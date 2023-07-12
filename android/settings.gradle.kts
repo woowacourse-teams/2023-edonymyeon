@@ -14,3 +14,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "edonymyeon"
 include(":app")
+include(":domain")
