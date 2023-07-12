@@ -1,4 +1,4 @@
-package com.app.edonymyeon
+package com.app.edonymyeon.presentation.ui.main
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
