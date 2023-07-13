@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Edonymyeon"
         tools:targetApi="31">
         <activity
-            android:name="com.app.edonymyeon.presentation.ui.main.MainActivity"
+            android:name="com.app.edonymyeon.presentation.ui.auth.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,6 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.app.edonymyeon.presentation.ui.main.MainActivity"
+            android:exported="true"></activity>
     </application>
 
 </manifest>
