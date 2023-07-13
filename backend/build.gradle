@@ -38,6 +38,9 @@ dependencies {
 
 	// sql 파라미터 보여준 애 나중에 지워잉
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
+
+	// rest assured 추가
+	testImplementation 'io.rest-assured:rest-assured:5.3.1'
 }
 
 tasks.named('test') {
