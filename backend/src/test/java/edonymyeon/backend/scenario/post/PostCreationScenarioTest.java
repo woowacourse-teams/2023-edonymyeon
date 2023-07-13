@@ -28,9 +28,10 @@ import org.springframework.test.context.TestConstructor.AutowireMode;
 public class PostCreationScenarioTest {
 
     @Test
-    void 로그인된_사용자는_게시글을_새로_작성할_수_있다() {
+    void 로그인된_사용자는_게시글을_새로_작성할_수_있다() throws JsonProcessingException {
         final var response = RestAssured
                 .given().log().all()
+                .body(정상적으로_작성된_글())
                 .auth().basic("testMember", "password1234")
                 .when().log().all()
                 .post("/posts")
@@ -48,9 +49,10 @@ public class PostCreationScenarioTest {
     }
 
     @Test
-    void 로그인되지_않은_사용자는_게시글을_작성할_수_없다() {
+    void 로그인되지_않은_사용자는_게시글을_작성할_수_없다() throws JsonProcessingException {
         final var response = RestAssured
                 .given().log().all()
+                .body(정상적으로_작성된_글())
                 .auth().basic("testMember", "password1234")
                 .when().log().all()
                 .post("/posts")
@@ -87,6 +89,20 @@ public class PostCreationScenarioTest {
 //          TODO: 예외 메시지 작성 softly.assertThat(responseBody.jsonPath().getInt("id")).isNotNull();
 //          TODO: 예외 자체코드 작성 softly.assertThat(responseBody.jsonPath().getInt("id")).isNotNull();
         });
+    }
+
+    private static String 정상적으로_작성된_글() throws JsonProcessingException {
+        final var requestBody = new HashMap<String, Object>();
+        requestBody.put("title", "물건을 살까요 말까요? 우리집 강아지가 너무 귀엽습니다.");
+        requestBody.put("content", "빨간염소를 꾸미고 SNS에 올리면 천 원이 대신 기부가 되는 빨간염소 챌린지! 챌린지를 통해 아프리카에 보내질 염소는 마을 주민들의 영양과 경제력까지 책임지며 마을이 자립할 수 있는 큰 힘이 되어줄 거예요. 지금, 아프리카에 보낼 나만의 염소를 꾸며보세요!");
+        requestBody.put("price", 13_000);
+        requestBody.put("images", List.of("https://img.freepik.com/free-photo/tropical-sea-beach_74190-175.jpg",
+                "https://cdn.pixabay.com/photo/2018/06/13/18/20/waves-3473335_1280.jpg"));
+
+        final var objectMapper = new ObjectMapper();
+        return objectMapper
+                .writerWithDefaultPrettyPrinter()
+                .writeValueAsString(requestBody);
     }
 
     static Stream<Arguments> 잘못된게시글양식() throws JsonProcessingException {
