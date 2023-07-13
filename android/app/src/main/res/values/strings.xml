@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">edonymyeon</string>
+
+
+    <!-- login   -->
+    <string name="login_title">로그인</string>
+    <string name="login_email">이메일</string>
+    <string name="login_password">비밀번호</string>
+    <string name="login_login">로그인</string>
+    <string name="login_suggest">아이디가 없나요?</string>
+    <string name="login_join">회원가입</string>
 </resources>
