@@ -8,7 +8,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:context="com.app.edonymyeon.presentation.ui.auth.LoginActivity">
 
         <Space
@@ -78,7 +78,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_email"
-            app:layout_constraintWidth_percent="0.81" />
+            app:layout_constraintWidth_percent="0.88" />
 
         <Space
             android:id="@+id/space_password_top"
@@ -126,7 +126,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_password"
-            app:layout_constraintWidth_percent="0.81" />
+            app:layout_constraintWidth_percent="0.88" />
 
         <Space
             android:id="@+id/space_password_bottom"
@@ -149,7 +149,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/space_password_bottom"
-            app:layout_constraintWidth_percent="0.81" />
+            app:layout_constraintWidth_percent="0.88" />
 
         <Space
             android:id="@+id/space_login_bottom"
@@ -195,7 +195,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_join"
-            app:layout_constraintWidth_percent="0.81" />
+            app:layout_constraintWidth_percent="0.88" />
 
         <Space
             android:layout_width="0dp"
