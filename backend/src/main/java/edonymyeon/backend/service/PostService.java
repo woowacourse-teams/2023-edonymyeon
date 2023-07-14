@@ -18,9 +18,9 @@ public class PostService {
     @Transactional
     public PostResponse createPost(final PostRequest postRequest) {
         final Post post = new Post(
-                postRequest.getTitle(),
-                postRequest.getContent(),
-                postRequest.getPrice()
+                postRequest.title(),
+                postRequest.content(),
+                postRequest.price()
         );
 
         postRepository.save(post);
