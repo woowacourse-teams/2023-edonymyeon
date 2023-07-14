@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">edonymyeon</string>
-
-
     <!-- login   -->
     <string name="login_title">로그인</string>
     <string name="login_email">이메일</string>
@@ -17,4 +15,17 @@
     <string name="bottom_navigation_alarm_title">알림</string>
     <string name="bottom_navigation_my_page_title">마이 페이지</string>
     <string name="all_preparing_page">준비중인 페이지입니다</string>
+
+    <!--post_editor-->
+    <string name="post_editor_page_title">글쓰기</string>
+    <string name="post_editor_post_title">제목</string>
+    <string name="post_editor_post_title_hint">제목을 입력하세요</string>
+    <string name="post_editor_post_price">가격</string>
+    <string name="post_editor_price_hint">가격을 입력하세요</string>
+    <string name="post_editor_post_category">카테코리</string>
+    <string name="post_editor_camera_description">사진 찍는 버튼</string>
+    <string name="post_editor_gallery_description">갤러리에서 이미지 고르는 버튼</string>
+    <string name="post_editor_content_hint">내용을 입력하세요</string>
+    <string name="post_editor_page_write">등록</string>
+    <string name="post_editor_price_unit">원</string>
 </resources>
