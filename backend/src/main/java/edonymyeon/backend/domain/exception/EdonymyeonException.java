@@ -8,4 +8,13 @@ public class EdonymyeonException extends RuntimeException{
         super();
         this.exceptionCode = exceptionCode;
     }
+
+    public int getCode() {
+        return exceptionCode.getCode();
+    }
+
+    @Override
+    public String getMessage() {
+        return exceptionCode.getMessage();
+    }
 }
