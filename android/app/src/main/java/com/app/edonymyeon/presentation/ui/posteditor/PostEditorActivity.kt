@@ -1,7 +1,11 @@
 package com.app.edonymyeon.presentation.ui.posteditor
 
+import android.content.ContentValues
 import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -22,6 +26,13 @@ class PostEditorActivity : AppCompatActivity() {
             }
         }
 
+    private val takeCameraImage =
+        registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
+            if (bitmap != null) {
+                setCameraImage(bitmap)
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPostEditorBinding.inflate(layoutInflater)
@@ -29,6 +40,10 @@ class PostEditorActivity : AppCompatActivity() {
 
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+
+        binding.ivPostCamera.setOnClickListener {
+            navigateToCamera()
+        }
 
         binding.ivPostGallery.setOnClickListener {
             navigateToGallery()
@@ -40,12 +55,12 @@ class PostEditorActivity : AppCompatActivity() {
     private fun setAdapter() {
         adapter = PostEditorImagesAdapter(::deleteImages)
         binding.rvPostEditorImages.adapter = adapter
+        updateImages()
     }
 
     private fun deleteImages(image: String) {
         viewModel.deleteSelectedImages(image)
         setAdapter()
-        updateImages()
     }
 
     private fun updateImages() {
@@ -56,11 +71,16 @@ class PostEditorActivity : AppCompatActivity() {
             },
         )
     }
+
     private fun navigateToGallery() {
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
         pickMultipleImage.launch(intent)
+    }
+
+    private fun navigateToCamera() {
+        takeCameraImage.launch(null)
     }
 
     private fun setGalleryImages(data: Intent?) {
@@ -84,7 +104,31 @@ class PostEditorActivity : AppCompatActivity() {
                 viewModel.addSelectedImages(imageUri.toString())
             }
         }
-        updateImages()
+        setAdapter()
+    }
+
+    private fun setCameraImage(bitmap: Bitmap) {
+        val imageUri = getImageUri(bitmap)
+        viewModel.addSelectedImages(imageUri.toString())
+        setAdapter()
+    }
+
+    private fun getImageUri(bitmap: Bitmap): Uri? {
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        }
+
+        val resolver = applicationContext.contentResolver
+        resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+            ?.let { imageUri ->
+                val outputStream = resolver.openOutputStream(imageUri)
+                outputStream?.use { stream ->
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                }
+                return imageUri
+            }
+        return null
     }
 
     companion object {
