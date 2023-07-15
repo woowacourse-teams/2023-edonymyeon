@@ -25,7 +25,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -88,7 +88,16 @@ dependencies {
     // domain module
     implementation(project(":domain"))
 
+<<<<<<< HEAD
     // android core
     implementation ("androidx.fragment:fragment-ktx:1.5.7")
 
+=======
+    val lifecycle_version = "2.2.0"
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+    // LiveData
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
+    implementation("androidx.activity:activity-ktx:1.7.2")
+>>>>>>> dc7f8f7 (feat: 갤러리에서 이미지 다중 선택 기능 구현 및 이미지 삭제 기능 구현)
 }
