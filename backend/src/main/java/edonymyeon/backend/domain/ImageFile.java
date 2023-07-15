@@ -8,9 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -39,14 +39,16 @@ public class ImageFile {
     @JoinColumn
     private Post post;
 
-    public ImageFile(final String fileDirectory, final MultipartFile multipartFile, final Post post) throws IOException {
+    public ImageFile(final String fileDirectory, final MultipartFile multipartFile, final Post post)
+            throws IOException {
         this.fileDirectory = fileDirectory;
         this.originalName = multipartFile.getOriginalFilename();
         this.storeName = createStoreName(originalName);
         this.post = post;
 
         String fullPath = fileDirectory + storeName;
-        multipartFile.transferTo(new File(fullPath));
+        final Path absolutePath = Paths.get(fullPath).toAbsolutePath();
+        multipartFile.transferTo(absolutePath);
     }
 
     private String createStoreName(final String originalName) {
@@ -60,7 +62,7 @@ public class ImageFile {
         return originalName.substring(pos + 1);
     }
 
-    public String getFullPath(){
+    public String getFullPath() {
         return fileDirectory + storeName;
     }
 }
