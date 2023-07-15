@@ -28,4 +28,8 @@
     <string name="post_editor_content_hint">내용을 입력하세요</string>
     <string name="post_editor_page_write">등록</string>
     <string name="post_editor_price_unit">원</string>
+
+    <!--item_post_editor_image-->
+    <string name="item_post_editor_image_description">갤러리에서 가져온 이미지</string>
+    <string name="item_post_editor_image_delete_description">이미지 삭제 버튼</string>
 </resources>
