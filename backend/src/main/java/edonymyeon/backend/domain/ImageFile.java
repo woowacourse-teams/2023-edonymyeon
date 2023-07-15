@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
-@Table(name = "irene333")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class ImageFile {
