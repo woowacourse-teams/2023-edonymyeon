@@ -36,7 +36,7 @@ public class PostService {
         );
         postRepository.save(post);
 
-        if(!postRequest.images().isEmpty()){
+        if (!postRequest.images().isEmpty()) {
             final List<ImageFile> imageFiles = postRequest.images()
                     .stream()
                     .map(image -> {
