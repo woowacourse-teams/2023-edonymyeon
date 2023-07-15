@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import edonymyeon.backend.service.request.PostRequest;
 import edonymyeon.backend.service.response.PostResponse;
+import java.util.Collections;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,8 @@ class PostServiceTest {
         final PostRequest request = new PostRequest(
                 "사도 돼요?",
                 "얼마 안해요",
-                100_000L
+                100_000L,
+                Collections.emptyList()
         );
 
         final PostResponse target = postService.createPost(request);
