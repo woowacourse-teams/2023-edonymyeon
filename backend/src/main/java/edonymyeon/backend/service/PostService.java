@@ -1,10 +1,15 @@
 package edonymyeon.backend.service;
 
+import edonymyeon.backend.domain.ImageFile;
 import edonymyeon.backend.domain.Post;
+import edonymyeon.backend.repository.ImageFileRepository;
 import edonymyeon.backend.repository.PostRepository;
 import edonymyeon.backend.service.request.PostRequest;
 import edonymyeon.backend.service.response.PostResponse;
+import java.io.IOException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,16 +19,36 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final ImageFileRepository imageFileRepository;
+
+    @Value("${file.dir}")
+    private String fileDirectory;
 
     @Transactional
     public PostResponse createPost(final PostRequest postRequest) {
+
+        System.out.println("postRequest = " + postRequest);
+
         final Post post = new Post(
                 postRequest.title(),
                 postRequest.content(),
                 postRequest.price()
         );
-
         postRepository.save(post);
+
+        if(!postRequest.images().isEmpty()){
+            final List<ImageFile> imageFiles = postRequest.images()
+                    .stream()
+                    .map(image -> {
+                        try {
+                            return new ImageFile(fileDirectory, image, post);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }).toList();
+            imageFileRepository.saveAll(imageFiles);
+        }
+
         return new PostResponse(post.getId());
     }
 }

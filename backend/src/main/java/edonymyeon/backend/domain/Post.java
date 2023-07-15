@@ -92,19 +92,19 @@ public class Post {
     }
 
     private void validateTitle(final String title) {
-        if(title.isBlank() || title.length() > MAX_TITLE_LENGTH) {
+        if (title.isBlank() || title.length() > MAX_TITLE_LENGTH) {
             throw new EdonymyeonException(POST_TITLE_ILLEGAL_LENGTH);
         }
     }
 
     private void validateContent(final String content) {
-        if(content.isBlank() || content.length() > MAX_CONTENT_LENGTH) {
+        if (content.isBlank() || content.length() > MAX_CONTENT_LENGTH) {
             throw new EdonymyeonException(POST_CONTENT_ILLEGAL_LENGTH);
         }
     }
 
     private void validatePrice(final Long price) {
-        if(Objects.isNull(price) || price < MIN_PRICE || price > MAX_PRICE) {
+        if (Objects.isNull(price) || price < MIN_PRICE || price > MAX_PRICE) {
             throw new EdonymyeonException(POST_PRICE_ILLEGAL_SIZE);
         }
     }
