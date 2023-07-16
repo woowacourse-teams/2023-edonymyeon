@@ -27,9 +27,6 @@ public class ImageFile {
     private Long id;
 
     @Column
-    private String originalName;
-
-    @Column
     private String fileDirectory;
 
     @Column
@@ -39,27 +36,12 @@ public class ImageFile {
     @JoinColumn
     private Post post;
 
-    public ImageFile(final String fileDirectory, final MultipartFile multipartFile, final Post post)
-            throws IOException {
+    public ImageInfo(
+            final String fileDirectory,
+            final String storeName
+    ) {
         this.fileDirectory = fileDirectory;
-        this.originalName = multipartFile.getOriginalFilename();
-        this.storeName = createStoreName(originalName);
-        this.post = post;
-
-        String fullPath = fileDirectory + storeName;
-        final Path absolutePath = Paths.get(fullPath).toAbsolutePath();
-        multipartFile.transferTo(absolutePath);
-    }
-
-    private String createStoreName(final String originalName) {
-        String ext = extractExt(originalName);
-        String uuid = UUID.randomUUID().toString();
-        return uuid + "." + ext;
-    }
-
-    private String extractExt(final String originalName) {
-        int pos = originalName.lastIndexOf(".");
-        return originalName.substring(pos + 1);
+        this.storeName = storeName;
     }
 
     public String getFullPath() {
