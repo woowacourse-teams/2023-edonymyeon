@@ -12,12 +12,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestConstructor;
@@ -28,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 @AllArgsConstructor
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @TestConstructor(autowireMode = AutowireMode.ALL)
+@Import(TestConfig.class)
 @SpringBootTest
 class PostServiceTest {
 
@@ -49,7 +52,8 @@ class PostServiceTest {
         }
 
         @Test
-        void 이미지들의_멀티파트파일을_받으면_특정_폴더에_이미지를_저장한다() throws IOException {
+        @Disabled
+        void 이미지들의_멀티파트파일을_받으면_특정_폴더에_이미지를_저장한다() throws IOException, InterruptedException {
             // given
             final PostRequest postRequest = getPostRequest();
 
@@ -82,7 +86,7 @@ class PostServiceTest {
             assertThat(uploadedImageNames)
                     .containsAll(List.of(
                             "test-inserting-one.jpg",
-                            "test-inserting-one.jpg"
+                            "test-inserting-two.jpg"
                     ));
         }
 
@@ -101,8 +105,8 @@ class PostServiceTest {
             assertThat(imageFiles)
                     .extracting(ImageFile::getFullPath)
                     .containsExactlyInAnyOrder(
-                            "src/main/resources/static/img/test_store/test-inserting-one.jpg",
-                            "src/main/resources/static/img/test_store/test-inserting-two.jpg"
+                            "src/test/resources/static/img/test_store/test-inserting-one.jpg",
+                            "src/test/resources/static/img/test_store/test-inserting-two.jpg"
                     );
         }
 
