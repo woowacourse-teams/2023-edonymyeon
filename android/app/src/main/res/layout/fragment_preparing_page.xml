@@ -1,0 +1,16 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.app.edonymyeon.presentation.ui.main.home.HomeFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/dohyeon"
+        android:gravity="center"
+        android:text="@string/all_preparing_page"
+        android:textColor="@color/black_000000"
+        android:textSize="35sp" />
+
+</FrameLayout>
