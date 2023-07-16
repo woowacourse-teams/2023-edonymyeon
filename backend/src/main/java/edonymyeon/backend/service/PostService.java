@@ -18,16 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final ImageFileRepository imageFileRepository;
+    private final ImageFileUploader imageFileUploader;
+    private final ImageInfoRepository imageInfoRepository;
 
     @Value("${file.dir}")
     private String fileDirectory;
 
     @Transactional
     public PostResponse createPost(final PostRequest postRequest) {
-
-        System.out.println("postRequest = " + postRequest);
-
         final Post post = new Post(
                 postRequest.title(),
                 postRequest.content(),
@@ -38,14 +36,10 @@ public class PostService {
         if (!postRequest.images().isEmpty()) {
             final List<ImageInfo> imageInfos = postRequest.images()
                     .stream()
-                    .map(image -> {
-                        try {
-                            return new ImageFile(fileDirectory, image, post);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }).toList();
-            imageFileRepository.saveAll(imageFiles);
+                    .map(image -> imageFileUploader.uploadFile(fileDirectory, image))
+                    .toList();
+            imageInfos.forEach(post::addImageInfo);
+            imageInfoRepository.saveAll(imageInfos);
         }
 
         return new PostResponse(post.getId());
