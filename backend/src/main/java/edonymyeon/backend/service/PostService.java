@@ -1,12 +1,11 @@
 package edonymyeon.backend.service;
 
-import edonymyeon.backend.domain.ImageFile;
+import edonymyeon.backend.domain.ImageInfo;
 import edonymyeon.backend.domain.Post;
-import edonymyeon.backend.repository.ImageFileRepository;
+import edonymyeon.backend.repository.ImageInfoRepository;
 import edonymyeon.backend.repository.PostRepository;
 import edonymyeon.backend.service.request.PostRequest;
 import edonymyeon.backend.service.response.PostResponse;
-import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,7 +36,7 @@ public class PostService {
         postRepository.save(post);
 
         if (!postRequest.images().isEmpty()) {
-            final List<ImageFile> imageFiles = postRequest.images()
+            final List<ImageInfo> imageInfos = postRequest.images()
                     .stream()
                     .map(image -> {
                         try {

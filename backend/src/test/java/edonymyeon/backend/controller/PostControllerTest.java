@@ -26,12 +26,12 @@ class PostControllerTest {
     void 사진_첨부_성공_테스트() throws Exception {
         // 파일 1
         InputStream file1InputStream = getClass().getResourceAsStream("/static/img/file/test_image_1.jpg");
-        MockMultipartFile file1 = new MockMultipartFile("imageFiles", "test_image_1.jpg", "image/jpg",
+        MockMultipartFile file1 = new MockMultipartFile("images", "test_image_1.jpg", "image/jpg",
                 file1InputStream);
 
         // 파일 2
         InputStream file2InputStream = getClass().getResourceAsStream("/static/img/file/test_image_2.jpg");
-        MockMultipartFile file2 = new MockMultipartFile("imageFiles", "test_image_2.jpg", "image/jpg",
+        MockMultipartFile file2 = new MockMultipartFile("images", "test_image_2.jpg", "image/jpg",
                 file2InputStream);
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/posts")

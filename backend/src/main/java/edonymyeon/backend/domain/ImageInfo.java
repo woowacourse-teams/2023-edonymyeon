@@ -8,19 +8,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class ImageFile {
+public class ImageInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,5 +41,9 @@ public class ImageFile {
 
     public String getFullPath() {
         return fileDirectory + storeName;
+    }
+
+    public void updatePost(Post post) {
+        this.post = post;
     }
 }

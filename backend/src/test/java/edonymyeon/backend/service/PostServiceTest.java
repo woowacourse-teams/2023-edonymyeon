@@ -2,8 +2,8 @@ package edonymyeon.backend.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edonymyeon.backend.domain.ImageFile;
-import edonymyeon.backend.repository.ImageFileRepository;
+import edonymyeon.backend.domain.ImageInfo;
+import edonymyeon.backend.repository.ImageInfoRepository;
 import edonymyeon.backend.service.request.PostRequest;
 import edonymyeon.backend.service.response.PostResponse;
 import java.io.IOException;
@@ -91,7 +91,7 @@ class PostServiceTest {
         }
 
         @Test
-        void 폴더에_이미지를_저장한_후_Post_도메인에는_파일의_경로를_넘긴다(@Autowired ImageFileRepository imageFileRepository)
+        void 폴더에_이미지를_저장한_후_Post_도메인에는_파일의_경로를_넘긴다(@Autowired ImageInfoRepository imageFileRepository)
                 throws IOException {
             // given
             final PostRequest postRequest = getPostRequest();
@@ -100,10 +100,10 @@ class PostServiceTest {
             final Long postId = postService.createPost(postRequest).id();
 
             // then
-            List<ImageFile> imageFiles = imageFileRepository.findAllByPostId(postId);
+            List<ImageInfo> imageFiles = imageFileRepository.findAllByPostId(postId);
             assertThat(imageFiles).hasSize(2);
             assertThat(imageFiles)
-                    .extracting(ImageFile::getFullPath)
+                    .extracting(ImageInfo::getFullPath)
                     .containsExactlyInAnyOrder(
                             "src/test/resources/static/img/test_store/test-inserting-one.jpg",
                             "src/test/resources/static/img/test_store/test-inserting-two.jpg"
