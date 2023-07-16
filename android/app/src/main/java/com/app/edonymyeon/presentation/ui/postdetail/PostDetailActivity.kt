@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostDetailBinding
 import com.google.android.material.snackbar.Snackbar
@@ -13,11 +14,16 @@ class PostDetailActivity : AppCompatActivity() {
         ActivityPostDetailBinding.inflate(layoutInflater)
     }
 
+    private val viewModel: PostDetailViewModel by lazy {
+        ViewModelProvider(this)[PostDetailViewModel::class.java]
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         initAppbar()
+        binding.postViewModel = viewModel
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

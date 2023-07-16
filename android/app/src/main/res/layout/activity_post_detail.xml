@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="postViewModel"
+            type="com.app.edonymyeon.presentation.ui.postdetail.PostDetailViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -89,6 +96,7 @@
                     android:id="@+id/tv_title"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
+                    android:text="@{postViewModel.post.title}"
                     android:textSize="20sp"
                     app:layout_constraintStart_toEndOf="@id/space_content_start"
                     app:layout_constraintTop_toBottomOf="@id/space_image_bottom"
@@ -118,6 +126,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_marginStart="16dp"
+                    android:text="@{postViewModel.post.writer.nickname}"
                     android:textSize="16sp"
                     app:layout_constraintStart_toEndOf="@id/iv_user_profile"
                     app:layout_constraintTop_toTopOf="@id/iv_user_profile"
@@ -128,6 +137,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_marginStart="16dp"
+                    android:text="@{postViewModel.post.createdAt.toString()}"
                     android:textSize="12sp"
                     app:layout_constraintStart_toEndOf="@id/iv_user_profile"
                     app:layout_constraintTop_toBottomOf="@id/tv_user_nickname"
@@ -146,6 +156,7 @@
                     android:id="@+id/tv_price"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
+                    android:text="@{@string/post_detail_price(postViewModel.post.price)}"
                     android:textSize="14sp"
                     app:layout_constraintStart_toEndOf="@id/space_content_start"
                     app:layout_constraintTop_toBottomOf="@id/space_price_top"
@@ -164,6 +175,7 @@
                     android:id="@+id/tv_content"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:text="@{postViewModel.post.content}"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toStartOf="@id/space_content_end"
                     app:layout_constraintStart_toEndOf="@id/space_content_start"
@@ -186,7 +198,8 @@
                     app:layout_constraintDimensionRatio="H, 360:24"
                     app:layout_constraintEnd_toStartOf="@id/space_content_end"
                     app:layout_constraintStart_toEndOf="@id/space_content_start"
-                    app:layout_constraintTop_toBottomOf="@id/space_reaction_top" />
+                    app:layout_constraintTop_toBottomOf="@id/space_reaction_top"
+                    app:reactionCount="@{postViewModel.post.reactionCount}" />
 
                 <Space
                     android:id="@+id/space_reaction_bottom"
@@ -239,6 +252,7 @@
                     android:layout_height="0dp"
                     android:background="@drawable/selector_cb_reaction_up"
                     android:button="@null"
+                    android:checked="@{postViewModel.recommendation.isUp}"
                     app:layout_constraintBottom_toBottomOf="@id/space_up_start"
                     app:layout_constraintDimensionRatio="H,1:1"
                     app:layout_constraintStart_toEndOf="@id/space_up_start"
@@ -251,6 +265,7 @@
                     android:layout_height="0dp"
                     android:background="@drawable/selector_cb_reaction_down"
                     android:button="@null"
+                    android:checked="@{postViewModel.recommendation.isDown}"
                     app:layout_constraintBottom_toBottomOf="@id/space_up_start"
                     app:layout_constraintDimensionRatio="H,1:1"
                     app:layout_constraintEnd_toStartOf="@id/space_down_end"
@@ -263,6 +278,7 @@
                     android:layout_width="0dp"
                     android:layout_height="12dp"
                     android:layout_marginHorizontal="8dp"
+                    android:progress="@{postViewModel.recommendation.progress}"
                     android:progressDrawable="@drawable/bg_reaction_progress"
                     app:layout_constraintBottom_toBottomOf="@id/space_up_start"
                     app:layout_constraintEnd_toStartOf="@id/cb_down"
