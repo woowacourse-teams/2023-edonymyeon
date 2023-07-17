@@ -109,7 +109,6 @@
             android:autofillHints="no"
             android:background="@android:color/transparent"
             android:fontFamily="@font/dohyeon"
-            android:gravity="end"
             android:hint="@string/post_editor_price_hint"
             android:inputType="number"
             android:text="@{viewModel.postPrice}"
