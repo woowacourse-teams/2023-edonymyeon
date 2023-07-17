@@ -51,6 +51,7 @@ class PostEditorActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initBinding()
+        initAppbar()
         setCameraAndGalleryClickListener()
         setAdapter()
     }
@@ -63,6 +64,12 @@ class PostEditorActivity : AppCompatActivity() {
     private fun initBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+    }
+
+    private fun initAppbar() {
+        setSupportActionBar(binding.tbPostEditor)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = ""
     }
 
     private fun setAdapter() {
