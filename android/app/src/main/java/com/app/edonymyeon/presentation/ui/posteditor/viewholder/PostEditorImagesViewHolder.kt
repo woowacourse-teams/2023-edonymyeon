@@ -7,27 +7,26 @@ import app.edonymyeon.databinding.ItemPostEditorImageBinding
 
 class PostEditorImagesViewHolder private constructor(
     private val binding: ItemPostEditorImageBinding,
-    private val deleteImage: (String) -> Unit,
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(imageUrl: String) {
+    fun bind(imageUrl: String, deleteImages: (String) -> Unit) {
         binding.postEditorImage = imageUrl
         binding.ivPostGalleryImageRemove.setOnClickListener {
-            deleteImage.invoke(imageUrl)
+            deleteImages.invoke(imageUrl)
         }
+        binding.executePendingBindings()
     }
 
     companion object {
         fun from(
             parent: ViewGroup,
-            deleteImage: (String) -> Unit,
         ): PostEditorImagesViewHolder {
             val binding = ItemPostEditorImageBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false,
             )
-            return PostEditorImagesViewHolder(binding, deleteImage)
+            return PostEditorImagesViewHolder(binding)
         }
     }
 }

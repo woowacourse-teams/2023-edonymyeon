@@ -76,12 +76,7 @@ class PostEditorActivity : AppCompatActivity() {
     }
 
     private fun updateImages() {
-        viewModel.galleryImages.observe(
-            this,
-            Observer {
-                adapter.submitList(it)
-            },
-        )
+        adapter.submitList(viewModel.galleryImages.value)
     }
 
     private fun navigateToGallery() {
