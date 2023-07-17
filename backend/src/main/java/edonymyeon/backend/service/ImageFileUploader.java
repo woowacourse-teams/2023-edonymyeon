@@ -33,8 +33,4 @@ public class ImageFileUploader {
             throw new RuntimeException();
         }
     }
-
-//    public void setImageFileNameStrategy(final ImageFileNameStrategy imageFileNameStrategy) {
-//        this.imageFileNameStrategy = imageFileNameStrategy;
-//    }
 }
