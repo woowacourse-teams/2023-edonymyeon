@@ -50,18 +50,19 @@ class PostEditorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        initBinding()
+        setCameraAndGalleryClickListener()
+        setAdapter()
+    }
+
+    private fun setCameraAndGalleryClickListener() {
+        binding.ivPostCamera.setOnClickListener { navigateToCamera() }
+        binding.ivPostGallery.setOnClickListener { navigateToGallery() }
+    }
+
+    private fun initBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-
-        binding.ivPostCamera.setOnClickListener {
-            navigateToCamera()
-        }
-
-        binding.ivPostGallery.setOnClickListener {
-            navigateToGallery()
-        }
-
-        setAdapter()
     }
 
     private fun setAdapter() {
