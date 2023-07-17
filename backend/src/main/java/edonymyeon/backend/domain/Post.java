@@ -52,7 +52,7 @@ public class Post {
     // TODO: 작성자
     // TODO: cascade
     @OneToMany(mappedBy = "post")
-    private List<ImageInfo> imageInfos;
+    private List<PostImageInfo> postImageInfos;
 
     @CreatedDate
     @Column(nullable = false)
@@ -68,7 +68,7 @@ public class Post {
             final Long price,
             final LocalDateTime createAt,
             final Long viewCount,
-            final List<ImageInfo> imageInfos
+            final List<PostImageInfo> postImageInfos
     ) {
         validate(title, content, price);
         this.id = id;
@@ -77,7 +77,7 @@ public class Post {
         this.price = price;
         this.createAt = createAt;
         this.viewCount = viewCount;
-        this.imageInfos = new ArrayList<>();
+        this.postImageInfos = new ArrayList<>();
     }
 
     public Post(
@@ -116,11 +116,10 @@ public class Post {
         }
     }
 
-    public void addImageInfo(final ImageInfo imageInfo) {
-        if (this.imageInfos.contains(imageInfo)) {
+    public void addPostImageInfo(final PostImageInfo postImageInfo) {
+        if (this.postImageInfos.contains(postImageInfo)) {
             return;
         }
-        this.imageInfos.add(imageInfo);
-        imageInfo.updatePost(this);
+        this.postImageInfos.add(postImageInfo);
     }
 }
