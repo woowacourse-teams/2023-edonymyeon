@@ -1,5 +1,7 @@
-package edonymyeon.backend.service;
+package edonymyeon.backend;
 
+import edonymyeon.backend.service.ImageFileNameMockStrategy;
+import edonymyeon.backend.service.ImageFileUploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -7,10 +9,11 @@ import org.springframework.context.annotation.Bean;
 @RequiredArgsConstructor
 @TestConfiguration
 public class TestConfig {
-
     @Bean
-    public ImageFileUploader imageFileGenerator() {
+    public ImageFileUploader imageFileUploader() {
         return new ImageFileUploader(new ImageFileNameMockStrategy(
+                "test-inserting-one",
+                "test-inserting-two",
                 "test-inserting-one",
                 "test-inserting-two"
         ));

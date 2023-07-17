@@ -32,7 +32,7 @@ public class PostService {
         if (!postRequest.images().isEmpty()) {
             final List<ImageInfo> imageInfos = postRequest.images()
                     .stream()
-                    .map(image -> imageFileUploader.uploadFile(image))
+                    .map(imageFileUploader::uploadFile)
                     .toList();
             imageInfos.forEach(post::addImageInfo);
             imageInfoRepository.saveAll(imageInfos);
