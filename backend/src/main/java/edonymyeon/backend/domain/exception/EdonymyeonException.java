@@ -1,20 +1,23 @@
 package edonymyeon.backend.domain.exception;
 
+import lombok.Getter;
+
+@Getter
 public class EdonymyeonException extends RuntimeException {
 
-    private final ExceptionCode exceptionCode;
+    private final ExceptionInformation exceptionInformation;
 
-    public EdonymyeonException(ExceptionCode exceptionCode) {
+    public EdonymyeonException(ExceptionInformation exceptionInformation) {
         super();
-        this.exceptionCode = exceptionCode;
+        this.exceptionInformation = exceptionInformation;
     }
 
     public int getCode() {
-        return exceptionCode.getCode();
+        return exceptionInformation.getCode();
     }
 
     @Override
     public String getMessage() {
-        return exceptionCode.getMessage();
+        return exceptionInformation.getMessage();
     }
 }
