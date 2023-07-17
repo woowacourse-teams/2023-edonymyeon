@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum ExceptionCode {
+public enum ExceptionInformation {
 
     // 클래스이름_필드명_틀린내용
     // 1___: 인증 관련

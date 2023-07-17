@@ -1,8 +1,16 @@
 package edonymyeon.backend.controlleradvice;
 
+import static edonymyeon.backend.domain.exception.ExceptionInformation.AUTHORIZATION_EMPTY;
+import static edonymyeon.backend.domain.exception.ExceptionInformation.MEMBER_EMAIL_NOT_FOUND;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+
 import edonymyeon.backend.controlleradvice.dto.ExceptionResponse;
 import edonymyeon.backend.domain.exception.EdonymyeonException;
+import edonymyeon.backend.domain.exception.ExceptionInformation;
+import java.util.EnumMap;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -10,6 +18,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private final EnumMap<ExceptionInformation, HttpStatus> exceptionInfoToHttpStatus = new EnumMap<>(
+            ExceptionInformation.class);
+
+    public GlobalExceptionHandler() {
+        exceptionInfoToHttpStatus.put(MEMBER_EMAIL_NOT_FOUND, UNAUTHORIZED);
+        exceptionInfoToHttpStatus.put(AUTHORIZATION_EMPTY, UNAUTHORIZED);
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionResponse> handleException(final Exception e) {
@@ -24,8 +40,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleEdonymyeonException(final EdonymyeonException e) {
         final ExceptionResponse exceptionResponse = new ExceptionResponse(e.getCode(), e.getMessage());
 
-        return ResponseEntity.badRequest()
+        final HttpStatus httpStatus = exceptionInfoToHttpStatus.getOrDefault(e.getExceptionInformation(), BAD_REQUEST);
+
+        return ResponseEntity.status(httpStatus)
                 .body(exceptionResponse);
-        // TODO: BadRequest 외의 예외가 될 수도 있음
     }
 }

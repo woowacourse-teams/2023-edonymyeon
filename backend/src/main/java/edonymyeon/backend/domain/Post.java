@@ -1,8 +1,8 @@
 package edonymyeon.backend.domain;
 
-import static edonymyeon.backend.domain.exception.ExceptionCode.POST_CONTENT_ILLEGAL_LENGTH;
-import static edonymyeon.backend.domain.exception.ExceptionCode.POST_PRICE_ILLEGAL_SIZE;
-import static edonymyeon.backend.domain.exception.ExceptionCode.POST_TITLE_ILLEGAL_LENGTH;
+import static edonymyeon.backend.domain.exception.ExceptionInformation.POST_CONTENT_ILLEGAL_LENGTH;
+import static edonymyeon.backend.domain.exception.ExceptionInformation.POST_PRICE_ILLEGAL_SIZE;
+import static edonymyeon.backend.domain.exception.ExceptionInformation.POST_TITLE_ILLEGAL_LENGTH;
 
 import edonymyeon.backend.domain.exception.EdonymyeonException;
 import jakarta.persistence.Column;

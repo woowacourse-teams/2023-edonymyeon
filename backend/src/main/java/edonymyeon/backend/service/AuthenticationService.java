@@ -1,6 +1,6 @@
 package edonymyeon.backend.service;
 
-import static edonymyeon.backend.domain.exception.ExceptionCode.MEMBER_EMAIL_NOT_FOUND;
+import static edonymyeon.backend.domain.exception.ExceptionInformation.MEMBER_EMAIL_NOT_FOUND;
 
 import edonymyeon.backend.domain.Member;
 import edonymyeon.backend.domain.exception.EdonymyeonException;
