@@ -8,7 +8,6 @@ import edonymyeon.backend.service.request.PostRequest;
 import edonymyeon.backend.service.response.PostResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,9 +19,6 @@ public class PostService {
     private final PostRepository postRepository;
     private final ImageFileUploader imageFileUploader;
     private final ImageInfoRepository imageInfoRepository;
-
-    @Value("${file.dir}")
-    private String fileDirectory;
 
     @Transactional
     public PostResponse createPost(final PostRequest postRequest) {
@@ -36,7 +32,7 @@ public class PostService {
         if (!postRequest.images().isEmpty()) {
             final List<ImageInfo> imageInfos = postRequest.images()
                     .stream()
-                    .map(image -> imageFileUploader.uploadFile(fileDirectory, image))
+                    .map(image -> imageFileUploader.uploadFile(image))
                     .toList();
             imageInfos.forEach(post::addImageInfo);
             imageInfoRepository.saveAll(imageInfos);

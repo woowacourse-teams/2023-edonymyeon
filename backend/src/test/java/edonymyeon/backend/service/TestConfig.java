@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 @RequiredArgsConstructor
 @TestConfiguration
 public class TestConfig {
+
     @Bean
     public ImageFileUploader imageFileGenerator() {
         return new ImageFileUploader(new ImageFileNameMockStrategy(
