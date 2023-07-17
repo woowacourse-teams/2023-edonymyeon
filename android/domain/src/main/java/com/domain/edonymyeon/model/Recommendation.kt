@@ -10,7 +10,7 @@ data class Recommendation(
         get() {
             val total = upCount + downCount
             if (total == 0) {
-                return 0
+                return 50
             }
             return (upCount.toFloat() / total.toFloat() * 100).toInt()
         }

@@ -23,7 +23,9 @@ class PostDetailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initAppbar()
-        binding.postViewModel = viewModel
+        initBinding()
+
+        setRecommendCheckboxListener()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -61,5 +63,19 @@ class PostDetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.tbPostDetail)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = ""
+    }
+
+    private fun initBinding() {
+        binding.lifecycleOwner = this
+        binding.postViewModel = viewModel
+    }
+
+    private fun setRecommendCheckboxListener() {
+        binding.cbUp.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.updateUpRecommendation(isChecked)
+        }
+        binding.cbDown.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.updateDownRecommendation(isChecked)
+        }
     }
 }

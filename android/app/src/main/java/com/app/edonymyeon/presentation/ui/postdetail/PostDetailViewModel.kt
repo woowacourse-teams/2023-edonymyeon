@@ -3,6 +3,7 @@ package com.app.edonymyeon.presentation.ui.postdetail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.uimodel.RecommendationUiModel
@@ -24,6 +25,58 @@ class PostDetailViewModel : ViewModel() {
     init {
         _post.value = postData.toUiModel()
         _recommendation.value = postData.recommendation.toUiModel()
+    }
+
+    fun updateUpRecommendation(isChecked: Boolean) {
+        val oldRecommendation = _recommendation.value?.toDomain() ?: return
+
+        if (isChecked) {
+            if (oldRecommendation.isDown) {
+                _recommendation.value = oldRecommendation.copy(
+                    upCount = oldRecommendation.upCount + 1,
+                    isUp = true,
+                    isDown = false,
+                ).toUiModel()
+            } else {
+                _recommendation.value = oldRecommendation.copy(
+                    upCount = oldRecommendation.upCount + 1,
+                    isUp = true,
+                ).toUiModel()
+            }
+        } else {
+            _recommendation.value = oldRecommendation.copy(
+                upCount = oldRecommendation.upCount - 1,
+                isUp = false,
+            ).toUiModel()
+        }
+
+        _post.value = _post.value?.copy(recommendation = _recommendation.value ?: return)
+    }
+
+    fun updateDownRecommendation(isChecked: Boolean) {
+        val oldRecommendation = _recommendation.value?.toDomain() ?: return
+
+        if (isChecked) {
+            if (oldRecommendation.isUp) {
+                _recommendation.value = oldRecommendation.copy(
+                    downCount = oldRecommendation.downCount + 1,
+                    isUp = false,
+                    isDown = true,
+                ).toUiModel()
+            } else {
+                _recommendation.value = oldRecommendation.copy(
+                    downCount = oldRecommendation.downCount + 1,
+                    isDown = true,
+                ).toUiModel()
+            }
+        } else {
+            _recommendation.value = oldRecommendation.copy(
+                downCount = oldRecommendation.downCount - 1,
+                isDown = false,
+            ).toUiModel()
+        }
+
+        _post.value = _post.value?.copy(recommendation = _recommendation.value ?: return)
     }
 }
 

@@ -12,3 +12,12 @@ fun Recommendation.toUiModel(): RecommendationUiModel {
         progress = progress,
     )
 }
+
+fun RecommendationUiModel.toDomain(): Recommendation {
+    return Recommendation(
+        upCount = upCount,
+        downCount = downCount,
+        isUp = isUp,
+        isDown = isDown,
+    )
+}
