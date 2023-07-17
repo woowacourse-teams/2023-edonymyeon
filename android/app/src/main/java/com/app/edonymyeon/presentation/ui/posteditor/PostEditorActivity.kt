@@ -1,5 +1,7 @@
 package com.app.edonymyeon.presentation.ui.posteditor
 
+import android.Manifest
+import android.content.ClipData
 import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
@@ -10,15 +12,16 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import app.edonymyeon.databinding.ActivityPostEditorBinding
 import com.app.edonymyeon.presentation.ui.posteditor.adapter.PostEditorImagesAdapter
 
 class PostEditorActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityPostEditorBinding
     private val viewModel: PostEditorViewModel by viewModels()
     private lateinit var adapter: PostEditorImagesAdapter
+    private val binding: ActivityPostEditorBinding by lazy {
+        ActivityPostEditorBinding.inflate(layoutInflater)
+    }
     private val pickMultipleImage =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
@@ -35,7 +38,6 @@ class PostEditorActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityPostEditorBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.lifecycleOwner = this
@@ -86,25 +88,35 @@ class PostEditorActivity : AppCompatActivity() {
     private fun setGalleryImages(data: Intent?) {
         data?.clipData?.let { clipData ->
             val count = clipData.itemCount
-            if (count > MAX_IMAGES_COUNT) {
-                Toast.makeText(applicationContext, "사진은 10장까지 선택 가능합니다.", Toast.LENGTH_LONG).show()
-                return
-            }
             val currentImageCount = viewModel.galleryImages.value?.size ?: 0
-            if (currentImageCount + count > MAX_IMAGES_COUNT) {
-                Toast.makeText(applicationContext, "사진은 10장까지 선택 가능합니다.", Toast.LENGTH_LONG).show()
-                return
+            when {
+                checkImageCountLimit(count, MAX_IMAGES_COUNT).not() -> return
+                checkImageCountLimit(count, MAX_IMAGES_COUNT - currentImageCount).not() -> return
+                else -> addSelectedImagesFromClipData(count, clipData)
             }
-            for (i in 0 until count) {
-                val imageUri = clipData.getItemAt(i).uri
-                viewModel.addSelectedImages(imageUri.toString())
-            }
-        } ?: run {
-            data?.data?.let { imageUri ->
-                viewModel.addSelectedImages(imageUri.toString())
-            }
-        }
+        } ?: addSelectedImageFromUri(data)
         setAdapter()
+    }
+
+    private fun addSelectedImageFromUri(data: Intent?) {
+        data?.data?.let { imageUri ->
+            viewModel.addSelectedImages(imageUri.toString())
+        }
+    }
+
+    private fun addSelectedImagesFromClipData(count: Int, clipData: ClipData) {
+        for (i in 0 until count) {
+            val imageUri = clipData.getItemAt(i).uri
+            viewModel.addSelectedImages(imageUri.toString())
+        }
+    }
+
+    private fun checkImageCountLimit(count: Int, limitCount: Int): Boolean {
+        if (count > limitCount) {
+            Toast.makeText(applicationContext, "사진은 10장까지 선택 가능합니다.", Toast.LENGTH_LONG).show()
+            return false
+        }
+        return true
     }
 
     private fun setCameraImage(bitmap: Bitmap) {
@@ -114,11 +126,6 @@ class PostEditorActivity : AppCompatActivity() {
     }
 
     private fun getImageUri(bitmap: Bitmap): Uri? {
-        val contentValues = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")
-            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-        }
-
         val resolver = applicationContext.contentResolver
         resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
             ?.let { imageUri ->
@@ -133,5 +140,13 @@ class PostEditorActivity : AppCompatActivity() {
 
     companion object {
         private const val MAX_IMAGES_COUNT = 10
+        private val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+        }
+        private val permissionList = arrayOf(
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+        )
     }
 }
