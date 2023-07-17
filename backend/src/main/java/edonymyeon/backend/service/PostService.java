@@ -7,6 +7,7 @@ import edonymyeon.backend.repository.PostRepository;
 import edonymyeon.backend.service.request.PostRequest;
 import edonymyeon.backend.service.response.PostResponse;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,14 +30,16 @@ public class PostService {
         );
         postRepository.save(post);
 
-        if (!postRequest.images().isEmpty()) {
-            final List<ImageInfo> imageInfos = postRequest.images()
-                    .stream()
-                    .map(imageFileUploader::uploadFile)
-                    .toList();
-            imageInfos.forEach(post::addImageInfo);
-            imageInfoRepository.saveAll(imageInfos);
+        if (Objects.isNull(postRequest.images()) || postRequest.images().isEmpty()) {
+            return new PostResponse(post.getId());
         }
+
+        final List<ImageInfo> imageInfos = postRequest.images()
+                .stream()
+                .map(imageFileUploader::uploadFile)
+                .toList();
+        imageInfos.forEach(post::addImageInfo);
+        imageInfoRepository.saveAll(imageInfos);
 
         return new PostResponse(post.getId());
     }
