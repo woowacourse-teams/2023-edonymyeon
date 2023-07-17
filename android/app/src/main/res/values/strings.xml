@@ -9,4 +9,12 @@
     <string name="login_login">로그인</string>
     <string name="login_suggest">아이디가 없나요?</string>
     <string name="login_join">회원가입</string>
+
+    <!-- bottom navigation title    -->
+    <string name="bottom_navigation_home_title">홈</string>
+    <string name="bottom_navigation_search_title">검색</string>
+    <string name="bottom_navigation_category_title">카테고리</string>
+    <string name="bottom_navigation_alarm_title">알림</string>
+    <string name="bottom_navigation_my_page_title">마이 페이지</string>
+    <string name="all_preparing_page">준비중인 페이지입니다</string>
 </resources>

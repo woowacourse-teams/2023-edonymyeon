@@ -87,4 +87,8 @@ dependencies {
 
     // domain module
     implementation(project(":domain"))
+
+    // android core
+    implementation ("androidx.fragment:fragment-ktx:1.5.7")
+
 }
