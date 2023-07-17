@@ -11,7 +11,10 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -47,7 +50,9 @@ public class Post {
     private Long price;
 
     // TODO: 작성자
-    // TODO: 사진들
+    // TODO: cascade
+    @OneToMany(mappedBy = "post")
+    private List<ImageInfo> imageInfos;
 
     @CreatedDate
     @Column(nullable = false)
@@ -62,7 +67,8 @@ public class Post {
             final String content,
             final Long price,
             final LocalDateTime createAt,
-            final Long viewCount
+            final Long viewCount,
+            final List<ImageInfo> imageInfos
     ) {
         validate(title, content, price);
         this.id = id;
@@ -71,6 +77,7 @@ public class Post {
         this.price = price;
         this.createAt = createAt;
         this.viewCount = viewCount;
+        this.imageInfos = new ArrayList<>();
     }
 
     public Post(
@@ -78,7 +85,7 @@ public class Post {
             final String content,
             final Long price
     ) {
-        this(null, title, content, price, null, null);
+        this(null, title, content, price, null, null, null);
     }
 
     private void validate(
@@ -92,20 +99,28 @@ public class Post {
     }
 
     private void validateTitle(final String title) {
-        if(title.isBlank() || title.length() > MAX_TITLE_LENGTH) {
+        if (title.isBlank() || title.length() > MAX_TITLE_LENGTH) {
             throw new EdonymyeonException(POST_TITLE_ILLEGAL_LENGTH);
         }
     }
 
     private void validateContent(final String content) {
-        if(content.isBlank() || content.length() > MAX_CONTENT_LENGTH) {
+        if (content.isBlank() || content.length() > MAX_CONTENT_LENGTH) {
             throw new EdonymyeonException(POST_CONTENT_ILLEGAL_LENGTH);
         }
     }
 
     private void validatePrice(final Long price) {
-        if(Objects.isNull(price) || price < MIN_PRICE || price > MAX_PRICE) {
+        if (Objects.isNull(price) || price < MIN_PRICE || price > MAX_PRICE) {
             throw new EdonymyeonException(POST_PRICE_ILLEGAL_SIZE);
         }
+    }
+
+    public void addImageInfo(final ImageInfo imageInfo) {
+        if (this.imageInfos.contains(imageInfo)) {
+            return;
+        }
+        this.imageInfos.add(imageInfo);
+        imageInfo.updatePost(this);
     }
 }

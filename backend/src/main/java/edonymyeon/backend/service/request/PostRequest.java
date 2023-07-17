@@ -1,20 +1,14 @@
 package edonymyeon.backend.service.request;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
-@Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
-public class PostRequest {
+public record PostRequest(
+        String title,
+        String content,
+        Long price,
+        List<MultipartFile> images
+) {
 
-    private String title;
-
-    private String content;
-
-    private Long price;
-    // todo private final List<MultipartFile> images;
 }
 

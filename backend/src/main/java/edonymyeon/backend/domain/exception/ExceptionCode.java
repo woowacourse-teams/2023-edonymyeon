@@ -1,5 +1,10 @@
 package edonymyeon.backend.domain.exception;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+@AllArgsConstructor
 public enum ExceptionCode {
 
     // 클래스이름_필드명_틀린내용
@@ -9,9 +14,4 @@ public enum ExceptionCode {
 
     private int code;
     private String message;
-
-    ExceptionCode(final int code, final String message) {
-        this.code = code;
-        this.message = message;
-    }
 }
