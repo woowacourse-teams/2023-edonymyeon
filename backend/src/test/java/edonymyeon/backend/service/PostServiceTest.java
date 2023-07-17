@@ -1,6 +1,7 @@
 package edonymyeon.backend.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.domain.ImageInfo;
@@ -102,5 +103,17 @@ class PostServiceTest {
                 13_000L,
                 multipartFiles
         );
+    }
+
+    @Test
+    void 이미지가_없어도_게시글을_저장할수있다() {
+        final PostRequest postRequest = new PostRequest(
+                "I love you",
+                "He wisely contented himself with his family and his love of nature.",
+                13_000L,
+                null
+        );
+
+        assertThatCode(() -> postService.createPost(postRequest)).doesNotThrowAnyException();
     }
 }
