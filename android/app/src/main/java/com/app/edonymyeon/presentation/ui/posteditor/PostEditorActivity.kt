@@ -36,6 +36,16 @@ class PostEditorActivity : AppCompatActivity() {
             }
         }
 
+    private val requestPermissionsLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
+            results.forEach {
+                if (!it.value) {
+                    Toast.makeText(applicationContext, "권한 허용 필요", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -82,6 +92,7 @@ class PostEditorActivity : AppCompatActivity() {
     }
 
     private fun navigateToCamera() {
+        requestPermissionsLauncher.launch(permissionList)
         takeCameraImage.launch(null)
     }
 
