@@ -5,7 +5,8 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.domain.ImageInfo;
-import edonymyeon.backend.repository.ImageInfoRepository;
+import edonymyeon.backend.domain.PostImageInfo;
+import edonymyeon.backend.repository.PostImageInfoRepository;
 import edonymyeon.backend.service.request.PostRequest;
 import edonymyeon.backend.service.response.PostResponse;
 import java.io.IOException;
@@ -31,7 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 @SpringBootTest
 class PostServiceTest {
 
-    private final ImageInfoRepository imageInfoRepository;
+    private final PostImageInfoRepository postImageInfoRepository;
     private final PostService postService;
 
     @Test
@@ -56,7 +57,7 @@ class PostServiceTest {
         final var postId = postService.createPost(postRequest).id();
 
         // then
-        List<ImageInfo> imageFiles = imageInfoRepository.findAllByPostId(postId);
+        List<PostImageInfo> imageFiles = postImageInfoRepository.findAllByPostId(postId);
         assertThat(imageFiles).hasSize(2);
         assertThat(imageFiles)
                 .extracting(ImageInfo::getStoreName)
@@ -76,7 +77,7 @@ class PostServiceTest {
         final Long postId = postService.createPost(postRequest).id();
 
         // then
-        List<ImageInfo> imageFiles = imageInfoRepository.findAllByPostId(postId);
+        List<PostImageInfo> imageFiles = postImageInfoRepository.findAllByPostId(postId);
         assertThat(imageFiles).hasSize(2);
         assertThat(imageFiles)
                 .extracting(ImageInfo::getFullPath)
