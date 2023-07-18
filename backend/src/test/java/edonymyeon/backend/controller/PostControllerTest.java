@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
-@Sql("/dummydata.sql")
+@Sql({"/truncate.sql", "/dummydata.sql"})
 @Transactional
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SpringBootTest

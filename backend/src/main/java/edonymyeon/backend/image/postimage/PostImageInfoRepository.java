@@ -6,5 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostImageInfoRepository extends JpaRepository<PostImageInfo, Long> {
 
-    List<PostImageInfo> findAllByPostId(Long postId);
+    List<PostImageInfo> findAllByPostId(final Long postId);
+
+    void deleteAllByPostId(final Long postId);
 }

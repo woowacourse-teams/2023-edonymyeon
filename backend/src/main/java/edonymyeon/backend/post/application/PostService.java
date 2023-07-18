@@ -77,6 +77,7 @@ public class PostService {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EdonymyeonException(POST_NOT_FOUND));
         if (post.isSameMember(member)) {
+            postImageInfoRepository.deleteAllByPostId(postId);
             postRepository.deleteById(postId);
             return;
         }
