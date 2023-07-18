@@ -17,4 +17,9 @@
     <string name="bottom_navigation_alarm_title">알림</string>
     <string name="bottom_navigation_my_page_title">마이 페이지</string>
     <string name="all_preparing_page">준비중인 페이지입니다</string>
+
+    <!-- home fragment   -->
+    <string name="home_edonymyeon">이돈이면</string>
+    <string name="home_hot_post">HOT 게시물</string>
+    <string name="home_all_post">전체 게시글</string>
 </resources>
