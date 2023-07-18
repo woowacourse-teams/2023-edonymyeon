@@ -9,7 +9,7 @@ class PostEditorImagesAdapter(
     private val deleteImage: (String) -> Unit,
 ) : ListAdapter<String, PostEditorImagesViewHolder>(diffUtil) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostEditorImagesViewHolder {
-        return PostEditorImagesViewHolder.from(parent)
+        return PostEditorImagesViewHolder(parent)
     }
 
     override fun onBindViewHolder(holder: PostEditorImagesViewHolder, position: Int) {

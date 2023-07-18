@@ -3,11 +3,19 @@ package com.app.edonymyeon.presentation.ui.posteditor.viewholder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import app.edonymyeon.R
 import app.edonymyeon.databinding.ItemPostEditorImageBinding
 
-class PostEditorImagesViewHolder private constructor(
-    private val binding: ItemPostEditorImageBinding,
-) : RecyclerView.ViewHolder(binding.root) {
+class PostEditorImagesViewHolder(
+    parent: ViewGroup,
+) : RecyclerView.ViewHolder(
+    LayoutInflater.from(parent.context).inflate(
+        R.layout.item_post_editor_image,
+        parent,
+        false,
+    ),
+) {
+    private val binding = ItemPostEditorImageBinding.bind(itemView)
 
     fun bind(imageUrl: String, deleteImages: (String) -> Unit) {
         binding.postEditorImage = imageUrl
@@ -15,18 +23,5 @@ class PostEditorImagesViewHolder private constructor(
             deleteImages.invoke(imageUrl)
         }
         binding.executePendingBindings()
-    }
-
-    companion object {
-        fun from(
-            parent: ViewGroup,
-        ): PostEditorImagesViewHolder {
-            val binding = ItemPostEditorImageBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false,
-            )
-            return PostEditorImagesViewHolder(binding)
-        }
     }
 }
