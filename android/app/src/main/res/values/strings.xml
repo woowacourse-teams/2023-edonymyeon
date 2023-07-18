@@ -36,9 +36,9 @@
     <string name="post_editor_page_write">등록</string>
     <string name="post_editor_price_unit">원</string>
     <string name="post_editor_image_limit_message">"사진은 10장까지 선택 가능합니다."</string>
+    <string name="post_editor_check_permission">권한 허용 필요</string>
 
     <!--item_post_editor_image-->
     <string name="item_post_editor_image_description">갤러리에서 가져온 이미지</string>
     <string name="item_post_editor_image_delete_description">이미지 삭제 버튼</string>
-    <string name="check_notification">권한을 확인해주세요.</string>
 </resources>

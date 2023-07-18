@@ -46,7 +46,11 @@ class PostEditorActivity : AppCompatActivity() {
         permissions.entries.forEach { entry ->
             val isGranted = entry.value
             if (!isGranted) {
-                Snackbar.make(binding.clPostEditor, "권한 허용 필요", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    binding.clPostEditor,
+                    getString(R.string.post_editor_check_permission),
+                    Snackbar.LENGTH_SHORT,
+                ).show()
             } else {
                 navigateToCamera()
             }
