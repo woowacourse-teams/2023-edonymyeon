@@ -22,9 +22,14 @@ class PostDetailViewModel : ViewModel() {
     val recommendation: LiveData<RecommendationUiModel>
         get() = _recommendation
 
+    private val _isScrap = MutableLiveData<Boolean>()
+    val isScrap: LiveData<Boolean>
+        get() = _isScrap
+
     init {
         _post.value = postData.toUiModel()
         _recommendation.value = postData.recommendation.toUiModel()
+        _isScrap.value = postData.isScrap
     }
 
     fun updateUpRecommendation(isChecked: Boolean) {
@@ -49,8 +54,6 @@ class PostDetailViewModel : ViewModel() {
                 isUp = false,
             ).toUiModel()
         }
-
-        _post.value = _post.value?.copy(recommendation = _recommendation.value ?: return)
     }
 
     fun updateDownRecommendation(isChecked: Boolean) {
@@ -75,8 +78,10 @@ class PostDetailViewModel : ViewModel() {
                 isDown = false,
             ).toUiModel()
         }
+    }
 
-        _post.value = _post.value?.copy(recommendation = _recommendation.value ?: return)
+    fun updateScrap(isChecked: Boolean) {
+        _isScrap.value = isChecked
     }
 }
 
@@ -106,6 +111,6 @@ private val postData = Post(
         isUp = false,
         isDown = true,
     ),
-    isScrap = false,
+    isScrap = true,
     isWriter = false,
 )

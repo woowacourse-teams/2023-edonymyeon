@@ -37,11 +37,7 @@ class PostDetailActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.action_scrap -> {
                 item.isChecked = !item.isChecked
-                if (item.isChecked) {
-                    item.setIcon(R.drawable.btn_scrap_selected)
-                } else {
-                    item.setIcon(R.drawable.btn_scrap_unselected)
-                }
+                viewModel.updateScrap(item.isChecked)
                 return true
             }
 

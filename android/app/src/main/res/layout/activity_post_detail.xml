@@ -29,7 +29,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:background="@drawable/selector_cb_scrap"
-                android:button="@null" />
+                android:button="@null"
+                android:checked="@{postViewModel.isScrap}" />
 
         </androidx.appcompat.widget.Toolbar>
 
