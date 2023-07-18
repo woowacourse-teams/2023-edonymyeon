@@ -20,7 +20,9 @@ import com.google.android.material.snackbar.Snackbar
 class PostEditorActivity : AppCompatActivity() {
 
     private val viewModel: PostEditorViewModel by viewModels()
-    private lateinit var adapter: PostEditorImagesAdapter
+    private val adapter: PostEditorImagesAdapter by lazy {
+        PostEditorImagesAdapter(::deleteImages)
+    }
     private val binding: ActivityPostEditorBinding by lazy {
         ActivityPostEditorBinding.inflate(layoutInflater)
     }
@@ -75,7 +77,6 @@ class PostEditorActivity : AppCompatActivity() {
     }
 
     private fun setAdapter() {
-        adapter = PostEditorImagesAdapter(::deleteImages)
         binding.rvPostEditorImages.adapter = adapter
         updateImages()
     }
