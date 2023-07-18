@@ -79,21 +79,21 @@ class PostEditorActivity : AppCompatActivity() {
     }
 
     private fun setCameraAndGalleryClickListener() {
-        binding.ivPostCamera.setOnClickListener { requestPermission(permissions) }
+        binding.ivPostCamera.setOnClickListener { requestPermission() }
         binding.ivPostGallery.setOnClickListener { navigateToGallery() }
     }
 
-    private fun requestPermission(permissions: Array<String>) {
+    private fun requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val backgroundPermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
-            val permissionList = permissions.toMutableList()
+            val permissionList = requestPermissions.toMutableList()
             if (permissionList.contains(backgroundPermission)) {
                 permissionList.remove(backgroundPermission)
             }
             val permissionArray = permissionList.toTypedArray()
             permissionRequestLauncher.launch(permissionArray)
         } else {
-            permissionRequestLauncher.launch(permissions)
+            permissionRequestLauncher.launch(requestPermissions)
         }
     }
 
@@ -185,7 +185,7 @@ class PostEditorActivity : AppCompatActivity() {
             put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")
             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
         }
-        private val permissions = arrayOf(
+        private val requestPermissions = arrayOf(
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
         )
