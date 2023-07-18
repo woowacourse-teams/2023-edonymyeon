@@ -10,6 +10,8 @@ import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.post.application.dto.PostFindingCondition;
+import edonymyeon.backend.post.application.dto.PostFindingResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.domain.Post;
@@ -63,5 +65,9 @@ public class PostService {
                 .stream()
                 .map(imageFileUploader::uploadFile)
                 .toList();
+    }
+
+    public List<PostFindingResponse> findAllPost(final PostFindingCondition postFindingCondition) {
+        return null;
     }
 }
