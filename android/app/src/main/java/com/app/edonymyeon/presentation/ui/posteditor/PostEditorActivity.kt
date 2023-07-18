@@ -56,11 +56,6 @@ class PostEditorActivity : AppCompatActivity() {
         setAdapter()
     }
 
-    private fun setCameraAndGalleryClickListener() {
-        binding.ivPostCamera.setOnClickListener { navigateToCamera() }
-        binding.ivPostGallery.setOnClickListener { navigateToGallery() }
-    }
-
     private fun initBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
@@ -70,6 +65,11 @@ class PostEditorActivity : AppCompatActivity() {
         setSupportActionBar(binding.tbPostEditor)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = ""
+    }
+
+    private fun setCameraAndGalleryClickListener() {
+        binding.ivPostCamera.setOnClickListener { requestPermissionsLauncher.launch(permissionList) }
+        binding.ivPostGallery.setOnClickListener { navigateToGallery() }
     }
 
     private fun setAdapter() {
