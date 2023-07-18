@@ -96,5 +96,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
     // LiveData
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
+
+    // by viewModels() 종속성
     implementation("androidx.activity:activity-ktx:1.7.2")
 }
