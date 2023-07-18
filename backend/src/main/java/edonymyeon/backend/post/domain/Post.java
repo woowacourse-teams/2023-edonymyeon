@@ -127,4 +127,8 @@ public class Post {
         }
         this.postImageInfos.add(postImageInfo);
     }
+
+    public boolean isSameMember(final Member member) {
+        return this.member.equals(member);
+    }
 }
