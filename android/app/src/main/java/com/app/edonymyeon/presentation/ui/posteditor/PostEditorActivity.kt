@@ -6,9 +6,9 @@ import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -40,15 +40,18 @@ class PostEditorActivity : AppCompatActivity() {
             }
         }
 
-    private val requestPermissionsLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { results ->
-            results.forEach {
-                if (!it.value) {
-                    Toast.makeText(applicationContext, "권한 허용 필요", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
+    private val permissionRequestLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions(),
+    ) { permissions: Map<String, Boolean> ->
+        permissions.entries.forEach { entry ->
+            val isGranted = entry.value
+            if (!isGranted) {
+                Snackbar.make(binding.clPostEditor, "권한 허용 필요", Snackbar.LENGTH_SHORT).show()
+            } else {
+                navigateToCamera()
             }
         }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,8 +75,22 @@ class PostEditorActivity : AppCompatActivity() {
     }
 
     private fun setCameraAndGalleryClickListener() {
-        binding.ivPostCamera.setOnClickListener { requestPermissionsLauncher.launch(permissionList) }
+        binding.ivPostCamera.setOnClickListener { requestPermission(permissions) }
         binding.ivPostGallery.setOnClickListener { navigateToGallery() }
+    }
+
+    private fun requestPermission(permissions: Array<String>) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val backgroundPermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
+            val permissionList = permissions.toMutableList()
+            if (permissionList.contains(backgroundPermission)) {
+                permissionList.remove(backgroundPermission)
+            }
+            val permissionArray = permissionList.toTypedArray()
+            permissionRequestLauncher.launch(permissionArray)
+        } else {
+            permissionRequestLauncher.launch(permissions)
+        }
     }
 
     private fun setAdapter() {
@@ -98,7 +115,6 @@ class PostEditorActivity : AppCompatActivity() {
     }
 
     private fun navigateToCamera() {
-        requestPermissionsLauncher.launch(permissionList)
         takeCameraImage.launch(null)
     }
 
@@ -165,7 +181,7 @@ class PostEditorActivity : AppCompatActivity() {
             put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")
             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
         }
-        private val permissionList = arrayOf(
+        private val permissions = arrayOf(
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
         )
