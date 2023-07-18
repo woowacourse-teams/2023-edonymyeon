@@ -25,7 +25,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -89,6 +89,5 @@ dependencies {
     implementation(project(":domain"))
 
     // android core
-    implementation ("androidx.fragment:fragment-ktx:1.5.7")
-
+    implementation("androidx.fragment:fragment-ktx:1.5.7")
 }
