@@ -1,6 +1,8 @@
 package edonymyeon.backend.post.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_FORBIDDEN;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_NOT_FOUND;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.ImageFileUploader;
@@ -35,8 +37,7 @@ public class PostService {
 
     @Transactional
     public PostResponse createPost(final MemberIdDto memberIdDto, final PostRequest postRequest) {
-        final Member member = memberRepository.findById(memberIdDto.id())
-                .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
+        final Member member = findMemberById(memberIdDto);
 
         final Post post = new Post(
                 postRequest.title(),
@@ -58,10 +59,27 @@ public class PostService {
         return new PostResponse(post.getId());
     }
 
+    private Member findMemberById(final MemberIdDto memberIdDto) {
+        return memberRepository.findById(memberIdDto.id())
+                .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
+    }
+
     private List<ImageInfo> uploadImages(final PostRequest postRequest) {
         return postRequest.images()
                 .stream()
                 .map(imageFileUploader::uploadFile)
                 .toList();
+    }
+
+    @Transactional
+    public void deletePost(final MemberIdDto memberIdDto, final Long postId) {
+        final Member member = findMemberById(memberIdDto);
+        final Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EdonymyeonException(POST_NOT_FOUND));
+        if (post.isSameMember(member)) {
+            postRepository.deleteById(postId);
+            return;
+        }
+        throw new EdonymyeonException(POST_MEMBER_FORBIDDEN);
     }
 }
