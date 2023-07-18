@@ -1,9 +1,23 @@
 <resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.Edonymyeon" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:fontFamily">@font/dohyeon</item>
+        <!-- Toolbar -->
+        <item name="overlapAnchor">false</item>
+        <item name="android:dropDownVerticalOffset">?attr/actionBarSize</item>
+        <item name="android:dropDownListViewStyle">@style/PopupMenuListView</item>
+        <item name="android:actionOverflowButtonStyle">@style/ToolbarOverFlowButton</item>
+        <item name="android:listPreferredItemHeightSmall">70dp</item>
     </style>
 
     <style name="Theme.Edonymyeon" parent="Base.Theme.Edonymyeon" />
+
+    <style name="ToolbarOverFlowButton" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="tint">@color/blue_576b9e</item>
+    </style>
+
+    <style name="PopupMenuListView" parent="@android:style/Widget.Holo.ListView.DropDown">
+        <item name="android:divider">@color/blue_576b9e</item>
+        <item name="android:dividerHeight">1dp</item>
+    </style>
 </resources>

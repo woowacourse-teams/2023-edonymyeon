@@ -19,8 +19,9 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View? {
         binding.lifecycleOwner = this
         binding.homeViewModel = viewModel
