@@ -3,8 +3,8 @@ package com.app.edonymyeon.presentation.ui.postdetail
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostDetailBinding
 import com.google.android.material.snackbar.Snackbar
@@ -14,9 +14,7 @@ class PostDetailActivity : AppCompatActivity() {
         ActivityPostDetailBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: PostDetailViewModel by lazy {
-        ViewModelProvider(this)[PostDetailViewModel::class.java]
-    }
+    private val viewModel: PostDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
