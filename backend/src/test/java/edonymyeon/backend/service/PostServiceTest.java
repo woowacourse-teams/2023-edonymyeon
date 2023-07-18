@@ -4,16 +4,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import edonymyeon.backend.TestConfig;
-import edonymyeon.backend.domain.ImageInfo;
-import edonymyeon.backend.domain.PostImageInfo;
-import edonymyeon.backend.repository.PostImageInfoRepository;
-import edonymyeon.backend.service.request.PostRequest;
-import edonymyeon.backend.service.response.PostResponse;
+import edonymyeon.backend.image.domain.ImageInfo;
+import edonymyeon.backend.image.postimage.PostImageInfoRepository;
+import edonymyeon.backend.image.postimage.domain.PostImageInfo;
+import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.post.application.PostService;
+import edonymyeon.backend.post.application.dto.PostRequest;
+import edonymyeon.backend.post.application.dto.PostResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -22,8 +27,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+@Transactional
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
 @DisplayNameGeneration(ReplaceUnderscores.class)
@@ -33,7 +40,26 @@ import org.springframework.web.multipart.MultipartFile;
 class PostServiceTest {
 
     private final PostImageInfoRepository postImageInfoRepository;
+
     private final PostService postService;
+
+    private final MemberRepository memberRepository;
+
+    private MemberIdDto memberId;
+
+    @BeforeEach
+    public void setUp() {
+        Member member = new Member(
+                null,
+                "email",
+                "password",
+                "nickname",
+                "introduction",
+                null
+        );
+        memberRepository.save(member);
+        memberId = new MemberIdDto(member.getId());
+    }
 
     @Test
     void 게시글_생성() {
@@ -44,7 +70,7 @@ class PostServiceTest {
                 Collections.emptyList()
         );
 
-        final PostResponse target = postService.createPost(request);
+        final PostResponse target = postService.createPost(memberId, request);
         assertThat(target.id()).isNotNull();
     }
 
@@ -54,7 +80,9 @@ class PostServiceTest {
         final PostRequest postRequest = getPostRequest();
 
         // when
-        final var postId = postService.createPost(postRequest).id();
+        System.out.println("폴더에_저장하는_이미지의_이름은_UUID_와_확장자명_형식으로_지어진다");
+        System.out.println("memberId.id() = " + memberId.id());
+        final var postId = postService.createPost(memberId, postRequest).id();
 
         // then
         List<PostImageInfo> imageFiles = postImageInfoRepository.findAllByPostId(postId);
@@ -74,7 +102,9 @@ class PostServiceTest {
         final PostRequest postRequest = getPostRequest();
 
         // when
-        final Long postId = postService.createPost(postRequest).id();
+        System.out.println("폴더에_이미지를_저장한_후_Post_도메인에는_파일의_경로를_넘긴다");
+        System.out.println("memberId.id() = " + memberId.id());
+        final Long postId = postService.createPost(memberId, postRequest).id();
 
         // then
         List<PostImageInfo> imageFiles = postImageInfoRepository.findAllByPostId(postId);
@@ -115,6 +145,8 @@ class PostServiceTest {
                 null
         );
 
-        assertThatCode(() -> postService.createPost(postRequest)).doesNotThrowAnyException();
+        System.out.println("이미지가 없어도 게시글 저장 가능");
+        System.out.println("memberId.id() = " + memberId.id());
+        assertThatCode(() -> postService.createPost(memberId, postRequest)).doesNotThrowAnyException();
     }
 }

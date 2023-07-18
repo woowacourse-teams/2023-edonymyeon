@@ -2,10 +2,12 @@ package edonymyeon.backend.service;
 
 import static org.junit.Assert.fail;
 
+import edonymyeon.backend.image.ImageFileNameStrategy;
 import java.util.Arrays;
 import java.util.Iterator;
 
 public class ImageFileNameMockStrategy implements ImageFileNameStrategy {
+
     private final Iterator<String> mockPrefixes;
 
     public ImageFileNameMockStrategy(final String... mockPrefixes) {
