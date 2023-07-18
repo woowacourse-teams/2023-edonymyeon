@@ -120,4 +120,8 @@ public class PostService {
         }
         throw new EdonymyeonException(POST_MEMBER_FORBIDDEN);
     }
+
+    public List<PostFindingResponse> findAllPost(final PostFindingCondition postFindingCondition) {
+        return null;
+    }
 }
