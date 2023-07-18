@@ -7,6 +7,7 @@ import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.uimodel.RecommendationUiModel
+import com.domain.edonymyeon.model.Count
 import com.domain.edonymyeon.model.Post
 import com.domain.edonymyeon.model.ReactionCount
 import com.domain.edonymyeon.model.Recommendation
@@ -38,19 +39,19 @@ class PostDetailViewModel : ViewModel() {
         if (isChecked) {
             if (oldRecommendation.isDown) {
                 _recommendation.value = oldRecommendation.copy(
-                    upCount = oldRecommendation.upCount + 1,
+                    upCount = oldRecommendation.upCount.increase(),
                     isUp = true,
                     isDown = false,
                 ).toUiModel()
             } else {
                 _recommendation.value = oldRecommendation.copy(
-                    upCount = oldRecommendation.upCount + 1,
+                    upCount = oldRecommendation.upCount.increase(),
                     isUp = true,
                 ).toUiModel()
             }
         } else {
             _recommendation.value = oldRecommendation.copy(
-                upCount = oldRecommendation.upCount - 1,
+                upCount = oldRecommendation.upCount.decrease(),
                 isUp = false,
             ).toUiModel()
         }
@@ -62,19 +63,19 @@ class PostDetailViewModel : ViewModel() {
         if (isChecked) {
             if (oldRecommendation.isUp) {
                 _recommendation.value = oldRecommendation.copy(
-                    downCount = oldRecommendation.downCount + 1,
+                    downCount = oldRecommendation.downCount.decrease(),
                     isUp = false,
                     isDown = true,
                 ).toUiModel()
             } else {
                 _recommendation.value = oldRecommendation.copy(
-                    downCount = oldRecommendation.downCount + 1,
+                    downCount = oldRecommendation.downCount.increase(),
                     isDown = true,
                 ).toUiModel()
             }
         } else {
             _recommendation.value = oldRecommendation.copy(
-                downCount = oldRecommendation.downCount - 1,
+                downCount = oldRecommendation.downCount.decrease(),
                 isDown = false,
             ).toUiModel()
         }
@@ -106,8 +107,8 @@ private val postData = Post(
         scrapCount = 77,
     ),
     recommendation = Recommendation(
-        upCount = 123,
-        downCount = 41,
+        upCount = Count(0),
+        downCount = Count(0),
         isUp = false,
         isDown = true,
     ),
