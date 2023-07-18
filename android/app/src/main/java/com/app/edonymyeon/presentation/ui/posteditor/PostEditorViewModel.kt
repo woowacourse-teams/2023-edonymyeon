@@ -29,12 +29,12 @@ class PostEditorViewModel : ViewModel() {
 
     fun addSelectedImages(image: String) {
         images.add(image)
-        _galleryImages.value = images
+        _galleryImages.value = images.toList()
     }
 
     fun deleteSelectedImages(image: String) {
         images.remove(image)
-        _galleryImages.value = images
+        _galleryImages.value = images.toList()
     }
 
     fun setTitle(editTitle: Editable) {

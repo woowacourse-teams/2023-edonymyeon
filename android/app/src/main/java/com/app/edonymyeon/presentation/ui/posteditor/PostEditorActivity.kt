@@ -12,6 +12,8 @@ import android.provider.MediaStore
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostEditorBinding
 import com.app.edonymyeon.presentation.ui.posteditor.adapter.PostEditorImagesAdapter
@@ -64,6 +66,7 @@ class PostEditorActivity : AppCompatActivity() {
         initBinding()
         initAppbar()
         setCameraAndGalleryClickListener()
+        observeImages()
         setAdapter()
     }
 
@@ -99,16 +102,19 @@ class PostEditorActivity : AppCompatActivity() {
 
     private fun setAdapter() {
         binding.rvPostEditorImages.adapter = adapter
-        updateImages()
     }
 
     private fun deleteImages(image: String) {
         viewModel.deleteSelectedImages(image)
-        setAdapter()
     }
 
-    private fun updateImages() {
-        adapter.submitList(viewModel.galleryImages.value)
+    private fun observeImages() {
+        viewModel.galleryImages.observe(
+            this,
+            Observer { images ->
+                adapter.submitList(images)
+            },
+        )
     }
 
     private fun navigateToGallery() {
@@ -163,7 +169,6 @@ class PostEditorActivity : AppCompatActivity() {
     private fun setCameraImage(bitmap: Bitmap) {
         val imageUri = getImageUri(bitmap)
         viewModel.addSelectedImages(imageUri.toString())
-        setAdapter()
     }
 
     private fun getImageUri(bitmap: Bitmap): Uri? {
