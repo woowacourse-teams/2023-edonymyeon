@@ -35,6 +35,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-### 테스트용 이미지 업로드 ###
-/src/main/resources/static/img/test_store/
