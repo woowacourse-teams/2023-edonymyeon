@@ -4,11 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import edonymyeon.backend.TestConfig;
-import edonymyeon.backend.domain.ImageInfo;
-import edonymyeon.backend.domain.PostImageInfo;
-import edonymyeon.backend.repository.PostImageInfoRepository;
-import edonymyeon.backend.service.request.PostRequest;
-import edonymyeon.backend.service.response.PostResponse;
+import edonymyeon.backend.image.domain.ImageInfo;
+import edonymyeon.backend.image.postimage.PostImageInfoRepository;
+import edonymyeon.backend.image.postimage.domain.PostImageInfo;
+import edonymyeon.backend.post.application.PostService;
+import edonymyeon.backend.post.application.dto.PostRequest;
+import edonymyeon.backend.post.application.dto.PostResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
