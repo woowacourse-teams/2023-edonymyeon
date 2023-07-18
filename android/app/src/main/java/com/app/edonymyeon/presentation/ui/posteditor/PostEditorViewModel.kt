@@ -1,26 +1,25 @@
 package com.app.edonymyeon.presentation.ui.posteditor
 
-import android.app.Application
 import android.text.Editable
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 
-class PostEditorViewModel(application: Application) : AndroidViewModel(application) {
+class PostEditorViewModel : ViewModel() {
     private val images = mutableListOf<String>()
     private val _galleryImages = MutableLiveData<List<String>>()
-    private val _postTitle = MutableLiveData<String>()
-    private val _postPrice = MutableLiveData<String>()
-    private val _postContent = MutableLiveData<String>()
     val galleryImages: LiveData<List<String>>
         get() = _galleryImages
 
+    private val _postTitle = MutableLiveData<String>()
     val postTitle: LiveData<String>
         get() = _postTitle
 
+    private val _postPrice = MutableLiveData<String>()
     val postPrice: LiveData<String>
         get() = _postPrice
 
+    private val _postContent = MutableLiveData<String>()
     val postContent: LiveData<String>
         get() = _postContent
 
