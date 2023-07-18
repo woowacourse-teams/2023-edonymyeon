@@ -7,6 +7,8 @@ import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.image.postimage.PostImageInfoRepository;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
+import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
@@ -23,9 +25,11 @@ import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.web.multipart.MultipartFile;
 
 @SuppressWarnings("NonAsciiCharacters")
+@Sql("/dummydata.sql")
 @RequiredArgsConstructor
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @TestConstructor(autowireMode = AutowireMode.ALL)
@@ -33,8 +37,13 @@ import org.springframework.web.multipart.MultipartFile;
 @SpringBootTest
 class PostServiceTest {
 
+    private static final MemberIdDto memberId = new MemberIdDto(1L);
+
     private final PostImageInfoRepository postImageInfoRepository;
+
     private final PostService postService;
+
+    private final MemberRepository memberRepository;
 
     @Test
     void 게시글_생성() {
@@ -45,7 +54,7 @@ class PostServiceTest {
                 Collections.emptyList()
         );
 
-        final PostResponse target = postService.createPost(request);
+        final PostResponse target = postService.createPost(memberId, request);
         assertThat(target.id()).isNotNull();
     }
 
@@ -55,7 +64,7 @@ class PostServiceTest {
         final PostRequest postRequest = getPostRequest();
 
         // when
-        final var postId = postService.createPost(postRequest).id();
+        final var postId = postService.createPost(memberId, postRequest).id();
 
         // then
         List<PostImageInfo> imageFiles = postImageInfoRepository.findAllByPostId(postId);
@@ -75,7 +84,7 @@ class PostServiceTest {
         final PostRequest postRequest = getPostRequest();
 
         // when
-        final Long postId = postService.createPost(postRequest).id();
+        final Long postId = postService.createPost(memberId, postRequest).id();
 
         // then
         List<PostImageInfo> imageFiles = postImageInfoRepository.findAllByPostId(postId);
@@ -116,6 +125,6 @@ class PostServiceTest {
                 null
         );
 
-        assertThatCode(() -> postService.createPost(postRequest)).doesNotThrowAnyException();
+        assertThatCode(() -> postService.createPost(memberId, postRequest)).doesNotThrowAnyException();
     }
 }

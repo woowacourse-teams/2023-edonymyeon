@@ -1,9 +1,15 @@
 package edonymyeon.backend.post.application;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
+
+import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.image.postimage.PostImageInfoRepository;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
+import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.domain.Post;
@@ -20,15 +26,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostService {
 
     private final PostRepository postRepository;
+
     private final ImageFileUploader imageFileUploader;
+
     private final PostImageInfoRepository postImageInfoRepository;
 
+    private final MemberRepository memberRepository;
+
     @Transactional
-    public PostResponse createPost(final PostRequest postRequest) {
+    public PostResponse createPost(final MemberIdDto memberIdDto, final PostRequest postRequest) {
+        final Member member = memberRepository.findById(memberIdDto.id())
+                .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
+
         final Post post = new Post(
                 postRequest.title(),
                 postRequest.content(),
-                postRequest.price()
+                postRequest.price(),
+                member
         );
         postRepository.save(post);
 
