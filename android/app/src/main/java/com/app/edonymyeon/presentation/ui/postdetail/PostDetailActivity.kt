@@ -5,8 +5,10 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager2.widget.ViewPager2
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostDetailBinding
+import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.google.android.material.snackbar.Snackbar
 
 class PostDetailActivity : AppCompatActivity() {
@@ -24,6 +26,7 @@ class PostDetailActivity : AppCompatActivity() {
         initAppbar()
 
         setRecommendCheckboxListener()
+        setImageSlider()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -71,5 +74,18 @@ class PostDetailActivity : AppCompatActivity() {
         binding.cbDown.setOnCheckedChangeListener { _, isChecked ->
             viewModel.updateDownRecommendation(isChecked)
         }
+    }
+
+    private fun setImageSlider() {
+        binding.vpImageSlider.offscreenPageLimit = 1
+        binding.vpImageSlider.adapter =
+            ImageSliderAdapter(viewModel.post.value?.images ?: emptyList())
+        binding.vpImageSlider.registerOnPageChangeCallback(
+            object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                }
+            },
+        )
     }
 }
