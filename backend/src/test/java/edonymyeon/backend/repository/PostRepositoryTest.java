@@ -2,7 +2,8 @@ package edonymyeon.backend.repository;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.domain.Post;
+import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.post.repository.PostRepository;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -37,5 +38,4 @@ class PostRepositoryTest {
                 }
         );
     }
-
 }
