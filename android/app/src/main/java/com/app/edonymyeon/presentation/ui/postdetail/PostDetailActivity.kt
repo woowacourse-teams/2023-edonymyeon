@@ -3,6 +3,9 @@ package com.app.edonymyeon.presentation.ui.postdetail
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
@@ -27,6 +30,7 @@ class PostDetailActivity : AppCompatActivity() {
 
         setRecommendCheckboxListener()
         setImageSlider()
+        setImageIndicators()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -84,8 +88,41 @@ class PostDetailActivity : AppCompatActivity() {
             object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
+                    updateCurrentIndicator(position)
                 }
             },
         )
+    }
+
+    private fun setImageIndicators() {
+        val params = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+        ).apply { setMargins(8, 0, 8, 0) }
+
+        addIndicatorViews(params)
+        updateCurrentIndicator(0)
+    }
+
+    private fun addIndicatorViews(params: LinearLayout.LayoutParams) {
+        List<ImageView>(binding.vpImageSlider.adapter?.itemCount ?: 0) {
+            ImageView(this).apply {
+                setImageResource(R.drawable.ic_indicator_focus_off)
+                layoutParams = params
+            }.also { indicatorView ->
+                binding.llIndicators.addView(indicatorView)
+            }
+        }
+    }
+
+    private fun updateCurrentIndicator(position: Int) {
+        for (i in 0 until binding.llIndicators.childCount) {
+            val indicatorView = binding.llIndicators.getChildAt(i) as ImageView
+            if (i == position) {
+                indicatorView.setImageResource(R.drawable.ic_indicator_focus_on)
+            } else {
+                indicatorView.setImageResource(R.drawable.ic_indicator_focus_off)
+            }
+        }
     }
 }
