@@ -20,8 +20,8 @@ class PostDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        initAppbar()
         initBinding()
+        initAppbar()
 
         setRecommendCheckboxListener()
     }
@@ -53,15 +53,15 @@ class PostDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun initBinding() {
+        binding.lifecycleOwner = this
+        binding.postViewModel = viewModel
+    }
+
     private fun initAppbar() {
         setSupportActionBar(binding.tbPostDetail)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = ""
-    }
-
-    private fun initBinding() {
-        binding.lifecycleOwner = this
-        binding.postViewModel = viewModel
     }
 
     private fun setRecommendCheckboxListener() {
