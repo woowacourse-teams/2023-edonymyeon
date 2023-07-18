@@ -12,8 +12,10 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostEditorBinding
 import com.app.edonymyeon.presentation.ui.posteditor.adapter.PostEditorImagesAdapter
+import com.google.android.material.snackbar.Snackbar
 
 class PostEditorActivity : AppCompatActivity() {
 
@@ -127,7 +129,11 @@ class PostEditorActivity : AppCompatActivity() {
 
     private fun checkImageCountLimit(count: Int, limitCount: Int): Boolean {
         if (count > limitCount) {
-            Toast.makeText(applicationContext, "사진은 10장까지 선택 가능합니다.", Toast.LENGTH_LONG).show()
+            Snackbar.make(
+                binding.clPostEditor,
+                getString(R.string.post_editor_image_limit_message),
+                Snackbar.LENGTH_SHORT,
+            ).show()
             return false
         }
         return true
