@@ -1,6 +1,7 @@
 package edonymyeon.backend.global.controlleradvice;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
@@ -23,6 +24,7 @@ public class GlobalExceptionHandler {
     public GlobalExceptionHandler() {
         exceptionInfoToHttpStatus.put(ExceptionInformation.MEMBER_EMAIL_NOT_FOUND, UNAUTHORIZED);
         exceptionInfoToHttpStatus.put(ExceptionInformation.AUTHORIZATION_EMPTY, UNAUTHORIZED);
+        exceptionInfoToHttpStatus.put(ExceptionInformation.POST_MEMBER_FORBIDDEN, FORBIDDEN);
     }
 
     @ExceptionHandler(Exception.class)
