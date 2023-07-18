@@ -158,8 +158,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_post_category" />
 
-        <View
-            android:id="@+id/view_post_editor_title_provider"
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/div_post_editor_title_provider"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/blue_576b9e"
@@ -176,7 +176,7 @@
             app:layout_constraintDimensionRatio="H,360:20"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_post_editor_title_provider" />
+            app:layout_constraintTop_toBottomOf="@id/div_post_editor_title_provider" />
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nsv_post_content_images"
@@ -233,11 +233,11 @@
             android:id="@+id/space_content_bottom"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/view_post_editor_content_provider"
+            app:layout_constraintBottom_toTopOf="@+id/div_post_editor_content_provider"
             app:layout_constraintDimensionRatio="H, 360:10" />
 
-        <View
-            android:id="@+id/view_post_editor_content_provider"
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/div_post_editor_content_provider"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/blue_576b9e"
