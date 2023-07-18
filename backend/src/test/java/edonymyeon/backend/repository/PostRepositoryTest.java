@@ -2,39 +2,59 @@ package edonymyeon.backend.repository;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @SuppressWarnings("NonAsciiCharacters")
+@RequiredArgsConstructor
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @TestConstructor(autowireMode = AutowireMode.ALL)
 @SpringBootTest
 class PostRepositoryTest {
 
-    private final PostRepository posts;
+    private final PostRepository postRepository;
 
-    PostRepositoryTest(final PostRepository posts) {
-        this.posts = posts;
+    private final MemberRepository memberRepository;
+    private Member member;
+
+    @BeforeEach
+    public void setUp() {
+        member = new Member(
+                null,
+                "email",
+                "password",
+                "nickname",
+                "introduction",
+                null
+        );
+        memberRepository.save(member);
     }
 
     @Test
     void 생성() {
-        Post post = new Post("호바", "호이 바보라는 뜻", 0L);
-        posts.save(post);
+        Post post = new Post("호바", "호이 바보라는 뜻", 0L, member);
+        postRepository.save(post);
 
-        Post target = posts.findById(post.getId()).get();
+        Post target = postRepository.findById(post.getId()).get();
 
         assertSoftly(softly -> {
                     softly.assertThat(target.getId()).isNotNull();
                     softly.assertThat(target.getTitle()).isEqualTo("호바");
                     softly.assertThat(target.getCreateAt()).isNotNull();
-                    softly.assertThat(target.getViewCount()).isEqualTo(0);
+                    softly.assertThat(target.getViewCount()).isEqualTo(0L);
+                    softly.assertThat(target.getMember().getId()).isEqualTo(1L);
                 }
         );
     }

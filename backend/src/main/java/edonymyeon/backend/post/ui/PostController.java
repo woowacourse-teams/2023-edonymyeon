@@ -23,7 +23,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<PostResponse> createPost(@AuthPrincipal MemberIdDto memberId,
                                                    @ModelAttribute PostRequest postRequest) {
-        PostResponse response = postService.createPost(postRequest);
+        PostResponse response = postService.createPost(memberId, postRequest);
         return ResponseEntity.created(URI.create("/posts/" + response.id()))
                 .body(response);
     }

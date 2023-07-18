@@ -1,17 +1,22 @@
 package edonymyeon.backend.post.domain;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_CONTENT_ILLEGAL_LENGTH;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_EMPTY;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_PRICE_ILLEGAL_SIZE;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_TITLE_ILLEGAL_LENGTH;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
+import edonymyeon.backend.member.domain.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -50,7 +55,10 @@ public class Post {
     @Column(nullable = false)
     private Long price;
 
-    // TODO: 작성자
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private Member member;
+
     // TODO: cascade
     @OneToMany(mappedBy = "post")
     private List<PostImageInfo> postImageInfos;
@@ -59,29 +67,34 @@ public class Post {
     @Column(nullable = false)
     private LocalDateTime createAt;
 
+    // todo: 테스트 코드에서 자꾸 null 값으로 조회되서 일단 하드코딩
     @ColumnDefault("0")
-    private Long viewCount;
+    private Long viewCount = 0L;
 
     public Post(
             final String title,
             final String content,
-            final Long price
+            final Long price,
+            final Member member
     ) {
-        validate(title, content, price);
+        validate(title, content, price, member);
         this.title = title;
         this.content = content;
         this.price = price;
+        this.member = member;
         this.postImageInfos = new ArrayList<>();
     }
 
     private void validate(
             final String title,
             final String content,
-            final Long price
+            final Long price,
+            final Member member
     ) {
         validateTitle(title);
         validateContent(content);
         validatePrice(price);
+        validateMember(member);
     }
 
     private void validateTitle(final String title) {
@@ -99,6 +112,12 @@ public class Post {
     private void validatePrice(final Long price) {
         if (Objects.isNull(price) || price < MIN_PRICE || price > MAX_PRICE) {
             throw new EdonymyeonException(POST_PRICE_ILLEGAL_SIZE);
+        }
+    }
+
+    private void validateMember(final Member member) {
+        if (Objects.isNull(member)) {
+            throw new EdonymyeonException(POST_MEMBER_EMPTY);
         }
     }
 
