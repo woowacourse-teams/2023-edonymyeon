@@ -87,4 +87,24 @@ public class ThumbsService {
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
     }
 
+    @Transactional
+    public void thumbsDown(final MemberIdDto memberId, final Long postId) {
+        Member loginMember = findMemberById(memberId);
+        Post post = findPostById(postId);
+
+        if (post.getMember().getId().equals(loginMember.getId())) {
+            throw new EdonymyeonException(THUMBS_POST_IS_SELF_UP_DOWN);
+        }
+
+        Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postId, loginMember.getId());
+
+        if (postThumbs.isEmpty()) {
+            Thumbs thumbs = new Thumbs(post, loginMember, ThumbsType.DOWN);
+            thumbsRepository.save(thumbs);
+            return;
+        }
+
+        Thumbs thumbs = postThumbs.get();
+        thumbs.down();
+    }
 }
