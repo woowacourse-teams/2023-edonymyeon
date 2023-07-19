@@ -1,7 +1,7 @@
 package edonymyeon.backend.thumbs.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_POST_IS_SELF_UP_DOWN;
+import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_IS_SELF_UP_DOWN;
 import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP_ALREADY_EXIST;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -103,7 +103,7 @@ class ThumbsUpServiceTest {
         assertThatThrownBy(
                 () -> thumbsService.thumbsUp(loginMemberId, postResponse.id()))
                 .isExactlyInstanceOf(EdonymyeonException.class)
-                .hasMessage(THUMBS_POST_IS_SELF_UP_DOWN.getMessage());
+                .hasMessage(THUMBS_IS_SELF_UP_DOWN.getMessage());
     }
 
     @Test

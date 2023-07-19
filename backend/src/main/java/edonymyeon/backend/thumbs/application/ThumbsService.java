@@ -2,7 +2,11 @@ package edonymyeon.backend.thumbs.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_POST_IS_SELF_UP_DOWN;
+import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_DOWN_DELETE_FAIL_WHEN_THUMBS_UP;
+import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_DOWN_IS_NOT_EXIST;
+import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_IS_SELF_UP_DOWN;
+import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP_DELETE_FAIL_WHEN_THUMBS_DOWN;
+import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP_IS_NOT_EXIST;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
@@ -11,9 +15,9 @@ import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.thumbs.domain.AllThumbsInPost;
-import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
+import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
 import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import java.util.Objects;
@@ -40,13 +44,13 @@ public class ThumbsService {
                 allThumbsInPost.getDownCount());
     }
 
-    public ThumbsStatusInPostResponse findThumbsStatusInPost(final MemberIdDto memberId, final Long postId){
-        if(Objects.isNull(memberId.id())){
+    public ThumbsStatusInPostResponse findThumbsStatusInPost(final MemberIdDto memberId, final Long postId) {
+        if (Objects.isNull(memberId.id())) {
             return new ThumbsStatusInPostResponse(false, false);
         }
 
         Optional<Thumbs> thumbsInPost = thumbsRepository.findByPostIdAndMemberId(postId, memberId.id());
-        if(thumbsInPost.isEmpty()){
+        if (thumbsInPost.isEmpty()) {
             return new ThumbsStatusInPostResponse(false, false);
         }
 
@@ -58,13 +62,9 @@ public class ThumbsService {
     public void thumbsUp(final MemberIdDto memberId, final Long postId) {
         Member loginMember = findMemberById(memberId);
         Post post = findPostById(postId);
-
-        if (post.getMember().equals(loginMember)) {
-            throw new EdonymyeonException(THUMBS_POST_IS_SELF_UP_DOWN);
-        }
+        checkPostWriter(post, loginMember);
 
         Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postId, loginMember.getId());
-
         if (postThumbs.isEmpty()) {
             Thumbs thumbs = new Thumbs(post, loginMember, ThumbsType.UP);
             thumbsRepository.save(thumbs);
@@ -73,6 +73,59 @@ public class ThumbsService {
 
         Thumbs thumbs = postThumbs.get();
         thumbs.up();
+    }
+
+    @Transactional
+    public void thumbsDown(final MemberIdDto memberId, final Long postId) {
+        Member loginMember = findMemberById(memberId);
+        Post post = findPostById(postId);
+        checkPostWriter(post, loginMember);
+
+        Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postId, loginMember.getId());
+        if (postThumbs.isEmpty()) {
+            Thumbs thumbs = new Thumbs(post, loginMember, ThumbsType.DOWN);
+            thumbsRepository.save(thumbs);
+            return;
+        }
+
+        Thumbs thumbs = postThumbs.get();
+        thumbs.down();
+    }
+
+    @Transactional
+    public void deleteThumbsUp(final MemberIdDto memberId, final Long postId) {
+        Member loginMember = findMemberById(memberId);
+        Post post = findPostById(postId);
+        checkPostWriter(post, loginMember);
+
+        Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postId, loginMember.getId());
+        if (postThumbs.isEmpty()) {
+            throw new EdonymyeonException(THUMBS_UP_IS_NOT_EXIST);
+        }
+
+        Thumbs thumbs = postThumbs.get();
+        if (thumbs.isDown()) {
+            throw new EdonymyeonException(THUMBS_UP_DELETE_FAIL_WHEN_THUMBS_DOWN);
+        }
+        thumbsRepository.delete(thumbs);
+    }
+
+    @Transactional
+    public void deleteThumbsDown(final MemberIdDto memberId, final Long postId) {
+        Member loginMember = findMemberById(memberId);
+        Post post = findPostById(postId);
+        checkPostWriter(post, loginMember);
+
+        Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postId, loginMember.getId());
+        if (postThumbs.isEmpty()) {
+            throw new EdonymyeonException(THUMBS_DOWN_IS_NOT_EXIST);
+        }
+
+        Thumbs thumbs = postThumbs.get();
+        if (thumbs.isUp()) {
+            throw new EdonymyeonException(THUMBS_DOWN_DELETE_FAIL_WHEN_THUMBS_UP);
+        }
+        thumbsRepository.delete(thumbs);
     }
 
     private Member findMemberById(final MemberIdDto memberId) {
@@ -85,24 +138,9 @@ public class ThumbsService {
                 .orElseThrow(() -> new EdonymyeonException(POST_ID_NOT_FOUND));
     }
 
-    @Transactional
-    public void thumbsDown(final MemberIdDto memberId, final Long postId) {
-        Member loginMember = findMemberById(memberId);
-        Post post = findPostById(postId);
-
+    private void checkPostWriter(final Post post, final Member loginMember) {
         if (post.getMember().equals(loginMember)) {
-            throw new EdonymyeonException(THUMBS_POST_IS_SELF_UP_DOWN);
+            throw new EdonymyeonException(THUMBS_IS_SELF_UP_DOWN);
         }
-
-        Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postId, loginMember.getId());
-
-        if (postThumbs.isEmpty()) {
-            Thumbs thumbs = new Thumbs(post, loginMember, ThumbsType.DOWN);
-            thumbsRepository.save(thumbs);
-            return;
-        }
-
-        Thumbs thumbs = postThumbs.get();
-        thumbs.down();
     }
 }
