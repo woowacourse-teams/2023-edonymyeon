@@ -28,8 +28,6 @@ class PostDetailActivity : AppCompatActivity() {
 
         initBinding()
         initAppbar()
-
-        setRecommendCheckboxListener()
 //        viewModel.getPostDetail(0L)
     }
 
@@ -84,15 +82,6 @@ class PostDetailActivity : AppCompatActivity() {
                 return@setOnCheckedChangeListener
             }
             viewModel.updateScrap(isChecked)
-        }
-    }
-
-    private fun setRecommendCheckboxListener() {
-        binding.cbUp.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateUpRecommendation(isChecked)
-        }
-        binding.cbDown.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateDownRecommendation(isChecked)
         }
     }
 }
