@@ -77,8 +77,13 @@ public class PostService {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EdonymyeonException(POST_NOT_FOUND));
         if (post.isSameMember(member)) {
+            final List<ImageInfo> imageInfos = post.getPostImageInfos()
+                    .stream()
+                    .map(postImage -> new ImageInfo(postImage.getFileDirectory(), postImage.getStoreName()))
+                    .toList();
             postImageInfoRepository.deleteAllByPostId(postId);
             postRepository.deleteById(postId);
+            imageInfos.forEach(imageFileUploader::removeFile);
             return;
         }
         throw new EdonymyeonException(POST_MEMBER_FORBIDDEN);

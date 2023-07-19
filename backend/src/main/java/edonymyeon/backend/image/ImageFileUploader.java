@@ -1,6 +1,7 @@
 package edonymyeon.backend.image;
 
 import edonymyeon.backend.image.domain.ImageInfo;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -32,5 +33,11 @@ public class ImageFileUploader {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void removeFile(final ImageInfo imageInfo) {
+        final Path absolutePath = Paths.get(imageInfo.getFullPath()).toAbsolutePath();
+        final File file = new File(imageInfo.getFullPath());
+        file.delete();
     }
 }

@@ -13,6 +13,7 @@ import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
@@ -148,5 +149,15 @@ class PostServiceTest {
         System.out.println("이미지가 없어도 게시글 저장 가능");
         System.out.println("memberId.id() = " + memberId.id());
         assertThatCode(() -> postService.createPost(memberId, postRequest)).doesNotThrowAnyException();
+    }
+
+    @Test
+    void 게시글이_삭제되면_디렉토리에_있는_이미지도_삭제된다() throws IOException {
+        final PostResponse postResponse = postService.createPost(memberId, getPostRequest());
+        final PostImageInfo postImageInfo = postImageInfoRepository.findById(postResponse.id()).get();
+        assertThat(new File(postImageInfo.getFullPath()).canRead()).isTrue();
+
+        postService.deletePost(memberId, postResponse.id());
+        assertThat(new File(postImageInfo.getFullPath()).canRead()).isFalse();
     }
 }
