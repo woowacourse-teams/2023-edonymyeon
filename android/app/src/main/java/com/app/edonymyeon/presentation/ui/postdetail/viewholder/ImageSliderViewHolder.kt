@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ItemImageSliderBinding
-import com.bumptech.glide.Glide
 
 class ImageSliderViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.item_image_slider, parent, false),
@@ -13,8 +12,6 @@ class ImageSliderViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(
     private val binding = ItemImageSliderBinding.bind(itemView)
 
     fun bind(imageUrl: String) {
-        Glide.with(itemView.context)
-            .load(imageUrl)
-            .into(binding.ivPostImageItem)
+        binding.imageUrl = imageUrl
     }
 }
