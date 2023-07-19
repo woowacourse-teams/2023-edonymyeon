@@ -22,13 +22,21 @@ class PostDetailActivity : AppCompatActivity() {
 
     private val viewModel: PostDetailViewModel by viewModels()
 
+    private val dialog: DeleteDialog by lazy {
+        DeleteDialog {
+            viewModel.deletePost()
+            // 게시글 목록으로 이동
+            dialog.dismiss()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         initBinding()
         initAppbar()
-//        viewModel.getPostDetail(0L)
+        //        viewModel.getPostDetail(0L)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -45,7 +53,7 @@ class PostDetailActivity : AppCompatActivity() {
             }
 
             R.id.action_delete -> {
-                Snackbar.make(binding.root, "delete", Snackbar.LENGTH_SHORT).show()
+                dialog.show(supportFragmentManager, "DeleteDialog")
                 true
             }
 
@@ -77,7 +85,11 @@ class PostDetailActivity : AppCompatActivity() {
         supportActionBar?.title = ""
         binding.actionScrap.setOnCheckedChangeListener { _, isChecked ->
             if (isMyPost()) {
-                Snackbar.make(binding.root, getString(R.string.post_detail_writer_cant_scrap), Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    binding.root,
+                    getString(R.string.post_detail_writer_cant_scrap),
+                    Snackbar.LENGTH_SHORT,
+                ).show()
                 binding.actionScrap.isChecked = false
                 return@setOnCheckedChangeListener
             }

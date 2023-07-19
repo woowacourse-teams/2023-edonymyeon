@@ -3,8 +3,6 @@ package com.app.edonymyeon.presentation.ui.postdetail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
@@ -14,8 +12,6 @@ import com.domain.edonymyeon.model.Post
 import com.domain.edonymyeon.model.ReactionCount
 import com.domain.edonymyeon.model.Recommendation
 import com.domain.edonymyeon.model.Writer
-import com.domain.edonymyeon.repository.PostRepository
-import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 class PostDetailViewModel() : ViewModel() {
@@ -37,20 +33,20 @@ class PostDetailViewModel() : ViewModel() {
         _isScrap.value = postData.isScrap
     }
 
-/*    fun getPostDetail(postId: Long) {
-        viewModelScope.launch {
-            repository.getPostDetail(postId).onSuccess {
-                it as Post
-                _post.value = it.toUiModel()
-                _recommendation.value = it.recommendation.toUiModel()
-                _isScrap.value = it.isScrap
-            }.onFailure {
-                it as CustomThrowable
-                when (it.code) {
+    /*    fun getPostDetail(postId: Long) {
+            viewModelScope.launch {
+                repository.getPostDetail(postId).onSuccess {
+                    it as Post
+                    _post.value = it.toUiModel()
+                    _recommendation.value = it.recommendation.toUiModel()
+                    _isScrap.value = it.isScrap
+                }.onFailure {
+                    it as CustomThrowable
+                    when (it.code) {
+                    }
                 }
             }
-        }
-    }*/
+        }*/
 
     fun updateUpRecommendation(isChecked: Boolean) {
         val oldRecommendation = _recommendation.value?.toDomain() ?: return
@@ -106,6 +102,9 @@ class PostDetailViewModel() : ViewModel() {
         if (_post.value?.isWriter == true) return
         _isScrap.value = isChecked
     }
+
+    fun deletePost() {
+    }
 }
 
 private val postData = Post(
@@ -135,5 +134,5 @@ private val postData = Post(
         isDown = true,
     ),
     isScrap = false,
-    isWriter = true,
+    isWriter = false,
 )
