@@ -26,7 +26,7 @@ public class Member {
 
     private static final int MAX_EMAIL_LENGTH = 30;
     private static final int MAX_PASSWORD_LENGTH = 30;
-    private static final int MAX_NICKNAME_LENGTH = 10;
+    private static final int MAX_NICKNAME_LENGTH = 20;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
