@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.image.domain.ImageInfo;
-import edonymyeon.backend.image.postimage.PostImageInfoRepository;
+import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
