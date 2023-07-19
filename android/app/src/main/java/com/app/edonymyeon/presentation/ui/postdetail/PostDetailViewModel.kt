@@ -18,7 +18,7 @@ import com.domain.edonymyeon.repository.PostRepository
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
-class PostDetailViewModel(private val repository: PostRepository) : ViewModel() {
+class PostDetailViewModel() : ViewModel() {
     private val _post = MutableLiveData<PostUiModel>()
     val post: LiveData<PostUiModel>
         get() = _post
@@ -32,12 +32,12 @@ class PostDetailViewModel(private val repository: PostRepository) : ViewModel() 
         get() = _isScrap
 
     init {
-        /*        _post.value = postData.toUiModel()
-                _recommendation.value = postData.recommendation.toUiModel()
-                _isScrap.value = postData.isScrap*/
+        _post.value = postData.toUiModel()
+        _recommendation.value = postData.recommendation.toUiModel()
+        _isScrap.value = postData.isScrap
     }
 
-    fun getPostDetail(postId: Long) {
+/*    fun getPostDetail(postId: Long) {
         viewModelScope.launch {
             repository.getPostDetail(postId).onSuccess {
                 it as Post
@@ -50,7 +50,7 @@ class PostDetailViewModel(private val repository: PostRepository) : ViewModel() 
                 }
             }
         }
-    }
+    }*/
 
     fun updateUpRecommendation(isChecked: Boolean) {
         val oldRecommendation = _recommendation.value?.toDomain() ?: return
