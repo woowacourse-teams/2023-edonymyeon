@@ -14,6 +14,7 @@ public class MemberTestSupport {
     private static int nickNameCount = 1;
 
     private final MemberRepository memberRepository;
+
     private final ProfileImageInfoTestSupport profileImageInfoTestSupport;
 
     public MemberBuilder builder() {
@@ -23,8 +24,11 @@ public class MemberTestSupport {
     public final class MemberBuilder {
 
         private String email;
+
         private String password;
+
         private String nickname;
+
         private ProfileImageInfo profileImageInfo;
 
         public MemberBuilder email(final String email) {

@@ -18,6 +18,7 @@ public class IntegrationTest {
 
     @Autowired
     protected ProfileImageInfoTestSupport profileImageInfoTestSupport;
+
     @Autowired
     protected MemberTestSupport memberTestSupport;
 

@@ -19,6 +19,7 @@ public class ProfileImageInfoTestSupport {
     public final class ProfileImageInfoBuilder {
 
         private String fileDirectory;
+
         private String storeName;
 
         public ProfileImageInfoBuilder fileDirectory(final String fileDirectory) {
