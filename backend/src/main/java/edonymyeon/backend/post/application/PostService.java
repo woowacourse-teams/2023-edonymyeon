@@ -67,7 +67,7 @@ public class PostService {
     }
 
     private boolean isDummy(final MultipartFile multipartFile) {
-        return "".equals(multipartFile.getName());
+        return multipartFile.isEmpty();
     }
 
     private List<ImageInfo> uploadImages(final PostRequest postRequest) {
