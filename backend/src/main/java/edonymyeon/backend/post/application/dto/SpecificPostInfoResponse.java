@@ -10,7 +10,7 @@ public record SpecificPostInfoResponse(
         long price,
         String content,
         LocalDateTime createdAt,
-        List<PostImageInfo> imageUrls,
+        List<String> images,
         WriterResponse writerResponse,
         ReactionCountResponse reactionCountResponse,
         int upCount,

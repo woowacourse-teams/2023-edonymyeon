@@ -13,17 +13,21 @@ import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -260,8 +264,8 @@ public class PostIntegrationTest extends IntegrationTest {
                 .then().log().all()
                 .extract();
 
-        final SpecificPostInfoResponse post = postService.findSpecificPost(postResponse.id(), new MemberIdDto(member2.getId()));
-
+        final SpecificPostInfoResponse post = postService.findSpecificPost(postResponse.id(),
+                new MemberIdDto(member2.getId()));
 
         assertThat(response.statusCode()).isEqualTo(200);
         assertAll(
@@ -274,13 +278,19 @@ public class PostIntegrationTest extends IntegrationTest {
                 () -> assertThat(response.body().jsonPath().getString("images[0]")).isEqualTo(post.images().get(0)),
                 () -> assertThat(response.body().jsonPath().getString("images[1]")).isEqualTo(post.images().get(1)),
 
-                () -> assertThat(response.body().jsonPath().getLong("writerResponse.id")).isEqualTo(post.writerResponse().id()),
-                () -> assertThat(response.body().jsonPath().getString("writerResponse.nickname")).isEqualTo(post.writerResponse().nickname()),
-                () -> assertThat(response.body().jsonPath().getString("writerResponse.profileImage")).isEqualTo(post.writerResponse().profileImage()),
+                () -> assertThat(response.body().jsonPath().getLong("writerResponse.id")).isEqualTo(
+                        post.writerResponse().id()),
+                () -> assertThat(response.body().jsonPath().getString("writerResponse.nickname")).isEqualTo(
+                        post.writerResponse().nickname()),
+                () -> assertThat(response.body().jsonPath().getString("writerResponse.profileImage")).isEqualTo(
+                        post.writerResponse().profileImage()),
 
-                () -> assertThat(response.body().jsonPath().getInt("reactionCountResponse.viewCount")).isEqualTo(post.reactionCountResponse().viewCount()),
-                () -> assertThat(response.body().jsonPath().getInt("reactionCountResponse.commentCount")).isEqualTo(post.reactionCountResponse().commentCount()),
-                () -> assertThat(response.body().jsonPath().getInt("reactionCountResponse.scrapCount")).isEqualTo(post.reactionCountResponse().scrapCount()),
+                () -> assertThat(response.body().jsonPath().getInt("reactionCountResponse.viewCount")).isEqualTo(
+                        post.reactionCountResponse().viewCount()),
+                () -> assertThat(response.body().jsonPath().getInt("reactionCountResponse.commentCount")).isEqualTo(
+                        post.reactionCountResponse().commentCount()),
+                () -> assertThat(response.body().jsonPath().getInt("reactionCountResponse.scrapCount")).isEqualTo(
+                        post.reactionCountResponse().scrapCount()),
 
                 () -> assertThat(response.body().jsonPath().getInt("upCount")).isEqualTo(post.upCount()),
                 () -> assertThat(response.body().jsonPath().getInt("downCount")).isEqualTo(post.downCount()),
