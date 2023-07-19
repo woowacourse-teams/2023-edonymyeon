@@ -9,6 +9,7 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
@@ -51,5 +52,14 @@ public class ThumbsService {
 
         Thumbs thumbs = postThumbs.get();
         thumbs.up();
+    }
+
+    public AllThumbsInPostResponse allThumbsInPost(final Long postId) {
+        AllThumbsInPost allThumbsInPost = new AllThumbsInPost(thumbsRepository.findByPostId(postId));
+
+        return new AllThumbsInPostResponse(
+                allThumbsInPost.getUpCount(),
+                allThumbsInPost.getDownCount()
+        );
     }
 }
