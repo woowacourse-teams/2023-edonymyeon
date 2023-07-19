@@ -9,7 +9,7 @@ import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
-import edonymyeon.backend.thumbs.repository.ThumbsRepository;
+import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -34,15 +34,13 @@ public class ThumbsInPostServiceTest {
 
     private final PostService postService;
 
-    private Member postWriter;
-
     private Member otherMember;
 
     private PostResponse postResponse;
 
     @BeforeEach
     public void 두_회원의_가입과_하나의_게시글쓰기를_한다() {
-        postWriter = new Member(
+        Member postWriter = new Member(
                 null,
                 "email",
                 "password",
@@ -97,13 +95,13 @@ public class ThumbsInPostServiceTest {
         );
         memberRepository.save(otherMember2);
 
-        // when
         MemberIdDto otherMemberId = new MemberIdDto(otherMember.getId());
         thumbsService.thumbsUp(otherMemberId, postResponse.id());
 
         MemberIdDto otherMember2Id = new MemberIdDto(otherMember2.getId());
         thumbsService.thumbsUp(otherMember2Id, postResponse.id());
 
+        // when
         AllThumbsInPostResponse allThumbsInPostResponse = thumbsService.allThumbsInPost(postResponse.id());
 
         // then
@@ -116,6 +114,65 @@ public class ThumbsInPostServiceTest {
 
     @Test
     void 해당_게시글에_추천과_비추천_수를_읽어온다2() {
+        // TODO: 비추 기능 추가되면 테스트 케이스 추가하기
+    }
+
+    @Test
+    void 로그인_하지_않으면_추천과_비추천_여부가_모두_false_이다() {
+        // given
+        MemberIdDto otherMemberId = new MemberIdDto(otherMember.getId());
+        thumbsService.thumbsUp(otherMemberId, postResponse.id());
+
+        // when
+        MemberIdDto emptyId = new MemberIdDto(null);
+        ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.thumbsStatusInPost(emptyId,
+                postResponse.id());
+
+        // then
+        assertSoftly(softly -> {
+                    softly.assertThat(thumbsStatusInPostResponse.isUp()).isFalse();
+                    softly.assertThat(thumbsStatusInPostResponse.isDown()).isFalse();
+                }
+        );
+    }
+
+    @Test
+    void 해당_게시글을_추천했을때_추천여부만_True_이다() {
+        // given
+        MemberIdDto otherMemberId = new MemberIdDto(otherMember.getId());
+        thumbsService.thumbsUp(otherMemberId, postResponse.id());
+
+        // when
+        ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.thumbsStatusInPost(otherMemberId,
+                postResponse.id());
+
+        // then
+        assertSoftly(softly -> {
+                    softly.assertThat(thumbsStatusInPostResponse.isUp()).isTrue();
+                    softly.assertThat(thumbsStatusInPostResponse.isDown()).isFalse();
+                }
+        );
+    }
+
+    @Test
+    void 해당_게시글을_추천하지_않았을때_모두_False_이다() {
+        // given
+        MemberIdDto otherMemberId = new MemberIdDto(otherMember.getId());
+
+        // when
+        ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.thumbsStatusInPost(otherMemberId,
+                postResponse.id());
+
+        // then
+        assertSoftly(softly -> {
+                    softly.assertThat(thumbsStatusInPostResponse.isUp()).isFalse();
+                    softly.assertThat(thumbsStatusInPostResponse.isDown()).isFalse();
+                }
+        );
+    }
+
+    @Test
+    void 해당_게시글의_비추천여부를_알아본다() {
         // TODO: 비추 기능 추가되면 테스트 케이스 추가하기
     }
 }

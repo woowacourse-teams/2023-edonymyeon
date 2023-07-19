@@ -48,8 +48,12 @@ public class Thumbs {
         this.thumbsType = thumbsType;
     }
 
-    private boolean isUp() {
+    public boolean isUp() {
         return thumbsType == ThumbsType.UP;
+    }
+
+    public boolean isDown() {
+        return !isUp();
     }
 
     private void updateThumbsType() {

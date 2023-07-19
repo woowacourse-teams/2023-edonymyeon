@@ -12,7 +12,9 @@ import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
+import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -61,5 +63,19 @@ public class ThumbsService {
                 allThumbsInPost.getUpCount(),
                 allThumbsInPost.getDownCount()
         );
+    }
+
+    public ThumbsStatusInPostResponse thumbsStatusInPost(final MemberIdDto memberId, final Long postId){
+        if(Objects.isNull(memberId.id())){
+            return new ThumbsStatusInPostResponse(false, false);
+        }
+
+        Optional<Thumbs> post = thumbsRepository.findByPostIdAndMemberId(postId, memberId.id());
+        if(post.isEmpty()){
+            return new ThumbsStatusInPostResponse(false, false);
+        }
+
+        Thumbs thumbs = post.get();
+        return new ThumbsStatusInPostResponse(thumbs.isUp(), thumbs.isDown());
     }
 }
