@@ -122,6 +122,29 @@ public class PostService {
     }
 
     public List<PostFindingResponse> findAllPost(final PostFindingCondition postFindingCondition) {
-        return null;
+        final PageRequest pageRequest = PageRequest.of(
+                postFindingCondition.getPage(),
+                postFindingCondition.getSize(),
+                switch (postFindingCondition.getSortDirection()) {
+                    case ASC -> Direction.ASC;
+                    case DESC -> Direction.DESC;
+                },
+                postFindingCondition.getSortBy().getName()
+        );
+
+        final Slice<Post> foundPosts = postRepository.findAll(pageRequest);
+
+        return foundPosts.getContent().stream()
+                .map(post -> new PostFindingResponse(
+                        post.getId(),
+                        post.getTitle(),
+                        post.getPostImageInfos().get(0).getFullPath(),
+                        post.getContent(),
+                        null, // TODO: 작성자 정보
+                        post.getCreateAt(),
+                        0, // TODO: 조회수
+                        0, // TODO: 스크랩 수
+                        0 // TODO: 댓글 수
+                )).toList();
     }
 }
