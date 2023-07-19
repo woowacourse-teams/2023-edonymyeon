@@ -115,7 +115,7 @@ public class PostService {
                     post.getPrice(),
                     post.getContent(),
                     post.getCreateAt(),
-                    post.getPostImageInfos(),
+                    post.getPostImageInfos().stream().map(ImageInfo::getFullPath).toList(),
                     writerResponse,
                     reactionCountResponse,
                     allThumbsInPost.thumbsUpCount(),
@@ -135,7 +135,7 @@ public class PostService {
                 post.getPrice(),
                 post.getContent(),
                 post.getCreateAt(),
-                post.getPostImageInfos(),
+                post.getPostImageInfos().stream().map(ImageInfo::getFullPath).toList(),
                 writerResponse,
                 reactionCountResponse,
                 allThumbsInPost.thumbsUpCount(),
@@ -151,7 +151,7 @@ public class PostService {
         return new WriterResponse(
                 member.getId(),
                 member.getNickname(),
-                member.getProfileImageInfo()
+                member.getProfileImageInfo().getFileDirectory()
         );
     }
 

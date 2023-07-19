@@ -5,10 +5,12 @@ import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,5 +36,11 @@ public class PostController {
     public ResponseEntity<Void> deletePost(@AuthPrincipal MemberIdDto memberId, @PathVariable Long postId) {
         postService.deletePost(memberId, postId);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<SpecificPostInfoResponse> findSpecificPost(@AuthPrincipal(required = false) MemberIdDto memberIdDto, @PathVariable Long postId) {
+        return ResponseEntity.ok()
+                .body(postService.findSpecificPost(postId, memberIdDto));
     }
 }
