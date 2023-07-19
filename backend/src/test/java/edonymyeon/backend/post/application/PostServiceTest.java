@@ -1,7 +1,6 @@
 package edonymyeon.backend.post.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.TestConfig;
@@ -17,7 +16,6 @@ import edonymyeon.backend.post.repository.PostRepository;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -69,60 +67,6 @@ class PostServiceTest {
         memberId = new MemberIdDto(member.getId());
     }
 
-    @Test
-    void 게시글_생성() {
-        final PostRequest request = new PostRequest(
-                "사도 돼요?",
-                "얼마 안해요",
-                100_000L,
-                Collections.emptyList()
-        );
-
-        final PostResponse target = postService.createPost(memberId, request);
-        assertThat(target.id()).isNotNull();
-    }
-
-    @Test
-    void 폴더에_저장하는_이미지의_이름은_UUID_와_확장자명_형식으로_지어진다() throws IOException {
-        // given
-        final PostRequest postRequest = getPostRequest();
-
-        // when
-        System.out.println("폴더에_저장하는_이미지의_이름은_UUID_와_확장자명_형식으로_지어진다");
-        System.out.println("memberId.id() = " + memberId.id());
-        final var postId = postService.createPost(memberId, postRequest).id();
-
-        // then
-        List<PostImageInfo> imageFiles = postImageInfoRepository.findAllByPostId(postId);
-        assertSoftly(softly -> {
-                    softly.assertThat(imageFiles).hasSize(2);
-                    softly.assertThat(이미지_UUID_와_확장자_형식.matcher(imageFiles.get(0).getStoreName()).matches()).isTrue();
-                    softly.assertThat(이미지_UUID_와_확장자_형식.matcher(imageFiles.get(1).getStoreName()).matches()).isTrue();
-                }
-        );
-    }
-
-    @Test
-    void 폴더에_이미지를_저장한_후_Post_도메인에는_파일의_경로를_넘긴다()
-            throws IOException {
-        // given
-        final PostRequest postRequest = getPostRequest();
-
-        // when
-        System.out.println("폴더에_이미지를_저장한_후_Post_도메인에는_파일의_경로를_넘긴다");
-        System.out.println("memberId.id() = " + memberId.id());
-        final Long postId = postService.createPost(memberId, postRequest).id();
-
-        // then
-        List<PostImageInfo> imageFiles = postImageInfoRepository.findAllByPostId(postId);
-        assertSoftly(softly -> {
-                    softly.assertThat(imageFiles).hasSize(2);
-                    softly.assertThat(파일_경로_형식.matcher(imageFiles.get(0).getFullPath()).matches()).isTrue();
-                    softly.assertThat(파일_경로_형식.matcher(imageFiles.get(1).getFullPath()).matches()).isTrue();
-                }
-        );
-    }
-
     private PostRequest getPostRequest() throws IOException {
         final InputStream file1InputStream = getClass().getResourceAsStream("/static/img/file/test_image_1.jpg");
         final MockMultipartFile file1 = new MockMultipartFile("imageFiles", "test_image_1.jpg", "image/jpg",
@@ -142,28 +86,76 @@ class PostServiceTest {
         );
     }
 
-    @Test
-    void 이미지가_없어도_게시글을_저장할수있다() {
-        final PostRequest postRequest = new PostRequest(
-                "I love you",
-                "He wisely contented himself with his family and his love of nature.",
-                13_000L,
-                null
-        );
+    @Nested
+    class 게시글을_생성할_때 {
 
-        System.out.println("이미지가 없어도 게시글 저장 가능");
-        System.out.println("memberId.id() = " + memberId.id());
-        assertThatCode(() -> postService.createPost(memberId, postRequest)).doesNotThrowAnyException();
+        @Test
+        void 이미지_없이_게시글을_생성할_수_있다() {
+            final PostRequest request = new PostRequest(
+                    "사도 돼요?",
+                    "얼마 안해요",
+                    100_000L,
+                    null
+            );
+
+            final PostResponse target = postService.createPost(memberId, request);
+            assertThat(target.id()).isNotNull();
+        }
+
+        @Test
+        void 폴더에_저장하는_이미지의_이름은_UUID_와_확장자명_형식으로_지어진다() throws IOException {
+            // given
+            final PostRequest postRequest = getPostRequest();
+
+            // when
+            System.out.println("폴더에_저장하는_이미지의_이름은_UUID_와_확장자명_형식으로_지어진다");
+            System.out.println("memberId.id() = " + memberId.id());
+            final var postId = postService.createPost(memberId, postRequest).id();
+
+            // then
+            List<PostImageInfo> imageFiles = postImageInfoRepository.findAllByPostId(postId);
+            assertSoftly(softly -> {
+                        softly.assertThat(imageFiles).hasSize(2);
+                        softly.assertThat(이미지_UUID_와_확장자_형식.matcher(imageFiles.get(0).getStoreName()).matches()).isTrue();
+                        softly.assertThat(이미지_UUID_와_확장자_형식.matcher(imageFiles.get(1).getStoreName()).matches()).isTrue();
+                    }
+            );
+        }
+
+        @Test
+        void 폴더에_이미지를_저장한_후_Post_도메인에는_파일의_경로를_넘긴다()
+                throws IOException {
+            // given
+            final PostRequest postRequest = getPostRequest();
+
+            // when
+            System.out.println("폴더에_이미지를_저장한_후_Post_도메인에는_파일의_경로를_넘긴다");
+            System.out.println("memberId.id() = " + memberId.id());
+            final Long postId = postService.createPost(memberId, postRequest).id();
+
+            // then
+            List<PostImageInfo> imageFiles = postImageInfoRepository.findAllByPostId(postId);
+            assertSoftly(softly -> {
+                        softly.assertThat(imageFiles).hasSize(2);
+                        softly.assertThat(파일_경로_형식.matcher(imageFiles.get(0).getFullPath()).matches()).isTrue();
+                        softly.assertThat(파일_경로_형식.matcher(imageFiles.get(1).getFullPath()).matches()).isTrue();
+                    }
+            );
+        }
     }
 
-    @Test
-    void 게시글이_삭제되면_디렉토리에_있는_이미지도_삭제된다() throws IOException {
-        final PostResponse postResponse = postService.createPost(memberId, getPostRequest());
-        final PostImageInfo postImageInfo = postImageInfoRepository.findById(postResponse.id()).get();
-        assertThat(new File(postImageInfo.getFullPath()).canRead()).isTrue();
+    @Nested
+    class 게시글을_삭제할_때 {
 
-        postService.deletePost(memberId, postResponse.id());
-        assertThat(new File(postImageInfo.getFullPath()).canRead()).isFalse();
+        @Test
+        void 게시글이_삭제되면_디렉토리에_있는_이미지도_삭제된다() throws IOException {
+            final PostResponse postResponse = postService.createPost(memberId, getPostRequest());
+            final PostImageInfo postImageInfo = postImageInfoRepository.findAllByPostId(postResponse.id()).get(0);
+            assertThat(new File(postImageInfo.getFullPath()).canRead()).isTrue();
+
+            postService.deletePost(memberId, postResponse.id());
+            assertThat(new File(postImageInfo.getFullPath()).canRead()).isFalse();
+        }
     }
 
     @Nested
