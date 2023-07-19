@@ -1,9 +1,11 @@
 package edonymyeon.backend.post.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.TestConfig;
+import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.postimage.PostImageInfoRepository;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
@@ -13,6 +15,7 @@ import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.support.MemberTestSupport;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,16 +56,16 @@ class PostServiceTest {
 
     private final MemberRepository memberRepository;
 
+    private final MemberTestSupport memberTestSupport;
+
     private MemberIdDto memberId;
 
     @BeforeEach
     public void setUp() {
-        Member member = new Member(
-                "email",
-                "password",
-                "nickname",
-                null
-        );
+        Member member = memberTestSupport.builder()
+                .email("email")
+                .password("password")
+                .build();
         memberRepository.save(member);
         memberId = new MemberIdDto(member.getId());
     }
@@ -160,6 +163,35 @@ class PostServiceTest {
 
     @Nested
     class 게시글을_수정할_때 {
+
+        @Test
+        void 게시글_작성자가_아니면_수정할_수_없다(@Autowired PostRepository postRepository) throws IOException {
+            // given
+            final PostRequest postRequest = new PostRequest(
+                    "I love you",
+                    "He wisely contented himself with his family and his love of nature.",
+                    13_000L,
+                    null
+            );
+            final PostResponse post = postService.createPost(memberId, postRequest);
+
+            // when
+            Member 다른_사람 = memberTestSupport.builder()
+                    .email("otheremail")
+                    .password("password")
+                    .build();
+            memberRepository.save(다른_사람);
+            memberId = new MemberIdDto(다른_사람.getId());
+            final PostRequest updatedPostRequest = new PostRequest(
+                    "I hate you",
+                    "change!!",
+                    26_000L,
+                    null
+            );
+            assertThatThrownBy(
+                    () -> postService.updatePost(new MemberIdDto(다른_사람.getId()), post.id(), updatedPostRequest))
+                    .isInstanceOf(EdonymyeonException.class);
+        }
 
         @Test
         void 제목과_내용과_가격을_수정할_수_있다(@Autowired PostRepository postRepository) throws IOException {
