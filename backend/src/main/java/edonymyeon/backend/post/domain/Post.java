@@ -55,8 +55,8 @@ public class Post {
     @Column(nullable = false)
     private Long price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false)
     private Member member;
 
     // TODO: cascade
