@@ -1,5 +1,6 @@
 package edonymyeon.backend.thumbs.application;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_DOWN_ALREADY_EXIST;
 import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_POST_IS_SELF_UP_DOWN;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -89,10 +90,10 @@ public class ThumbsDownServiceTest {
     void 비추천하려는_게시물이_없으면_예외가_발생한다() {
         MemberIdDto loginMemberId = new MemberIdDto(postWriter.getId());
 
-        // TODO: 없는 게시글 조회 예외 종류 추가 해주기
         assertThatThrownBy(
                 () -> thumbsService.thumbsDown(loginMemberId, 1000L))
-                .isExactlyInstanceOf(IllegalArgumentException.class);
+                .isExactlyInstanceOf(EdonymyeonException.class)
+                .hasMessage(POST_ID_NOT_FOUND.getMessage());
     }
 
     @Test

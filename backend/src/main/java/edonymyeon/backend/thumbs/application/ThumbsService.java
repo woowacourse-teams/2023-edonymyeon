@@ -1,6 +1,7 @@
 package edonymyeon.backend.thumbs.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_POST_IS_SELF_UP_DOWN;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
@@ -76,10 +77,9 @@ public class ThumbsService {
         thumbs.up();
     }
 
-    // TODO: 예외 바꿔주기
     private Post findPostById(final Long postId) {
         return postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 게시글이 없습니다."));
+                .orElseThrow(() -> new EdonymyeonException(POST_ID_NOT_FOUND));
     }
 
     private Member findMemberById(final MemberIdDto memberId) {
