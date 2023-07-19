@@ -6,8 +6,12 @@ public class AllThumbsInPost {
 
     private final List<Thumbs> allThumbs;
 
-    public AllThumbsInPost(final List<Thumbs> allThumbs) {
+    private AllThumbsInPost(final List<Thumbs> allThumbs) {
         this.allThumbs = allThumbs;
+    }
+
+    public static AllThumbsInPost from(final List<Thumbs> thumbs) {
+        return new AllThumbsInPost(thumbs);
     }
 
     public int getUpCount() {

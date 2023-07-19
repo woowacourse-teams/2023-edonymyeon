@@ -1,5 +1,6 @@
 package edonymyeon.backend.thumbs.domain;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_DOWN_ALREADY_EXIST;
 import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP_ALREADY_EXIST;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
@@ -63,6 +64,13 @@ public class Thumbs {
     public void up() {
         if (isUp()) {
             throw new EdonymyeonException(THUMBS_UP_ALREADY_EXIST);
+        }
+        updateThumbsType();
+    }
+
+    public void down() {
+        if (isDown()) {
+            throw new EdonymyeonException(THUMBS_DOWN_ALREADY_EXIST);
         }
         updateThumbsType();
     }
