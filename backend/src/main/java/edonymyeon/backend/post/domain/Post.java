@@ -55,8 +55,8 @@ public class Post {
     @Column(nullable = false)
     private Long price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false)
     private Member member;
 
     // TODO: cascade
@@ -126,5 +126,9 @@ public class Post {
             return;
         }
         this.postImageInfos.add(postImageInfo);
+    }
+
+    public boolean isSameMember(final Member member) {
+        return this.member.equals(member);
     }
 }

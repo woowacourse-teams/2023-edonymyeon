@@ -16,6 +16,8 @@ public class TestConfig {
                 "test-inserting-one",
                 "test-inserting-two",
                 "test-inserting-one",
+                "test-inserting-two",
+                "test-inserting-one",
                 "test-inserting-two"
         ));
     }
