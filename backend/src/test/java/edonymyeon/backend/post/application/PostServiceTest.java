@@ -2,9 +2,9 @@ package edonymyeon.backend.post.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.TestConfig;
-import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.image.postimage.PostImageInfoRepository;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
@@ -12,16 +12,21 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.post.repository.PostRepository;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
@@ -38,6 +43,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Import(TestConfig.class)
 @SpringBootTest
 class PostServiceTest {
+
+    private static final Pattern 이미지_UUID_와_확장자_형식 = Pattern.compile("test-inserting\\d+\\.(png|jpg)");
+    private static final Pattern 파일_경로_형식 = Pattern.compile(
+            "src/test/resources/static/img/test_store/" + "test-inserting\\d+\\.(png|jpg)"
+    );
 
     private final PostImageInfoRepository postImageInfoRepository;
 
@@ -84,13 +94,12 @@ class PostServiceTest {
 
         // then
         List<PostImageInfo> imageFiles = postImageInfoRepository.findAllByPostId(postId);
-        assertThat(imageFiles).hasSize(2);
-        assertThat(imageFiles)
-                .extracting(ImageInfo::getStoreName)
-                .containsAll(List.of(
-                        "test-inserting-one.jpg",
-                        "test-inserting-two.jpg"
-                ));
+        assertSoftly(softly -> {
+                    softly.assertThat(imageFiles).hasSize(2);
+                    softly.assertThat(이미지_UUID_와_확장자_형식.matcher(imageFiles.get(0).getStoreName()).matches()).isTrue();
+                    softly.assertThat(이미지_UUID_와_확장자_형식.matcher(imageFiles.get(1).getStoreName()).matches()).isTrue();
+                }
+        );
     }
 
     @Test
@@ -106,13 +115,12 @@ class PostServiceTest {
 
         // then
         List<PostImageInfo> imageFiles = postImageInfoRepository.findAllByPostId(postId);
-        assertThat(imageFiles).hasSize(2);
-        assertThat(imageFiles)
-                .extracting(ImageInfo::getFullPath)
-                .containsExactlyInAnyOrder(
-                        "src/test/resources/static/img/test_store/test-inserting-one.jpg",
-                        "src/test/resources/static/img/test_store/test-inserting-two.jpg"
-                );
+        assertSoftly(softly -> {
+                    softly.assertThat(imageFiles).hasSize(2);
+                    softly.assertThat(파일_경로_형식.matcher(imageFiles.get(0).getFullPath()).matches()).isTrue();
+                    softly.assertThat(파일_경로_형식.matcher(imageFiles.get(1).getFullPath()).matches()).isTrue();
+                }
+        );
     }
 
     private PostRequest getPostRequest() throws IOException {
@@ -156,5 +164,117 @@ class PostServiceTest {
 
         postService.deletePost(memberId, postResponse.id());
         assertThat(new File(postImageInfo.getFullPath()).canRead()).isFalse();
+    }
+
+    @Nested
+    class 게시글을_수정할_때 {
+
+        @Test
+        void 제목과_내용과_가격을_수정할_수_있다(@Autowired PostRepository postRepository) throws IOException {
+            // given
+            final PostRequest postRequest = new PostRequest(
+                    "I love you",
+                    "He wisely contented himself with his family and his love of nature.",
+                    13_000L,
+                    null
+            );
+            final PostResponse post = postService.createPost(memberId, postRequest);
+
+            // when
+            final PostRequest updatedPostRequest = new PostRequest(
+                    "I hate you",
+                    "change!!",
+                    26_000L,
+                    null
+            );
+            postService.updatePost(memberId, post.id(), updatedPostRequest);
+
+            // then
+            final Post findPost = postRepository.findById(post.id()).get();
+            assertSoftly(softly -> {
+                        softly.assertThat(findPost.getTitle()).isEqualTo(updatedPostRequest.title());
+                        softly.assertThat(findPost.getContent()).isEqualTo(updatedPostRequest.content());
+                        softly.assertThat(findPost.getPrice()).isEqualTo(updatedPostRequest.price());
+                    }
+            );
+        }
+
+        @Nested
+        class 이미지를_수정하는_경우 {
+
+            private final PostRequest 이미지가_2개_있는_요청 = getPostRequest();
+
+            private final PostRequest 이미지가_없는_요청 = new PostRequest(
+                    "I love you",
+                    "He wisely contented himself with his family and his love of nature.",
+                    13_000L,
+                    null
+            );
+
+            이미지를_수정하는_경우() throws IOException {
+            }
+
+            @Test
+            void 이미지를_추가할_수_있다(@Autowired PostRepository postRepository) throws IOException {
+                // given
+                final PostResponse post = postService.createPost(memberId, 이미지가_없는_요청);
+
+                // when
+                postService.updatePost(memberId, post.id(), 이미지가_2개_있는_요청);
+
+                // then
+                final Post findPost = postRepository.findById(post.id()).get();
+                assertThat(findPost.getPostImageInfos().size()).isEqualTo(이미지가_2개_있는_요청.images().size());
+            }
+
+            @Test
+            void 이미지를_전부_삭제할_수_있다(@Autowired PostRepository postRepository) throws IOException {
+                // given
+                final PostResponse post = postService.createPost(memberId, 이미지가_2개_있는_요청);
+
+                // when
+                postService.updatePost(memberId, post.id(), 이미지가_없는_요청);
+
+                // then
+                final Post findPost = postRepository.findById(post.id()).get();
+                assertThat(findPost.getPostImageInfos().size()).isEqualTo(0);
+            }
+
+            @Test
+            void 이미지를_바꿀_수_있다(@Autowired PostRepository postRepository) throws IOException {
+                //given
+                final MockMultipartFile 바꾸기_전_이미지 = new MockMultipartFile("imageFiles", "test_image_1.jpg", "image/jpg",
+                        getClass().getResourceAsStream("/static/img/file/test_image_1.jpg"));
+                final PostRequest 게시글_생성_요청 = new PostRequest(
+                        "I love you",
+                        "He wisely contented himself with his family and his love of nature.",
+                        13_000L,
+                        List.of(바꾸기_전_이미지)
+                );
+                final PostResponse post = postService.createPost(memberId, 게시글_생성_요청);
+                final PostImageInfo 바꾸기_전_이미지_정보 = postRepository.findById(post.id()).get().getPostImageInfos().get(0);
+
+                // when
+                final MockMultipartFile 바꾼_후_이미지 = new MockMultipartFile("imageFiles", "test_image_2.jpg", "image/jpg",
+                        getClass().getResourceAsStream("/static/img/file/test_image_2.jpg"));
+                final PostRequest 게시글_수정_요청 = new PostRequest(
+                        "I love you",
+                        "He wisely contented himself with his family and his love of nature.",
+                        13_000L,
+                        List.of(바꾼_후_이미지)
+                );
+                postService.updatePost(memberId, post.id(), 게시글_수정_요청);
+
+                // then
+                final Post findPost = postRepository.findById(post.id()).get();
+                final PostImageInfo 바꾼_후_이미지_정보 = findPost.getPostImageInfos().get(0);
+
+                assertSoftly(softly -> {
+                            softly.assertThat(findPost.getPostImageInfos().size()).isEqualTo(게시글_수정_요청.images().size());
+                            softly.assertThat(바꾸기_전_이미지_정보.getFullPath().equals(바꾼_후_이미지_정보.getFullPath())).isFalse();
+                        }
+                );
+            }
+        }
     }
 }
