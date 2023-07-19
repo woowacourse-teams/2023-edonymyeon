@@ -16,6 +16,7 @@ import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -74,18 +75,61 @@ public class PostService {
     @Transactional
     public void deletePost(final MemberIdDto memberIdDto, final Long postId) {
         final Member member = findMemberById(memberIdDto);
-        final Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EdonymyeonException(POST_ID_NOT_FOUND));
+        final Post post = findPostById(postId);
         if (post.isSameMember(member)) {
-            final List<ImageInfo> imageInfos = post.getPostImageInfos()
-                    .stream()
-                    .map(postImage -> new ImageInfo(postImage.getFileDirectory(), postImage.getStoreName()))
-                    .toList();
+            final List<ImageInfo> imageInfos = findImageInfosFromPost(post);
             postImageInfoRepository.deleteAllByPostId(postId);
             postRepository.deleteById(postId);
             imageInfos.forEach(imageFileUploader::removeFile);
             return;
         }
         throw new EdonymyeonException(POST_MEMBER_FORBIDDEN);
+    }
+
+    private Post findPostById(final Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new EdonymyeonException(POST_ID_NOT_FOUND));
+    }
+
+    private List<ImageInfo> findImageInfosFromPost(final Post post) {
+        return post.getPostImageInfos()
+                .stream()
+                .map(postImage -> new ImageInfo(postImage.getFileDirectory(), postImage.getStoreName()))
+                .toList();
+    }
+
+    @Transactional
+    public PostResponse updatePost(
+            final MemberIdDto memberId,
+            final Long postId,
+            final PostRequest postRequest
+    ) {
+        final Member member = findMemberById(memberId);
+        final Post post = findPostById(postId);
+
+        if (!post.isSameMember(member)) {
+            throw new EdonymyeonException(POST_MEMBER_FORBIDDEN);
+        }
+
+        post.updateTitle(postRequest.title());
+        post.updateContent(postRequest.content());
+        post.updatePrice(postRequest.price());
+
+        final List<ImageInfo> originalImageInfos = findImageInfosFromPost(post);
+        postImageInfoRepository.deleteAllByPostId(postId);
+
+        if (Objects.isNull(postRequest.images()) || postRequest.images().isEmpty()) {
+            post.updateImages(Collections.emptyList());
+            originalImageInfos.forEach(imageFileUploader::removeFile);
+            return new PostResponse(postId);
+        }
+
+        final List<PostImageInfo> updatePostImageInfos = uploadImages(postRequest).stream()
+                .map(imageInfo -> PostImageInfo.of(imageInfo, post))
+                .toList();
+        post.updateImages(updatePostImageInfos);
+        postImageInfoRepository.saveAll(updatePostImageInfos);
+        originalImageInfos.forEach(imageFileUploader::removeFile);
+        return new PostResponse(postId);
     }
 }

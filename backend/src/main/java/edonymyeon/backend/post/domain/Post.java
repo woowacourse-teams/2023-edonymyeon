@@ -128,6 +128,26 @@ public class Post {
         this.postImageInfos.add(postImageInfo);
     }
 
+    public void updateTitle(final String title) {
+        validateTitle(title);
+        this.title = title;
+    }
+
+    public void updateContent(final String content) {
+        validateContent(content);
+        this.content = content;
+    }
+
+    public void updatePrice(final Long price) {
+        validatePrice(price);
+        this.price = price;
+    }
+
+    public void updateImages(final List<PostImageInfo> postImageInfos) {
+        this.postImageInfos.clear();
+        this.postImageInfos.addAll(postImageInfos);
+    }
+
     public boolean isSameMember(final Member member) {
         return this.member.equals(member);
     }
