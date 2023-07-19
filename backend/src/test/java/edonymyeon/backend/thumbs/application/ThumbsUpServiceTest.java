@@ -61,11 +61,9 @@ class ThumbsUpServiceTest {
             final String nickname
     ) {
         Member member = new Member(
-                null,
                 email,
                 password,
                 nickname,
-                "introduction",
                 null
         );
         memberRepository.save(member);
