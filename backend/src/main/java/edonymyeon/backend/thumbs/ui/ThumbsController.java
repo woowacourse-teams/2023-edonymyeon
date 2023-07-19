@@ -22,4 +22,12 @@ public class ThumbsController {
         return ResponseEntity.ok()
                 .build();
     }
+
+    @PutMapping("posts/{postId}/down")
+    public ResponseEntity<Void> thumbsDown(@AuthPrincipal final MemberIdDto memberId,
+                                         @PathVariable final Long postId){
+        thumbsService.thumbsDown(memberId, postId);
+        return ResponseEntity.ok()
+                .build();
+    }
 }

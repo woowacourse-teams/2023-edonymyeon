@@ -40,29 +40,15 @@ public class ThumbsInPostServiceTest {
 
     @BeforeEach
     public void 두_회원의_가입과_하나의_게시글쓰기를_한다() {
-        Member postWriter = new Member(
-                "email",
-                "password",
-                "nickname",
-                null
-        );
-        memberRepository.save(postWriter);
+        otherMember = registerMember("otherEmail", "otherPassword", "otherNickname");
 
-        otherMember = new Member(
-                "otherEmail",
-                "otherPassword",
-                "otherNickname",
-                null
-        );
-        memberRepository.save(otherMember);
-
+        Member postWriter = registerMember("email", "password", "nickname");
         PostRequest postRequest = new PostRequest(
                 "title",
                 "content",
                 1000L,
                 null
         );
-
         MemberIdDto memberId = new MemberIdDto(postWriter.getId());
         postResponse = postService.createPost(memberId, postRequest);
     }
@@ -81,19 +67,9 @@ public class ThumbsInPostServiceTest {
     @Test
     void 해당_게시글에_추천과_비추천_수를_읽어온다() {
         // given
-        Member otherMember2 = new Member(
-                "otherEmail2",
-                "otherPassword2",
-                "otherNickname2",
-                null
-        );
-        memberRepository.save(otherMember2);
-
-        MemberIdDto otherMemberId = new MemberIdDto(otherMember.getId());
-        thumbsService.thumbsUp(otherMemberId, postResponse.id());
-
-        MemberIdDto otherMember2Id = new MemberIdDto(otherMember2.getId());
-        thumbsService.thumbsUp(otherMember2Id, postResponse.id());
+        Member otherMember2 = registerMember("otherEmail2", "otherPassword2", "otherNickname2");
+        thumbsUp(otherMember, postResponse);
+        thumbsUp(otherMember2, postResponse);
 
         // when
         AllThumbsInPostResponse allThumbsInPostResponse = thumbsService.findAllThumbsInPost(postResponse.id());
@@ -108,14 +84,29 @@ public class ThumbsInPostServiceTest {
 
     @Test
     void 해당_게시글에_추천과_비추천_수를_읽어온다2() {
-        // TODO: 비추 기능 추가되면 테스트 케이스 추가하기
+        // given
+        Member otherMember2 = registerMember("otherEmail2", "otherPassword2", "otherNickname2");
+        Member otherMember3 = registerMember("otherEmail3", "otherPassword3", "otherNickname3");
+
+        thumbsUp(otherMember, postResponse);
+        thumbsUp(otherMember2, postResponse);
+        thumbsDown(otherMember3, postResponse);
+
+        // when
+        AllThumbsInPostResponse allThumbsInPostResponse = thumbsService.findAllThumbsInPost(postResponse.id());
+
+        // then
+        assertSoftly(softly -> {
+                    softly.assertThat(allThumbsInPostResponse.thumbsUpCount()).isEqualTo(2);
+                    softly.assertThat(allThumbsInPostResponse.thumbsDownCount()).isEqualTo(1);
+                }
+        );
     }
 
     @Test
     void 로그인_하지_않으면_추천과_비추천_여부가_모두_false_이다() {
         // given
-        MemberIdDto otherMemberId = new MemberIdDto(otherMember.getId());
-        thumbsService.thumbsUp(otherMemberId, postResponse.id());
+        thumbsUp(otherMember, postResponse);
 
         // when
         MemberIdDto emptyId = new MemberIdDto(null);
@@ -133,10 +124,10 @@ public class ThumbsInPostServiceTest {
     @Test
     void 해당_게시글을_추천했을때_추천여부만_True_이다() {
         // given
-        MemberIdDto otherMemberId = new MemberIdDto(otherMember.getId());
-        thumbsService.thumbsUp(otherMemberId, postResponse.id());
+        thumbsUp(otherMember, postResponse);
 
         // when
+        MemberIdDto otherMemberId = new MemberIdDto(otherMember.getId());
         ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.findThumbsStatusInPost(otherMemberId,
                 postResponse.id());
 
@@ -166,7 +157,46 @@ public class ThumbsInPostServiceTest {
     }
 
     @Test
-    void 해당_게시글의_비추천여부를_알아본다() {
-        // TODO: 비추 기능 추가되면 테스트 케이스 추가하기
+    void 해당_게시글을_비추천했을때_비추천여부만_True_이다() {
+        // given
+        thumbsDown(otherMember, postResponse);
+
+        // when
+        MemberIdDto otherMemberId = new MemberIdDto(otherMember.getId());
+        ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.findThumbsStatusInPost(otherMemberId,
+                postResponse.id());
+
+        // then
+        assertSoftly(softly -> {
+                    softly.assertThat(thumbsStatusInPostResponse.isUp()).isFalse();
+                    softly.assertThat(thumbsStatusInPostResponse.isDown()).isTrue();
+                }
+        );
+    }
+
+    private void thumbsUp(final Member member, final PostResponse post) {
+        MemberIdDto memberId = new MemberIdDto(member.getId());
+        thumbsService.thumbsUp(memberId, post.id());
+    }
+
+    private void thumbsDown(final Member member, final PostResponse post) {
+        MemberIdDto memberId = new MemberIdDto(member.getId());
+        thumbsService.thumbsDown(memberId, post.id());
+    }
+
+    private Member registerMember(
+            final String email,
+            final String password,
+            final String nickname
+    ) {
+        Member member = new Member(
+                email,
+                password,
+                nickname,
+                null
+        );
+        memberRepository.save(member);
+
+        return member;
     }
 }
