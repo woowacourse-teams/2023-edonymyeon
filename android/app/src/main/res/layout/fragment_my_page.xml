@@ -248,7 +248,7 @@
                 android:id="@+id/iv_my_badge"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:src="@drawable/ic_launcher_background"
+                android:src="@drawable/ic_my_page_badge"
                 app:layout_constraintBottom_toTopOf="@id/tv_my_badge"
                 app:layout_constraintDimensionRatio="H,1:1"
                 app:layout_constraintEnd_toEndOf="parent"
