@@ -1,4 +1,4 @@
-package edonymyeon.backend.post.service;
+package edonymyeon.backend.post.application;
 
 import static org.junit.Assert.fail;
 
