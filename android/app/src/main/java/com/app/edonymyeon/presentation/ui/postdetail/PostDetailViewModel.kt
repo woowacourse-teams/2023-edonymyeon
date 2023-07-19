@@ -3,6 +3,8 @@ package com.app.edonymyeon.presentation.ui.postdetail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
@@ -12,9 +14,11 @@ import com.domain.edonymyeon.model.Post
 import com.domain.edonymyeon.model.ReactionCount
 import com.domain.edonymyeon.model.Recommendation
 import com.domain.edonymyeon.model.Writer
+import com.domain.edonymyeon.repository.PostRepository
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
-class PostDetailViewModel : ViewModel() {
+class PostDetailViewModel(private val repository: PostRepository) : ViewModel() {
     private val _post = MutableLiveData<PostUiModel>()
     val post: LiveData<PostUiModel>
         get() = _post
@@ -28,14 +32,29 @@ class PostDetailViewModel : ViewModel() {
         get() = _isScrap
 
     init {
-        _post.value = postData.toUiModel()
-        _recommendation.value = postData.recommendation.toUiModel()
-        _isScrap.value = postData.isScrap
+        /*        _post.value = postData.toUiModel()
+                _recommendation.value = postData.recommendation.toUiModel()
+                _isScrap.value = postData.isScrap*/
+    }
+
+    fun getPostDetail(postId: Long) {
+        viewModelScope.launch {
+            repository.getPostDetail(postId).onSuccess {
+                it as Post
+                _post.value = it.toUiModel()
+                _recommendation.value = it.recommendation.toUiModel()
+                _isScrap.value = it.isScrap
+            }.onFailure {
+                it as CustomThrowable
+                when (it.code) {
+                }
+            }
+        }
     }
 
     fun updateUpRecommendation(isChecked: Boolean) {
         val oldRecommendation = _recommendation.value?.toDomain() ?: return
-        if (oldRecommendation.isUp == isChecked) return
+        if (oldRecommendation.isUp && isChecked) return
 
         if (isChecked) {
             if (oldRecommendation.isDown) {
@@ -60,12 +79,12 @@ class PostDetailViewModel : ViewModel() {
 
     fun updateDownRecommendation(isChecked: Boolean) {
         val oldRecommendation = _recommendation.value?.toDomain() ?: return
-        if (oldRecommendation.isDown == isChecked) return
+        if (oldRecommendation.isDown && isChecked) return
 
         if (isChecked) {
             if (oldRecommendation.isUp) {
                 _recommendation.value = oldRecommendation.copy(
-                    downCount = oldRecommendation.downCount.decrease(),
+                    downCount = oldRecommendation.downCount.increase(),
                     isUp = false,
                     isDown = true,
                 ).toUiModel()

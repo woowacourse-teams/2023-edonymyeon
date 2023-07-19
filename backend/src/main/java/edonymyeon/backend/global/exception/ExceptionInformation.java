@@ -28,7 +28,9 @@ public enum ExceptionInformation {
 
     // 4___: 추천 관련
     THUMBS_UP_ALREADY_EXIST(4000, "이미 추천된 게시글 입니다"),
-    THUMBS_POST_IS_LOGIN_MEMBER(4001, "본인의 게시글을 추천/비추천 할 수 없습니다");
+    THUMBS_DOWN_ALREADY_EXIST(4001, "이미 비추천된 게시글 입니다"),
+    THUMBS_POST_IS_SELF_UP_DOWN(4002, "본인의 게시글을 추천/비추천 할 수 없습니다")
+    ;
 
     private int code;
 

@@ -6,11 +6,12 @@ import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostDetailBinding
+import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
+import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.google.android.material.snackbar.Snackbar
 
@@ -19,7 +20,11 @@ class PostDetailActivity : AppCompatActivity() {
         ActivityPostDetailBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: PostDetailViewModel by viewModels()
+    private val viewModel: PostDetailViewModel by lazy {
+        PostDetailViewModelFactory(PostRepositoryImpl(PostRemoteDataSource())).create(
+            PostDetailViewModel::class.java,
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +36,7 @@ class PostDetailActivity : AppCompatActivity() {
         setRecommendCheckboxListener()
         setImageSlider()
         setImageIndicators()
+        viewModel.getPostDetail(0L)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
