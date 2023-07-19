@@ -3,6 +3,8 @@ package edonymyeon.backend.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import edonymyeon.backend.TestConfig;
+import edonymyeon.backend.image.postimage.PostImageInfoRepository;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostFindingCondition;
 import edonymyeon.backend.post.application.dto.PostFindingResponse;
@@ -18,14 +20,18 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @TestConstructor(autowireMode = AutowireMode.ALL)
+@Transactional
 @SpringBootTest
+@Import(TestConfig.class)
 @DisplayName("게시글 전체 조회 테스트")
 public class PostServiceFindingAllPostsTest {
 
@@ -103,7 +109,7 @@ public class PostServiceFindingAllPostsTest {
                         ),
                 () -> assertThat(postFindingResponses)
                         .extracting(PostFindingResponse::imagePath)
-                        .containsOnly(IMAGE1_RELATIVE_PATH),
+                        .containsOnly("src/test/resources/static/img/test_store/test-inserting0.jpg"),
                 () -> assertThat(postFindingResponses)
                         .extracting(PostFindingResponse::createdAt)
                         .hasSize(3)
@@ -127,9 +133,15 @@ public class PostServiceFindingAllPostsTest {
     }
 
     @Test
-    void 주어진_조회개수로_게시글_조회개수를_조절할_수_있다() {
+    void 주어진_조회개수로_게시글_조회개수를_조절할_수_있다() throws IOException {
+        setUp();
+        setUp();
+        setUp();
+        setUp();
+        setUp(); // 12개 저장됨
+
         final var postFindingCondition = PostFindingCondition.builder()
-                .limit(10)
+                .size(10)
                 .build();
         final var postFindingResponses = postService.findAllPost(postFindingCondition);
 
@@ -140,7 +152,7 @@ public class PostServiceFindingAllPostsTest {
     @Test
     void 조회개수가_정해진_경우_주어진_조회페이지로_게시글_조회페이지를_조절할_수_있다() {
         final var postFindingCondition = PostFindingCondition.builder()
-                .limit(1)
+                .size(1)
                 .page(1)
                 .build();
         final var postFindingResponses = postService.findAllPost(postFindingCondition);
@@ -151,7 +163,11 @@ public class PostServiceFindingAllPostsTest {
     }
 
     @Test
-    void 조회할_게시글이_없는_경우_null이_아니라_빈_리스트를_반환한다(@Autowired PostRepository postRepository) {
+    void 조회할_게시글이_없는_경우_null이_아니라_빈_리스트를_반환한다(
+            @Autowired PostRepository postRepository,
+            @Autowired PostImageInfoRepository imageInfoRepository
+    ) {
+        imageInfoRepository.deleteAll();
         postRepository.deleteAll();
 
         final var postFindingCondition = PostFindingCondition.builder().build();

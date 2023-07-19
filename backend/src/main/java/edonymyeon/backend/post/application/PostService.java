@@ -19,6 +19,9 @@ import edonymyeon.backend.post.repository.PostRepository;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,6 +71,29 @@ public class PostService {
     }
 
     public List<PostFindingResponse> findAllPost(final PostFindingCondition postFindingCondition) {
-        return null;
+        final PageRequest pageRequest = PageRequest.of(
+                postFindingCondition.getPage(),
+                postFindingCondition.getSize(),
+                switch (postFindingCondition.getSortDirection()) {
+                    case ASC -> Direction.ASC;
+                    case DESC -> Direction.DESC;
+                },
+                postFindingCondition.getSortBy().getName()
+        );
+
+        final Slice<Post> foundPosts = postRepository.findAll(pageRequest);
+
+        return foundPosts.getContent().stream()
+                .map(post -> new PostFindingResponse(
+                        post.getId(),
+                        post.getTitle(),
+                        post.getPostImageInfos().get(0).getFullPath(),
+                        post.getContent(),
+                        null, // TODO: 작성자 정보
+                        post.getCreateAt(),
+                        0, // TODO: 조회수
+                        0, // TODO: 스크랩 수
+                        0 // TODO: 댓글 수
+                )).toList();
     }
 }

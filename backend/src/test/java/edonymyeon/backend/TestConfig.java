@@ -13,10 +13,7 @@ public class TestConfig {
     @Bean
     public ImageFileUploader imageFileUploader() {
         return new ImageFileUploader(new ImageFileNameMockStrategy(
-                "test-inserting-one",
-                "test-inserting-two",
-                "test-inserting-one",
-                "test-inserting-two"
+                "test-inserting"
         ));
     }
 }
