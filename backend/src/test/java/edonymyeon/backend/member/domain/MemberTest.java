@@ -39,9 +39,9 @@ class MemberTest {
     }
 
     @Test
-    public void 닉네임이_10자_초과이면_예외발생() {
+    public void 닉네임이_20자_초과이면_예외발생() {
         StringBuilder nickName = new StringBuilder();
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < 21; i++) {
             nickName.append(i);
         }
         final String invalidNickName = nickName.toString();
