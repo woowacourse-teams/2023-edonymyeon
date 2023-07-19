@@ -90,8 +90,8 @@ class PostServiceTest {
         assertThat(imageFiles)
                 .extracting(ImageInfo::getStoreName)
                 .containsAll(List.of(
-                        "test-inserting-one.jpg",
-                        "test-inserting-two.jpg"
+                        "test-inserting0.jpg",
+                        "test-inserting0.jpg"
                 ));
     }
 
@@ -112,8 +112,8 @@ class PostServiceTest {
         assertThat(imageFiles)
                 .extracting(ImageInfo::getFullPath)
                 .containsExactlyInAnyOrder(
-                        "src/test/resources/static/img/test_store/test-inserting-one.jpg",
-                        "src/test/resources/static/img/test_store/test-inserting-two.jpg"
+                        "src/test/resources/static/img/test_store/test-inserting0.jpg",
+                        "src/test/resources/static/img/test_store/test-inserting0.jpg"
                 );
     }
 

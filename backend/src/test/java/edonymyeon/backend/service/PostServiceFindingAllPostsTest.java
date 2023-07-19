@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.image.postimage.PostImageInfoRepository;
+import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostFindingCondition;
 import edonymyeon.backend.post.application.dto.PostFindingResponse;
@@ -51,6 +54,8 @@ public class PostServiceFindingAllPostsTest {
     public static final String IMAGE2_RELATIVE_PATH = "/static/img/file/test_image_2.jpg";
 
     private final PostService postService;
+    private final MemberRepository memberRepository;
+    private MemberIdDto memberId;
 
     @BeforeEach
     void setUp() throws IOException {
@@ -81,9 +86,20 @@ public class PostServiceFindingAllPostsTest {
                 List.of(file1, file2)
         );
 
-        postService.createPost(POST_REQUEST1);
-        postService.createPost(POST_REQUEST2);
-        postService.createPost(POST_REQUEST3);
+        Member member = new Member(
+                null,
+                "email",
+                "password",
+                "nickname",
+                "introduction",
+                null
+        );
+        memberRepository.save(member);
+        memberId = new MemberIdDto(member.getId());
+
+        postService.createPost(memberId, POST_REQUEST1);
+        postService.createPost(memberId, POST_REQUEST2);
+        postService.createPost(memberId, POST_REQUEST3);
     }
 
     @Test
