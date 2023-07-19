@@ -16,9 +16,11 @@ import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
+@Service
 public class ThumbsService {
 
     private final ThumbsRepository thumbsRepository;
@@ -27,6 +29,7 @@ public class ThumbsService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
 
+    @Transactional
     public void thumbsUp(final MemberIdDto memberId, final Long postId) {
         Member loginMember = memberRepository.findById(memberId.id())
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
