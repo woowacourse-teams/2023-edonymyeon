@@ -35,6 +35,7 @@ class PostDetailActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_post_detail, menu)
+        hideMenusForWriter(menu)
         return true
     }
 
@@ -57,6 +58,17 @@ class PostDetailActivity : AppCompatActivity() {
             }
 
             else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun hideMenusForWriter(menu: Menu?) {
+        listOf(
+            menu?.findItem(R.id.action_update),
+            menu?.findItem(R.id.action_delete),
+        ).forEach {
+            if (viewModel.post.value?.isWriter == true) {
+                it?.isVisible = false
+            }
         }
     }
 

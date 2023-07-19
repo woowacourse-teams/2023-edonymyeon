@@ -133,6 +133,6 @@ private val postData = Post(
         isUp = false,
         isDown = true,
     ),
-    isScrap = true,
-    isWriter = false,
+    isScrap = false,
+    isWriter = true,
 )
