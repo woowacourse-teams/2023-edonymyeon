@@ -48,11 +48,9 @@ class ThumbsUpServiceTest {
     @BeforeEach
     public void 회원가입과_게시글쓰기를_한다() {
         postWriter = new Member(
-                null,
                 "email",
                 "password",
                 "nickname",
-                "introduction",
                 null
         );
         memberRepository.save(postWriter);
@@ -91,11 +89,9 @@ class ThumbsUpServiceTest {
     void 추천시_해당게시물에_추천한_적_없으면_추가한다() {
         // given
         Member otherMember = new Member(
-                null,
                 "email2",
                 "password2",
                 "nickname2",
-                "introduction2",
                 null
         );
         memberRepository.save(otherMember);
@@ -126,11 +122,9 @@ class ThumbsUpServiceTest {
     void 추천시_해당게시물에_추천한_적_있으면_예외가_발생한다() {
         // given
         Member otherMember = new Member(
-                null,
                 "email2",
                 "password2",
                 "nickname2",
-                "introduction2",
                 null
         );
         memberRepository.save(otherMember);

@@ -51,11 +51,9 @@ class ThumbsUpIntegrationTest {
     @BeforeEach
     void 테스트_실행전_게시글을_작성하는_사람을_추가한다() {
         postWriter = new Member(
-                null,
                 "email",
                 "password",
                 "nickname",
-                "introduction",
                 null
         );
         memberRepository.save(postWriter);
@@ -67,11 +65,9 @@ class ThumbsUpIntegrationTest {
         PostResponse postResponse = postService.createPost(new MemberIdDto(postWriter.getId()), postRequest);
 
         Member otherMember = new Member(
-                null,
                 "email2",
                 "password2",
                 "nickname2",
-                "introduction2",
                 null
         );
         memberRepository.save(otherMember);

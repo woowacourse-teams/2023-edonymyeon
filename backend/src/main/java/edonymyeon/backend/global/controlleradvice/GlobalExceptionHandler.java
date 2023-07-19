@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
             ExceptionInformation.class);
 
     public GlobalExceptionHandler() {
-        exceptionInfoToHttpStatus.put(ExceptionInformation.MEMBER_EMAIL_NOT_FOUND, UNAUTHORIZED);
+        exceptionInfoToHttpStatus.put(ExceptionInformation.AUTHORIZATION_FAIL, UNAUTHORIZED);
         exceptionInfoToHttpStatus.put(ExceptionInformation.AUTHORIZATION_EMPTY, UNAUTHORIZED);
     }
 
