@@ -35,7 +35,7 @@ class PostDetailViewModel : ViewModel() {
 
     fun updateUpRecommendation(isChecked: Boolean) {
         val oldRecommendation = _recommendation.value?.toDomain() ?: return
-        if (oldRecommendation.isUp == isChecked) return
+        if (oldRecommendation.isUp && isChecked) return
 
         if (isChecked) {
             if (oldRecommendation.isDown) {
@@ -60,12 +60,12 @@ class PostDetailViewModel : ViewModel() {
 
     fun updateDownRecommendation(isChecked: Boolean) {
         val oldRecommendation = _recommendation.value?.toDomain() ?: return
-        if (oldRecommendation.isDown == isChecked) return
+        if (oldRecommendation.isDown && isChecked) return
 
         if (isChecked) {
             if (oldRecommendation.isUp) {
                 _recommendation.value = oldRecommendation.copy(
-                    downCount = oldRecommendation.downCount.decrease(),
+                    downCount = oldRecommendation.downCount.increase(),
                     isUp = false,
                     isDown = true,
                 ).toUiModel()
