@@ -12,6 +12,7 @@ import io.restassured.response.Response;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class MemberIntegrationTest extends IntegrationTest {
@@ -37,7 +38,8 @@ public class MemberIntegrationTest extends IntegrationTest {
         final MyPageResponse myPageResponse = response.as(MyPageResponse.class);
         assertAll(
                 () -> assertThat(myPageResponse.memberId()).isEqualTo(member.getId()),
-                () -> assertThat(myPageResponse.nickname()).isEqualTo(member.getNickname())
+                () -> assertThat(myPageResponse.nickname()).isEqualTo(member.getNickname()),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         );
     }
 }
