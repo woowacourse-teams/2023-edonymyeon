@@ -24,7 +24,7 @@ public class ImageFileNameMockStrategy implements ImageFileNameStrategy {
         return prefix + "." + ext;
     }
 
-    private String extractExt(final String originalName) {
+    public String extractExt(final String originalName) {
         int pos = originalName.lastIndexOf(".");
         return originalName.substring(pos + 1);
     }
