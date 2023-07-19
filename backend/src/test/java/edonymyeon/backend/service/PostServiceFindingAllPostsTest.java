@@ -12,15 +12,19 @@ import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostFindingCondition;
 import edonymyeon.backend.post.application.dto.PostFindingResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
+import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.repository.PostRepository;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
@@ -35,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @SpringBootTest
 @Import(TestConfig.class)
+@TestInstance(Lifecycle.PER_CLASS)
 @DisplayName("게시글 전체 조회 테스트")
 public class PostServiceFindingAllPostsTest {
 
@@ -57,49 +62,24 @@ public class PostServiceFindingAllPostsTest {
     private final MemberRepository memberRepository;
     private MemberIdDto memberId;
 
-    @BeforeEach
-    void setUp() throws IOException {
-        final MockMultipartFile file1 = new MockMultipartFile("imageFiles", "test_image_1.jpg", "image/jpg",
-                getClass().getResourceAsStream(IMAGE1_RELATIVE_PATH));
-
-        final MockMultipartFile file2 = new MockMultipartFile("imageFiles", "test_image_2.jpg", "image/jpg",
-                getClass().getResourceAsStream(IMAGE2_RELATIVE_PATH));
-
-        final var POST_REQUEST1 = new PostRequest(
-                POST_REQUEST1_TITLE,
-                POST_REQUEST1_CONTENT,
-                POST_REQUEST1_PRICE,
-                List.of(file1, file2)
-        );
-
-        final var POST_REQUEST2 = new PostRequest(
-                POST_REQUEST2_TITLE,
-                POST_REQUEST2_CONTENT,
-                POST_REQUEST2_PRICE,
-                List.of(file1, file2)
-        );
-
-        final var POST_REQUEST3 = new PostRequest(
-                POST_REQUEST3_TITLE,
-                POST_REQUEST3_CONTENT,
-                POST_REQUEST3_PRICE,
-                List.of(file1, file2)
-        );
-
+    @BeforeAll
+    void 사용자_만들기() {
         Member member = new Member(
                 null,
                 "email",
                 "password",
                 "nickname",
-                "introduction",
                 null
         );
         memberRepository.save(member);
         memberId = new MemberIdDto(member.getId());
+    }
 
-        postService.createPost(memberId, POST_REQUEST1);
-        postService.createPost(memberId, POST_REQUEST2);
-        postService.createPost(memberId, POST_REQUEST3);
+    @BeforeEach
+    void 게시글들_등록하기() throws IOException {
+        게시글1_만들기();
+        게시글2_만들기();
+        게시글3_만들기();
     }
 
     @Test
@@ -128,9 +108,11 @@ public class PostServiceFindingAllPostsTest {
                         .containsOnly("src/test/resources/static/img/test_store/test-inserting0.jpg"),
                 () -> assertThat(postFindingResponses)
                         .extracting(PostFindingResponse::createdAt)
-                        .hasSize(3)
+                        .hasSize(3),
+                () -> assertThat(postFindingResponses)
+                        .extracting(postFindingResponse -> postFindingResponse.writer().nickName())
+                        .containsOnly("nickname")
         );
-        // TODO: 작성자 정보 검증
         // TODO: 조회수 검증
         // TODO: 스크랩 수 검증
         // TODO: 댓글 수 검증
@@ -150,11 +132,10 @@ public class PostServiceFindingAllPostsTest {
 
     @Test
     void 주어진_조회개수로_게시글_조회개수를_조절할_수_있다() throws IOException {
-        setUp();
-        setUp();
-        setUp();
-        setUp();
-        setUp(); // 12개 저장됨
+        게시글들_등록하기();
+        게시글들_등록하기();
+        게시글들_등록하기();
+        // 12개 저장됨
 
         final var postFindingCondition = PostFindingCondition.builder()
                 .size(10)
@@ -192,5 +173,56 @@ public class PostServiceFindingAllPostsTest {
         assertThat(postFindingResponses)
                 .isNotNull()
                 .isEmpty();
+    }
+
+    private PostResponse 게시글1_만들기() throws IOException {
+        final MockMultipartFile file1 = new MockMultipartFile("imageFiles", "test_image_1.jpg", "image/jpg",
+                getClass().getResourceAsStream(IMAGE1_RELATIVE_PATH));
+
+        final MockMultipartFile file2 = new MockMultipartFile("imageFiles", "test_image_2.jpg", "image/jpg",
+                getClass().getResourceAsStream(IMAGE2_RELATIVE_PATH));
+
+        final var POST_REQUEST1 = new PostRequest(
+                POST_REQUEST1_TITLE,
+                POST_REQUEST1_CONTENT,
+                POST_REQUEST1_PRICE,
+                List.of(file1, file2)
+        );
+
+        return postService.createPost(memberId, POST_REQUEST1);
+    }
+
+    private PostResponse 게시글2_만들기() throws IOException {
+        final MockMultipartFile file1 = new MockMultipartFile("imageFiles", "test_image_1.jpg", "image/jpg",
+                getClass().getResourceAsStream(IMAGE1_RELATIVE_PATH));
+
+        final MockMultipartFile file2 = new MockMultipartFile("imageFiles", "test_image_2.jpg", "image/jpg",
+                getClass().getResourceAsStream(IMAGE2_RELATIVE_PATH));
+
+        final var POST_REQUEST2 = new PostRequest(
+                POST_REQUEST2_TITLE,
+                POST_REQUEST2_CONTENT,
+                POST_REQUEST2_PRICE,
+                List.of(file1, file2)
+        );
+
+        return postService.createPost(memberId, POST_REQUEST2);
+    }
+
+    private PostResponse 게시글3_만들기() throws IOException {
+        final MockMultipartFile file1 = new MockMultipartFile("imageFiles", "test_image_1.jpg", "image/jpg",
+                getClass().getResourceAsStream(IMAGE1_RELATIVE_PATH));
+
+        final MockMultipartFile file2 = new MockMultipartFile("imageFiles", "test_image_2.jpg", "image/jpg",
+                getClass().getResourceAsStream(IMAGE2_RELATIVE_PATH));
+
+        final var POST_REQUEST3 = new PostRequest(
+                POST_REQUEST3_TITLE,
+                POST_REQUEST3_CONTENT,
+                POST_REQUEST3_PRICE,
+                List.of(file1, file2)
+        );
+
+        return postService.createPost(memberId, POST_REQUEST3);
     }
 }

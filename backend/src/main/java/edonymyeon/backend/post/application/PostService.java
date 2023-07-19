@@ -16,6 +16,7 @@ import edonymyeon.backend.post.application.dto.PostFindingCondition;
 import edonymyeon.backend.post.application.dto.PostFindingResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.post.application.dto.WriterResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import java.util.List;
@@ -140,7 +141,7 @@ public class PostService {
                         post.getTitle(),
                         post.getPostImageInfos().get(0).getFullPath(),
                         post.getContent(),
-                        null, // TODO: 작성자 정보
+                        new WriterResponse(post.getMember().getNickname()), // TODO: 작성자 정보
                         post.getCreateAt(),
                         0, // TODO: 조회수
                         0, // TODO: 스크랩 수
