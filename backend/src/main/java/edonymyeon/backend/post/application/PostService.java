@@ -14,6 +14,7 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import java.util.List;
@@ -87,5 +88,9 @@ public class PostService {
             return;
         }
         throw new EdonymyeonException(POST_MEMBER_FORBIDDEN);
+    }
+
+    public SpecificPostInfoResponse findSpecificPost(final Long postId, final Long memberId) {
+        return null;
     }
 }
