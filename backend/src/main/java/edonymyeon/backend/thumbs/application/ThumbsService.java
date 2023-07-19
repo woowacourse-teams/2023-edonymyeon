@@ -9,9 +9,13 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.thumbs.domain.AllThumbsInPost;
+import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
+import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -51,5 +55,28 @@ public class ThumbsService {
 
         Thumbs thumbs = postThumbs.get();
         thumbs.up();
+    }
+
+    public AllThumbsInPostResponse findAllThumbsInPost(final Long postId) {
+        AllThumbsInPost allThumbsInPost = new AllThumbsInPost(thumbsRepository.findByPostId(postId));
+
+        return new AllThumbsInPostResponse(
+                allThumbsInPost.getUpCount(),
+                allThumbsInPost.getDownCount()
+        );
+    }
+
+    public ThumbsStatusInPostResponse findThumbsStatusInPost(final MemberIdDto memberId, final Long postId){
+        if(Objects.isNull(memberId.id())){
+            return new ThumbsStatusInPostResponse(false, false);
+        }
+
+        Optional<Thumbs> thumbsInPost = thumbsRepository.findByPostIdAndMemberId(postId, memberId.id());
+        if(thumbsInPost.isEmpty()){
+            return new ThumbsStatusInPostResponse(false, false);
+        }
+
+        Thumbs thumbs = thumbsInPost.get();
+        return new ThumbsStatusInPostResponse(thumbs.isUp(), thumbs.isDown());
     }
 }
