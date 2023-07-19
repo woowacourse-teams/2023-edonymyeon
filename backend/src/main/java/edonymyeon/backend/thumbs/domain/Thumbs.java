@@ -1,5 +1,8 @@
 package edonymyeon.backend.thumbs.domain;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP_ALREADY_EXIST;
+
+import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.domain.Post;
 import jakarta.persistence.Entity;
@@ -42,11 +45,18 @@ public class Thumbs {
         this.thumbsType = thumbsType;
     }
 
-    public boolean isUp() {
+    private boolean isUp() {
         return thumbsType == ThumbsType.UP;
     }
 
-    public void updateThumbsType() {
+    private void updateThumbsType() {
         this.thumbsType = thumbsType.getReverseType();
+    }
+
+    public void up() {
+        if(isUp()){
+            throw new EdonymyeonException(THUMBS_UP_ALREADY_EXIST);
+        }
+        updateThumbsType();
     }
 }

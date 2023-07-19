@@ -2,7 +2,6 @@ package edonymyeon.backend.thumbs.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_POST_IS_LOGIN_MEMBER;
-import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP_ALREADY_EXIST;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
@@ -51,11 +50,6 @@ public class ThumbsService {
         }
 
         Thumbs thumbs = postThumbs.get();
-
-        if (thumbs.isUp()) {
-            throw new EdonymyeonException(THUMBS_UP_ALREADY_EXIST);
-        }
-
-        thumbs.updateThumbsType();
+        thumbs.up();
     }
 }
