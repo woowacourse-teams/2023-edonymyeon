@@ -9,6 +9,7 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.thumbs.domain.AllThumbsInPost;
 import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
@@ -56,7 +57,7 @@ public class ThumbsService {
         thumbs.up();
     }
 
-    public AllThumbsInPostResponse allThumbsInPost(final Long postId) {
+    public AllThumbsInPostResponse findAllThumbsInPost(final Long postId) {
         AllThumbsInPost allThumbsInPost = new AllThumbsInPost(thumbsRepository.findByPostId(postId));
 
         return new AllThumbsInPostResponse(
@@ -65,17 +66,17 @@ public class ThumbsService {
         );
     }
 
-    public ThumbsStatusInPostResponse thumbsStatusInPost(final MemberIdDto memberId, final Long postId){
+    public ThumbsStatusInPostResponse findThumbsStatusInPost(final MemberIdDto memberId, final Long postId){
         if(Objects.isNull(memberId.id())){
             return new ThumbsStatusInPostResponse(false, false);
         }
 
-        Optional<Thumbs> post = thumbsRepository.findByPostIdAndMemberId(postId, memberId.id());
-        if(post.isEmpty()){
+        Optional<Thumbs> thumbsInPost = thumbsRepository.findByPostIdAndMemberId(postId, memberId.id());
+        if(thumbsInPost.isEmpty()){
             return new ThumbsStatusInPostResponse(false, false);
         }
 
-        Thumbs thumbs = post.get();
+        Thumbs thumbs = thumbsInPost.get();
         return new ThumbsStatusInPostResponse(thumbs.isUp(), thumbs.isDown());
     }
 }

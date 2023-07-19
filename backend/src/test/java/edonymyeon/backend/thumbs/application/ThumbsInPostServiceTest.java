@@ -73,7 +73,7 @@ public class ThumbsInPostServiceTest {
 
     @Test
     void 해당_게시글에_추천이_없을시에도_정상_동작한다() {
-        AllThumbsInPostResponse allThumbsInPostResponse = thumbsService.allThumbsInPost(postResponse.id());
+        AllThumbsInPostResponse allThumbsInPostResponse = thumbsService.findAllThumbsInPost(postResponse.id());
 
         assertSoftly(softly -> {
                     softly.assertThat(allThumbsInPostResponse.thumbsUpCount()).isEqualTo(0);
@@ -102,7 +102,7 @@ public class ThumbsInPostServiceTest {
         thumbsService.thumbsUp(otherMember2Id, postResponse.id());
 
         // when
-        AllThumbsInPostResponse allThumbsInPostResponse = thumbsService.allThumbsInPost(postResponse.id());
+        AllThumbsInPostResponse allThumbsInPostResponse = thumbsService.findAllThumbsInPost(postResponse.id());
 
         // then
         assertSoftly(softly -> {
@@ -125,7 +125,7 @@ public class ThumbsInPostServiceTest {
 
         // when
         MemberIdDto emptyId = new MemberIdDto(null);
-        ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.thumbsStatusInPost(emptyId,
+        ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.findThumbsStatusInPost(emptyId,
                 postResponse.id());
 
         // then
@@ -143,7 +143,7 @@ public class ThumbsInPostServiceTest {
         thumbsService.thumbsUp(otherMemberId, postResponse.id());
 
         // when
-        ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.thumbsStatusInPost(otherMemberId,
+        ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.findThumbsStatusInPost(otherMemberId,
                 postResponse.id());
 
         // then
@@ -160,7 +160,7 @@ public class ThumbsInPostServiceTest {
         MemberIdDto otherMemberId = new MemberIdDto(otherMember.getId());
 
         // when
-        ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.thumbsStatusInPost(otherMemberId,
+        ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.findThumbsStatusInPost(otherMemberId,
                 postResponse.id());
 
         // then
