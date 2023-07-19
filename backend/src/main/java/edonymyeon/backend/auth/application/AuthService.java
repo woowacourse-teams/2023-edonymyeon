@@ -1,13 +1,12 @@
 package edonymyeon.backend.auth.application;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.AUTHORIZATION_FAIL;
+import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_NOT_FOUND;
 
 import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +19,7 @@ public class AuthService {
     //todo: 비밀번호까지 조회에 사용하나?
     public MemberIdDto findMember(final String email, final String password) {
         final Member member = memberRepository.findByEmailAndPassword(email, password)
-                .orElseThrow(() -> new EdonymyeonException(AUTHORIZATION_FAIL));
+                .orElseThrow(() -> new EdonymyeonException(MEMBER_EMAIL_NOT_FOUND));
         return new MemberIdDto(member.getId());
     }
 
