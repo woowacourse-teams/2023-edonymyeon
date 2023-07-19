@@ -21,6 +21,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
+    public static final long NON_EXISTING_MEMBER_ID = 0L;
     private final AuthService authService;
 
     @Override
@@ -30,11 +31,18 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
-                                  final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory)
+    public Object resolveArgument(
+            final MethodParameter parameter,
+            final ModelAndViewContainer mavContainer,
+            final NativeWebRequest webRequest,
+            final WebDataBinderFactory binderFactory
+    )
             throws Exception {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
+            if (!Objects.requireNonNull(parameter.getParameterAnnotation(AuthPrincipal.class)).required()) {
+                return new MemberIdDto(NON_EXISTING_MEMBER_ID);
+            }
             throw new EdonymyeonException(AUTHORIZATION_EMPTY);
         }
 
