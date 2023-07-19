@@ -3,6 +3,7 @@ package com.app.edonymyeon.presentation.ui.posteditor
 import android.Manifest
 import android.content.ClipData
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -18,6 +19,7 @@ import androidx.lifecycle.Observer
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostEditorBinding
 import com.app.edonymyeon.presentation.ui.posteditor.adapter.PostEditorImagesAdapter
+import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.google.android.material.snackbar.Snackbar
 
 class PostEditorActivity : AppCompatActivity() {
@@ -65,6 +67,19 @@ class PostEditorActivity : AppCompatActivity() {
         setCameraAndGalleryClickListener()
         observeImages()
         setAdapter()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val key = intent.getIntExtra(KEY_POST_EDITOR_ID, 0)
+        if (key == UPDATE_CODE) {
+            val post = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra(KEY_POST_EDITOR_POST, PostUiModel::class.java)
+            } else {
+                intent.getParcelableExtra<PostUiModel>(KEY_POST_EDITOR_POST)
+            }
+            post?.let { viewModel.init(it) }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -219,6 +234,10 @@ class PostEditorActivity : AppCompatActivity() {
 
     companion object {
         private const val MAX_IMAGES_COUNT = 10
+        private const val KEY_POST_EDITOR_ID = "key_post_editor_id"
+        private const val KEY_POST_EDITOR_POST = "key_post_editor_post"
+        private const val POST_CODE = 2000
+        private const val UPDATE_CODE = 3000
         private val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")
             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
@@ -227,5 +246,12 @@ class PostEditorActivity : AppCompatActivity() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
         )
+
+        fun newIntent(context: Context, post: PostUiModel, key: Int): Intent {
+            return Intent(context, PostEditorActivity::class.java).apply {
+                putExtra(KEY_POST_EDITOR_ID, key)
+                putExtra(KEY_POST_EDITOR_POST, post)
+            }
+        }
     }
 }
