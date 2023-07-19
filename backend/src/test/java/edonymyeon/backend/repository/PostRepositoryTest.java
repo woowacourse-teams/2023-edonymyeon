@@ -32,11 +32,9 @@ class PostRepositoryTest {
     @BeforeEach
     public void setUp() {
         member = new Member(
-                null,
                 "email",
                 "password",
                 "nickname",
-                "introduction",
                 null
         );
         memberRepository.save(member);
