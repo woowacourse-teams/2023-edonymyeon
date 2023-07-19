@@ -11,6 +11,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class MemberTestSupport {
 
+    private static final String DEFAULT_EMAIL = "email";
+    private static final String DEFAULT_PASSWORD = "password";
+    private static final String DEFAULT_NICK_NAME = "nickName";
+    private static int emailCount = 1;
     private static int nickNameCount = 1;
 
     private final MemberRepository memberRepository;
@@ -54,9 +58,9 @@ public class MemberTestSupport {
         public Member build() {
             return memberRepository.save(
                     new Member(
-                            email == null ? UUID.randomUUID().toString() : email,
-                            password == null ? UUID.randomUUID().toString() : password,
-                            nickname == null ? ("nickName" + nickNameCount++) : nickname,
+                            email == null ? (DEFAULT_EMAIL + emailCount++) : email,
+                            password == null ? DEFAULT_PASSWORD : password,
+                            nickname == null ? (DEFAULT_NICK_NAME + nickNameCount++) : nickname,
                             profileImageInfo == null ? profileImageInfoTestSupport.builder().build() : profileImageInfo
                     )
             );
