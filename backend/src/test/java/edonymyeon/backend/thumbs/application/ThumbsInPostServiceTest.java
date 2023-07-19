@@ -38,32 +38,6 @@ public class ThumbsInPostServiceTest {
 
     private PostResponse postResponse;
 
-    private void thumbsUp(final Member member, final PostResponse post) {
-        MemberIdDto memberId = new MemberIdDto(member.getId());
-        thumbsService.thumbsUp(memberId, post.id());
-    }
-
-    private void thumbsDown(final Member member, final PostResponse post) {
-        MemberIdDto memberId = new MemberIdDto(member.getId());
-        thumbsService.thumbsDown(memberId, post.id());
-    }
-
-    private Member registerMember(
-            final String email,
-            final String password,
-            final String nickname
-    ) {
-        Member member = new Member(
-                email,
-                password,
-                nickname,
-                null
-        );
-        memberRepository.save(member);
-
-        return member;
-    }
-
     @BeforeEach
     public void 두_회원의_가입과_하나의_게시글쓰기를_한다() {
         otherMember = registerMember("otherEmail", "otherPassword", "otherNickname");
@@ -198,5 +172,31 @@ public class ThumbsInPostServiceTest {
                     softly.assertThat(thumbsStatusInPostResponse.isDown()).isTrue();
                 }
         );
+    }
+
+    private void thumbsUp(final Member member, final PostResponse post) {
+        MemberIdDto memberId = new MemberIdDto(member.getId());
+        thumbsService.thumbsUp(memberId, post.id());
+    }
+
+    private void thumbsDown(final Member member, final PostResponse post) {
+        MemberIdDto memberId = new MemberIdDto(member.getId());
+        thumbsService.thumbsDown(memberId, post.id());
+    }
+
+    private Member registerMember(
+            final String email,
+            final String password,
+            final String nickname
+    ) {
+        Member member = new Member(
+                email,
+                password,
+                nickname,
+                null
+        );
+        memberRepository.save(member);
+
+        return member;
     }
 }

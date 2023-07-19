@@ -69,7 +69,7 @@ public class Thumbs {
     }
 
     public void down() {
-        if (!isUp()) {
+        if (isDown()) {
             throw new EdonymyeonException(THUMBS_DOWN_ALREADY_EXIST);
         }
         updateThumbsType();

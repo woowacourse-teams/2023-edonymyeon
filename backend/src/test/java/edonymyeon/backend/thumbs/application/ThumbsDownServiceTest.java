@@ -46,32 +46,6 @@ public class ThumbsDownServiceTest {
 
     private PostResponse postResponse;
 
-    private void thumbsUp(final Member member, final PostResponse post) {
-        MemberIdDto memberId = new MemberIdDto(member.getId());
-        thumbsService.thumbsUp(memberId, post.id());
-    }
-
-    private void thumbsDown(final Member member, final PostResponse post) {
-        MemberIdDto memberId = new MemberIdDto(member.getId());
-        thumbsService.thumbsDown(memberId, post.id());
-    }
-
-    private Member registerMember(
-            final String email,
-            final String password,
-            final String nickname
-    ) {
-        Member member = new Member(
-                email,
-                password,
-                nickname,
-                null
-        );
-        memberRepository.save(member);
-
-        return member;
-    }
-
     @BeforeEach
     public void 회원가입과_게시글쓰기를_한다() {
         postWriter =  registerMember("email", "password", "nickname");
@@ -161,5 +135,31 @@ public class ThumbsDownServiceTest {
                 () -> thumbsService.thumbsDown(otherMemberId, postResponse.id()))
                 .isExactlyInstanceOf(EdonymyeonException.class)
                 .hasMessage(THUMBS_DOWN_ALREADY_EXIST.getMessage());
+    }
+
+    private void thumbsUp(final Member member, final PostResponse post) {
+        MemberIdDto memberId = new MemberIdDto(member.getId());
+        thumbsService.thumbsUp(memberId, post.id());
+    }
+
+    private void thumbsDown(final Member member, final PostResponse post) {
+        MemberIdDto memberId = new MemberIdDto(member.getId());
+        thumbsService.thumbsDown(memberId, post.id());
+    }
+
+    private Member registerMember(
+            final String email,
+            final String password,
+            final String nickname
+    ) {
+        Member member = new Member(
+                email,
+                password,
+                nickname,
+                null
+        );
+        memberRepository.save(member);
+
+        return member;
     }
 }

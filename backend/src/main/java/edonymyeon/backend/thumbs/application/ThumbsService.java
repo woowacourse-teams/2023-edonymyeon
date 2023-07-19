@@ -34,12 +34,10 @@ public class ThumbsService {
     private final PostRepository postRepository;
 
     public AllThumbsInPostResponse findAllThumbsInPost(final Long postId) {
-        AllThumbsInPost allThumbsInPost = new AllThumbsInPost(thumbsRepository.findByPostId(postId));
+        AllThumbsInPost allThumbsInPost = AllThumbsInPost.from(thumbsRepository.findByPostId(postId));
 
-        return new AllThumbsInPostResponse(
-                allThumbsInPost.getUpCount(),
-                allThumbsInPost.getDownCount()
-        );
+        return new AllThumbsInPostResponse(allThumbsInPost.getUpCount(),
+                allThumbsInPost.getDownCount());
     }
 
     public ThumbsStatusInPostResponse findThumbsStatusInPost(final MemberIdDto memberId, final Long postId){
@@ -61,7 +59,7 @@ public class ThumbsService {
         Member loginMember = findMemberById(memberId);
         Post post = findPostById(postId);
 
-        if (post.getMember().getId().equals(loginMember.getId())) {
+        if (post.getMember().equals(loginMember)) {
             throw new EdonymyeonException(THUMBS_POST_IS_SELF_UP_DOWN);
         }
 
@@ -77,14 +75,14 @@ public class ThumbsService {
         thumbs.up();
     }
 
-    private Post findPostById(final Long postId) {
-        return postRepository.findById(postId)
-                .orElseThrow(() -> new EdonymyeonException(POST_ID_NOT_FOUND));
-    }
-
     private Member findMemberById(final MemberIdDto memberId) {
         return memberRepository.findById(memberId.id())
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
+    }
+
+    private Post findPostById(final Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new EdonymyeonException(POST_ID_NOT_FOUND));
     }
 
     @Transactional
@@ -92,7 +90,7 @@ public class ThumbsService {
         Member loginMember = findMemberById(memberId);
         Post post = findPostById(postId);
 
-        if (post.getMember().getId().equals(loginMember.getId())) {
+        if (post.getMember().equals(loginMember)) {
             throw new EdonymyeonException(THUMBS_POST_IS_SELF_UP_DOWN);
         }
 
