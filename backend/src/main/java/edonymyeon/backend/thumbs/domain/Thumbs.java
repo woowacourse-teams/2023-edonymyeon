@@ -39,7 +39,11 @@ public class Thumbs {
     @Enumerated(value = EnumType.STRING)
     private ThumbsType thumbsType;
 
-    public Thumbs(final Post post, final Member member, final ThumbsType thumbsType) {
+    public Thumbs(
+            final Post post,
+            final Member member,
+            final ThumbsType thumbsType
+    ) {
         this.post = post;
         this.member = member;
         this.thumbsType = thumbsType;

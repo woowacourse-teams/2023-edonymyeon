@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ThumbsRepository extends JpaRepository<Thumbs, Long> {
 
-    Optional<Thumbs> findByPostIdAndMemberId(Long postId, Long memberId);
+    Optional<Thumbs> findByPostIdAndMemberId(final Long postId, final Long memberId);
 }
