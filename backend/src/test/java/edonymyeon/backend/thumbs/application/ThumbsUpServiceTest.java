@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @TestConstructor(autowireMode = AutowireMode.ALL)
 @Transactional
 @SpringBootTest
-class ThumbsServiceTest {
+class ThumbsUpServiceTest {
 
     private final ThumbsService thumbsService;
 
