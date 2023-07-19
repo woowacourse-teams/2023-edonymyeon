@@ -58,6 +58,10 @@ class PostEditorActivity : AppCompatActivity() {
         }
     }
 
+    private val originActivityKey by lazy {
+        intent.getIntExtra(KEY_POST_EDITOR_ID, 0)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -71,8 +75,7 @@ class PostEditorActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val key = intent.getIntExtra(KEY_POST_EDITOR_ID, 0)
-        if (key == UPDATE_CODE) {
+        if (originActivityKey == UPDATE_CODE) {
             val post = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 intent.getParcelableExtra(KEY_POST_EDITOR_POST, PostUiModel::class.java)
             } else {
@@ -90,11 +93,37 @@ class PostEditorActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_post_save -> {
+                viewModel.postTitle.observe(
+                    this,
+                    Observer {
+                        if (it.isNotEmpty() || it != null) {
+                            savePost()
+                            finish()
+                        } else {
+                            showSnackbarForMissingTitle()
+                        }
+                    },
+                )
                 return true
             }
 
             else -> return super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun savePost() {
+        when (originActivityKey) {
+            POST_CODE -> {}
+            UPDATE_CODE -> {}
+        }
+    }
+
+    private fun showSnackbarForMissingTitle() {
+        Snackbar.make(
+            binding.clPostEditor,
+            getString(R.string.post_editor_snackbar_missing_title_message),
+            Snackbar.LENGTH_SHORT,
+        ).show()
     }
 
     private fun initBinding() {
