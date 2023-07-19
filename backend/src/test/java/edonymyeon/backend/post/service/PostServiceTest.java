@@ -1,4 +1,4 @@
-package edonymyeon.backend.service;
+package edonymyeon.backend.post.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
