@@ -1,7 +1,7 @@
 package edonymyeon.backend.thumbs.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_POST_IS_LOGIN_MEMBER;
+import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_POST_IS_SELF_UP_DOWN;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
@@ -28,34 +28,9 @@ public class ThumbsService {
 
     private final ThumbsRepository thumbsRepository;
 
-    // TODO: 나중에 dev 받아와서 서비스들로 고쳐주기
     private final MemberRepository memberRepository;
+
     private final PostRepository postRepository;
-
-    @Transactional
-    public void thumbsUp(final MemberIdDto memberId, final Long postId) {
-        Member loginMember = memberRepository.findById(memberId.id())
-                .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
-
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 게시글이 없습니다."));
-
-        // TODO: equal재정의 되면 바꿔주기
-        if (post.getMember().getId().equals(loginMember.getId())) {
-            throw new EdonymyeonException(THUMBS_POST_IS_LOGIN_MEMBER);
-        }
-
-        Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postId, loginMember.getId());
-
-        if (postThumbs.isEmpty()) {
-            Thumbs thumbs = new Thumbs(post, loginMember, ThumbsType.UP);
-            thumbsRepository.save(thumbs);
-            return;
-        }
-
-        Thumbs thumbs = postThumbs.get();
-        thumbs.up();
-    }
 
     public AllThumbsInPostResponse findAllThumbsInPost(final Long postId) {
         AllThumbsInPost allThumbsInPost = new AllThumbsInPost(thumbsRepository.findByPostId(postId));
@@ -79,4 +54,37 @@ public class ThumbsService {
         Thumbs thumbs = thumbsInPost.get();
         return new ThumbsStatusInPostResponse(thumbs.isUp(), thumbs.isDown());
     }
+
+    @Transactional
+    public void thumbsUp(final MemberIdDto memberId, final Long postId) {
+        Member loginMember = findMemberById(memberId);
+        Post post = findPostById(postId);
+
+        if (post.getMember().getId().equals(loginMember.getId())) {
+            throw new EdonymyeonException(THUMBS_POST_IS_SELF_UP_DOWN);
+        }
+
+        Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postId, loginMember.getId());
+
+        if (postThumbs.isEmpty()) {
+            Thumbs thumbs = new Thumbs(post, loginMember, ThumbsType.UP);
+            thumbsRepository.save(thumbs);
+            return;
+        }
+
+        Thumbs thumbs = postThumbs.get();
+        thumbs.up();
+    }
+
+    // TODO: 예외 바꿔주기
+    private Post findPostById(final Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 게시글이 없습니다."));
+    }
+
+    private Member findMemberById(final MemberIdDto memberId) {
+        return memberRepository.findById(memberId.id())
+                .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
+    }
+
 }
