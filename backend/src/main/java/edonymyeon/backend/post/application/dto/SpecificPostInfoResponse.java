@@ -1,5 +1,6 @@
 package edonymyeon.backend.post.application.dto;
 
+import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -9,7 +10,7 @@ public record SpecificPostInfoResponse(
         long price,
         String content,
         LocalDateTime createdAt,
-        List<String> imageUrls,
+        List<PostImageInfo> imageUrls,
         WriterResponse writerResponse,
         ReactionCountResponse reactionCountResponse,
         int upCount,
