@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">edonymyeon</string>
 
+
     <!-- login   -->
     <string name="login_title">로그인</string>
     <string name="login_email">이메일</string>
@@ -26,4 +27,25 @@
     <string name="post_detail_toolbar_menu_update">수정</string>
     <string name="post_detail_toolbar_menu_delete">삭제</string>
     <string name="post_detail_price">가격: %,d원</string>
+
+    <!--post_editor-->
+    <string name="post_editor_page_title">글쓰기</string>
+    <string name="post_editor_post_title">제목</string>
+    <string name="post_editor_post_title_hint">제목을 입력하세요</string>
+    <string name="post_editor_post_price">가격</string>
+    <string name="post_editor_price_hint">가격을 입력하세요</string>
+    <string name="post_editor_post_category">카테코리</string>
+    <string name="post_editor_camera_description">사진 찍는 버튼</string>
+    <string name="post_editor_gallery_description">갤러리에서 이미지 고르는 버튼</string>
+    <string name="post_editor_content_hint">내용을 입력하세요</string>
+    <string name="post_editor_page_write">등록</string>
+    <string name="post_editor_price_unit">원</string>
+    <string name="post_editor_image_limit_message">사진은 10장까지 선택 가능합니다</string>
+    <string name="post_editor_check_permission">권한 허용 필요</string>
+    <string name="post_editor_check_title_input">제목은 필수 입력 항목입니다</string>
+    <string name="post_editor_snackbar_ok_message">확인</string>
+
+    <!--item_post_editor_image-->
+    <string name="item_post_editor_image_description">갤러리에서 가져온 이미지</string>
+    <string name="item_post_editor_image_delete_description">이미지 삭제 버튼</string>
 </resources>

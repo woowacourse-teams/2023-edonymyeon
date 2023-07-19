@@ -90,4 +90,13 @@ dependencies {
 
     // android core
     implementation("androidx.fragment:fragment-ktx:1.5.7")
+
+    val lifecycle_version = "2.2.0"
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
+    // LiveData
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
+
+    // by viewModels() 종속성
+    implementation("androidx.activity:activity-ktx:1.7.2")
 }
