@@ -12,7 +12,6 @@ import android.provider.MediaStore
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostEditorBinding
@@ -48,11 +47,7 @@ class PostEditorActivity : AppCompatActivity() {
         permissions.entries.forEach { entry ->
             val isGranted = entry.value
             if (!isGranted) {
-                Snackbar.make(
-                    binding.clPostEditor,
-                    getString(R.string.post_editor_check_permission),
-                    Snackbar.LENGTH_SHORT,
-                ).show()
+                showPermissionSnackbar()
             } else {
                 navigateToCamera()
             }
@@ -94,6 +89,10 @@ class PostEditorActivity : AppCompatActivity() {
                 permissionList.remove(backgroundPermission)
             }
             val permissionArray = permissionList.toTypedArray()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                navigateToCamera()
+                return
+            }
             permissionRequestLauncher.launch(permissionArray)
         } else {
             permissionRequestLauncher.launch(requestPermissions)
@@ -115,6 +114,23 @@ class PostEditorActivity : AppCompatActivity() {
                 adapter.submitList(images)
             },
         )
+    }
+
+    private fun showPermissionSnackbar() {
+        Snackbar.make(
+            binding.clPostEditor,
+            getString(R.string.post_editor_check_permission),
+            Snackbar.LENGTH_LONG,
+        )
+            .setAction(getString(R.string.post_editor_snackbar_ok_message)) { openAppSetting() }
+            .show()
+    }
+
+    private fun openAppSetting() {
+        val intent = Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        val uri = Uri.fromParts("package", packageName, null)
+        intent.data = uri
+        startActivity(intent)
     }
 
     private fun navigateToGallery() {
