@@ -103,6 +103,7 @@ class PostDetailViewModel() : ViewModel() {
     }
 
     fun updateScrap(isChecked: Boolean) {
+        if (_post.value?.isWriter == true) return
         _isScrap.value = isChecked
     }
 }

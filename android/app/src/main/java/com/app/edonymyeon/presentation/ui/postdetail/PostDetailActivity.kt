@@ -40,24 +40,18 @@ class PostDetailActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_scrap -> {
-                item.isChecked = !item.isChecked
-                viewModel.updateScrap(item.isChecked)
-                return true
-            }
-
+        return when (item.itemId) {
             R.id.action_update -> {
                 Snackbar.make(binding.root, "update", Snackbar.LENGTH_SHORT).show()
-                return true
+                true
             }
 
             R.id.action_delete -> {
                 Snackbar.make(binding.root, "delete", Snackbar.LENGTH_SHORT).show()
-                return true
+                true
             }
 
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -66,11 +60,13 @@ class PostDetailActivity : AppCompatActivity() {
             menu?.findItem(R.id.action_update),
             menu?.findItem(R.id.action_delete),
         ).forEach {
-            if (viewModel.post.value?.isWriter == true) {
+            if (isMyPost()) {
                 it?.isVisible = false
             }
         }
     }
+
+    private fun isMyPost() = viewModel.post.value?.isWriter == true
 
     private fun initBinding() {
         binding.lifecycleOwner = this
@@ -81,6 +77,14 @@ class PostDetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.tbPostDetail)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = ""
+        binding.actionScrap.setOnCheckedChangeListener { _, isChecked ->
+            if (isMyPost()) {
+                Snackbar.make(binding.root, getString(R.string.post_detail_writer_cant_scrap), Snackbar.LENGTH_SHORT).show()
+                binding.actionScrap.isChecked = false
+                return@setOnCheckedChangeListener
+            }
+            viewModel.updateScrap(isChecked)
+        }
     }
 
     private fun setRecommendCheckboxListener() {
