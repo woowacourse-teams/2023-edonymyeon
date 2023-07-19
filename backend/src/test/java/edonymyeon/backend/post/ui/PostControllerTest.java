@@ -1,4 +1,4 @@
-package edonymyeon.backend.controller;
+package edonymyeon.backend.post.ui;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_FORBIDDEN;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -6,7 +6,9 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
+import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.support.MemberTestSupport;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -21,7 +23,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -29,7 +30,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
-@Sql({"/truncate.sql", "/dummydata.sql"})
 @Transactional
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SpringBootTest
@@ -38,6 +38,9 @@ class PostControllerTest {
 
     @Autowired
     MockMvc mockMvc;
+
+    @Autowired
+    protected MemberTestSupport memberTestSupport;
 
     private static MockMultipartFile 이미지1;
 
@@ -63,6 +66,11 @@ class PostControllerTest {
 
     @Test
     void 사진_첨부_성공_테스트() throws Exception {
+        final Member member = memberTestSupport.builder()
+                .email("email")
+                .password("password")
+                .build();
+
         mockMvc.perform(MockMvcRequestBuilders.multipart("/posts")
                         .file(이미지1)
                         .file(이미지2)
@@ -71,7 +79,8 @@ class PostControllerTest {
                         .param("price", "1000")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .header(HttpHeaders.AUTHORIZATION, "Basic "
-                                + java.util.Base64.getEncoder().encodeToString("email:password".getBytes()))
+                                + java.util.Base64.getEncoder()
+                                .encodeToString((member.getEmail() + ":" + member.getPassword()).getBytes()))
                 )
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
@@ -91,6 +100,11 @@ class PostControllerTest {
 
     @Test
     void 본인이_작성한_게시글_삭제_가능_테스트() throws Exception {
+        final Member member = memberTestSupport.builder()
+                .email("email")
+                .password("password")
+                .build();
+
         final MvcResult 게시글_생성_요청_결과 = mockMvc.perform(MockMvcRequestBuilders.multipart("/posts")
                         .file(이미지1)
                         .file(이미지2)
@@ -99,7 +113,8 @@ class PostControllerTest {
                         .param("price", "1000")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .header(HttpHeaders.AUTHORIZATION, "Basic "
-                                + Base64.getEncoder().encodeToString("email:password".getBytes()))
+                                + Base64.getEncoder()
+                                .encodeToString((member.getEmail() + ":" + member.getPassword()).getBytes()))
                 )
                 .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
 
@@ -107,7 +122,8 @@ class PostControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/posts/" + 게시글_생성_응답.id())
                         .header(HttpHeaders.AUTHORIZATION, "Basic "
-                                + Base64.getEncoder().encodeToString("email:password".getBytes())))
+                                + Base64.getEncoder()
+                                .encodeToString((member.getEmail() + ":" + member.getPassword()).getBytes())))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
@@ -121,6 +137,11 @@ class PostControllerTest {
 
     @Test
     void 본인이_작성하지_않은_게시글_삭제_불가능_테스트() throws Exception {
+        final Member member = memberTestSupport.builder()
+                .email("email")
+                .password("password")
+                .build();
+
         final MvcResult 게시글_생성_요청_결과 = mockMvc.perform(MockMvcRequestBuilders.multipart("/posts")
                         .file(이미지1)
                         .file(이미지2)
@@ -129,15 +150,21 @@ class PostControllerTest {
                         .param("price", "1000")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .header(HttpHeaders.AUTHORIZATION, "Basic "
-                                + Base64.getEncoder().encodeToString("email:password".getBytes()))
+                                + Base64.getEncoder()
+                                .encodeToString((member.getEmail() + ":" + member.getPassword()).getBytes()))
                 )
                 .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
 
         PostResponse 게시글_생성_응답 = extractResponseFromResult(게시글_생성_요청_결과, PostResponse.class);
+        final Member otherMember = memberTestSupport.builder()
+                .email("other")
+                .password("password")
+                .build();
 
         final MvcResult 게시글_삭제_요청_결과 = mockMvc.perform(MockMvcRequestBuilders.delete("/posts/" + 게시글_생성_응답.id())
                         .header(HttpHeaders.AUTHORIZATION, "Basic "
-                                + Base64.getEncoder().encodeToString("badman:password".getBytes())))
+                                + Base64.getEncoder()
+                                .encodeToString((otherMember.getEmail() + ":" + otherMember.getPassword()).getBytes())))
                 .andExpect(MockMvcResultMatchers.status().isForbidden())
                 .andReturn();
 

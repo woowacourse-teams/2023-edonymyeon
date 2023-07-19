@@ -1,25 +1,19 @@
-package edonymyeon.backend.integration;
+package edonymyeon.backend.post.integration;
 
+import edonymyeon.backend.IntegrationTest;
+import edonymyeon.backend.member.domain.Member;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.io.File;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(ReplaceUnderscores.class)
-@Sql({"/truncate.sql", "/dummydata.sql"})
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class PostControllerIntegrationTest {
+public class PostIntegrationTest extends IntegrationTest {
 
     @LocalServerPort
     private int port;
@@ -35,8 +29,13 @@ public class PostControllerIntegrationTest {
 
     @Test
     void 사진_첨부_성공_테스트() {
+        final Member member = memberTestSupport.builder()
+                .email("email")
+                .password("password")
+                .build();
+
         RestAssured.given()
-                .auth().preemptive().basic("email", "password")
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .multiPart("title", "this is title")
                 .multiPart("content", "this is content")
                 .multiPart("price", 1000)
@@ -64,8 +63,13 @@ public class PostControllerIntegrationTest {
 
     @Test
     void 본인이_작성한_게시글_삭제_가능_테스트() {
+        final Member member = memberTestSupport.builder()
+                .email("email")
+                .password("password")
+                .build();
+
         final ExtractableResponse<Response> 게시글_생성_요청_결과 = RestAssured.given()
-                .auth().preemptive().basic("email", "password")
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .multiPart("title", "this is title")
                 .multiPart("content", "this is content")
                 .multiPart("price", 1000)
@@ -81,7 +85,7 @@ public class PostControllerIntegrationTest {
         final long 게시글_id = Long.parseLong(location.split("/")[2]);
 
         RestAssured.given()
-                .auth().preemptive().basic("email", "password")
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .when()
                 .delete("/posts/" + 게시글_id)
                 .then()
@@ -90,8 +94,13 @@ public class PostControllerIntegrationTest {
 
     @Test
     void 본인이_작성하지_않은_게시글_삭제_불가능_테스트() {
+        final Member member = memberTestSupport.builder()
+                .email("email")
+                .password("password")
+                .build();
+
         final ExtractableResponse<Response> 게시글_생성_요청_결과 = RestAssured.given()
-                .auth().preemptive().basic("email", "password")
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .multiPart("title", "this is title")
                 .multiPart("content", "this is content")
                 .multiPart("price", 1000)
@@ -106,8 +115,13 @@ public class PostControllerIntegrationTest {
         final String location = 게시글_생성_요청_결과.header("location");
         final long 게시글_id = Long.parseLong(location.split("/")[2]);
 
+        final Member otherMember = memberTestSupport.builder()
+                .email("other")
+                .password("password")
+                .build();
+
         RestAssured.given()
-                .auth().preemptive().basic("badman", "password")
+                .auth().preemptive().basic(otherMember.getEmail(), otherMember.getPassword())
                 .when()
                 .delete("/posts/" + 게시글_id)
                 .then()
