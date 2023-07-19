@@ -1,8 +1,8 @@
 package edonymyeon.backend.post.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_FORBIDDEN;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_NOT_FOUND;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.ImageFileUploader;
@@ -75,7 +75,7 @@ public class PostService {
     public void deletePost(final MemberIdDto memberIdDto, final Long postId) {
         final Member member = findMemberById(memberIdDto);
         final Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EdonymyeonException(POST_NOT_FOUND));
+                .orElseThrow(() -> new EdonymyeonException(POST_ID_NOT_FOUND));
         if (post.isSameMember(member)) {
             final List<ImageInfo> imageInfos = post.getPostImageInfos()
                     .stream()

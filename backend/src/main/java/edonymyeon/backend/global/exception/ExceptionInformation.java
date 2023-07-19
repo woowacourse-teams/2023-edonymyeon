@@ -13,7 +13,7 @@ public enum ExceptionInformation {
     AUTHORIZATION_EMPTY(1523, "인증 정보가 없습니다."),
 
     // 2___: 게시글 관련
-    POST_NOT_FOUND(2000, "존재하지 않는 게시글입니다."),
+    POST_ID_NOT_FOUND(2000, "존재하지 않는 게시글입니다."),
     POST_TITLE_ILLEGAL_LENGTH(2511, "제목은 1자 이상 30자 이하여야 합니다."),
     POST_CONTENT_ILLEGAL_LENGTH(2523, "내용은 1자 이상 1,000자 이하여야 합니다."),
     POST_PRICE_ILLEGAL_SIZE(2543, "가격은 0원 이상 100억 이하여야 합니다."),
