@@ -22,6 +22,9 @@ public enum ExceptionInformation {
 
     // 3___: 회원 관련
     MEMBER_ID_NOT_FOUND(3000, "존재하지 않는 회원입니다."),
+    MEMBER_EMAIL_INVALID(3001, "회원 이메일 정보가 잘못되었습니다."),
+    MEMBER_PASSWORD_INVALID(3002, "회원 비밀번호가 잘못되었습니다."),
+    MEMBER_NICKNAME_INVALID(3003, "회원 닉네임이 잘못되었습니다."),
 
     // 4___: 추천 관련
     THUMBS_UP_ALREADY_EXIST(4000, "이미 추천된 게시글 입니다"),

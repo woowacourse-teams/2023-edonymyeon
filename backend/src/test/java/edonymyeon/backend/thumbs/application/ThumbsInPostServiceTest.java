@@ -41,21 +41,17 @@ public class ThumbsInPostServiceTest {
     @BeforeEach
     public void 두_회원의_가입과_하나의_게시글쓰기를_한다() {
         Member postWriter = new Member(
-                null,
                 "email",
                 "password",
                 "nickname",
-                "introduction",
                 null
         );
         memberRepository.save(postWriter);
 
         otherMember = new Member(
-                null,
                 "otherEmail",
                 "otherPassword",
                 "otherNickname",
-                "introduction",
                 null
         );
         memberRepository.save(otherMember);
@@ -86,11 +82,9 @@ public class ThumbsInPostServiceTest {
     void 해당_게시글에_추천과_비추천_수를_읽어온다() {
         // given
         Member otherMember2 = new Member(
-                null,
                 "otherEmail2",
                 "otherPassword2",
                 "otherNickname2",
-                "introduction",
                 null
         );
         memberRepository.save(otherMember2);

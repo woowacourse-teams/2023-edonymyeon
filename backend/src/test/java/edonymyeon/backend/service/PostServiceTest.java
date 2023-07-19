@@ -51,11 +51,9 @@ class PostServiceTest {
     @BeforeEach
     public void setUp() {
         Member member = new Member(
-                null,
                 "email",
                 "password",
                 "nickname",
-                "introduction",
                 null
         );
         memberRepository.save(member);
