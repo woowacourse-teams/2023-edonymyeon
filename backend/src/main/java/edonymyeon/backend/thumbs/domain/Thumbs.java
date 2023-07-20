@@ -54,7 +54,7 @@ public class Thumbs {
     }
 
     public boolean isDown() {
-        return !isUp();
+        return thumbsType == ThumbsType.DOWN;
     }
 
     private void updateThumbsType() {

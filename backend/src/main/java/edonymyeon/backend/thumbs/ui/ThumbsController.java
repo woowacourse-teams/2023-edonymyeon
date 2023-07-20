@@ -5,6 +5,7 @@ import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.thumbs.application.ThumbsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,22 @@ public class ThumbsController {
     public ResponseEntity<Void> thumbsDown(@AuthPrincipal final MemberIdDto memberId,
                                          @PathVariable final Long postId){
         thumbsService.thumbsDown(memberId, postId);
+        return ResponseEntity.ok()
+                .build();
+    }
+
+    @DeleteMapping("posts/{postId}/up")
+    public ResponseEntity<Void> deleteThumbsUp(@AuthPrincipal final MemberIdDto memberId,
+                                           @PathVariable final Long postId){
+        thumbsService.deleteThumbsUp(memberId, postId);
+        return ResponseEntity.ok()
+                .build();
+    }
+
+    @DeleteMapping("posts/{postId}/down")
+    public ResponseEntity<Void> deleteThumbsDown(@AuthPrincipal final MemberIdDto memberId,
+                                               @PathVariable final Long postId){
+        thumbsService.deleteThumbsDown(memberId, postId);
         return ResponseEntity.ok()
                 .build();
     }
