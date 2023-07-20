@@ -11,6 +11,7 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.support.MemberTestSupport;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -34,6 +35,7 @@ public class PostFindingSpecificPostTest {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final ProfileImageInfoRepository profileImageInfoRepository;
+    private final MemberTestSupport memberTestSupport;
     private final PostService postService;
     private MemberIdDto memberId;
     private MemberIdDto member2Id;
@@ -41,9 +43,8 @@ public class PostFindingSpecificPostTest {
 
     @BeforeEach
     void setUp() {
-        final ProfileImageInfo savedProfileImageInfo = saveProfileImageInfo();
-        final Member member = saveMember(savedProfileImageInfo);
-        saveMember2(savedProfileImageInfo);
+        final Member member = saveMember();
+        saveMember2();
         savePost(member);
     }
 
@@ -102,35 +103,29 @@ public class PostFindingSpecificPostTest {
         postId = postRepository.save(post).getId();
     }
 
-    private Member saveMember(final ProfileImageInfo savedProfileImageInfo) {
-        final var member = new Member(
-                "email",
-                "password",
-                "nick",
-                savedProfileImageInfo
-        );
-        memberId = new MemberIdDto(memberRepository.save(member).getId());
+    private Member saveMember() {
+        final Member member = memberTestSupport.builder()
+                .profileImageInfo(saveProfileImageInfo())
+                .build();
+        memberId = new MemberIdDto(member.getId());
         return member;
     }
 
-    private Member saveMember2(final ProfileImageInfo savedProfileImageInfo) {
-        final var member = new Member(
-                "email2",
-                "password2",
-                "nick2",
-                saveProfileImageInfo2()
-        );
+    private Member saveMember2() {
+        final Member member = memberTestSupport.builder()
+                .profileImageInfo(saveProfileImageInfo2())
+                .build();
         member2Id = new MemberIdDto(memberRepository.save(member).getId());
         return member;
     }
 
     private ProfileImageInfo saveProfileImageInfo() {
         return profileImageInfoRepository.save(
-                new ProfileImageInfo("/static/img/file/test_image_1.jpg", "test_image_1.jpg"));
+                new ProfileImageInfo("test_image_1.jpg"));
     }
 
     private ProfileImageInfo saveProfileImageInfo2() {
         return profileImageInfoRepository.save(
-                new ProfileImageInfo("/static/img/file/test_image_2.jpg", "test_image_2.jpg"));
+                new ProfileImageInfo("test_image_2.jpg"));
     }
 }

@@ -66,8 +66,6 @@ class PostServiceTest {
     @BeforeEach
     public void setUp() {
         Member member = memberTestSupport.builder()
-                .email("email")
-                .password("password")
                 .build();
         memberRepository.save(member);
         memberId = new MemberIdDto(member.getId());
@@ -164,7 +162,7 @@ class PostServiceTest {
             assertThat(new File(imageFileUploader.getFullPath(postImageInfo.getStoreName())).canRead()).isTrue();
 
             postService.deletePost(memberId, postResponse.id());
-            assertThat(new File(postImageInfo.getUrl()).canRead()).isFalse();
+            assertThat(new File(imageFileUploader.getFullPath(postImageInfo.getStoreName())).canRead()).isFalse();
         }
     }
 
@@ -301,8 +299,8 @@ class PostServiceTest {
                 final PostImageInfo 바꾼_후_이미지_정보 = findPost.getPostImageInfos().get(0);
 
                 assertSoftly(softly -> {
-                    softly.assertThat(findPost.getPostImageInfos().size()).isEqualTo(게시글_수정_요청.images().size());
-                    softly.assertThat(바꾸기_전_이미지_정보.getUrl().equals(바꾼_후_이미지_정보.getUrl())).isFalse();
+                            softly.assertThat(findPost.getPostImageInfos().size()).isEqualTo(게시글_수정_요청.images().size());
+                            softly.assertThat(바꾸기_전_이미지_정보.getUrl().equals(바꾼_후_이미지_정보.getUrl())).isFalse();
                         }
                 );
             }
