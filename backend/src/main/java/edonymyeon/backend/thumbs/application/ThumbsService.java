@@ -75,6 +75,22 @@ public class ThumbsService {
         thumbs.up();
     }
 
+    private Member findMemberById(final MemberIdDto memberId) {
+        return memberRepository.findById(memberId.id())
+                .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
+    }
+
+    private Post findPostById(final Long postId) {
+        return postRepository.findById(postId)
+                .orElseThrow(() -> new EdonymyeonException(POST_ID_NOT_FOUND));
+    }
+
+    private void checkPostWriter(final Post post, final Member loginMember) {
+        if (post.isSameMember(loginMember)) {
+            throw new EdonymyeonException(THUMBS_IS_SELF_UP_DOWN);
+        }
+    }
+
     @Transactional
     public void thumbsDown(final MemberIdDto memberId, final Long postId) {
         Member loginMember = findMemberById(memberId);
@@ -126,21 +142,5 @@ public class ThumbsService {
             throw new EdonymyeonException(THUMBS_DOWN_DELETE_FAIL_WHEN_THUMBS_UP);
         }
         thumbsRepository.delete(thumbs);
-    }
-
-    private Member findMemberById(final MemberIdDto memberId) {
-        return memberRepository.findById(memberId.id())
-                .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
-    }
-
-    private Post findPostById(final Long postId) {
-        return postRepository.findById(postId)
-                .orElseThrow(() -> new EdonymyeonException(POST_ID_NOT_FOUND));
-    }
-
-    private void checkPostWriter(final Post post, final Member loginMember) {
-        if (post.getMember().equals(loginMember)) {
-            throw new EdonymyeonException(THUMBS_IS_SELF_UP_DOWN);
-        }
     }
 }

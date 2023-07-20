@@ -1,5 +1,6 @@
 package edonymyeon.backend.thumbs.domain;
 
+import static edonymyeon.backend.thumbs.domain.ThumbsType.*;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.member.domain.Member;
@@ -28,13 +29,13 @@ class AllThumbsInPostTest {
         Post post = new Post("title", "content", 100L, member);
 
         List<Thumbs> thumbs = List.of(
-                new Thumbs(post, member, ThumbsType.UP),
-                new Thumbs(post, member, ThumbsType.UP),
-                new Thumbs(post, member, ThumbsType.UP),
-                new Thumbs(post, member, ThumbsType.UP),
-                new Thumbs(post, member, ThumbsType.UP),
-                new Thumbs(post, member, ThumbsType.DOWN),
-                new Thumbs(post, member, ThumbsType.DOWN)
+                new Thumbs(post, member, UP),
+                new Thumbs(post, member, UP),
+                new Thumbs(post, member, UP),
+                new Thumbs(post, member, UP),
+                new Thumbs(post, member, UP),
+                new Thumbs(post, member, DOWN),
+                new Thumbs(post, member, DOWN)
         );
 
         AllThumbsInPost allThumbsInPost = AllThumbsInPost.from(thumbs);
