@@ -50,7 +50,10 @@ class PostDetailActivity : AppCompatActivity() {
 
         viewModel.post.observe(this) {
             setImageSlider(it)
-//            binding.vpImageSlider.adapter?.notifyDataSetChanged()
+        }
+
+        viewModel.reactionCount.observe(this) {
+            binding.postReactionCtv.reactionCount = it
         }
     }
 
