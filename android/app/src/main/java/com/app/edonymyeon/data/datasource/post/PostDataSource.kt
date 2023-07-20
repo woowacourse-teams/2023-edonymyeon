@@ -5,5 +5,5 @@ import retrofit2.Response
 
 interface PostDataSource {
     suspend fun getPostDetail(postId: Long): Response<PostDetailResponse>
-    suspend fun deletePost(postId: Long): Response<Void>
+    suspend fun deletePost(postId: Long): Response<Unit>
 }

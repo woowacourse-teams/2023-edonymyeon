@@ -13,7 +13,7 @@ class PostRemoteDataSource : PostDataSource {
         return postService.getPost(postId)
     }
 
-    override suspend fun deletePost(postId: Long): Response<Void> {
+    override suspend fun deletePost(postId: Long): Response<Unit> {
         return postService.deletePost(postId)
     }
 }

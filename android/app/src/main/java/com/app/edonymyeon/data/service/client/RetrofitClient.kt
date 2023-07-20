@@ -46,6 +46,5 @@ class RetrofitClient(private val baseUrl: String = DEV_URL) {
                 }
             }
         }
-
     }
 }

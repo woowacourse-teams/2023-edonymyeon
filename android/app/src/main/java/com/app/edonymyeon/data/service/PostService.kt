@@ -11,5 +11,5 @@ interface PostService {
     suspend fun getPost(@Path("postId") postId: Long): Response<PostDetailResponse>
 
     @DELETE("/posts/{postId}")
-    suspend fun deletePost(@Path("postId") postId: Long): Response<Void> // Void or Unit?
+    suspend fun deletePost(@Path("postId") postId: Long): Response<Unit> // Void or Unit?
 }

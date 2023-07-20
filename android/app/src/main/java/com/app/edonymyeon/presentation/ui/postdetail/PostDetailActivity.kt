@@ -7,7 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostDetailBinding
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
+import com.app.edonymyeon.data.datasource.recommend.RecommendRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
+import com.app.edonymyeon.data.repository.RecommendRepositoryImpl
 import com.google.android.material.snackbar.Snackbar
 
 class PostDetailActivity : AppCompatActivity() {
@@ -16,8 +18,11 @@ class PostDetailActivity : AppCompatActivity() {
     }
 
     private val viewModel: PostDetailViewModel by lazy {
-        PostDetailViewModelFactory(PostRepositoryImpl(PostRemoteDataSource())).create(
-            PostDetailViewModel::class.java
+        PostDetailViewModelFactory(
+            PostRepositoryImpl(PostRemoteDataSource()),
+            RecommendRepositoryImpl(RecommendRemoteDataSource()),
+        ).create(
+            PostDetailViewModel::class.java,
         )
     }
 
@@ -72,10 +77,10 @@ class PostDetailActivity : AppCompatActivity() {
 
     private fun setRecommendCheckboxListener() {
         binding.cbUp.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateUpRecommendation(isChecked)
+            viewModel.updateUpRecommendationUi(isChecked)
         }
         binding.cbDown.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateDownRecommendation(isChecked)
+            viewModel.updateDownRecommendationUi(isChecked)
         }
     }
 }

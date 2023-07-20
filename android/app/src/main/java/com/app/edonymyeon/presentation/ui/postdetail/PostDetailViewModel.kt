@@ -15,10 +15,14 @@ import com.domain.edonymyeon.model.ReactionCount
 import com.domain.edonymyeon.model.Recommendation
 import com.domain.edonymyeon.model.Writer
 import com.domain.edonymyeon.repository.PostRepository
+import com.domain.edonymyeon.repository.RecommendRepository
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
-class PostDetailViewModel(private val repository: PostRepository) : ViewModel() {
+class PostDetailViewModel(
+    private val postRepository: PostRepository,
+    private val recommendRepository: RecommendRepository,
+) : ViewModel() {
     private val _post = MutableLiveData<PostUiModel>()
     val post: LiveData<PostUiModel>
         get() = _post
@@ -39,7 +43,7 @@ class PostDetailViewModel(private val repository: PostRepository) : ViewModel() 
 
     fun getPostDetail(postId: Long) {
         viewModelScope.launch {
-            repository.getPostDetail(postId)
+            postRepository.getPostDetail(postId)
                 .onSuccess {
                     it as Post
                     _post.value = it.toUiModel()
@@ -55,7 +59,7 @@ class PostDetailViewModel(private val repository: PostRepository) : ViewModel() 
 
     fun deletePost(postId: Long) {
         viewModelScope.launch {
-            repository.deletePost(postId)
+            postRepository.deletePost(postId)
                 .onFailure {
                     it as CustomThrowable
                     when (it.code) {
@@ -64,7 +68,7 @@ class PostDetailViewModel(private val repository: PostRepository) : ViewModel() 
         }
     }
 
-    fun updateUpRecommendation(isChecked: Boolean) {
+    fun updateUpRecommendationUi(isChecked: Boolean) {
         val oldRecommendation = _recommendation.value?.toDomain() ?: return
         if (oldRecommendation.isUp && isChecked) return
 
@@ -87,9 +91,38 @@ class PostDetailViewModel(private val repository: PostRepository) : ViewModel() 
                 isUp = false,
             ).toUiModel()
         }
+
+        if (oldRecommendation.isUp == isChecked) return
+        if (isChecked) {
+            saveRecommendationUp(0L)
+        } else {
+            deleteRecommendationUp(0L)
+        }
     }
 
-    fun updateDownRecommendation(isChecked: Boolean) {
+    private fun saveRecommendationUp(postId: Long) {
+        viewModelScope.launch {
+            recommendRepository.saveRecommendUp(postId)
+                .onFailure {
+                    it as CustomThrowable
+                    when (it.code) {
+                    }
+                }
+        }
+    }
+
+    private fun deleteRecommendationUp(postId: Long) {
+        viewModelScope.launch {
+            recommendRepository.deleteRecommendUp(postId)
+                .onFailure {
+                    it as CustomThrowable
+                    when (it.code) {
+                    }
+                }
+        }
+    }
+
+    fun updateDownRecommendationUi(isChecked: Boolean) {
         val oldRecommendation = _recommendation.value?.toDomain() ?: return
         if (oldRecommendation.isDown && isChecked) return
 
@@ -111,6 +144,35 @@ class PostDetailViewModel(private val repository: PostRepository) : ViewModel() 
                 downCount = oldRecommendation.downCount.decrease(),
                 isDown = false,
             ).toUiModel()
+        }
+
+        if (oldRecommendation.isDown == isChecked) return
+        if (isChecked) {
+            saveRecommendationDown(0L)
+        } else {
+            deleteRecommendationDown(0L)
+        }
+    }
+
+    private fun saveRecommendationDown(postId: Long) {
+        viewModelScope.launch {
+            recommendRepository.saveRecommendDown(postId)
+                .onFailure {
+                    it as CustomThrowable
+                    when (it.code) {
+                    }
+                }
+        }
+    }
+
+    private fun deleteRecommendationDown(postId: Long) {
+        viewModelScope.launch {
+            recommendRepository.deleteRecommendDown(postId)
+                .onFailure {
+                    it as CustomThrowable
+                    when (it.code) {
+                    }
+                }
         }
     }
 
