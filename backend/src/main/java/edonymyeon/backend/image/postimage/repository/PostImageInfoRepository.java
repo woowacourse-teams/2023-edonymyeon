@@ -1,4 +1,4 @@
-package edonymyeon.backend.image.postimage;
+package edonymyeon.backend.image.postimage.repository;
 
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import java.util.List;

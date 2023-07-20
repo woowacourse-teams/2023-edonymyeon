@@ -5,7 +5,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NI
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_INVALID;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.image.postimage.ProfileImageInfo;
+import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

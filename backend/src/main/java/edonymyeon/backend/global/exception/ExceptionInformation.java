@@ -33,7 +33,10 @@ public enum ExceptionInformation {
     THUMBS_UP_IS_NOT_EXIST(4003, "추천하지 않은 게시글의 추천을 취소할 수 없습니다."),
     THUMBS_DOWN_IS_NOT_EXIST(4004, "비추천하지 않은 게시글의 비추천을 취소할 수 없습니다."),
     THUMBS_UP_DELETE_FAIL_WHEN_THUMBS_DOWN(4005, "비추천 한 게시글의 추천을 취소할 수 없습니다."),
-    THUMBS_DOWN_DELETE_FAIL_WHEN_THUMBS_UP(4006, "추천 한 게시글의 비추천을 취소할 수 없습니다.");
+    THUMBS_DOWN_DELETE_FAIL_WHEN_THUMBS_UP(4006, "추천 한 게시글의 비추천을 취소할 수 없습니다."),
+
+    // 5___: 이미지 관련
+    IMAGE_EXTENSION_INVALID(5000, "등록할 수 없는 이미지 확장자입니다.");
 
     private int code;
 
