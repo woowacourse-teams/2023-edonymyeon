@@ -1,6 +1,5 @@
 package com.app.edonymyeon.presentation.ui.postdetail
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,7 +36,6 @@ class PostDetailViewModel(postId: Long, private val repository: PostRepository) 
     }
 
     private fun getPostDetail(postId: Long) {
-        Log.d("Test", "Get Post Start")
         viewModelScope.launch {
             repository.getPostDetail(postId)
                 .onSuccess {

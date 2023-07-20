@@ -1,7 +1,6 @@
 package com.app.edonymyeon.presentation.ui.postdetail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
@@ -116,7 +115,6 @@ class PostDetailActivity : AppCompatActivity() {
     }
 
     private fun setImageSlider(post: PostUiModel) {
-        Log.d("Test", "Set Image Slider: ${post.images.size}")
         binding.vpImageSlider.offscreenPageLimit = 1
         binding.vpImageSlider.adapter =
             ImageSliderAdapter(post.images)
