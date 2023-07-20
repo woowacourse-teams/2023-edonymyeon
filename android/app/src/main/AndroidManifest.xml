@@ -19,6 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Edonymyeon"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
         <activity
@@ -32,6 +33,7 @@
         <activity
             android:name="com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity"
             android:exported="true"></activity>
+
         <activity
             android:name="com.app.edonymyeon.presentation.ui.main.MainActivity"
             android:exported="true">
