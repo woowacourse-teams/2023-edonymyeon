@@ -15,6 +15,7 @@ import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
+import com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.google.android.material.snackbar.Snackbar
 
@@ -66,6 +67,7 @@ class PostDetailActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_update -> {
                 Snackbar.make(binding.root, "update", Snackbar.LENGTH_SHORT).show()
+                startActivity(PostEditorActivity.newIntent(this, PostEditorActivity.UPDATE_CODE))
                 true
             }
 

@@ -20,6 +20,7 @@ import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostEditorBinding
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
+import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import com.app.edonymyeon.presentation.ui.posteditor.adapter.PostEditorImagesAdapter
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.google.android.material.snackbar.Snackbar
@@ -115,12 +116,17 @@ class PostEditorActivity : AppCompatActivity() {
                 return true
             }
 
+            android.R.id.home -> {
+                finish()
+                return true
+            }
+
             else -> return super.onOptionsItemSelected(item)
         }
     }
 
     private fun navigateToDetail() {
-        /*startActivity(PostDetailActivity.newIntent(this, viewModel.postId.value))*/
+        startActivity(PostDetailActivity.newIntent(this, viewModel.postId.value ?: -1))
     }
 
     private fun savePost() {
@@ -304,6 +310,7 @@ class PostEditorActivity : AppCompatActivity() {
             return Intent(context, PostEditorActivity::class.java).apply {
                 putExtra(KEY_POST_EDITOR_CHECK, code)
                 putExtra(KEY_POST_EDITOR_POST, post)
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             }
         }
     }

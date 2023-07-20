@@ -16,7 +16,7 @@ class HomeViewModel : ViewModel() {
 
     private val allPostDummy = List(5) {
         AllPostItemUiModel(
-            id = it,
+            id = it.toLong(),
             title = "title $it",
             content = "content $it",
             nickname = "nickname $it",
