@@ -83,7 +83,7 @@ public class PostService {
         final Member member = findMemberById(memberIdDto);
         final Post post = findPostById(postId);
 
-        if (post.isSameMember(member)) {
+        if (!post.isSameMember(member)) {
             throw new EdonymyeonException(POST_MEMBER_FORBIDDEN);
         }
 
