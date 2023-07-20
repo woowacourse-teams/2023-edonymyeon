@@ -32,14 +32,10 @@ class PostDetailViewModel(postId: Long, private val repository: PostRepository) 
         get() = _isScrap
 
     init {
-        /*        _post.value = postData.toUiModel()
-                _recommendation.value = postData.recommendation.toUiModel()
-                _reactionCount.value = postData.reactionCount.toUiModel()
-                _isScrap.value = postData.isScrap*/
         getPostDetail(postId)
     }
 
-    fun getPostDetail(postId: Long) {
+    private fun getPostDetail(postId: Long) {
         viewModelScope.launch {
             repository.getPostDetail(postId).onSuccess {
                 it as Post
@@ -133,6 +129,9 @@ class PostDetailViewModel(postId: Long, private val repository: PostRepository) 
     images = listOf(
         "https://contents.lotteon.com/itemimage/_v135805/LE/12/04/64/86/36/_1/22/51/40/89/2/LE1204648636_1225140892_1.jpg/dims/resizef/720X720",
         "https://gdimg.gmarket.co.kr/1811472676/still/400?ver=1589887288",
+        "https://contents.lotteon.com/itemimage/_v135805/LE/12/04/64/86/36/_1/22/51/40/89/2/LE1204648636_1225140892_1.jpg/dims/resizef/720X720",
+        "https://gdimg.gmarket.co.kr/1811472676/still/400?ver=1589887288",
+        "https://contents.lotteon.com/itemimage/_v135805/LE/12/04/64/86/36/_1/22/51/40/89/2/LE1204648636_1225140892_1.jpg/dims/resizef/720X720",
     ),
     createdAt = LocalDateTime.of(2023, 7, 16, 20, 4),
     writer = Writer(

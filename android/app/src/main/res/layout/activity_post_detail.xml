@@ -59,6 +59,7 @@
                     android:id="@+id/ll_indicators"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
+                    android:gravity="center_horizontal"
                     android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="@id/vp_image_slider"
                     app:layout_constraintDimensionRatio="H,172:10"
@@ -114,6 +115,7 @@
 
                 <ImageView
                     android:id="@+id/iv_user_profile"
+                    imgUrlCircleCrop="@{postViewModel.post.writer.profileImage}"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintDimensionRatio="H, 1:1"

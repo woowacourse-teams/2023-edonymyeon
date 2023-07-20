@@ -65,7 +65,7 @@ public class Post {
 
     @CreatedDate
     @Column(nullable = false)
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     // todo: 테스트 코드에서 자꾸 null 값으로 조회되서 일단 하드코딩
     @ColumnDefault("0")
@@ -126,6 +126,32 @@ public class Post {
             return;
         }
         this.postImageInfos.add(postImageInfo);
+    }
+
+    public void update(final String title, final String content, final Long price) {
+        updateTitle(title);
+        updateContent(content);
+        updatePrice(price);
+    }
+
+    private void updateTitle(final String title) {
+        validateTitle(title);
+        this.title = title;
+    }
+
+    private void updateContent(final String content) {
+        validateContent(content);
+        this.content = content;
+    }
+
+    private void updatePrice(final Long price) {
+        validatePrice(price);
+        this.price = price;
+    }
+
+    public void updateImages(final List<PostImageInfo> postImageInfos) {
+        this.postImageInfos.clear();
+        this.postImageInfos.addAll(postImageInfos);
     }
 
     public boolean isSameMember(final Member member) {

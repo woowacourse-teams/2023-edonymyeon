@@ -18,7 +18,7 @@ public enum ExceptionInformation {
     POST_CONTENT_ILLEGAL_LENGTH(2523, "내용은 1자 이상 1,000자 이하여야 합니다."),
     POST_PRICE_ILLEGAL_SIZE(2543, "가격은 0원 이상 100억 이하여야 합니다."),
     POST_MEMBER_EMPTY(2544, "게시글에는 작성자가 있어야 합니다."),
-    POST_MEMBER_FORBIDDEN(2666, "게시글 작성자만 게시글을 삭제할 수 있습니다."),
+    POST_MEMBER_FORBIDDEN(2666, "게시글 작성자만 게시글을 수정/삭제할 수 있습니다."),
 
     // 3___: 회원 관련
     MEMBER_ID_NOT_FOUND(3000, "존재하지 않는 회원입니다."),
@@ -27,10 +27,16 @@ public enum ExceptionInformation {
     MEMBER_NICKNAME_INVALID(3003, "회원 닉네임이 잘못되었습니다."),
 
     // 4___: 추천 관련
-    THUMBS_UP_ALREADY_EXIST(4000, "이미 추천된 게시글 입니다"),
-    THUMBS_DOWN_ALREADY_EXIST(4001, "이미 비추천된 게시글 입니다"),
-    THUMBS_POST_IS_SELF_UP_DOWN(4002, "본인의 게시글을 추천/비추천 할 수 없습니다")
-    ;
+    THUMBS_UP_ALREADY_EXIST(4000, "이미 추천된 게시글 입니다."),
+    THUMBS_DOWN_ALREADY_EXIST(4001, "이미 비추천된 게시글 입니다."),
+    THUMBS_IS_SELF_UP_DOWN(4002, "본인의 게시글을 추천/비추천하거나 추천/비추천 취소할 수 없습니다."),
+    THUMBS_UP_IS_NOT_EXIST(4003, "추천하지 않은 게시글의 추천을 취소할 수 없습니다."),
+    THUMBS_DOWN_IS_NOT_EXIST(4004, "비추천하지 않은 게시글의 비추천을 취소할 수 없습니다."),
+    THUMBS_UP_DELETE_FAIL_WHEN_THUMBS_DOWN(4005, "비추천 한 게시글의 추천을 취소할 수 없습니다."),
+    THUMBS_DOWN_DELETE_FAIL_WHEN_THUMBS_UP(4006, "추천 한 게시글의 비추천을 취소할 수 없습니다."),
+
+    // 5___: 이미지 관련
+    IMAGE_EXTENSION_INVALID(5000, "등록할 수 없는 이미지 확장자입니다.");
 
     private int code;
 
