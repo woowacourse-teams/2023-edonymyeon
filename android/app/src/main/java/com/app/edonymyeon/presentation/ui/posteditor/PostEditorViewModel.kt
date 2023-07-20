@@ -4,9 +4,14 @@ import android.text.Editable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.app.edonymyeon.data.common.CustomThrowable
+import com.app.edonymyeon.data.dto.request.PostEditorResponse
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
+import com.domain.edonymyeon.repository.PostRepository
+import kotlinx.coroutines.launch
 
-class PostEditorViewModel : ViewModel() {
+class PostEditorViewModel(private val repository: PostRepository) : ViewModel() {
     private val images = mutableListOf<String>()
     private val _galleryImages = MutableLiveData<List<String>>()
     val galleryImages: LiveData<List<String>>
@@ -24,13 +29,52 @@ class PostEditorViewModel : ViewModel() {
     val postContent: LiveData<String>
         get() = _postContent
 
+    private val _postId = MutableLiveData<Long>()
+
     init {
         _galleryImages.value = images
     }
 
-    fun init(post: PostUiModel) {
+    fun initViewModelOnUpdate(post: PostUiModel) {
         _postTitle.value = post.title
         _postPrice.value = post.price.toString()
+        _postContent.value = post.content
+        _galleryImages.value = images
+    }
+
+    fun postPost() {
+        viewModelScope.launch {
+            repository.postPost(
+                _postTitle.value.toString(),
+                _postContent.value.toString(),
+                _postPrice.value?.toInt() ?: 0,
+                _galleryImages.value?.toList() ?: listOf(""),
+            ).onSuccess {
+                _postId.value = (it as PostEditorResponse).id
+            }.onFailure {
+                it as CustomThrowable
+                when (it.code) {
+                }
+            }
+        }
+    }
+
+    fun putPost(id: Long) {
+        viewModelScope.launch {
+            repository.putPost(
+                id,
+                _postTitle.value.toString(),
+                _postContent.value.toString(),
+                _postPrice.value?.toInt() ?: 0,
+                _galleryImages.value?.toList() ?: listOf(""),
+            ).onSuccess {
+                _postId.value = (it as PostEditorResponse).id
+            }.onFailure {
+                it as CustomThrowable
+                when (it.code) {
+                }
+            }
+        }
     }
 
     fun addSelectedImages(image: String) {
