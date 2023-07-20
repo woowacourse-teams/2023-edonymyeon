@@ -115,6 +115,9 @@ private val postData = Post(
     images = listOf(
         "https://contents.lotteon.com/itemimage/_v135805/LE/12/04/64/86/36/_1/22/51/40/89/2/LE1204648636_1225140892_1.jpg/dims/resizef/720X720",
         "https://gdimg.gmarket.co.kr/1811472676/still/400?ver=1589887288",
+        "https://contents.lotteon.com/itemimage/_v135805/LE/12/04/64/86/36/_1/22/51/40/89/2/LE1204648636_1225140892_1.jpg/dims/resizef/720X720",
+        "https://gdimg.gmarket.co.kr/1811472676/still/400?ver=1589887288",
+        "https://contents.lotteon.com/itemimage/_v135805/LE/12/04/64/86/36/_1/22/51/40/89/2/LE1204648636_1225140892_1.jpg/dims/resizef/720X720",
     ),
     createdAt = LocalDateTime.of(2023, 7, 16, 20, 4),
     writer = Writer(
