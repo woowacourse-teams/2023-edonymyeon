@@ -13,6 +13,7 @@ import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.support.MemberTestSupport;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,16 +47,18 @@ class PostServiceTest {
 
     private final MemberRepository memberRepository;
 
+    private final MemberTestSupport memberTestSupport;
+
     private MemberIdDto memberId;
 
     @BeforeEach
     public void setUp() {
-        Member member = new Member(
-                "email",
-                "password",
-                "nickname",
-                null
-        );
+        Member member = memberTestSupport.builder()
+                .email("email")
+                .password("password")
+                .nickname("nickname")
+                .profileImageInfo(null)
+                .build();
         memberRepository.save(member);
         memberId = new MemberIdDto(member.getId());
     }

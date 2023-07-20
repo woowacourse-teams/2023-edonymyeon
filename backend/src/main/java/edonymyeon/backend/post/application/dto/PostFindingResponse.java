@@ -21,7 +21,7 @@ public record PostFindingResponse(
                 post.getPostImageInfos().size() == 0 ? null : post.getPostImageInfos().get(0).getFullPath(),
                 post.getContent(),
                 new WriterResponse(post.getMember().getNickname()),
-                post.getCreateAt(),
+                post.getCreatedAt(),
                 0, // TODO: 조회수
                 0, // TODO: 스크랩 수
                 0 // TODO: 댓글 수
