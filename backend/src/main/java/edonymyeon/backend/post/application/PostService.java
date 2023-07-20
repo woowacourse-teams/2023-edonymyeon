@@ -139,41 +139,23 @@ public class PostService {
         final WriterDetailResponse writerDetailResponse = getWriterResponse(post.getMember());
 
         if (member.isEmpty()) {
-            return new SpecificPostInfoResponse(
-                    post.getId(),
-                    post.getTitle(),
-                    post.getPrice(),
-                    post.getContent(),
-                    post.getCreatedAt(),
-                    post.getPostImageInfos().stream().map(ImageInfo::getFullPath).toList(),
+            return SpecificPostInfoResponse.of(
+                    post,
+                    allThumbsInPost,
                     writerDetailResponse,
-                    reactionCountResponse,
-                    allThumbsInPost.thumbsUpCount(),
-                    allThumbsInPost.thumbsDownCount(),
-                    false,
-                    false,
-                    false, // TODO: 스크랩 기능 구현 필요
-                    false
+                    reactionCountResponse
             );
         }
 
         final ThumbsStatusInPostResponse thumbsStatusInPost = thumbsService.findThumbsStatusInPost(memberIdDto, postId);
 
-        return new SpecificPostInfoResponse(
-                post.getId(),
-                post.getTitle(),
-                post.getPrice(),
-                post.getContent(),
-                post.getCreatedAt(),
-                post.getPostImageInfos().stream().map(ImageInfo::getFullPath).toList(),
+        return SpecificPostInfoResponse.of(
+                post,
+                allThumbsInPost,
                 writerDetailResponse,
                 reactionCountResponse,
-                allThumbsInPost.thumbsUpCount(),
-                allThumbsInPost.thumbsDownCount(),
-                thumbsStatusInPost.isUp(),
-                thumbsStatusInPost.isDown(),
-                false, // TODO: 스크랩 기능 구현 필요
-                post.isSameMember(member.get())
+                thumbsStatusInPost,
+                member.get()
         );
     }
 

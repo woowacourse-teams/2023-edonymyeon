@@ -37,8 +37,7 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
             final ModelAndViewContainer mavContainer,
             final NativeWebRequest webRequest,
             final WebDataBinderFactory binderFactory
-    )
-            throws Exception {
+    ) {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
             if (!Objects.requireNonNull(parameter.getParameterAnnotation(AuthPrincipal.class)).required()) {
