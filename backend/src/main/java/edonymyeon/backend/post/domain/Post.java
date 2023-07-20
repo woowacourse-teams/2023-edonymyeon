@@ -128,17 +128,23 @@ public class Post {
         this.postImageInfos.add(postImageInfo);
     }
 
-    public void updateTitle(final String title) {
+    public void update(final String title, final String content, final Long price) {
+        updateTitle(title);
+        updateContent(content);
+        updatePrice(price);
+    }
+
+    private void updateTitle(final String title) {
         validateTitle(title);
         this.title = title;
     }
 
-    public void updateContent(final String content) {
+    private void updateContent(final String content) {
         validateContent(content);
         this.content = content;
     }
 
-    public void updatePrice(final Long price) {
+    private void updatePrice(final Long price) {
         validatePrice(price);
         this.price = price;
     }

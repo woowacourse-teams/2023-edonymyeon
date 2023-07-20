@@ -124,9 +124,7 @@ public class PostService {
         final Post post = findPostById(postId);
         checkWriter(member, post);
 
-        post.updateTitle(postRequest.title());
-        post.updateContent(postRequest.content());
-        post.updatePrice(postRequest.price());
+        post.update(postRequest.title(), postRequest.content(), postRequest.price());
 
         final List<ImageInfo> originalImageInfos = findImageInfosFromPost(post);
         postImageInfoRepository.deleteAllByPostId(postId);
@@ -137,12 +135,20 @@ public class PostService {
             return new PostResponse(postId);
         }
 
+        updateImagesOfPost(postRequest, post, originalImageInfos);
+        return new PostResponse(postId);
+    }
+
+    private void updateImagesOfPost(
+            final PostRequest postRequest,
+            final Post post,
+            final List<ImageInfo> originalImageInfos
+    ) {
         final List<PostImageInfo> updatePostImageInfos = uploadImages(postRequest).stream()
                 .map(imageInfo -> PostImageInfo.of(imageInfo, post))
                 .toList();
         post.updateImages(updatePostImageInfos);
         postImageInfoRepository.saveAll(updatePostImageInfos);
         originalImageInfos.forEach(imageFileUploader::removeFile);
-        return new PostResponse(postId);
     }
 }
