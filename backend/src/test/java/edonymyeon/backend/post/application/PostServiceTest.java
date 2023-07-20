@@ -6,6 +6,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
@@ -28,7 +29,6 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
@@ -59,8 +59,7 @@ class PostServiceTest {
 
     private final MemberTestSupport memberTestSupport;
 
-    @Value("domain")
-    private String domain;
+    private final ImageFileUploader imageFileUploader;
 
     private MemberIdDto memberId;
 
@@ -144,8 +143,12 @@ class PostServiceTest {
             List<PostImageInfo> imageFiles = postImageInfoRepository.findAllByPostId(postId);
             assertSoftly(softly -> {
                         softly.assertThat(imageFiles).hasSize(2);
-                        softly.assertThat(파일_경로_형식.matcher(imageFiles.get(0).getUrl()).matches()).isTrue();
-                        softly.assertThat(파일_경로_형식.matcher(imageFiles.get(1).getUrl()).matches()).isTrue();
+                        softly.assertThat(
+                                        파일_경로_형식.matcher(imageFileUploader.getFullPath(imageFiles.get(0).getStoreName())).matches())
+                                .isTrue();
+                        softly.assertThat(
+                                        파일_경로_형식.matcher(imageFileUploader.getFullPath(imageFiles.get(1).getStoreName())).matches())
+                                .isTrue();
                     }
             );
         }
@@ -158,7 +161,7 @@ class PostServiceTest {
         void 게시글이_삭제되면_디렉토리에_있는_이미지도_삭제된다() throws IOException {
             final PostResponse postResponse = postService.createPost(memberId, getPostRequest());
             final PostImageInfo postImageInfo = postImageInfoRepository.findAllByPostId(postResponse.id()).get(0);
-            assertThat(new File(postImageInfo.getUrl()).canRead()).isTrue();
+            assertThat(new File(imageFileUploader.getFullPath(postImageInfo.getStoreName())).canRead()).isTrue();
 
             postService.deletePost(memberId, postResponse.id());
             assertThat(new File(postImageInfo.getUrl()).canRead()).isFalse();

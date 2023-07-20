@@ -159,7 +159,7 @@ class PostServiceTest {
     void 게시글이_삭제되면_디렉토리에_있는_이미지도_삭제된다() throws IOException {
         final PostResponse postResponse = postService.createPost(memberId, getPostRequest());
         final PostImageInfo postImageInfo = postImageInfoRepository.findAllByPostId(postResponse.id()).get(0);
-        assertThat(new File(imageFileUploader.getFullPath(postImageInfo.getStoreName())).canRead()).isTrue();
+        assertThat(new File(postImageInfo.getUrl()).canRead()).isTrue();
 
         postService.deletePost(memberId, postResponse.id());
         assertThat(new File(imageFileUploader.getFullPath(postImageInfo.getStoreName())).canRead()).isFalse();
