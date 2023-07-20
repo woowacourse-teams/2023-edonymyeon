@@ -1,5 +1,6 @@
 package com.app.edonymyeon.presentation.ui.postdetail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,7 +17,7 @@ import com.domain.edonymyeon.repository.RecommendRepository
 import kotlinx.coroutines.launch
 
 class PostDetailViewModel(
-    postId: Long,
+    private val postId: Long,
     private val postRepository: PostRepository,
     private val recommendRepository: RecommendRepository,
 ) : ViewModel() {
@@ -61,6 +62,9 @@ class PostDetailViewModel(
     fun deletePost(postId: Long) {
         viewModelScope.launch {
             postRepository.deletePost(postId)
+                .onSuccess {
+                    Log.d("PostDetailViewModel", "deletePost: success")
+                }
                 .onFailure {
                     it as CustomThrowable
                     when (it.code) {
@@ -95,31 +99,9 @@ class PostDetailViewModel(
 
         if (oldRecommendation.isUp == isChecked) return
         if (isChecked) {
-            saveRecommendationUp(0L)
+            saveRecommendation(postId, RecommendRepository::saveRecommendUp)
         } else {
-            deleteRecommendationUp(0L)
-        }
-    }
-
-    private fun saveRecommendationUp(postId: Long) {
-        viewModelScope.launch {
-            recommendRepository.saveRecommendUp(postId)
-                .onFailure {
-                    it as CustomThrowable
-                    when (it.code) {
-                    }
-                }
-        }
-    }
-
-    private fun deleteRecommendationUp(postId: Long) {
-        viewModelScope.launch {
-            recommendRepository.deleteRecommendUp(postId)
-                .onFailure {
-                    it as CustomThrowable
-                    when (it.code) {
-                    }
-                }
+            saveRecommendation(postId, RecommendRepository::deleteRecommendUp)
         }
     }
 
@@ -149,26 +131,18 @@ class PostDetailViewModel(
 
         if (oldRecommendation.isDown == isChecked) return
         if (isChecked) {
-            saveRecommendationDown(0L)
+            saveRecommendation(postId, RecommendRepository::saveRecommendDown)
         } else {
-            deleteRecommendationDown(0L)
+            saveRecommendation(postId, RecommendRepository::deleteRecommendDown)
         }
     }
 
-    private fun saveRecommendationDown(postId: Long) {
+    private fun saveRecommendation(
+        postId: Long,
+        event: suspend RecommendRepository.(Long) -> Result<Any>,
+    ) {
         viewModelScope.launch {
-            recommendRepository.saveRecommendDown(postId)
-                .onFailure {
-                    it as CustomThrowable
-                    when (it.code) {
-                    }
-                }
-        }
-    }
-
-    private fun deleteRecommendationDown(postId: Long) {
-        viewModelScope.launch {
-            recommendRepository.deleteRecommendDown(postId)
+            recommendRepository.event(postId)
                 .onFailure {
                     it as CustomThrowable
                     when (it.code) {
