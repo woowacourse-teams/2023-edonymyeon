@@ -49,8 +49,7 @@ public class PostService {
         );
         postRepository.save(post);
 
-        if (Objects.isNull(postRequest.images()) || postRequest.images().isEmpty() || isDummy(
-                postRequest.images().get(0))) {
+        if (isImagesEmpty(postRequest)) {
             return new PostResponse(post.getId());
         }
 
@@ -65,6 +64,13 @@ public class PostService {
     private Member findMemberById(final MemberIdDto memberIdDto) {
         return memberRepository.findById(memberIdDto.id())
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
+    }
+
+    private boolean isImagesEmpty(final PostRequest postRequest) {
+        return Objects.isNull(postRequest.images()) ||
+                postRequest.images().isEmpty() ||
+                isDummy(postRequest.images().get(0)
+                );
     }
 
     private boolean isDummy(final MultipartFile multipartFile) {
@@ -82,10 +88,7 @@ public class PostService {
     public void deletePost(final MemberIdDto memberIdDto, final Long postId) {
         final Member member = findMemberById(memberIdDto);
         final Post post = findPostById(postId);
-
-        if (!post.isSameMember(member)) {
-            throw new EdonymyeonException(POST_MEMBER_FORBIDDEN);
-        }
+        checkWriter(member, post);
 
         final List<ImageInfo> imageInfos = findImageInfosFromPost(post);
         postImageInfoRepository.deleteAllByPostId(postId);
@@ -105,6 +108,12 @@ public class PostService {
                 .toList();
     }
 
+    private void checkWriter(final Member member, final Post post) {
+        if (!post.isSameMember(member)) {
+            throw new EdonymyeonException(POST_MEMBER_FORBIDDEN);
+        }
+    }
+
     @Transactional
     public PostResponse updatePost(
             final MemberIdDto memberId,
@@ -113,10 +122,7 @@ public class PostService {
     ) {
         final Member member = findMemberById(memberId);
         final Post post = findPostById(postId);
-
-        if (!post.isSameMember(member)) {
-            throw new EdonymyeonException(POST_MEMBER_FORBIDDEN);
-        }
+        checkWriter(member, post);
 
         post.updateTitle(postRequest.title());
         post.updateContent(postRequest.content());
@@ -125,8 +131,7 @@ public class PostService {
         final List<ImageInfo> originalImageInfos = findImageInfosFromPost(post);
         postImageInfoRepository.deleteAllByPostId(postId);
 
-        if (Objects.isNull(postRequest.images()) || postRequest.images().isEmpty() || isDummy(
-                postRequest.images().get(0))) {
+        if (isImagesEmpty(postRequest)) {
             post.updateImages(Collections.emptyList());
             originalImageInfos.forEach(imageFileUploader::removeFile);
             return new PostResponse(postId);
