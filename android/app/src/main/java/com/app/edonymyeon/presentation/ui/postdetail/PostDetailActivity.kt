@@ -1,5 +1,7 @@
 package com.app.edonymyeon.presentation.ui.postdetail
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -159,6 +161,13 @@ class PostDetailActivity : AppCompatActivity() {
             } else {
                 indicatorView.setImageResource(R.drawable.ic_indicator_focus_off)
             }
+        }
+    }
+
+    companion object {
+        private const val KEY_POST_ID = "key_post_id"
+        fun newIntent(context: Context, postId: Long): Intent {
+            return Intent(context, PostDetailActivity::class.java).putExtra(KEY_POST_ID, postId)
         }
     }
 }
