@@ -3,17 +3,21 @@ package edonymyeon.backend.image;
 import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_EXTENSION_INVALID;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import java.util.Arrays;
-import java.util.function.Predicate;
+import java.util.Map;
+import java.util.Objects;
 import org.springframework.http.MediaType;
 
 public enum ImageExtension {
     JPG, JPEG, PNG;
 
+    private static final Map<String, ImageExtension> extensions = Map.of(
+            JPG.name(), JPG,
+            JPEG.name(), JPEG,
+            PNG.name(), PNG
+    );
+
     public static boolean contains(String extension) {
-        return Arrays.stream(values())
-                .map(Enum::toString)
-                .anyMatch(Predicate.isEqual(extension.toUpperCase()));
+        return extensions.containsKey(extension);
     }
 
     public static MediaType findMediaType(String fileName) {
@@ -34,9 +38,10 @@ public enum ImageExtension {
     }
 
     public static ImageExtension from(String extension) {
-        return Arrays.stream(values())
-                .filter(ext -> ext.toString().equals(extension.toUpperCase()))
-                .findAny()
-                .orElseThrow(() -> new EdonymyeonException(IMAGE_EXTENSION_INVALID));
+        final ImageExtension imageExtension = extensions.get(extension);
+        if (Objects.isNull(imageExtension)) {
+            throw new EdonymyeonException(IMAGE_EXTENSION_INVALID);
+        }
+        return imageExtension;
     }
 }
