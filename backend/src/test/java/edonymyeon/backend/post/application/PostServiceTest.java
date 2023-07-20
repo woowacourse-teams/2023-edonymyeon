@@ -28,6 +28,7 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
@@ -57,6 +58,9 @@ class PostServiceTest {
     private final MemberRepository memberRepository;
 
     private final MemberTestSupport memberTestSupport;
+
+    @Value("domain")
+    private String domain;
 
     private MemberIdDto memberId;
 
