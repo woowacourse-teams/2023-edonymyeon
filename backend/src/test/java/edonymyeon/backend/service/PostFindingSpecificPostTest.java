@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import edonymyeon.backend.TestConfig;
-import edonymyeon.backend.image.postimage.ProfileImageInfo;
-import edonymyeon.backend.image.postimage.repository.ProfileImageInfoRepository;
+import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
+import edonymyeon.backend.image.profileimage.repository.ProfileImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -54,7 +54,8 @@ public class PostFindingSpecificPostTest {
 
         assertAll(
                 () -> assertThat(postInfoResponse.title()).isEqualTo("Summer Breeze"),
-                () -> assertThat(postInfoResponse.content()).isEqualTo("Enjoy the refreshing summer breeze and soak up the sun's warmth at the beach."),
+                () -> assertThat(postInfoResponse.content()).isEqualTo(
+                        "Enjoy the refreshing summer breeze and soak up the sun's warmth at the beach."),
 
                 () -> assertThat(postInfoResponse.price()).isEqualTo(14_000L),
                 () -> assertThat(postInfoResponse.createdAt()).isNotNull(),
