@@ -64,4 +64,6 @@
     <!--item_post_editor_image-->
     <string name="item_post_editor_image_description">갤러리에서 가져온 이미지</string>
     <string name="item_post_editor_image_delete_description">이미지 삭제 버튼</string>
+    <string name="post_all_post">전체 게시물</string>
+    <string name="post_filter_recent">최신순</string>
 </resources>

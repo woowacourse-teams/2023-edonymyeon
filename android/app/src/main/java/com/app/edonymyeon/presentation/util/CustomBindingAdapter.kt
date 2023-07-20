@@ -10,10 +10,9 @@ object CustomBindingAdapter {
 
     @BindingAdapter("imgUrlCenterCrop")
     @JvmStatic
-    fun setCenterCropImageResource(view: ImageView, url: String) {
+    fun setCenterCropImageResource(view: ImageView, url: String?) {
         Glide.with(view.context)
             .load(url)
-            .error(R.drawable.ic_launcher_foreground)
             .centerCrop()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(view)
@@ -21,7 +20,7 @@ object CustomBindingAdapter {
 
     @BindingAdapter("imgUrlFitCenter")
     @JvmStatic
-    fun setFitCenterImageResource(view: ImageView, url: String) {
+    fun setFitCenterImageResource(view: ImageView, url: String?) {
         Glide.with(view.context)
             .load(url)
             .error(R.drawable.ic_launcher_foreground)

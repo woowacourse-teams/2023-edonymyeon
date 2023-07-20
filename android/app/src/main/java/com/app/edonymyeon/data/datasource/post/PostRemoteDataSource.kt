@@ -2,6 +2,7 @@ package com.app.edonymyeon.data.datasource.post
 
 import com.app.edonymyeon.data.dto.request.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
+import com.app.edonymyeon.data.dto.response.Posts
 import com.app.edonymyeon.data.service.PostService
 import com.app.edonymyeon.data.service.client.RetrofitClient
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -20,6 +21,11 @@ class PostRemoteDataSource : PostDataSource {
         return postService.getPost(postId)
     }
 
+    override suspend fun getPosts(size: Int, page: Int): Response<Posts> {
+        return postService.getPosts(size, page)
+    }
+
+    
     override suspend fun savePost(
         title: String,
         content: String,
