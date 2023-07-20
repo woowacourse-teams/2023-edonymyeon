@@ -1,7 +1,7 @@
 package edonymyeon.backend.post.application.dto;
 
 public enum SortBy {
-    CREATE_AT("createAt");
+    CREATE_AT("createdAt");
 
     private final String name;
 

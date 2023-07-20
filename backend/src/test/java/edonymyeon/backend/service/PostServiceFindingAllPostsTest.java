@@ -44,22 +44,31 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostServiceFindingAllPostsTest {
 
     public static final String POST_REQUEST1_TITLE = "Lost in Time";
+
     public static final String POST_REQUEST1_CONTENT = "A young archaeologist discovers a mysterious artifact that transports her back in time, forcing her to navigate ancient civilizations and find a way back home before history unravels.";
+
     public static final long POST_REQUEST1_PRICE = 14_000L;
 
     public static final String POST_REQUEST2_TITLE = "Whispers in the Dark";
+
     public static final String POST_REQUEST2_CONTENT = "A renowned detective embarks on a perilous journey to solve a series of murders that are linked to a secret society.";
+
     public static final long POST_REQUEST2_PRICE = 20_000L;
 
     public static final String POST_REQUEST3_TITLE = "Silent Shadows";
+
     public static final String POST_REQUEST3_CONTENT = "In a desolate town plagued by a decades-old curse, a curious teenager ventures into an abandoned mansion.";
+
     public static final long POST_REQUEST3_PRICE = 25_000L;
 
     public static final String IMAGE1_RELATIVE_PATH = "/static/img/file/test_image_1.jpg";
+
     public static final String IMAGE2_RELATIVE_PATH = "/static/img/file/test_image_2.jpg";
 
     private final PostService postService;
+
     private final MemberRepository memberRepository;
+
     private MemberIdDto memberId;
 
     @BeforeAll
@@ -104,7 +113,7 @@ public class PostServiceFindingAllPostsTest {
                                 POST_REQUEST3_CONTENT
                         ),
                 () -> assertThat(postFindingResponses)
-                        .extracting(PostFindingResponse::imagePath)
+                        .extracting(PostFindingResponse::image)
                         .containsOnly("src/test/resources/static/img/test_store/test-inserting0.jpg"),
                 () -> assertThat(postFindingResponses)
                         .extracting(PostFindingResponse::createdAt)

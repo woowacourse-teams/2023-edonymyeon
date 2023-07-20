@@ -57,8 +57,10 @@ public class PostController {
                 .sortBy(Objects.isNull(sortBy) ? PostFindingCondition.DEFAULT_SORT_BY : SortBy.valueOf(sortBy))
                 .sortDirection(Objects.isNull(sortDirection) ? PostFindingCondition.DEFAULT_SORT_DIRECTION : SortDirection.valueOf(sortDirection))
                 .build();
+
+        final List<PostFindingResponse> posts = postService.findAllPost(postFindingCondition);
         return ResponseEntity
                 .ok()
-                .body(postService.findAllPost(postFindingCondition));
+                .body(posts);
     }
 }
