@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.UUID;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
@@ -302,7 +301,7 @@ class PostServiceTest {
 
                 assertSoftly(softly -> {
                             softly.assertThat(findPost.getPostImageInfos().size()).isEqualTo(게시글_수정_요청.images().size());
-                            softly.assertThat(바꾸기_전_이미지_정보.getUrl().equals(바꾼_후_이미지_정보.getUrl())).isFalse();
+                    softly.assertThat(바꾸기_전_이미지_정보.getStoreName().equals(바꾼_후_이미지_정보.getStoreName())).isFalse();
                         }
                 );
             }

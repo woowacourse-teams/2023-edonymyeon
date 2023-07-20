@@ -13,11 +13,11 @@ public record GeneralPostInfoResponse(
         ReactionCountResponse reactionCount
 ) {
 
-    public static GeneralPostInfoResponse from(Post post) {
+    public static GeneralPostInfoResponse of(Post post, String domain) {
         return new GeneralPostInfoResponse(
                 post.getId(),
                 post.getTitle(),
-                post.getPostImageInfos().size() == 0 ? null : post.getPostImageInfos().get(0).getUrl(),
+                post.getPostImageInfos().size() == 0 ? null : domain + post.getPostImageInfos().get(0).getStoreName(),
                 post.getContent(),
                 new WriterResponse(post.getMember().getNickname()),
                 post.getCreatedAt(),
