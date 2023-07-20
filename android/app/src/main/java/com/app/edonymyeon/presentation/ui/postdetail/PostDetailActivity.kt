@@ -38,10 +38,13 @@ class PostDetailActivity : AppCompatActivity() {
     private val dialog: DeleteDialog by lazy {
         DeleteDialog {
             viewModel.deletePost(id)
-            // 게시글 목록으로 이동
             dialog.dismiss()
+            // 게시글 목록으로 이동
         }
     }
+
+    private val isMyPost: Boolean
+        get() = viewModel.post.value?.isWriter == true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +52,7 @@ class PostDetailActivity : AppCompatActivity() {
 
         initBinding()
         initAppbar()
-
+        setRecommendationCheckedListener()
         setImageIndicators()
 
         viewModel.post.observe(this) {
@@ -70,6 +73,7 @@ class PostDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_update -> {
+                // 글 작성으로 이동
                 Snackbar.make(binding.root, "update", Snackbar.LENGTH_SHORT).show()
                 true
             }
@@ -88,13 +92,13 @@ class PostDetailActivity : AppCompatActivity() {
             menu?.findItem(R.id.action_update),
             menu?.findItem(R.id.action_delete),
         ).forEach {
-            if (isMyPost()) {
-                it?.isVisible = false
+            viewModel.post.observe(this) { post ->
+                if (!post.isWriter) {
+                    it?.isVisible = false
+                }
             }
         }
     }
-
-    private fun isMyPost() = viewModel.post.value?.isWriter == true
 
     private fun initBinding() {
         binding.lifecycleOwner = this
@@ -107,7 +111,7 @@ class PostDetailActivity : AppCompatActivity() {
         supportActionBar?.title = ""
 
         binding.actionScrap.setOnCheckedChangeListener { _, isChecked ->
-            if (isMyPost()) {
+            if (isMyPost) {
                 Snackbar.make(
                     binding.root,
                     getString(R.string.post_detail_writer_cant_scrap),
@@ -117,6 +121,33 @@ class PostDetailActivity : AppCompatActivity() {
                 return@setOnCheckedChangeListener
             }
             viewModel.updateScrap(isChecked)
+        }
+    }
+
+    private fun setRecommendationCheckedListener() {
+        binding.cbUp.setOnCheckedChangeListener { _, isChecked ->
+            if (isMyPost) {
+                Snackbar.make(
+                    binding.root,
+                    getString(R.string.post_detail_writer_cant_recommend),
+                    Snackbar.LENGTH_SHORT,
+                ).show()
+                binding.cbUp.isChecked = false
+                return@setOnCheckedChangeListener
+            }
+            viewModel.updateUpRecommendationUi(isChecked)
+        }
+        binding.cbDown.setOnCheckedChangeListener { _, isChecked ->
+            if (isMyPost) {
+                Snackbar.make(
+                    binding.root,
+                    getString(R.string.post_detail_writer_cant_recommend),
+                    Snackbar.LENGTH_SHORT,
+                ).show()
+                binding.cbDown.isChecked = false
+                return@setOnCheckedChangeListener
+            }
+            viewModel.updateDownRecommendationUi(isChecked)
         }
     }
 
