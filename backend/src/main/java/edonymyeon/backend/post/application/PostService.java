@@ -27,6 +27,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -53,7 +54,8 @@ public class PostService {
         );
         postRepository.save(post);
 
-        if (Objects.isNull(postRequest.images()) || postRequest.images().isEmpty()) {
+        if (Objects.isNull(postRequest.images()) || postRequest.images().isEmpty() || isDummy(
+                postRequest.images().get(0))) {
             return new PostResponse(post.getId());
         }
 
@@ -68,6 +70,10 @@ public class PostService {
     private Member findMemberById(final MemberIdDto memberIdDto) {
         return memberRepository.findById(memberIdDto.id())
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
+    }
+
+    private boolean isDummy(final MultipartFile multipartFile) {
+        return multipartFile.isEmpty();
     }
 
     private List<ImageInfo> uploadImages(final PostRequest postRequest) {
