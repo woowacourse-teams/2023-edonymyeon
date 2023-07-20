@@ -222,6 +222,13 @@ public class PostService {
     }
 
     private WriterDetailResponse getWriterResponse(final Member member) {
+        if (Objects.isNull(member.getProfileImageInfo())) {
+            return new WriterDetailResponse(
+                    member.getId(),
+                    member.getNickname(),
+                    null
+            );
+        }
         return new WriterDetailResponse(
                 member.getId(),
                 member.getNickname(),
