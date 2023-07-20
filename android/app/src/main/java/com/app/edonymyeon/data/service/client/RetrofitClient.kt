@@ -11,7 +11,7 @@ class RetrofitClient(private val baseUrl: String = DEV_URL) {
 
     private fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(baseUrl)
+            .baseUrl("https://edonymyeon.site")
             .addConverterFactory(Json.asConverterFactory(contentType))
             .client(OkHttpClient.provideOkHttpClient(accessTokenInterceptor))
             .build()
@@ -33,7 +33,7 @@ class RetrofitClient(private val baseUrl: String = DEV_URL) {
     }
 
     companion object {
-        private const val DEV_URL = "http://"
+        private const val DEV_URL = "https://edonymyeon.site"
         private val contentType = "application/json".toMediaType()
         private var retrofitClient: RetrofitClient? = null
 

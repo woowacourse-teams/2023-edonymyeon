@@ -6,12 +6,13 @@ import androidx.recyclerview.widget.RecyclerView
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ItemPostBinding
 import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
+import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
 
 class PostViewHolder(parent: ViewGroup, onClick: (Int) -> Unit) :
     RecyclerView.ViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false)
     ) {
-    val binding = ItemPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+    val binding = ItemPostBinding.bind(itemView)
 
     init {
         binding.root.setOnClickListener {
@@ -21,6 +22,10 @@ class PostViewHolder(parent: ViewGroup, onClick: (Int) -> Unit) :
 
     fun bind(post: PostItemUiModel) {
         binding.post = post
-
+        binding.prvAllPostReaction.reactionCount = ReactionCountUiModel(
+            post.reactionCount.viewCount,
+            post.reactionCount.commentCount,
+            post.reactionCount.scrapCount,
+        )
     }
 }

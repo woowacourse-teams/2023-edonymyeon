@@ -57,6 +57,7 @@
             app:layout_constraintWidth_percent="0.016" />
 
         <TextView
+            android:text="최신순"
             android:id="@+id/tv_post_filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

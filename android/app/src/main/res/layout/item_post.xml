@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-
     <data>
-
         <variable
             name="post"
             type="com.app.edonymyeon.presentation.uimodel.PostItemUiModel" />
@@ -80,6 +78,7 @@
                 tools:text="로피 | 1일전" />
 
             <com.app.edonymyeon.presentation.common.customview.PostReactionView
+                android:id="@+id/prv_all_post_reaction"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="3dp"
@@ -98,6 +97,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_all_post_content"
                 app:layout_constraintTop_toTopOf="parent"
+                imgUrlCenterCrop="@{post.thumbnailUrl}"
                 app:layout_constraintWidth_percent="0.16"
                 tools:src="@drawable/ic_launcher_background" />
         </androidx.constraintlayout.widget.ConstraintLayout>
