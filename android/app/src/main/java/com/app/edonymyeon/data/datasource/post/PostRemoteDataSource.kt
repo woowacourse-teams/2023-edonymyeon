@@ -1,6 +1,5 @@
 package com.app.edonymyeon.data.datasource.post
 
-import android.net.Uri
 import com.app.edonymyeon.data.dto.request.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
 import com.app.edonymyeon.data.service.PostService
@@ -25,7 +24,7 @@ class PostRemoteDataSource : PostDataSource {
         title: String,
         content: String,
         price: Int,
-        imageUris: List<Uri>,
+        imageUris: List<String>,
     ): Response<PostEditorResponse> {
         val images = generateMultiPart(imageUris)
         val postEditorMap: HashMap<String, RequestBody> = hashMapOf()
@@ -41,7 +40,7 @@ class PostRemoteDataSource : PostDataSource {
         title: String,
         content: String,
         price: Int,
-        imageUris: List<Uri>,
+        imageUris: List<String>,
     ): Response<PostEditorResponse> {
         val images = generateMultiPart(imageUris)
         val postEditorMap: HashMap<String, RequestBody> = hashMapOf()
@@ -52,10 +51,10 @@ class PostRemoteDataSource : PostDataSource {
         return postService.updatePost(id, postEditorMap, images)
     }
 
-    private fun generateMultiPart(imageUris: List<Uri>) =
+    private fun generateMultiPart(imageUris: List<String>) =
         imageUris.map { imageUri ->
-            val file = File(imageUri.path ?: "")
+            val file = File(imageUri ?: "")
             val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-            MultipartBody.Part.createFormData("images[]", file.name, requestFile)
+            MultipartBody.Part.createFormData("images", file.name, requestFile)
         }
 }
