@@ -27,7 +27,7 @@ public class ImageFileUploader {
             final String originalFileName = multipartFile.getOriginalFilename();
             validateExtension(originalFileName);
             final String uploadedFileName = imageFileNameStrategy.createName(originalFileName);
-            final ImageInfo imageInfo = new ImageInfo(fileDirectory, uploadedFileName);
+            final ImageInfo imageInfo = new ImageInfo(uploadedFileName);
 
             String fullPath = getFullPath(uploadedFileName);
             final Path absolutePath = Paths.get(fullPath).toAbsolutePath();

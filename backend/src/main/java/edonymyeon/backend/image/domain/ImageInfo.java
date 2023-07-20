@@ -23,16 +23,11 @@ public class ImageInfo {
     private Long id;
 
     @Column
-    private String fileDirectory;
-
-    @Column
     private String storeName;
 
     public ImageInfo(
-            final String fileDirectory,
             final String storeName
     ) {
-        this.fileDirectory = fileDirectory;
         this.storeName = storeName;
     }
 

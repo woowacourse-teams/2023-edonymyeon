@@ -19,14 +19,13 @@ public class PostImageInfo extends ImageInfo {
     @JoinColumn
     private Post post;
 
-    public PostImageInfo(final String fileDirectory, final String storeName, final Post post) {
-        super(fileDirectory, storeName);
+    public PostImageInfo(final String storeName, final Post post) {
+        super(storeName);
         this.post = post;
     }
 
     public static PostImageInfo of(final ImageInfo imageInfo, final Post post) {
-        final PostImageInfo postImageInfo = new PostImageInfo(imageInfo.getFileDirectory(), imageInfo.getStoreName(),
-                post);
+        final PostImageInfo postImageInfo = new PostImageInfo(imageInfo.getStoreName(), post);
         post.addPostImageInfo(postImageInfo);
         return postImageInfo;
     }
