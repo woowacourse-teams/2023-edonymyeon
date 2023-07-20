@@ -8,4 +8,7 @@ interface PostRepository {
         size: Int,
         page: Int
     ): Result<List<PostItem>>
+
+    suspend fun savePost(title: String, content: String, price: Int, images: List<String>): Result<Any>
+    suspend fun updatePost(id: Long, title: String, content: String, price: Int, images: List<String>): Result<Any>
 }

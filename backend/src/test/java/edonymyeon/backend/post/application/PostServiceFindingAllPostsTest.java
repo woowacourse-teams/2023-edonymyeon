@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
@@ -63,11 +62,12 @@ public class PostServiceFindingAllPostsTest {
 
     private MemberIdDto memberId;
 
-    @Value("${domain}")
-    private String domain;
+/*    @Value("${domain}")
+    private String domain;*/
 
-    private final Pattern 파일_경로_형식 = Pattern.compile(
-            domain + "test-inserting\\d+\\.(png|jpg)"
+    //todo: 테스트 properties 파일에 있는 도메인 경로 하드코딩함
+    private Pattern 파일_경로_형식 = Pattern.compile(
+            "edonymyeon/" + "test-inserting\\d+\\.(png|jpg|jpeg)"
     );
 
     @BeforeAll

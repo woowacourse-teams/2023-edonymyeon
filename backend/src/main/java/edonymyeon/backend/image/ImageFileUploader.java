@@ -30,8 +30,8 @@ public class ImageFileUploader {
             final ImageInfo imageInfo = new ImageInfo(uploadedFileName);
 
             String fullPath = getFullPath(uploadedFileName);
-            final Path absolutePath = Paths.get(fullPath).toAbsolutePath();
-            multipartFile.transferTo(absolutePath);
+            final Path path = Paths.get(fullPath);
+            multipartFile.transferTo(path);
 
             return imageInfo;
         } catch (IOException e) {

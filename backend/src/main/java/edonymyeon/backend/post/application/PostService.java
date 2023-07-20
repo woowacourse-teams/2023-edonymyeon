@@ -6,6 +6,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMB
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.ImageFileUploader;
+import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
@@ -50,6 +51,8 @@ public class PostService {
     private final MemberRepository memberRepository;
 
     private final ThumbsService thumbsService;
+
+    private final Domain domain;
 
     @Transactional
     public PostResponse createPost(final MemberIdDto memberIdDto, final PostRequest postRequest) {
@@ -170,7 +173,7 @@ public class PostService {
         final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
         final Slice<Post> foundPosts = postRepository.findAll(pageRequest);
         return foundPosts
-                .map(GeneralPostInfoResponse::from)
+                .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()))
                 .toList();
     }
 
@@ -205,7 +208,8 @@ public class PostService {
                     post,
                     allThumbsInPost,
                     writerDetailResponse,
-                    reactionCountResponse
+                    reactionCountResponse,
+                    domain.getDomain()
             );
         }
 
@@ -217,15 +221,23 @@ public class PostService {
                 writerDetailResponse,
                 reactionCountResponse,
                 thumbsStatusInPost,
-                member.get()
+                member.get(),
+                domain.getDomain()
         );
     }
 
     private WriterDetailResponse getWriterResponse(final Member member) {
+        if (Objects.isNull(member.getProfileImageInfo())) {
+            return new WriterDetailResponse(
+                    member.getId(),
+                    member.getNickname(),
+                    null
+            );
+        }
         return new WriterDetailResponse(
                 member.getId(),
                 member.getNickname(),
-                member.getProfileImageInfo().getUrl()
+                domain.getDomain() + member.getProfileImageInfo().getStoreName()
         );
     }
 }
