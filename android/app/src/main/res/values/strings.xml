@@ -54,6 +54,7 @@
     <string name="post_editor_check_permission">권한 허용 필요</string>
     <string name="post_editor_check_title_input">제목은 필수 입력 항목입니다</string>
     <string name="post_editor_snackbar_ok_message">확인</string>
+    <string name="post_editor_snackbar_missing_title_message">타이틀을 작성해야만 등록이 됩니다.</string>
 
     <!--item_post_editor_image-->
     <string name="item_post_editor_image_description">갤러리에서 가져온 이미지</string>

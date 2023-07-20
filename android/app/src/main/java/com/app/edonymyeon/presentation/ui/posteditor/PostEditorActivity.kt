@@ -3,12 +3,15 @@ package com.app.edonymyeon.presentation.ui.posteditor
 import android.Manifest
 import android.content.ClipData
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.Menu
+import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +19,7 @@ import androidx.lifecycle.Observer
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostEditorBinding
 import com.app.edonymyeon.presentation.ui.posteditor.adapter.PostEditorImagesAdapter
+import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.google.android.material.snackbar.Snackbar
 
 class PostEditorActivity : AppCompatActivity() {
@@ -54,15 +58,71 @@ class PostEditorActivity : AppCompatActivity() {
         }
     }
 
+    private val originActivityKey by lazy {
+        intent.getIntExtra(KEY_POST_EDITOR_CHECK, 0)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         initBinding()
+        initializeViewModelWithPostIfUpdate()
         initAppbar()
         setCameraAndGalleryClickListener()
         observeImages()
         setAdapter()
+    }
+
+    private fun initializeViewModelWithPostIfUpdate() {
+        if (originActivityKey == UPDATE_CODE) {
+            val post = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                intent.getParcelableExtra(KEY_POST_EDITOR_POST, PostUiModel::class.java)
+            } else {
+                intent.getParcelableExtra<PostUiModel>(KEY_POST_EDITOR_POST)
+            }
+            post?.let { viewModel.init(it) }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_post_editor, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_post_save -> {
+                viewModel.postTitle.observe(
+                    this,
+                ) {
+                    if (it.isNotEmpty() || it != null) {
+                        savePost()
+                        finish()
+                    } else {
+                        showSnackbarForMissingTitle()
+                    }
+                }
+                return true
+            }
+
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun savePost() {
+        when (originActivityKey) {
+            POST_CODE -> {}
+            UPDATE_CODE -> {}
+        }
+    }
+
+    private fun showSnackbarForMissingTitle() {
+        Snackbar.make(
+            binding.clPostEditor,
+            getString(R.string.post_editor_snackbar_missing_title_message),
+            Snackbar.LENGTH_SHORT,
+        ).show()
     }
 
     private fun initBinding() {
@@ -202,6 +262,10 @@ class PostEditorActivity : AppCompatActivity() {
 
     companion object {
         private const val MAX_IMAGES_COUNT = 10
+        private const val KEY_POST_EDITOR_CHECK = "key_post_editor_check"
+        private const val KEY_POST_EDITOR_POST = "key_post_editor_post"
+        private const val POST_CODE = 2000
+        private const val UPDATE_CODE = 3000
         private val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")
             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
@@ -210,5 +274,12 @@ class PostEditorActivity : AppCompatActivity() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
         )
+
+        fun newIntent(context: Context, post: PostUiModel, code: Int): Intent {
+            return Intent(context, PostEditorActivity::class.java).apply {
+                putExtra(KEY_POST_EDITOR_CHECK, code)
+                putExtra(KEY_POST_EDITOR_POST, post)
+            }
+        }
     }
 }

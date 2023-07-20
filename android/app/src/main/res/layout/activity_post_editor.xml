@@ -33,17 +33,6 @@
                 android:text="@string/post_editor_page_title"
                 android:textColor="@color/white_ffffff"
                 android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/tb_post_editor_write"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginEnd="16dp"
-                android:fontFamily="@font/dohyeon"
-                android:text="@string/post_editor_page_write"
-                android:textColor="@color/white_ffffff"
-                android:textSize="14sp" />
         </androidx.appcompat.widget.Toolbar>
 
         <Space
@@ -73,6 +62,7 @@
             android:layout_height="0dp"
             android:layout_marginStart="87dp"
             android:layout_marginEnd="20dp"
+            android:afterTextChanged="@{viewModel.setTitle}"
             android:autofillHints="no"
             android:background="@android:color/transparent"
             android:fontFamily="@font/dohyeon"
@@ -81,7 +71,6 @@
             android:inputType="text"
             android:maxLength="30"
             android:text="@{viewModel.postTitle}"
-            android:afterTextChanged="@{viewModel.setTitle}"
             android:textColor="@color/gray_434343"
             android:textColorHint="@color/gray_615f5f"
             android:textSize="13sp"
@@ -107,13 +96,13 @@
             android:id="@+id/et_post_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:afterTextChanged="@{viewModel.setPrice}"
             android:autofillHints="no"
             android:background="@android:color/transparent"
             android:fontFamily="@font/dohyeon"
             android:hint="@string/post_editor_price_hint"
             android:inputType="number"
             android:text="@{viewModel.postPrice}"
-            android:afterTextChanged="@{viewModel.setPrice}"
             android:textColor="@color/gray_434343"
             android:textColorHint="@color/gray_615f5f"
             android:textSize="13sp"
@@ -199,6 +188,7 @@
                     android:id="@+id/et_post_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:afterTextChanged="@{viewModel.setContent}"
                     android:autofillHints="no"
                     android:background="@android:color/transparent"
                     android:fontFamily="@font/dohyeon"
@@ -206,7 +196,6 @@
                     android:inputType="textMultiLine"
                     android:maxLength="3000"
                     android:text="@{viewModel.postContent}"
-                    android:afterTextChanged="@{viewModel.setContent}"
                     android:textColor="@color/gray_434343"
                     android:textColorHint="@color/gray_615f5f"
                     android:textSize="15sp"
