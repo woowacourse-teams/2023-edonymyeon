@@ -12,6 +12,8 @@ import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
+import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.application.dto.ReactionCountResponse;
@@ -26,8 +28,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -56,7 +62,8 @@ public class PostService {
         );
         postRepository.save(post);
 
-        if (Objects.isNull(postRequest.images()) || postRequest.images().isEmpty()) {
+        if (Objects.isNull(postRequest.images()) || postRequest.images().isEmpty() || isDummy(
+                postRequest.images().get(0))) {
             return new PostResponse(post.getId());
         }
 
@@ -66,6 +73,15 @@ public class PostService {
         postImageInfoRepository.saveAll(postImageInfos);
 
         return new PostResponse(post.getId());
+    }
+
+    private Member findMemberById(final MemberIdDto memberIdDto) {
+        return memberRepository.findById(memberIdDto.id())
+                .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
+    }
+
+    private boolean isDummy(final MultipartFile multipartFile) {
+        return multipartFile.isEmpty();
     }
 
     private List<ImageInfo> uploadImages(final PostRequest postRequest) {
@@ -91,6 +107,26 @@ public class PostService {
             return;
         }
         throw new EdonymyeonException(POST_MEMBER_FORBIDDEN);
+    }
+
+    public List<GeneralPostInfoResponse> findAllPost(final GeneralFindingCondition generalFindingCondition) {
+        final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
+        final Slice<Post> foundPosts = postRepository.findAll(pageRequest);
+        return foundPosts
+                .map(GeneralPostInfoResponse::from)
+                .toList();
+    }
+
+    private static PageRequest convertConditionToPageRequest(final GeneralFindingCondition generalFindingCondition) {
+        return PageRequest.of(
+                generalFindingCondition.getPage(),
+                generalFindingCondition.getSize(),
+                switch (generalFindingCondition.getSortDirection()) {
+                    case ASC -> Direction.ASC;
+                    case DESC -> Direction.DESC;
+                },
+                generalFindingCondition.getSortBy().getName()
+        );
     }
 
     public SpecificPostInfoResponse findSpecificPost(final Long postId, final MemberIdDto memberIdDto) {
