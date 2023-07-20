@@ -82,14 +82,15 @@ public class PostService {
     public void deletePost(final MemberIdDto memberIdDto, final Long postId) {
         final Member member = findMemberById(memberIdDto);
         final Post post = findPostById(postId);
+
         if (post.isSameMember(member)) {
-            final List<ImageInfo> imageInfos = findImageInfosFromPost(post);
-            postImageInfoRepository.deleteAllByPostId(postId);
-            postRepository.deleteById(postId);
-            imageInfos.forEach(imageFileUploader::removeFile);
-            return;
+            throw new EdonymyeonException(POST_MEMBER_FORBIDDEN);
         }
-        throw new EdonymyeonException(POST_MEMBER_FORBIDDEN);
+
+        final List<ImageInfo> imageInfos = findImageInfosFromPost(post);
+        postImageInfoRepository.deleteAllByPostId(postId);
+        postRepository.deleteById(postId);
+        imageInfos.forEach(imageFileUploader::removeFile);
     }
 
     private Post findPostById(final Long postId) {
