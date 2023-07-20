@@ -1,6 +1,5 @@
 package com.app.edonymyeon.data.repository
 
-import android.net.Uri
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.datasource.post.PostDataSource
 import com.app.edonymyeon.data.dto.request.PostEditorResponse
@@ -24,7 +23,7 @@ class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepos
         price: Int,
         images: List<String>,
     ): Result<Any> {
-        val result = postDataSource.savePost(title, content, price, images.map { Uri.parse(it) })
+        val result = postDataSource.savePost(title, content, price, images)
         return if (result.isSuccessful) {
             Result.success(result.body() as PostEditorResponse)
         } else {
@@ -39,7 +38,7 @@ class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepos
         price: Int,
         images: List<String>,
     ): Result<Any> {
-        val result = postDataSource.updatePost(postId, title, content, price, images.map { Uri.parse(it) })
+        val result = postDataSource.updatePost(postId, title, content, price, images)
         return if (result.isSuccessful) {
             Result.success(result.body() as PostEditorResponse)
         } else {

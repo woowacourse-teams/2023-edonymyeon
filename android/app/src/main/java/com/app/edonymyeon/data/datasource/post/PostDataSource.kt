@@ -1,6 +1,5 @@
 package com.app.edonymyeon.data.datasource.post
 
-import android.net.Uri
 import com.app.edonymyeon.data.dto.request.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
 import retrofit2.Response
@@ -12,7 +11,7 @@ interface PostDataSource {
         title: String,
         content: String,
         price: Int,
-        images: List<Uri>,
+        images: List<String>,
     ): Response<PostEditorResponse>
 
     suspend fun updatePost(
@@ -20,6 +19,6 @@ interface PostDataSource {
         title: String,
         content: String,
         price: Int,
-        Images: List<Uri>,
+        Images: List<String>,
     ): Response<PostEditorResponse>
 }

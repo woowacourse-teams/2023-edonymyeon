@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,7 +27,7 @@ import com.google.android.material.snackbar.Snackbar
 class PostEditorActivity : AppCompatActivity() {
 
     private val viewModel: PostEditorViewModel by lazy {
-        PostEditorViewModelFactory(PostRepositoryImpl(PostRemoteDataSource())).create(
+        PostEditorViewModelFactory(application, PostRepositoryImpl(PostRemoteDataSource())).create(
             PostEditorViewModel::class.java,
         )
     }
@@ -106,7 +107,7 @@ class PostEditorActivity : AppCompatActivity() {
                 ) {
                     if (it.isNotEmpty() || it != null) {
                         savePost()
-                        finish()
+                        navigateToDetail()
                     } else {
                         showSnackbarForMissingTitle()
                     }
@@ -116,6 +117,10 @@ class PostEditorActivity : AppCompatActivity() {
 
             else -> return super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun navigateToDetail() {
+        /*startActivity(PostDetailActivity.newIntent(this, viewModel.postId.value))*/
     }
 
     private fun savePost() {
@@ -239,6 +244,7 @@ class PostEditorActivity : AppCompatActivity() {
     private fun addSelectedImagesFromClipData(count: Int, clipData: ClipData) {
         for (i in 0 until count) {
             val imageUri = clipData.getItemAt(i).uri
+            Log.d("dfsdfs", imageUri.toString())
             viewModel.addSelectedImages(imageUri.toString())
         }
     }
@@ -277,8 +283,8 @@ class PostEditorActivity : AppCompatActivity() {
         private const val MAX_IMAGES_COUNT = 10
         private const val KEY_POST_EDITOR_CHECK = "key_post_editor_check"
         private const val KEY_POST_EDITOR_POST = "key_post_editor_post"
-        private const val POST_CODE = 2000
-        private const val UPDATE_CODE = 3000
+        const val POST_CODE = 2000
+        const val UPDATE_CODE = 3000
         private val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")
             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
@@ -287,6 +293,12 @@ class PostEditorActivity : AppCompatActivity() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
         )
+
+        fun newIntent(context: Context, code: Int): Intent {
+            return Intent(context, PostEditorActivity::class.java).apply {
+                putExtra(KEY_POST_EDITOR_CHECK, code)
+            }
+        }
 
         fun newIntent(context: Context, post: PostUiModel, code: Int): Intent {
             return Intent(context, PostEditorActivity::class.java).apply {
