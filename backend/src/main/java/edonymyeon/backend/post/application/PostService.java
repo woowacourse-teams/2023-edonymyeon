@@ -108,6 +108,7 @@ public class PostService {
         checkWriter(member, post);
 
         final List<ImageInfo> imageInfos = findImageInfosFromPost(post);
+        thumbsService.deleteAllThumbsInPost(postId);
         postImageInfoRepository.deleteAllByPostId(postId);
         postRepository.deleteById(postId);
         imageInfos.forEach(imageFileUploader::removeFile);
