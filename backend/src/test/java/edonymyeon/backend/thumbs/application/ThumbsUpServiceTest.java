@@ -13,6 +13,7 @@ import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
@@ -41,40 +42,16 @@ class ThumbsUpServiceTest {
     private final MemberRepository memberRepository;
 
     private final PostService postService;
+    
+    private final MemberTestSupport memberTestSupport;
 
     private Member postWriter;
 
     private PostResponse postResponse;
 
-    private void thumbsUp(final Member member, final PostResponse post) {
-        MemberIdDto memberId = new MemberIdDto(member.getId());
-        thumbsService.thumbsUp(memberId, post.id());
-    }
-
-    private void thumbsDown(final Member member, final PostResponse post) {
-        MemberIdDto memberId = new MemberIdDto(member.getId());
-        thumbsService.thumbsDown(memberId, post.id());
-    }
-
-    private Member registerMember(
-            final String email,
-            final String password,
-            final String nickname
-    ) {
-        Member member = new Member(
-                email,
-                password,
-                nickname,
-                null
-        );
-        memberRepository.save(member);
-
-        return member;
-    }
-
     @BeforeEach
     public void 회원가입과_게시글쓰기를_한다() {
-        postWriter = registerMember("email", "password", "nickname");
+        postWriter = registerMember();
         PostRequest postRequest = new PostRequest(
                 "title",
                 "content",
@@ -109,7 +86,7 @@ class ThumbsUpServiceTest {
     @Test
     void 추천시_해당게시물에_추천한_적_없으면_추가한다(@Autowired ThumbsRepository thumbsRepository) {
         // given
-        Member otherMember = registerMember("email2", "password2", "nickname2");
+        Member otherMember = registerMember();
 
         // when
         thumbsUp(otherMember, postResponse);
@@ -129,7 +106,7 @@ class ThumbsUpServiceTest {
     @Test
     void 추천시_해당게시물에_비추천한_적_있으면_추천으로_업데이트_된다(@Autowired ThumbsRepository thumbsRepository) {
         // given
-        Member otherMember = registerMember("email2", "password2", "nickname2");
+        Member otherMember = registerMember();
 
         // when
         thumbsDown(otherMember, postResponse);
@@ -150,7 +127,7 @@ class ThumbsUpServiceTest {
     @Test
     void 추천시_해당게시물에_추천한_적_있으면_예외가_발생한다() {
         // given
-        Member otherMember = registerMember("email2", "password2", "nickname2");
+        Member otherMember = registerMember();
 
         // when
         thumbsUp(otherMember, postResponse);
@@ -162,5 +139,22 @@ class ThumbsUpServiceTest {
                 () -> thumbsService.thumbsUp(otherMemberId, postResponse.id()))
                 .isExactlyInstanceOf(EdonymyeonException.class)
                 .hasMessage(THUMBS_UP_ALREADY_EXIST.getMessage());
+    }
+
+
+    private void thumbsUp(final Member member, final PostResponse post) {
+        MemberIdDto memberId = new MemberIdDto(member.getId());
+        thumbsService.thumbsUp(memberId, post.id());
+    }
+
+    private void thumbsDown(final Member member, final PostResponse post) {
+        MemberIdDto memberId = new MemberIdDto(member.getId());
+        thumbsService.thumbsDown(memberId, post.id());
+    }
+
+    private Member registerMember() {
+        Member member = memberTestSupport.builder().build();
+        memberRepository.save(member);
+        return member;
     }
 }

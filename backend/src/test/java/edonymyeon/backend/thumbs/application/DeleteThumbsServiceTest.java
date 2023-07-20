@@ -13,6 +13,7 @@ import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import java.util.Optional;
@@ -42,13 +43,13 @@ public class DeleteThumbsServiceTest {
 
     private final PostService postService;
 
-    private Member postWriter;
+    private final MemberTestSupport memberTestSupport;
 
     private PostResponse postResponse;
 
     @BeforeEach
     public void 회원가입과_게시글쓰기를_한다() {
-        postWriter = registerMember("email", "password", "nickname");
+        Member postWriter = registerMember();
         PostRequest postRequest = new PostRequest(
                 "title",
                 "content",
@@ -63,7 +64,7 @@ public class DeleteThumbsServiceTest {
     @Test
     void 추천_취소(@Autowired ThumbsRepository thumbsRepository) {
         // given
-        Member otherMember = registerMember("email2", "password2", "nickname2");
+        Member otherMember = registerMember();
         thumbsUp(otherMember, postResponse);
 
         // when
@@ -77,7 +78,7 @@ public class DeleteThumbsServiceTest {
 
     @Test
     void 추천이_되어있지_않은경우_추천취소를_할_수_없다() {
-        Member otherMember = registerMember("email2", "password2", "nickname2");
+        Member otherMember = registerMember();
 
         assertThatThrownBy(() -> deleteThumbsUp(otherMember, postResponse))
                 .isExactlyInstanceOf(EdonymyeonException.class)
@@ -86,7 +87,7 @@ public class DeleteThumbsServiceTest {
 
     @Test
     void 비추천인_상태일때_추천을_취소할_수_없다() {
-        Member otherMember = registerMember("email2", "password2", "nickname2");
+        Member otherMember = registerMember();
         thumbsDown(otherMember, postResponse);
 
         assertThatThrownBy(() -> deleteThumbsUp(otherMember, postResponse))
@@ -97,7 +98,7 @@ public class DeleteThumbsServiceTest {
     @Test
     void 비추천_취소(@Autowired ThumbsRepository thumbsRepository) {
         // given
-        Member otherMember = registerMember("email2", "password2", "nickname2");
+        Member otherMember = registerMember();
         thumbsDown(otherMember, postResponse);
 
         // when
@@ -111,7 +112,7 @@ public class DeleteThumbsServiceTest {
 
     @Test
     void 비추천이_되어있지_않은경우_비추천취소를_할_수_없다() {
-        Member otherMember = registerMember("email2", "password2", "nickname2");
+        Member otherMember = registerMember();
 
         assertThatThrownBy(() -> deleteThumbsDown(otherMember, postResponse))
                 .isExactlyInstanceOf(EdonymyeonException.class)
@@ -120,7 +121,7 @@ public class DeleteThumbsServiceTest {
 
     @Test
     void 추천인_상태일때_비추천을_취소할_수_없다() {
-        Member otherMember = registerMember("email2", "password2", "nickname2");
+        Member otherMember = registerMember();
         thumbsUp(otherMember, postResponse);
 
         assertThatThrownBy(() -> deleteThumbsDown(otherMember, postResponse))
@@ -148,19 +149,9 @@ public class DeleteThumbsServiceTest {
         thumbsService.deleteThumbsDown(memberId, post.id());
     }
 
-    private Member registerMember(
-            final String email,
-            final String password,
-            final String nickname
-    ) {
-        Member member = new Member(
-                email,
-                password,
-                nickname,
-                null
-        );
+    private Member registerMember() {
+        Member member = memberTestSupport.builder().build();
         memberRepository.save(member);
-
         return member;
     }
 }
