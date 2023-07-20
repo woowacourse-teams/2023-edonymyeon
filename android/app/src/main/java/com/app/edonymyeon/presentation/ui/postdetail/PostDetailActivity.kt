@@ -18,7 +18,7 @@ import com.app.edonymyeon.data.repository.RecommendRepositoryImpl
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
-import com.google.android.material.snackbar.Snackbar
+import com.app.edonymyeon.presentation.util.makeSnackbar
 
 class PostDetailActivity : AppCompatActivity() {
     private val id: Long = 23L
@@ -38,6 +38,7 @@ class PostDetailActivity : AppCompatActivity() {
     private val dialog: DeleteDialog by lazy {
         DeleteDialog {
             viewModel.deletePost(id)
+            binding.root.makeSnackbar("delete")
             dialog.dismiss()
             // 게시글 목록으로 이동
         }
@@ -74,7 +75,7 @@ class PostDetailActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_update -> {
                 // 글 작성으로 이동
-                Snackbar.make(binding.root, "update", Snackbar.LENGTH_SHORT).show()
+                binding.root.makeSnackbar("update")
                 true
             }
 
@@ -112,11 +113,7 @@ class PostDetailActivity : AppCompatActivity() {
 
         binding.actionScrap.setOnCheckedChangeListener { _, isChecked ->
             if (isMyPost) {
-                Snackbar.make(
-                    binding.root,
-                    getString(R.string.post_detail_writer_cant_scrap),
-                    Snackbar.LENGTH_SHORT,
-                ).show()
+                binding.root.makeSnackbar(getString(R.string.post_detail_writer_cant_scrap))
                 binding.actionScrap.isChecked = false
                 return@setOnCheckedChangeListener
             }
@@ -127,11 +124,7 @@ class PostDetailActivity : AppCompatActivity() {
     private fun setRecommendationCheckedListener() {
         binding.cbUp.setOnCheckedChangeListener { _, isChecked ->
             if (isMyPost) {
-                Snackbar.make(
-                    binding.root,
-                    getString(R.string.post_detail_writer_cant_recommend),
-                    Snackbar.LENGTH_SHORT,
-                ).show()
+                binding.root.makeSnackbar(getString(R.string.post_detail_writer_cant_recommend))
                 binding.cbUp.isChecked = false
                 return@setOnCheckedChangeListener
             }
@@ -139,11 +132,7 @@ class PostDetailActivity : AppCompatActivity() {
         }
         binding.cbDown.setOnCheckedChangeListener { _, isChecked ->
             if (isMyPost) {
-                Snackbar.make(
-                    binding.root,
-                    getString(R.string.post_detail_writer_cant_recommend),
-                    Snackbar.LENGTH_SHORT,
-                ).show()
+                binding.root.makeSnackbar(getString(R.string.post_detail_writer_cant_recommend))
                 binding.cbDown.isChecked = false
                 return@setOnCheckedChangeListener
             }
