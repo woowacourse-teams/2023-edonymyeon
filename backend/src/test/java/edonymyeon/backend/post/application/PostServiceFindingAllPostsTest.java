@@ -32,6 +32,7 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.transaction.annotation.Transactional;
 
+@SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @TestConstructor(autowireMode = AutowireMode.ALL)

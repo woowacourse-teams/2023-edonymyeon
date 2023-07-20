@@ -17,7 +17,7 @@ public enum ImageExtension {
     );
 
     public static boolean contains(String extension) {
-        return extensions.containsKey(extension);
+        return extensions.containsKey(extension.toUpperCase());
     }
 
     public static MediaType findMediaType(String fileName) {
@@ -38,7 +38,7 @@ public enum ImageExtension {
     }
 
     public static ImageExtension from(String extension) {
-        final ImageExtension imageExtension = extensions.get(extension);
+        final ImageExtension imageExtension = extensions.get(extension.toUpperCase());
         if (Objects.isNull(imageExtension)) {
             throw new EdonymyeonException(IMAGE_EXTENSION_INVALID);
         }

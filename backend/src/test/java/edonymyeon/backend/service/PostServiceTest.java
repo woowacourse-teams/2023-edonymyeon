@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import edonymyeon.backend.TestConfig;
+import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
@@ -46,6 +47,8 @@ class PostServiceTest {
     private final PostService postService;
 
     private final MemberRepository memberRepository;
+
+    private final ImageFileUploader imageFileUploader;
 
     private final MemberTestSupport memberTestSupport;
 
@@ -112,7 +115,7 @@ class PostServiceTest {
         List<PostImageInfo> imageFiles = postImageInfoRepository.findAllByPostId(postId);
         assertThat(imageFiles).hasSize(2);
         assertThat(imageFiles)
-                .extracting(ImageInfo::getUrl)
+                .extracting(postImageInfo -> imageFileUploader.getFullPath(postImageInfo.getStoreName()))
                 .containsExactlyInAnyOrder(
                         "src/test/resources/static/img/test_store/test-inserting0.jpg",
                         "src/test/resources/static/img/test_store/test-inserting0.jpg"
@@ -155,10 +158,10 @@ class PostServiceTest {
     @Test
     void 게시글이_삭제되면_디렉토리에_있는_이미지도_삭제된다() throws IOException {
         final PostResponse postResponse = postService.createPost(memberId, getPostRequest());
-        final PostImageInfo postImageInfo = postImageInfoRepository.findById(postResponse.id()).get();
-        assertThat(new File(postImageInfo.getUrl()).canRead()).isTrue();
+        final PostImageInfo postImageInfo = postImageInfoRepository.findAllByPostId(postResponse.id()).get(0);
+        assertThat(new File(imageFileUploader.getFullPath(postImageInfo.getStoreName())).canRead()).isTrue();
 
         postService.deletePost(memberId, postResponse.id());
-        assertThat(new File(postImageInfo.getUrl()).canRead()).isFalse();
+        assertThat(new File(imageFileUploader.getFullPath(postImageInfo.getStoreName())).canRead()).isFalse();
     }
 }
