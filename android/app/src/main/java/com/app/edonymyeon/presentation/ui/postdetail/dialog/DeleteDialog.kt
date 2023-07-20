@@ -1,4 +1,4 @@
-package com.app.edonymyeon.presentation.ui.postdetail
+package com.app.edonymyeon.presentation.ui.postdetail.dialog
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable

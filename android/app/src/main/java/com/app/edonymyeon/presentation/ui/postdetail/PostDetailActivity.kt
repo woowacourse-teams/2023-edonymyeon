@@ -14,6 +14,7 @@ import app.edonymyeon.databinding.ActivityPostDetailBinding
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
+import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
 import com.google.android.material.snackbar.Snackbar
 
 class PostDetailActivity : AppCompatActivity() {
