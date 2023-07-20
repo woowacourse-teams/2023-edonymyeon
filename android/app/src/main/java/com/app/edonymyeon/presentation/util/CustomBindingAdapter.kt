@@ -32,7 +32,7 @@ object CustomBindingAdapter {
 
     @BindingAdapter("imgUrlCircleCrop")
     @JvmStatic
-    fun setCircleCropImageResource(view: ImageView, url: String) {
+    fun setCircleCropImageResource(view: ImageView, url: String?) {
         Glide.with(view.context)
             .load(url)
             .error(R.drawable.ic_launcher_foreground)

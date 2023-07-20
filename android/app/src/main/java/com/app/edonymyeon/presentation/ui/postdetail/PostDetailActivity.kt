@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import app.edonymyeon.R
@@ -13,6 +14,8 @@ import app.edonymyeon.databinding.ActivityPostDetailBinding
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
+import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
+import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.google.android.material.snackbar.Snackbar
 
 class PostDetailActivity : AppCompatActivity() {
@@ -20,10 +23,19 @@ class PostDetailActivity : AppCompatActivity() {
         ActivityPostDetailBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: PostDetailViewModel by lazy {
-        PostDetailViewModelFactory(PostRepositoryImpl(PostRemoteDataSource())).create(
-            PostDetailViewModel::class.java,
+    private val viewModel: PostDetailViewModel by viewModels {
+        PostDetailViewModelFactory(
+            23L,
+            PostRepositoryImpl(PostRemoteDataSource()),
         )
+    }
+
+    private val dialog: DeleteDialog by lazy {
+        DeleteDialog {
+            viewModel.deletePost()
+            // 게시글 목록으로 이동
+            dialog.dismiss()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,38 +45,51 @@ class PostDetailActivity : AppCompatActivity() {
         initBinding()
         initAppbar()
 
-        setRecommendCheckboxListener()
-        setImageSlider()
         setImageIndicators()
-        viewModel.getPostDetail(0L)
+
+        viewModel.post.observe(this) {
+            setImageSlider(it)
+        }
+
+        viewModel.reactionCount.observe(this) {
+            binding.postReactionCtv.reactionCount = it
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_post_detail, menu)
+        hideMenusForWriter(menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_scrap -> {
-                item.isChecked = !item.isChecked
-                viewModel.updateScrap(item.isChecked)
-                return true
-            }
-
+        return when (item.itemId) {
             R.id.action_update -> {
                 Snackbar.make(binding.root, "update", Snackbar.LENGTH_SHORT).show()
-                return true
+                true
             }
 
             R.id.action_delete -> {
-                Snackbar.make(binding.root, "delete", Snackbar.LENGTH_SHORT).show()
-                return true
+                dialog.show(supportFragmentManager, "DeleteDialog")
+                true
             }
 
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
+
+    private fun hideMenusForWriter(menu: Menu?) {
+        listOf(
+            menu?.findItem(R.id.action_update),
+            menu?.findItem(R.id.action_delete),
+        ).forEach {
+            if (isMyPost()) {
+                it?.isVisible = false
+            }
+        }
+    }
+
+    private fun isMyPost() = viewModel.post.value?.isWriter == true
 
     private fun initBinding() {
         binding.lifecycleOwner = this
@@ -75,21 +100,24 @@ class PostDetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.tbPostDetail)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = ""
+        binding.actionScrap.setOnCheckedChangeListener { _, isChecked ->
+            if (isMyPost()) {
+                Snackbar.make(
+                    binding.root,
+                    getString(R.string.post_detail_writer_cant_scrap),
+                    Snackbar.LENGTH_SHORT,
+                ).show()
+                binding.actionScrap.isChecked = false
+                return@setOnCheckedChangeListener
+            }
+            viewModel.updateScrap(isChecked)
+        }
     }
 
-    private fun setRecommendCheckboxListener() {
-        binding.cbUp.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateUpRecommendation(isChecked)
-        }
-        binding.cbDown.setOnCheckedChangeListener { _, isChecked ->
-            viewModel.updateDownRecommendation(isChecked)
-        }
-    }
-
-    private fun setImageSlider() {
+    private fun setImageSlider(post: PostUiModel) {
         binding.vpImageSlider.offscreenPageLimit = 1
         binding.vpImageSlider.adapter =
-            ImageSliderAdapter(viewModel.post.value?.images ?: emptyList())
+            ImageSliderAdapter(post.images)
         binding.vpImageSlider.registerOnPageChangeCallback(
             object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
