@@ -6,6 +6,7 @@ import com.app.edonymyeon.data.dto.response.Posts
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -19,10 +20,13 @@ interface PostService {
     @GET("/posts/{postId}")
     suspend fun getPost(@Path("postId") postId: Long): Response<PostDetailResponse>
 
+    @DELETE("/posts/{postId}")
+    suspend fun deletePost(@Path("postId") postId: Long): Response<Unit> // Void or Unit?
+
     @GET("/posts")
     suspend fun getPosts(
         @Query("size") size: Int,
-        @Query("page") page: Int
+        @Query("page") page: Int,
     ): Response<Posts>
 
     @Multipart
