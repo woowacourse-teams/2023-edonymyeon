@@ -124,7 +124,8 @@ public class PostService {
         final List<ImageInfo> originalImageInfos = findImageInfosFromPost(post);
         postImageInfoRepository.deleteAllByPostId(postId);
 
-        if (Objects.isNull(postRequest.images()) || postRequest.images().isEmpty()) {
+        if (Objects.isNull(postRequest.images()) || postRequest.images().isEmpty() || isDummy(
+                postRequest.images().get(0))) {
             post.updateImages(Collections.emptyList());
             originalImageInfos.forEach(imageFileUploader::removeFile);
             return new PostResponse(postId);
