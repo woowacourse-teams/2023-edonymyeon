@@ -1,11 +1,10 @@
-package edonymyeon.backend.repository;
+package edonymyeon.backend.post.repository;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
-import edonymyeon.backend.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -50,9 +49,9 @@ class PostRepositoryTest {
         assertSoftly(softly -> {
                     softly.assertThat(target.getId()).isNotNull();
                     softly.assertThat(target.getTitle()).isEqualTo("호바");
-                    softly.assertThat(target.getCreatedAt()).isNotNull();
-                    softly.assertThat(target.getViewCount()).isEqualTo(0L);
-                    softly.assertThat(target.getMember().getId()).isEqualTo(1L);
+            softly.assertThat(target.getCreatedAt()).isNotNull();
+            softly.assertThat(target.getViewCount()).isEqualTo(0L);
+            softly.assertThat(target.getMember().getId()).isEqualTo(member.getId());
                 }
         );
     }

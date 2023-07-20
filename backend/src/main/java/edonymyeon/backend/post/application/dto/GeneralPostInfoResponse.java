@@ -12,6 +12,7 @@ public record GeneralPostInfoResponse(
         LocalDateTime createdAt,
         ReactionCountResponse reactionCount
 ) {
+
     public static GeneralPostInfoResponse from(Post post) {
         return new GeneralPostInfoResponse(
                 post.getId(),
@@ -26,5 +27,4 @@ public record GeneralPostInfoResponse(
                 // TODO: 댓글 수
         );
     }
-
 }

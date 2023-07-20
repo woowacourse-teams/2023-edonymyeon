@@ -1,4 +1,4 @@
-package edonymyeon.backend.service;
+package edonymyeon.backend.post.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -9,7 +9,6 @@ import edonymyeon.backend.image.profileimage.repository.ProfileImageInfoReposito
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;

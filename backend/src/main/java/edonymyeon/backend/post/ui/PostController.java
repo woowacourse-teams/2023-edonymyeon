@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,6 +47,14 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/{postId}")
+    public ResponseEntity<PostResponse> updatePost(@AuthPrincipal MemberIdDto memberId,
+                                                   @ModelAttribute PostRequest postRequest,
+                                                   @PathVariable Long postId) {
+        final PostResponse postResponse = postService.updatePost(memberId, postId, postRequest);
+        return ResponseEntity.ok().body(postResponse);
+    }
+
     @GetMapping
     public ResponseEntity<GeneralPostsResponse> findAllPosts(
             @RequestParam(required = false) Integer page,
@@ -57,7 +66,8 @@ public class PostController {
                 .page(Objects.isNull(page) ? GeneralFindingCondition.DEFAULT_SIZE : page)
                 .size(Objects.isNull(size) ? GeneralFindingCondition.DEFAULT_LIMIT : size)
                 .sortBy(Objects.isNull(sortBy) ? GeneralFindingCondition.DEFAULT_SORT_BY : SortBy.valueOf(sortBy))
-                .sortDirection(Objects.isNull(sortDirection) ? GeneralFindingCondition.DEFAULT_SORT_DIRECTION : SortDirection.valueOf(sortDirection))
+                .sortDirection(Objects.isNull(sortDirection) ? GeneralFindingCondition.DEFAULT_SORT_DIRECTION
+                        : SortDirection.valueOf(sortDirection))
                 .build();
 
         final List<GeneralPostInfoResponse> posts = postService.findAllPost(generalFindingCondition);
@@ -67,7 +77,8 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<SpecificPostInfoResponse> findSpecificPost(@AuthPrincipal(required = false) MemberIdDto memberIdDto, @PathVariable Long postId) {
+    public ResponseEntity<SpecificPostInfoResponse> findSpecificPost(
+            @AuthPrincipal(required = false) MemberIdDto memberIdDto, @PathVariable Long postId) {
         return ResponseEntity.ok()
                 .body(postService.findSpecificPost(postId, memberIdDto));
     }

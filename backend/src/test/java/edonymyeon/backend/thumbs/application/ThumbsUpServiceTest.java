@@ -42,7 +42,7 @@ class ThumbsUpServiceTest {
     private final MemberRepository memberRepository;
 
     private final PostService postService;
-    
+
     private final MemberTestSupport memberTestSupport;
 
     private Member postWriter;
@@ -140,7 +140,6 @@ class ThumbsUpServiceTest {
                 .isExactlyInstanceOf(EdonymyeonException.class)
                 .hasMessage(THUMBS_UP_ALREADY_EXIST.getMessage());
     }
-
 
     private void thumbsUp(final Member member, final PostResponse post) {
         MemberIdDto memberId = new MemberIdDto(member.getId());
