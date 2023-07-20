@@ -4,9 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import edonymyeon.backend.TestConfig;
+import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.domain.ImageInfo;
-import edonymyeon.backend.image.postimage.PostImageInfoRepository;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
+import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -46,6 +47,9 @@ class PostServiceTest {
     private final PostService postService;
 
     private final MemberRepository memberRepository;
+
+
+    private final ImageFileUploader imageFileUploader;
 
     private final MemberTestSupport memberTestSupport;
 
@@ -112,7 +116,7 @@ class PostServiceTest {
         List<PostImageInfo> imageFiles = postImageInfoRepository.findAllByPostId(postId);
         assertThat(imageFiles).hasSize(2);
         assertThat(imageFiles)
-                .extracting(ImageInfo::getFullPath)
+                .extracting(postImageInfo -> imageFileUploader.getFullPath(postImageInfo.getStoreName()))
                 .containsExactlyInAnyOrder(
                         "src/test/resources/static/img/test_store/test-inserting0.jpg",
                         "src/test/resources/static/img/test_store/test-inserting0.jpg"
@@ -159,6 +163,6 @@ class PostServiceTest {
         assertThat(new File(postImageInfo.getFullPath()).canRead()).isTrue();
 
         postService.deletePost(memberId, postResponse.id());
-        assertThat(new File(postImageInfo.getFullPath()).canRead()).isFalse();
+        assertThat(new File(imageFileUploader.getFullPath(postImageInfo.getStoreName())).canRead()).isFalse();
     }
 }

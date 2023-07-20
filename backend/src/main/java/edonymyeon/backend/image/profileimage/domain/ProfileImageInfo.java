@@ -1,4 +1,4 @@
-package edonymyeon.backend.image.postimage;
+package edonymyeon.backend.image.profileimage.domain;
 
 import edonymyeon.backend.image.domain.ImageInfo;
 import jakarta.persistence.Entity;

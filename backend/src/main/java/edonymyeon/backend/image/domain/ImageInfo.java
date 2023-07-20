@@ -8,11 +8,15 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @MappedSuperclass
 public class ImageInfo {
+
+    @Value("${domain}")
+    private String domain;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +36,7 @@ public class ImageInfo {
         this.storeName = storeName;
     }
 
-    public String getFullPath() {
-        return fileDirectory + storeName;
+    public String getUrl() {
+        return domain + storeName;
     }
 }
