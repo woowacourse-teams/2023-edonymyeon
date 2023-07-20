@@ -5,7 +5,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 
-class RetrofitClient(private val baseUrl: String = DEV_URL) {
+class RetrofitClient private constructor(private val baseUrl: String) {
     private val retrofit: Retrofit by lazy { provideRetrofit() }
     private val accessTokenInterceptor = AccessTokenInterceptor()
 
@@ -33,12 +33,12 @@ class RetrofitClient(private val baseUrl: String = DEV_URL) {
     }
 
     companion object {
-        private const val DEV_URL = "http://"
+        private const val DEV_URL = "https://edonymyeon.site"
         private val contentType = "application/json".toMediaType()
         private var retrofitClient: RetrofitClient? = null
 
         fun getInstance(
-            baseUrl: String = "",
+            baseUrl: String = DEV_URL,
         ): RetrofitClient {
             return retrofitClient ?: synchronized(this) {
                 RetrofitClient(baseUrl).also {

@@ -7,5 +7,5 @@ import kotlinx.parcelize.Parcelize
 data class WriterUiModel(
     val id: Long,
     val nickname: String,
-    val profileImage: String,
+    val profileImage: String?,
 ) : Parcelable

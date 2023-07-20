@@ -201,8 +201,7 @@
                     app:layout_constraintDimensionRatio="H, 360:24"
                     app:layout_constraintEnd_toStartOf="@id/space_content_end"
                     app:layout_constraintStart_toEndOf="@id/space_content_start"
-                    app:layout_constraintTop_toBottomOf="@id/space_reaction_top"
-                    app:reactionCount="@{postViewModel.post.reactionCount}" />
+                    app:layout_constraintTop_toBottomOf="@id/space_reaction_top" />
 
                 <Space
                     android:id="@+id/space_reaction_bottom"
@@ -256,6 +255,7 @@
                     android:background="@drawable/selector_cb_reaction_up"
                     android:button="@null"
                     android:checked="@{postViewModel.recommendation.isUp}"
+                    android:onCheckedChanged="@{(_, isChecked)->postViewModel.updateUpRecommendationUi(isChecked)}"
                     app:layout_constraintBottom_toBottomOf="@id/space_up_start"
                     app:layout_constraintDimensionRatio="H,1:1"
                     app:layout_constraintStart_toEndOf="@id/space_up_start"
@@ -269,6 +269,7 @@
                     android:background="@drawable/selector_cb_reaction_down"
                     android:button="@null"
                     android:checked="@{postViewModel.recommendation.isDown}"
+                    android:onCheckedChanged="@{(_, isChecked)->postViewModel.updateDownRecommendationUi(isChecked)}"
                     app:layout_constraintBottom_toBottomOf="@id/space_up_start"
                     app:layout_constraintDimensionRatio="H,1:1"
                     app:layout_constraintEnd_toStartOf="@id/space_down_end"
