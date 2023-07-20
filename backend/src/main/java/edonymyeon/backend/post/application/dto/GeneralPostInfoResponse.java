@@ -3,7 +3,7 @@ package edonymyeon.backend.post.application.dto;
 import edonymyeon.backend.post.domain.Post;
 import java.time.LocalDateTime;
 
-public record PostFindingResponse(
+public record GeneralPostInfoResponse(
         Long id,
         String title,
         String image,
@@ -12,8 +12,8 @@ public record PostFindingResponse(
         LocalDateTime createdAt,
         ReactionCountResponse reactionCount
 ) {
-    public static PostFindingResponse from(Post post) {
-        return new PostFindingResponse(
+    public static GeneralPostInfoResponse from(Post post) {
+        return new GeneralPostInfoResponse(
                 post.getId(),
                 post.getTitle(),
                 post.getPostImageInfos().size() == 0 ? null : post.getPostImageInfos().get(0).getFullPath(),

@@ -9,8 +9,8 @@ import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.PostService;
-import edonymyeon.backend.post.application.dto.PostFindingCondition;
-import edonymyeon.backend.post.application.dto.PostFindingResponse;
+import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
+import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.repository.PostRepository;
@@ -93,33 +93,33 @@ public class PostServiceFindingAllPostsTest {
 
     @Test
     void 작성된_모든_게시글을_조회할_수_있다() {
-        final var postFindingCondition = PostFindingCondition.builder().build();
+        final var postFindingCondition = GeneralFindingCondition.builder().build();
         final var postFindingResponses = postService.findAllPost(postFindingCondition);
 
         assertAll(
                 () -> assertThat(postFindingResponses).hasSize(3),
                 () -> assertThat(postFindingResponses)
-                        .extracting(PostFindingResponse::title)
+                        .extracting(GeneralPostInfoResponse::title)
                         .containsExactlyInAnyOrder(
                                 POST_REQUEST1_TITLE,
                                 POST_REQUEST2_TITLE,
                                 POST_REQUEST3_TITLE
                         ),
                 () -> assertThat(postFindingResponses)
-                        .extracting(PostFindingResponse::content)
+                        .extracting(GeneralPostInfoResponse::content)
                         .containsExactlyInAnyOrder(
                                 POST_REQUEST1_CONTENT,
                                 POST_REQUEST2_CONTENT,
                                 POST_REQUEST3_CONTENT
                         ),
                 () -> assertThat(postFindingResponses)
-                        .extracting(PostFindingResponse::image)
+                        .extracting(GeneralPostInfoResponse::image)
                         .containsOnly("src/test/resources/static/img/test_store/test-inserting0.jpg"),
                 () -> assertThat(postFindingResponses)
-                        .extracting(PostFindingResponse::createdAt)
+                        .extracting(GeneralPostInfoResponse::createdAt)
                         .hasSize(3),
                 () -> assertThat(postFindingResponses)
-                        .extracting(postFindingResponse -> postFindingResponse.writer().nickName())
+                        .extracting(generalPostInfoResponse -> generalPostInfoResponse.writer().nickName())
                         .containsOnly("nickname")
         );
         // TODO: 조회수 검증
@@ -129,10 +129,10 @@ public class PostServiceFindingAllPostsTest {
 
     @Test
     void 게시글은_기본으로_등록일_내림차순으로_정렬된다() {
-        final var postFindingCondition = PostFindingCondition.builder().build();
+        final var postFindingCondition = GeneralFindingCondition.builder().build();
         final var postFindingResponses = postService.findAllPost(postFindingCondition);
         final var createdAts = postFindingResponses.stream()
-                .map(PostFindingResponse::createdAt)
+                .map(GeneralPostInfoResponse::createdAt)
                 .toList();
 
         assertThat(createdAts.get(0)).isAfterOrEqualTo(createdAts.get(1));
@@ -146,7 +146,7 @@ public class PostServiceFindingAllPostsTest {
         게시글들_등록하기();
         // 12개 저장됨
 
-        final var postFindingCondition = PostFindingCondition.builder()
+        final var postFindingCondition = GeneralFindingCondition.builder()
                 .size(10)
                 .build();
         final var postFindingResponses = postService.findAllPost(postFindingCondition);
@@ -157,7 +157,7 @@ public class PostServiceFindingAllPostsTest {
 
     @Test
     void 조회개수가_정해진_경우_주어진_조회페이지로_게시글_조회페이지를_조절할_수_있다() {
-        final var postFindingCondition = PostFindingCondition.builder()
+        final var postFindingCondition = GeneralFindingCondition.builder()
                 .size(1)
                 .page(1)
                 .build();
@@ -176,7 +176,7 @@ public class PostServiceFindingAllPostsTest {
         imageInfoRepository.deleteAll();
         postRepository.deleteAll();
 
-        final var postFindingCondition = PostFindingCondition.builder().build();
+        final var postFindingCondition = GeneralFindingCondition.builder().build();
         final var postFindingResponses = postService.findAllPost(postFindingCondition);
 
         assertThat(postFindingResponses)

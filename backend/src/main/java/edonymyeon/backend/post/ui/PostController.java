@@ -3,8 +3,9 @@ package edonymyeon.backend.post.ui;
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.post.application.PostService;
-import edonymyeon.backend.post.application.dto.PostFindingCondition;
-import edonymyeon.backend.post.application.dto.PostFindingResponse;
+import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
+import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
+import edonymyeon.backend.post.application.dto.GeneralPostsResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.application.dto.SortBy;
@@ -45,22 +46,22 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PostFindingResponse>> findAllPosts(
+    public ResponseEntity<GeneralPostsResponse> findAllPosts(
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size,
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false) String sortDirection
     ) {
-        final PostFindingCondition postFindingCondition = PostFindingCondition.builder()
-                .page(Objects.isNull(page) ? PostFindingCondition.DEFAULT_SIZE : page)
-                .size(Objects.isNull(size) ? PostFindingCondition.DEFAULT_LIMIT : size)
-                .sortBy(Objects.isNull(sortBy) ? PostFindingCondition.DEFAULT_SORT_BY : SortBy.valueOf(sortBy))
-                .sortDirection(Objects.isNull(sortDirection) ? PostFindingCondition.DEFAULT_SORT_DIRECTION : SortDirection.valueOf(sortDirection))
+        final GeneralFindingCondition generalFindingCondition = GeneralFindingCondition.builder()
+                .page(Objects.isNull(page) ? GeneralFindingCondition.DEFAULT_SIZE : page)
+                .size(Objects.isNull(size) ? GeneralFindingCondition.DEFAULT_LIMIT : size)
+                .sortBy(Objects.isNull(sortBy) ? GeneralFindingCondition.DEFAULT_SORT_BY : SortBy.valueOf(sortBy))
+                .sortDirection(Objects.isNull(sortDirection) ? GeneralFindingCondition.DEFAULT_SORT_DIRECTION : SortDirection.valueOf(sortDirection))
                 .build();
 
-        final List<PostFindingResponse> posts = postService.findAllPost(postFindingCondition);
+        final List<GeneralPostInfoResponse> posts = postService.findAllPost(generalFindingCondition);
         return ResponseEntity
                 .ok()
-                .body(posts);
+                .body(new GeneralPostsResponse(posts));
     }
 }

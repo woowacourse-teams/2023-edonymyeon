@@ -12,11 +12,10 @@ import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.post.application.dto.PostFindingCondition;
-import edonymyeon.backend.post.application.dto.PostFindingResponse;
+import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
+import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
-import edonymyeon.backend.post.application.dto.WriterResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import java.util.List;
@@ -101,23 +100,23 @@ public class PostService {
         throw new EdonymyeonException(POST_MEMBER_FORBIDDEN);
     }
 
-    public List<PostFindingResponse> findAllPost(final PostFindingCondition postFindingCondition) {
-        final PageRequest pageRequest = convertConditionToPageRequest(postFindingCondition);
+    public List<GeneralPostInfoResponse> findAllPost(final GeneralFindingCondition generalFindingCondition) {
+        final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
         final Slice<Post> foundPosts = postRepository.findAll(pageRequest);
         return foundPosts
-                .map(PostFindingResponse::from)
+                .map(GeneralPostInfoResponse::from)
                 .toList();
     }
 
-    private static PageRequest convertConditionToPageRequest(final PostFindingCondition postFindingCondition) {
+    private static PageRequest convertConditionToPageRequest(final GeneralFindingCondition generalFindingCondition) {
         return PageRequest.of(
-                postFindingCondition.getPage(),
-                postFindingCondition.getSize(),
-                switch (postFindingCondition.getSortDirection()) {
+                generalFindingCondition.getPage(),
+                generalFindingCondition.getSize(),
+                switch (generalFindingCondition.getSortDirection()) {
                     case ASC -> Direction.ASC;
                     case DESC -> Direction.DESC;
                 },
-                postFindingCondition.getSortBy().getName()
+                generalFindingCondition.getSortBy().getName()
         );
     }
 }

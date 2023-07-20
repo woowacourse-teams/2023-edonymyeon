@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class PostFindingCondition {
+public class GeneralFindingCondition {
 
     public static final int DEFAULT_SIZE = 0;
     public static final int DEFAULT_LIMIT = 20;
