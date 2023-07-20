@@ -13,6 +13,7 @@ import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.support.MemberTestSupport;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,12 +32,12 @@ import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-@Transactional
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @TestConstructor(autowireMode = AutowireMode.ALL)
 @Import(TestConfig.class)
+@Transactional
 @SpringBootTest
 class PostServiceTest {
 
@@ -46,16 +47,18 @@ class PostServiceTest {
 
     private final MemberRepository memberRepository;
 
+    private final MemberTestSupport memberTestSupport;
+
     private MemberIdDto memberId;
 
     @BeforeEach
     public void setUp() {
-        Member member = new Member(
-                "email",
-                "password",
-                "nickname",
-                null
-        );
+        Member member = memberTestSupport.builder()
+                .email("email")
+                .password("password")
+                .nickname("nickname")
+                .profileImageInfo(null)
+                .build();
         memberRepository.save(member);
         memberId = new MemberIdDto(member.getId());
     }
@@ -89,8 +92,8 @@ class PostServiceTest {
         assertThat(imageFiles)
                 .extracting(ImageInfo::getStoreName)
                 .containsAll(List.of(
-                        "test-inserting-one.jpg",
-                        "test-inserting-two.jpg"
+                        "test-inserting0.jpg",
+                        "test-inserting0.jpg"
                 ));
     }
 
@@ -111,8 +114,8 @@ class PostServiceTest {
         assertThat(imageFiles)
                 .extracting(ImageInfo::getFullPath)
                 .containsExactlyInAnyOrder(
-                        "src/test/resources/static/img/test_store/test-inserting-one.jpg",
-                        "src/test/resources/static/img/test_store/test-inserting-two.jpg"
+                        "src/test/resources/static/img/test_store/test-inserting0.jpg",
+                        "src/test/resources/static/img/test_store/test-inserting0.jpg"
                 );
     }
 

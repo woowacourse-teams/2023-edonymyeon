@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">edonymyeon</string>
 
+
     <!-- login   -->
     <string name="login_title">로그인</string>
     <string name="login_email">이메일</string>
