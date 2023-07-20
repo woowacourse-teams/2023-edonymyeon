@@ -3,10 +3,11 @@ package com.app.edonymyeon.presentation.ui.postdetail
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostDetailBinding
+import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
+import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.google.android.material.snackbar.Snackbar
 
 class PostDetailActivity : AppCompatActivity() {
@@ -14,7 +15,11 @@ class PostDetailActivity : AppCompatActivity() {
         ActivityPostDetailBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: PostDetailViewModel by viewModels()
+    private val viewModel: PostDetailViewModel by lazy {
+        PostDetailViewModelFactory(PostRepositoryImpl(PostRemoteDataSource())).create(
+            PostDetailViewModel::class.java
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +29,7 @@ class PostDetailActivity : AppCompatActivity() {
         initAppbar()
 
         setRecommendCheckboxListener()
+        viewModel.getPostDetail(0L)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
