@@ -12,4 +12,8 @@ class PostRemoteDataSource : PostDataSource {
     override suspend fun getPostDetail(postId: Long): Response<PostDetailResponse> {
         return postService.getPost(postId)
     }
+
+    override suspend fun deletePost(postId: Long): Response<Void> {
+        return postService.deletePost(postId)
+    }
 }

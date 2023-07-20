@@ -39,16 +39,28 @@ class PostDetailViewModel(private val repository: PostRepository) : ViewModel() 
 
     fun getPostDetail(postId: Long) {
         viewModelScope.launch {
-            repository.getPostDetail(postId).onSuccess {
-                it as Post
-                _post.value = it.toUiModel()
-                _recommendation.value = it.recommendation.toUiModel()
-                _isScrap.value = it.isScrap
-            }.onFailure {
-                it as CustomThrowable
-                when (it.code) {
+            repository.getPostDetail(postId)
+                .onSuccess {
+                    it as Post
+                    _post.value = it.toUiModel()
+                    _recommendation.value = it.recommendation.toUiModel()
+                    _isScrap.value = it.isScrap
+                }.onFailure {
+                    it as CustomThrowable
+                    when (it.code) {
+                    }
                 }
-            }
+        }
+    }
+
+    fun deletePost(postId: Long) {
+        viewModelScope.launch {
+            repository.deletePost(postId)
+                .onFailure {
+                    it as CustomThrowable
+                    when (it.code) {
+                    }
+                }
         }
     }
 

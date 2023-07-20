@@ -15,5 +15,13 @@ class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepos
             Result.failure(CustomThrowable(result.code(), result.message()))
         }
     }
-}
 
+    override suspend fun deletePost(postId: Long): Result<Any> {
+        val result = postDataSource.deletePost(postId)
+        return if (result.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(CustomThrowable(result.code(), result.message()))
+        }
+    }
+}
