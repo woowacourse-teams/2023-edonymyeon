@@ -9,5 +9,7 @@ public interface ThumbsRepository extends JpaRepository<Thumbs, Long> {
 
     Optional<Thumbs> findByPostIdAndMemberId(final Long postId, final Long memberId);
 
-    List<Thumbs> findByPostId(Long postId);
+    List<Thumbs> findByPostId(final Long postId);
+
+    void deleteAllByPostId(final Long postId);
 }

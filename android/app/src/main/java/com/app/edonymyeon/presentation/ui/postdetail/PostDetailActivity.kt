@@ -14,32 +14,42 @@ import androidx.viewpager2.widget.ViewPager2
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostDetailBinding
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
+import com.app.edonymyeon.data.datasource.recommend.RecommendRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
+import com.app.edonymyeon.data.repository.RecommendRepositoryImpl
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
 import com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
-import com.google.android.material.snackbar.Snackbar
+import com.app.edonymyeon.presentation.util.makeSnackbar
 
 class PostDetailActivity : AppCompatActivity() {
+    // intent 연결해서 수정할 값
+    private val id: Long = 23L
+
     private val binding: ActivityPostDetailBinding by lazy {
         ActivityPostDetailBinding.inflate(layoutInflater)
     }
 
     private val viewModel: PostDetailViewModel by viewModels {
         PostDetailViewModelFactory(
-            23L,
+            id,
             PostRepositoryImpl(PostRemoteDataSource()),
+            RecommendRepositoryImpl(RecommendRemoteDataSource()),
         )
     }
 
     private val dialog: DeleteDialog by lazy {
         DeleteDialog {
-            viewModel.deletePost()
-            // 게시글 목록으로 이동
+            viewModel.deletePost(id)
+            binding.root.makeSnackbar("delete")
             dialog.dismiss()
+            // 게시글 목록으로 이동
         }
     }
+
+    private val isMyPost: Boolean
+        get() = viewModel.post.value?.isWriter == true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +57,7 @@ class PostDetailActivity : AppCompatActivity() {
 
         initBinding()
         initAppbar()
-
+        setRecommendationCheckedListener()
         setImageIndicators()
 
         viewModel.post.observe(this) {
@@ -68,7 +78,7 @@ class PostDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_update -> {
-                Snackbar.make(binding.root, "update", Snackbar.LENGTH_SHORT).show()
+                binding.root.makeSnackbar("update")
                 startActivity(PostEditorActivity.newIntent(this, PostEditorActivity.UPDATE_CODE))
                 true
             }
@@ -87,13 +97,13 @@ class PostDetailActivity : AppCompatActivity() {
             menu?.findItem(R.id.action_update),
             menu?.findItem(R.id.action_delete),
         ).forEach {
-            if (isMyPost()) {
-                it?.isVisible = false
+            viewModel.post.observe(this) { post ->
+                if (!post.isWriter) {
+                    it?.isVisible = false
+                }
             }
         }
     }
-
-    private fun isMyPost() = viewModel.post.value?.isWriter == true
 
     private fun initBinding() {
         binding.lifecycleOwner = this
@@ -104,17 +114,33 @@ class PostDetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.tbPostDetail)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = ""
+
         binding.actionScrap.setOnCheckedChangeListener { _, isChecked ->
-            if (isMyPost()) {
-                Snackbar.make(
-                    binding.root,
-                    getString(R.string.post_detail_writer_cant_scrap),
-                    Snackbar.LENGTH_SHORT,
-                ).show()
+            if (isMyPost) {
+                binding.root.makeSnackbar(getString(R.string.post_detail_writer_cant_scrap))
                 binding.actionScrap.isChecked = false
                 return@setOnCheckedChangeListener
             }
             viewModel.updateScrap(isChecked)
+        }
+    }
+
+    private fun setRecommendationCheckedListener() {
+        binding.cbUp.setOnCheckedChangeListener { _, isChecked ->
+            if (isMyPost) {
+                binding.root.makeSnackbar(getString(R.string.post_detail_writer_cant_recommend))
+                binding.cbUp.isChecked = false
+                return@setOnCheckedChangeListener
+            }
+            viewModel.updateUpRecommendationUi(isChecked)
+        }
+        binding.cbDown.setOnCheckedChangeListener { _, isChecked ->
+            if (isMyPost) {
+                binding.root.makeSnackbar(getString(R.string.post_detail_writer_cant_recommend))
+                binding.cbDown.isChecked = false
+                return@setOnCheckedChangeListener
+            }
+            viewModel.updateDownRecommendationUi(isChecked)
         }
     }
 

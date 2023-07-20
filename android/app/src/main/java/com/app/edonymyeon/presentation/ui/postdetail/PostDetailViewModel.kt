@@ -1,5 +1,6 @@
 package com.app.edonymyeon.presentation.ui.postdetail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,9 +13,15 @@ import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
 import com.app.edonymyeon.presentation.uimodel.RecommendationUiModel
 import com.domain.edonymyeon.model.Post
 import com.domain.edonymyeon.repository.PostRepository
+import com.domain.edonymyeon.repository.RecommendRepository
 import kotlinx.coroutines.launch
 
-class PostDetailViewModel(postId: Long, private val repository: PostRepository) : ViewModel() {
+class PostDetailViewModel(
+    private val postId: Long,
+    private val postRepository: PostRepository,
+    private val recommendRepository: RecommendRepository,
+) : ViewModel() {
+
     private val _post = MutableLiveData<PostUiModel>()
     val post: LiveData<PostUiModel>
         get() = _post
@@ -37,7 +44,7 @@ class PostDetailViewModel(postId: Long, private val repository: PostRepository) 
 
     private fun getPostDetail(postId: Long) {
         viewModelScope.launch {
-            repository.getPostDetail(postId)
+            postRepository.getPostDetail(postId)
                 .onSuccess {
                     it as Post
                     _recommendation.value = it.recommendation.toUiModel()
@@ -52,7 +59,21 @@ class PostDetailViewModel(postId: Long, private val repository: PostRepository) 
         }
     }
 
-    fun updateUpRecommendation(isChecked: Boolean) {
+    fun deletePost(postId: Long) {
+        viewModelScope.launch {
+            postRepository.deletePost(postId)
+                .onSuccess {
+                    Log.d("PostDetailViewModel", "deletePost: success")
+                }
+                .onFailure {
+                    it as CustomThrowable
+                    when (it.code) {
+                    }
+                }
+        }
+    }
+
+    fun updateUpRecommendationUi(isChecked: Boolean) {
         val oldRecommendation = _recommendation.value?.toDomain() ?: return
         if (oldRecommendation.isUp && isChecked) return
 
@@ -75,9 +96,16 @@ class PostDetailViewModel(postId: Long, private val repository: PostRepository) 
                 isUp = false,
             ).toUiModel()
         }
+
+        if (oldRecommendation.isUp == isChecked) return
+        if (isChecked) {
+            saveRecommendation(postId, RecommendRepository::saveRecommendUp)
+        } else {
+            saveRecommendation(postId, RecommendRepository::deleteRecommendUp)
+        }
     }
 
-    fun updateDownRecommendation(isChecked: Boolean) {
+    fun updateDownRecommendationUi(isChecked: Boolean) {
         val oldRecommendation = _recommendation.value?.toDomain() ?: return
         if (oldRecommendation.isDown && isChecked) return
 
@@ -100,6 +128,27 @@ class PostDetailViewModel(postId: Long, private val repository: PostRepository) 
                 isDown = false,
             ).toUiModel()
         }
+
+        if (oldRecommendation.isDown == isChecked) return
+        if (isChecked) {
+            saveRecommendation(postId, RecommendRepository::saveRecommendDown)
+        } else {
+            saveRecommendation(postId, RecommendRepository::deleteRecommendDown)
+        }
+    }
+
+    private fun saveRecommendation(
+        postId: Long,
+        event: suspend RecommendRepository.(Long) -> Result<Any>,
+    ) {
+        viewModelScope.launch {
+            recommendRepository.event(postId)
+                .onFailure {
+                    it as CustomThrowable
+                    when (it.code) {
+                    }
+                }
+        }
     }
 
     fun updateScrap(isChecked: Boolean) {
@@ -117,8 +166,5 @@ class PostDetailViewModel(postId: Long, private val repository: PostRepository) 
                 scrapCount = oldReactionCount.scrapCount.decrease(),
             ).toUiModel()
         }
-    }
-
-    fun deletePost() {
     }
 }
