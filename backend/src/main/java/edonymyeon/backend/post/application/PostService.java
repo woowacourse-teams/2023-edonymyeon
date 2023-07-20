@@ -16,10 +16,17 @@ import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.post.application.dto.ReactionCountResponse;
+import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
+import edonymyeon.backend.post.application.dto.WriterDetailResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.thumbs.application.ThumbsService;
+import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
+import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -40,6 +47,8 @@ public class PostService {
     private final PostImageInfoRepository postImageInfoRepository;
 
     private final MemberRepository memberRepository;
+
+    private final ThumbsService thumbsService;
 
     @Transactional
     public PostResponse createPost(final MemberIdDto memberIdDto, final PostRequest postRequest) {
@@ -64,11 +73,6 @@ public class PostService {
         postImageInfoRepository.saveAll(postImageInfos);
 
         return new PostResponse(post.getId());
-    }
-
-    private Member findMemberById(final MemberIdDto memberIdDto) {
-        return memberRepository.findById(memberIdDto.id())
-                .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
     }
 
     private boolean isDummy(final MultipartFile multipartFile) {
@@ -118,5 +122,53 @@ public class PostService {
                 },
                 generalFindingCondition.getSortBy().getName()
         );
+    }
+
+    public SpecificPostInfoResponse findSpecificPost(final Long postId, final MemberIdDto memberIdDto) {
+        final Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new EdonymyeonException(POST_ID_NOT_FOUND));
+
+        final Optional<Member> member = memberRepository.findById(memberIdDto.id());
+
+        final ReactionCountResponse reactionCountResponse = new ReactionCountResponse(
+                0, // TODO: 조회수 기능 구현 필요
+                0, // TODO: 댓글 수 기능 구현 필요
+                0 // TODO: 스크랩 기능 구현 필요
+        );
+        final AllThumbsInPostResponse allThumbsInPost = thumbsService.findAllThumbsInPost(postId);
+        final WriterDetailResponse writerDetailResponse = getWriterResponse(post.getMember());
+
+        if (member.isEmpty()) {
+            return SpecificPostInfoResponse.of(
+                    post,
+                    allThumbsInPost,
+                    writerDetailResponse,
+                    reactionCountResponse
+            );
+        }
+
+        final ThumbsStatusInPostResponse thumbsStatusInPost = thumbsService.findThumbsStatusInPost(memberIdDto, postId);
+
+        return SpecificPostInfoResponse.of(
+                post,
+                allThumbsInPost,
+                writerDetailResponse,
+                reactionCountResponse,
+                thumbsStatusInPost,
+                member.get()
+        );
+    }
+
+    private WriterDetailResponse getWriterResponse(final Member member) {
+        return new WriterDetailResponse(
+                member.getId(),
+                member.getNickname(),
+                member.getProfileImageInfo().getFileDirectory()
+        );
+    }
+
+    private Member findMemberById(final MemberIdDto memberIdDto) {
+        return memberRepository.findById(memberIdDto.id())
+                .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
     }
 }

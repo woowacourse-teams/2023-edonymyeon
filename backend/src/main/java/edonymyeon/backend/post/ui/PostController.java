@@ -10,6 +10,7 @@ import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.application.dto.SortBy;
 import edonymyeon.backend.post.application.dto.SortDirection;
+import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
@@ -63,5 +64,11 @@ public class PostController {
         return ResponseEntity
                 .ok()
                 .body(new GeneralPostsResponse(posts));
+    }
+
+    @GetMapping("/{postId}")
+    public ResponseEntity<SpecificPostInfoResponse> findSpecificPost(@AuthPrincipal(required = false) MemberIdDto memberIdDto, @PathVariable Long postId) {
+        return ResponseEntity.ok()
+                .body(postService.findSpecificPost(postId, memberIdDto));
     }
 }

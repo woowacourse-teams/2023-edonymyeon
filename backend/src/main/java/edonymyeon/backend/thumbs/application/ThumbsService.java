@@ -1,5 +1,6 @@
 package edonymyeon.backend.thumbs.application;
 
+import static edonymyeon.backend.auth.ui.argumentresolver.AuthArgumentResolver.NON_EXISTING_MEMBER_ID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_DOWN_DELETE_FAIL_WHEN_THUMBS_UP;
@@ -45,8 +46,7 @@ public class ThumbsService {
     }
 
     public ThumbsStatusInPostResponse findThumbsStatusInPost(final MemberIdDto memberId, final Long postId) {
-        // TODO: 여우 코드랑 합쳐지면 수정
-        if (memberId.id() == -999) {
+        if (memberId.id() == NON_EXISTING_MEMBER_ID) {
             return new ThumbsStatusInPostResponse(false, false);
         }
 
