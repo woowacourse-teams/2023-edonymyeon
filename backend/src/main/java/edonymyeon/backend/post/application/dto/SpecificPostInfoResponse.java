@@ -1,6 +1,5 @@
 package edonymyeon.backend.post.application.dto;
 
-import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
@@ -31,7 +30,8 @@ public record SpecificPostInfoResponse(
             final WriterDetailResponse writerDetailResponse,
             final ReactionCountResponse reactionCountResponse,
             final ThumbsStatusInPostResponse thumbsStatusInPost,
-            final Member member
+            final Member member,
+            final String domain
     ) {
         return new SpecificPostInfoResponse(
                 post.getId(),
@@ -39,7 +39,7 @@ public record SpecificPostInfoResponse(
                 post.getPrice(),
                 post.getContent(),
                 post.getCreatedAt(),
-                post.getPostImageInfos().stream().map(ImageInfo::getUrl).toList(),
+                post.getPostImageInfos().stream().map(image -> domain + image.getStoreName()).toList(),
                 writerDetailResponse,
                 reactionCountResponse,
                 allThumbsInPost.thumbsUpCount(),
@@ -55,7 +55,8 @@ public record SpecificPostInfoResponse(
             final Post post,
             final AllThumbsInPostResponse allThumbsInPost,
             final WriterDetailResponse writerDetailResponse,
-            final ReactionCountResponse reactionCountResponse
+            final ReactionCountResponse reactionCountResponse,
+            final String domain
     ) {
         return new SpecificPostInfoResponse(
                 post.getId(),
@@ -63,7 +64,7 @@ public record SpecificPostInfoResponse(
                 post.getPrice(),
                 post.getContent(),
                 post.getCreatedAt(),
-                post.getPostImageInfos().stream().map(ImageInfo::getUrl).toList(),
+                post.getPostImageInfos().stream().map(image -> domain + image.getStoreName()).toList(),
                 writerDetailResponse,
                 reactionCountResponse,
                 allThumbsInPost.thumbsUpCount(),
