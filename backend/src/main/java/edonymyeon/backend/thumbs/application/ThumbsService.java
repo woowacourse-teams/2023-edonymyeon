@@ -45,7 +45,8 @@ public class ThumbsService {
     }
 
     public ThumbsStatusInPostResponse findThumbsStatusInPost(final MemberIdDto memberId, final Long postId) {
-        if (Objects.isNull(memberId.id())) {
+        // TODO: 여우 코드랑 합쳐지면 수정
+        if (memberId.id() == -999) {
             return new ThumbsStatusInPostResponse(false, false);
         }
 
