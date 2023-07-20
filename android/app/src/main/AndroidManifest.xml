@@ -23,12 +23,10 @@
 
         <activity
             android:name="com.app.edonymyeon.presentation.ui.auth.LoginActivity"
-            android:exported="true"></activity>
-
+            android:exported="true" />
         <activity
             android:name="com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity"
-            android:exported="true"></activity>
-
+            android:exported="true" />
         <activity
             android:name="com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity"
             android:exported="true"></activity>
