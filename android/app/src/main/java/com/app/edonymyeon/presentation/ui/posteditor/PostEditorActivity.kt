@@ -13,18 +13,23 @@ import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostEditorBinding
+import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
+import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.presentation.ui.posteditor.adapter.PostEditorImagesAdapter
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.google.android.material.snackbar.Snackbar
 
 class PostEditorActivity : AppCompatActivity() {
 
-    private val viewModel: PostEditorViewModel by viewModels()
+    private val viewModel: PostEditorViewModel by lazy {
+        PostEditorViewModelFactory(PostRepositoryImpl(PostRemoteDataSource())).create(
+            PostEditorViewModel::class.java,
+        )
+    }
     private val adapter: PostEditorImagesAdapter by lazy {
         PostEditorImagesAdapter(::deleteImages)
     }
@@ -62,6 +67,14 @@ class PostEditorActivity : AppCompatActivity() {
         intent.getIntExtra(KEY_POST_EDITOR_CHECK, 0)
     }
 
+    private val post by lazy {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra(KEY_POST_EDITOR_POST, PostUiModel::class.java)
+        } else {
+            intent.getParcelableExtra<PostUiModel>(KEY_POST_EDITOR_POST)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -76,12 +89,7 @@ class PostEditorActivity : AppCompatActivity() {
 
     private fun initializeViewModelWithPostIfUpdate() {
         if (originActivityKey == UPDATE_CODE) {
-            val post = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                intent.getParcelableExtra(KEY_POST_EDITOR_POST, PostUiModel::class.java)
-            } else {
-                intent.getParcelableExtra<PostUiModel>(KEY_POST_EDITOR_POST)
-            }
-            post?.let { viewModel.init(it) }
+            post?.let { viewModel.initViewModelOnUpdate(it) }
         }
     }
 
@@ -112,8 +120,13 @@ class PostEditorActivity : AppCompatActivity() {
 
     private fun savePost() {
         when (originActivityKey) {
-            POST_CODE -> {}
-            UPDATE_CODE -> {}
+            POST_CODE -> {
+                viewModel.postPost()
+            }
+
+            UPDATE_CODE -> {
+                post?.let { viewModel.putPost(it.id) }
+            }
         }
     }
 
