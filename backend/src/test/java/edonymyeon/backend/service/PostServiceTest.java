@@ -48,7 +48,6 @@ class PostServiceTest {
 
     private final MemberRepository memberRepository;
 
-
     private final ImageFileUploader imageFileUploader;
 
     private final MemberTestSupport memberTestSupport;

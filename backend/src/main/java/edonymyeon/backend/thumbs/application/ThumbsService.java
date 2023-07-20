@@ -21,7 +21,6 @@ import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
 import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

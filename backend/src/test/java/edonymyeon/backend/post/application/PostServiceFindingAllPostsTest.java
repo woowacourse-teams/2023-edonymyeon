@@ -1,4 +1,4 @@
-package edonymyeon.backend.service;
+package edonymyeon.backend.post.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -8,7 +8,6 @@ import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
@@ -166,7 +165,6 @@ public class PostServiceFindingAllPostsTest {
 
         assertThat(postFindingResponses.get(0).title())
                 .isEqualTo(POST_REQUEST2_TITLE);
-
     }
 
     @Test

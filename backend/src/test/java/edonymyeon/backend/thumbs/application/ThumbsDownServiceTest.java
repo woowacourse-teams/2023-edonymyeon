@@ -51,7 +51,7 @@ public class ThumbsDownServiceTest {
 
     @BeforeEach
     public void 회원가입과_게시글쓰기를_한다() {
-        postWriter =  registerMember();
+        postWriter = registerMember();
         PostRequest postRequest = new PostRequest(
                 "title",
                 "content",

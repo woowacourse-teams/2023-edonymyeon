@@ -24,6 +24,7 @@ public record SpecificPostInfoResponse(
         boolean isScrap,
         boolean isWriter
 ) {
+
     public static SpecificPostInfoResponse of(
             final Post post,
             final AllThumbsInPostResponse allThumbsInPost,

@@ -7,8 +7,8 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMB
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.domain.ImageInfo;
-import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
+import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -24,6 +24,7 @@ import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.thumbs.application.ThumbsService;
 import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
 import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -62,8 +63,7 @@ public class PostService {
         );
         postRepository.save(post);
 
-        if (Objects.isNull(postRequest.images()) || postRequest.images().isEmpty() || isDummy(
-                postRequest.images().get(0))) {
+        if (isImagesEmpty(postRequest)) {
             return new PostResponse(post.getId());
         }
 
@@ -73,6 +73,18 @@ public class PostService {
         postImageInfoRepository.saveAll(postImageInfos);
 
         return new PostResponse(post.getId());
+    }
+
+    private Member findMemberById(final MemberIdDto memberIdDto) {
+        return memberRepository.findById(memberIdDto.id())
+                .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
+    }
+
+    private boolean isImagesEmpty(final PostRequest postRequest) {
+        return Objects.isNull(postRequest.images()) ||
+                postRequest.images().isEmpty() ||
+                isDummy(postRequest.images().get(0)
+                );
     }
 
     private boolean isDummy(final MultipartFile multipartFile) {
@@ -89,19 +101,69 @@ public class PostService {
     @Transactional
     public void deletePost(final MemberIdDto memberIdDto, final Long postId) {
         final Member member = findMemberById(memberIdDto);
-        final Post post = postRepository.findById(postId)
+        final Post post = findPostById(postId);
+        checkWriter(member, post);
+
+        final List<ImageInfo> imageInfos = findImageInfosFromPost(post);
+        postImageInfoRepository.deleteAllByPostId(postId);
+        postRepository.deleteById(postId);
+        imageInfos.forEach(imageFileUploader::removeFile);
+    }
+
+    private Post findPostById(final Long postId) {
+        return postRepository.findById(postId)
                 .orElseThrow(() -> new EdonymyeonException(POST_ID_NOT_FOUND));
-        if (post.isSameMember(member)) {
-            final List<ImageInfo> imageInfos = post.getPostImageInfos()
-                    .stream()
-                    .map(postImage -> new ImageInfo(postImage.getFileDirectory(), postImage.getStoreName()))
-                    .toList();
-            postImageInfoRepository.deleteAllByPostId(postId);
-            postRepository.deleteById(postId);
-            imageInfos.forEach(imageFileUploader::removeFile);
-            return;
+    }
+
+    private List<ImageInfo> findImageInfosFromPost(final Post post) {
+        return post.getPostImageInfos()
+                .stream()
+                .map(postImage -> new ImageInfo(postImage.getFileDirectory(), postImage.getStoreName()))
+                .toList();
+    }
+
+    private void checkWriter(final Member member, final Post post) {
+        if (!post.isSameMember(member)) {
+            throw new EdonymyeonException(POST_MEMBER_FORBIDDEN);
         }
-        throw new EdonymyeonException(POST_MEMBER_FORBIDDEN);
+    }
+
+    @Transactional
+    public PostResponse updatePost(
+            final MemberIdDto memberId,
+            final Long postId,
+            final PostRequest postRequest
+    ) {
+        final Member member = findMemberById(memberId);
+        final Post post = findPostById(postId);
+        checkWriter(member, post);
+
+        post.update(postRequest.title(), postRequest.content(), postRequest.price());
+
+        final List<ImageInfo> originalImageInfos = findImageInfosFromPost(post);
+        postImageInfoRepository.deleteAllByPostId(postId);
+
+        if (isImagesEmpty(postRequest)) {
+            post.updateImages(Collections.emptyList());
+            originalImageInfos.forEach(imageFileUploader::removeFile);
+            return new PostResponse(postId);
+        }
+
+        updateImagesOfPost(postRequest, post, originalImageInfos);
+        return new PostResponse(postId);
+    }
+
+    private void updateImagesOfPost(
+            final PostRequest postRequest,
+            final Post post,
+            final List<ImageInfo> originalImageInfos
+    ) {
+        final List<PostImageInfo> updatePostImageInfos = uploadImages(postRequest).stream()
+                .map(imageInfo -> PostImageInfo.of(imageInfo, post))
+                .toList();
+        post.updateImages(updatePostImageInfos);
+        postImageInfoRepository.saveAll(updatePostImageInfos);
+        originalImageInfos.forEach(imageFileUploader::removeFile);
     }
 
     public List<GeneralPostInfoResponse> findAllPost(final GeneralFindingCondition generalFindingCondition) {
@@ -165,10 +227,5 @@ public class PostService {
                 member.getNickname(),
                 member.getProfileImageInfo().getFileDirectory()
         );
-    }
-
-    private Member findMemberById(final MemberIdDto memberIdDto) {
-        return memberRepository.findById(memberIdDto.id())
-                .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
     }
 }

@@ -1,6 +1,7 @@
 package edonymyeon.backend.thumbs.domain;
 
-import static edonymyeon.backend.thumbs.domain.ThumbsType.*;
+import static edonymyeon.backend.thumbs.domain.ThumbsType.DOWN;
+import static edonymyeon.backend.thumbs.domain.ThumbsType.UP;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.member.domain.Member;
