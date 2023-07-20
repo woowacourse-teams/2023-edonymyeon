@@ -1,4 +1,4 @@
-package edonymyeon.backend.image.postimage;
+package edonymyeon.backend.image.profileimage.domain;
 
 import edonymyeon.backend.image.domain.ImageInfo;
 import jakarta.persistence.Entity;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class ProfileImageInfo extends ImageInfo {
 
-    public ProfileImageInfo(final String fileDirectory, final String storeName) {
-        super(fileDirectory, storeName);
+    public ProfileImageInfo(final String storeName) {
+        super(storeName);
     }
 }

@@ -1,5 +1,6 @@
 package edonymyeon.backend.thumbs.application;
 
+import static edonymyeon.backend.auth.ui.argumentresolver.AuthArgumentResolver.NON_EXISTING_MEMBER_ID;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.member.application.dto.MemberIdDto;
@@ -8,6 +9,7 @@ import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
 import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
 import lombok.RequiredArgsConstructor;
@@ -34,15 +36,17 @@ public class ThumbsInPostServiceTest {
 
     private final PostService postService;
 
+    private final MemberTestSupport memberTestSupport;
+
     private Member otherMember;
 
     private PostResponse postResponse;
 
     @BeforeEach
     public void 두_회원의_가입과_하나의_게시글쓰기를_한다() {
-        otherMember = registerMember("otherEmail", "otherPassword", "otherNickname");
+        otherMember = registerMember();
+        Member postWriter = registerMember();
 
-        Member postWriter = registerMember("email", "password", "nickname");
         PostRequest postRequest = new PostRequest(
                 "title",
                 "content",
@@ -67,7 +71,7 @@ public class ThumbsInPostServiceTest {
     @Test
     void 해당_게시글에_추천과_비추천_수를_읽어온다() {
         // given
-        Member otherMember2 = registerMember("otherEmail2", "otherPassword2", "otherNickname2");
+        Member otherMember2 = registerMember();
         thumbsUp(otherMember, postResponse);
         thumbsUp(otherMember2, postResponse);
 
@@ -85,8 +89,8 @@ public class ThumbsInPostServiceTest {
     @Test
     void 해당_게시글에_추천과_비추천_수를_읽어온다2() {
         // given
-        Member otherMember2 = registerMember("otherEmail2", "otherPassword2", "otherNickname2");
-        Member otherMember3 = registerMember("otherEmail3", "otherPassword3", "otherNickname3");
+        Member otherMember2 = registerMember();
+        Member otherMember3 = registerMember();
 
         thumbsUp(otherMember, postResponse);
         thumbsUp(otherMember2, postResponse);
@@ -109,7 +113,7 @@ public class ThumbsInPostServiceTest {
         thumbsUp(otherMember, postResponse);
 
         // when
-        MemberIdDto emptyId = new MemberIdDto(null);
+        MemberIdDto emptyId = new MemberIdDto(NON_EXISTING_MEMBER_ID);
         ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.findThumbsStatusInPost(emptyId,
                 postResponse.id());
 
@@ -184,17 +188,8 @@ public class ThumbsInPostServiceTest {
         thumbsService.thumbsDown(memberId, post.id());
     }
 
-    private Member registerMember(
-            final String email,
-            final String password,
-            final String nickname
-    ) {
-        Member member = new Member(
-                email,
-                password,
-                nickname,
-                null
-        );
+    private Member registerMember() {
+        Member member = memberTestSupport.builder().build();
         memberRepository.save(member);
 
         return member;
