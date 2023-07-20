@@ -54,7 +54,8 @@ public class PostFindingSpecificPostTest {
 
         assertAll(
                 () -> assertThat(postInfoResponse.title()).isEqualTo("Summer Breeze"),
-                () -> assertThat(postInfoResponse.content()).isEqualTo("Enjoy the refreshing summer breeze and soak up the sun's warmth at the beach."),
+                () -> assertThat(postInfoResponse.content()).isEqualTo(
+                        "Enjoy the refreshing summer breeze and soak up the sun's warmth at the beach."),
 
                 () -> assertThat(postInfoResponse.price()).isEqualTo(14_000L),
                 () -> assertThat(postInfoResponse.createdAt()).isNotNull(),
