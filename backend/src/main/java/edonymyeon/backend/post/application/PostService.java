@@ -75,11 +75,6 @@ public class PostService {
         return new PostResponse(post.getId());
     }
 
-    private Member findMemberById(final MemberIdDto memberIdDto) {
-        return memberRepository.findById(memberIdDto.id())
-                .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
-    }
-
     private boolean isDummy(final MultipartFile multipartFile) {
         return multipartFile.isEmpty();
     }
@@ -149,7 +144,7 @@ public class PostService {
                     post.getTitle(),
                     post.getPrice(),
                     post.getContent(),
-                    post.getCreateAt(),
+                    post.getCreatedAt(),
                     post.getPostImageInfos().stream().map(ImageInfo::getFullPath).toList(),
                     writerDetailResponse,
                     reactionCountResponse,
@@ -169,7 +164,7 @@ public class PostService {
                 post.getTitle(),
                 post.getPrice(),
                 post.getContent(),
-                post.getCreateAt(),
+                post.getCreatedAt(),
                 post.getPostImageInfos().stream().map(ImageInfo::getFullPath).toList(),
                 writerDetailResponse,
                 reactionCountResponse,
