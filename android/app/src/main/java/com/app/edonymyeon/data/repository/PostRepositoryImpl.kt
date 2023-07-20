@@ -27,7 +27,6 @@ class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepos
             Result.failure(CustomThrowable(result.code(), result.message()))
         }
     }
-}
 
     override suspend fun savePost(
         title: String,

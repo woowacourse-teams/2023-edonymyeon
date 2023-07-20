@@ -3,6 +3,7 @@ package com.app.edonymyeon.mapper
 import com.app.edonymyeon.data.dto.response.Post
 import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
 import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
+import com.domain.edonymyeon.model.Count
 import com.domain.edonymyeon.model.PostItem
 import com.domain.edonymyeon.model.ReactionCount
 
@@ -14,9 +15,9 @@ fun Post.toDomain(): PostItem = PostItem(
     createdAt = createdAt,
     nickname = writer.nickName,
     reactionCount = ReactionCount(
-        reactionCount.viewCount,
-        reactionCount.commentCount,
-        reactionCount.scrapCount,
+        Count(reactionCount.viewCount),
+        Count(reactionCount.commentCount),
+        Count(reactionCount.scrapCount),
     ),
 )
 
@@ -28,21 +29,8 @@ fun PostItem.toUiModel(): PostItemUiModel = PostItemUiModel(
     createdAt = createdAt,
     nickname = nickname,
     reactionCount = ReactionCountUiModel(
-        reactionCount.viewCount,
-        reactionCount.commentCount,
-        reactionCount.scrapCount,
+        reactionCount.viewCount.value,
+        reactionCount.commentCount.value,
+        reactionCount.scrapCount.value,
     ),
 )
-
-//)
-//id = id,
-//    title = title,
-//    thumbnailUrl = image,
-//    content = content,
-//    writer = WriterNickNameUiModel(writerNickNameDataModel.nickName),
-//    createdAt = createdAt,
-//    reactionCount = ReactionCountUiModel(
-//        reactionCountDataModel.viewCount,
-//        reactionCountDataModel.commentCount,
-//        reactionCountDataModel.scrapCount,
-//    ),
