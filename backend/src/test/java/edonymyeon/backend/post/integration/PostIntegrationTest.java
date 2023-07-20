@@ -172,19 +172,19 @@ public class PostIntegrationTest extends IntegrationTest {
                 () -> assertThat(response.body().jsonPath().getString("images[0]")).isEqualTo(post.images().get(0)),
                 () -> assertThat(response.body().jsonPath().getString("images[1]")).isEqualTo(post.images().get(1)),
 
-                () -> assertThat(response.body().jsonPath().getLong("writerResponse.id")).isEqualTo(
-                        post.writerDetailResponse().id()),
-                () -> assertThat(response.body().jsonPath().getString("writerResponse.nickname")).isEqualTo(
-                        post.writerDetailResponse().nickname()),
-                () -> assertThat(response.body().jsonPath().getString("writerResponse.profileImage")).isEqualTo(
-                        post.writerDetailResponse().profileImage()),
+                () -> assertThat(response.body().jsonPath().getLong("writer.id")).isEqualTo(
+                        post.writer().id()),
+                () -> assertThat(response.body().jsonPath().getString("writer.nickname")).isEqualTo(
+                        post.writer().nickname()),
+                () -> assertThat(response.body().jsonPath().getString("writer.profileImage")).isEqualTo(
+                        post.writer().profileImage()),
 
-                () -> assertThat(response.body().jsonPath().getInt("reactionCountResponse.viewCount")).isEqualTo(
-                        post.reactionCountResponse().viewCount()),
-                () -> assertThat(response.body().jsonPath().getInt("reactionCountResponse.commentCount")).isEqualTo(
-                        post.reactionCountResponse().commentCount()),
-                () -> assertThat(response.body().jsonPath().getInt("reactionCountResponse.scrapCount")).isEqualTo(
-                        post.reactionCountResponse().scrapCount()),
+                () -> assertThat(response.body().jsonPath().getInt("reactionCount.viewCount")).isEqualTo(
+                        post.reactionCount().viewCount()),
+                () -> assertThat(response.body().jsonPath().getInt("reactionCount.commentCount")).isEqualTo(
+                        post.reactionCount().commentCount()),
+                () -> assertThat(response.body().jsonPath().getInt("reactionCount.scrapCount")).isEqualTo(
+                        post.reactionCount().scrapCount()),
 
                 () -> assertThat(response.body().jsonPath().getInt("upCount")).isEqualTo(post.upCount()),
                 () -> assertThat(response.body().jsonPath().getInt("downCount")).isEqualTo(post.downCount()),
@@ -226,19 +226,19 @@ public class PostIntegrationTest extends IntegrationTest {
                 () -> assertThat(response.body().jsonPath().getString("images[0]")).isEqualTo(post.images().get(0)),
                 () -> assertThat(response.body().jsonPath().getString("images[1]")).isEqualTo(post.images().get(1)),
 
-                () -> assertThat(response.body().jsonPath().getLong("writerResponse.id")).isEqualTo(
-                        post.writerDetailResponse().id()),
-                () -> assertThat(response.body().jsonPath().getString("writerResponse.nickname")).isEqualTo(
-                        post.writerDetailResponse().nickname()),
-                () -> assertThat(response.body().jsonPath().getString("writerResponse.profileImage")).isEqualTo(
-                        post.writerDetailResponse().profileImage()),
+                () -> assertThat(response.body().jsonPath().getLong("writer.id")).isEqualTo(
+                        post.writer().id()),
+                () -> assertThat(response.body().jsonPath().getString("writer.nickname")).isEqualTo(
+                        post.writer().nickname()),
+                () -> assertThat(response.body().jsonPath().getString("writer.profileImage")).isEqualTo(
+                        post.writer().profileImage()),
 
-                () -> assertThat(response.body().jsonPath().getInt("reactionCountResponse.viewCount")).isEqualTo(
-                        post.reactionCountResponse().viewCount()),
-                () -> assertThat(response.body().jsonPath().getInt("reactionCountResponse.commentCount")).isEqualTo(
-                        post.reactionCountResponse().commentCount()),
-                () -> assertThat(response.body().jsonPath().getInt("reactionCountResponse.scrapCount")).isEqualTo(
-                        post.reactionCountResponse().scrapCount()),
+                () -> assertThat(response.body().jsonPath().getInt("reactionCount.viewCount")).isEqualTo(
+                        post.reactionCount().viewCount()),
+                () -> assertThat(response.body().jsonPath().getInt("reactionCount.commentCount")).isEqualTo(
+                        post.reactionCount().commentCount()),
+                () -> assertThat(response.body().jsonPath().getInt("reactionCount.scrapCount")).isEqualTo(
+                        post.reactionCount().scrapCount()),
 
                 () -> assertThat(response.body().jsonPath().getInt("upCount")).isEqualTo(post.upCount()),
                 () -> assertThat(response.body().jsonPath().getInt("downCount")).isEqualTo(post.downCount()),
@@ -285,19 +285,19 @@ public class PostIntegrationTest extends IntegrationTest {
                 () -> assertThat(response.body().jsonPath().getString("images[0]")).isEqualTo(post.images().get(0)),
                 () -> assertThat(response.body().jsonPath().getString("images[1]")).isEqualTo(post.images().get(1)),
 
-                () -> assertThat(response.body().jsonPath().getLong("writerResponse.id")).isEqualTo(
-                        post.writerDetailResponse().id()),
-                () -> assertThat(response.body().jsonPath().getString("writerResponse.nickname")).isEqualTo(
-                        post.writerDetailResponse().nickname()),
-                () -> assertThat(response.body().jsonPath().getString("writerResponse.profileImage")).isEqualTo(
-                        post.writerDetailResponse().profileImage()),
+                () -> assertThat(response.body().jsonPath().getLong("writer.id")).isEqualTo(
+                        post.writer().id()),
+                () -> assertThat(response.body().jsonPath().getString("writer.nickname")).isEqualTo(
+                        post.writer().nickname()),
+                () -> assertThat(response.body().jsonPath().getString("writer.profileImage")).isEqualTo(
+                        post.writer().profileImage()),
 
-                () -> assertThat(response.body().jsonPath().getInt("reactionCountResponse.viewCount")).isEqualTo(
-                        post.reactionCountResponse().viewCount()),
-                () -> assertThat(response.body().jsonPath().getInt("reactionCountResponse.commentCount")).isEqualTo(
-                        post.reactionCountResponse().commentCount()),
-                () -> assertThat(response.body().jsonPath().getInt("reactionCountResponse.scrapCount")).isEqualTo(
-                        post.reactionCountResponse().scrapCount()),
+                () -> assertThat(response.body().jsonPath().getInt("reactionCount.viewCount")).isEqualTo(
+                        post.reactionCount().viewCount()),
+                () -> assertThat(response.body().jsonPath().getInt("reactionCount.commentCount")).isEqualTo(
+                        post.reactionCount().commentCount()),
+                () -> assertThat(response.body().jsonPath().getInt("reactionCount.scrapCount")).isEqualTo(
+                        post.reactionCount().scrapCount()),
 
                 () -> assertThat(response.body().jsonPath().getInt("upCount")).isEqualTo(post.upCount()),
                 () -> assertThat(response.body().jsonPath().getInt("downCount")).isEqualTo(post.downCount()),
