@@ -1,6 +1,7 @@
 package com.app.edonymyeon.presentation.ui.postdetail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
@@ -15,6 +16,7 @@ import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
+import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.google.android.material.snackbar.Snackbar
 
 class PostDetailActivity : AppCompatActivity() {
@@ -24,7 +26,7 @@ class PostDetailActivity : AppCompatActivity() {
 
     private val viewModel: PostDetailViewModel by viewModels {
         PostDetailViewModelFactory(
-            0L,
+            23L,
             PostRepositoryImpl(PostRemoteDataSource()),
         )
     }
@@ -44,8 +46,12 @@ class PostDetailActivity : AppCompatActivity() {
         initBinding()
         initAppbar()
 
-        setImageSlider()
         setImageIndicators()
+
+        viewModel.post.observe(this) {
+            setImageSlider(it)
+//            binding.vpImageSlider.adapter?.notifyDataSetChanged()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -106,10 +112,11 @@ class PostDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun setImageSlider() {
+    private fun setImageSlider(post: PostUiModel) {
+        Log.d("Test", "Set Image Slider: ${post.images.size}")
         binding.vpImageSlider.offscreenPageLimit = 1
         binding.vpImageSlider.adapter =
-            ImageSliderAdapter(viewModel.post.value?.images ?: emptyList())
+            ImageSliderAdapter(post.images)
         binding.vpImageSlider.registerOnPageChangeCallback(
             object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {

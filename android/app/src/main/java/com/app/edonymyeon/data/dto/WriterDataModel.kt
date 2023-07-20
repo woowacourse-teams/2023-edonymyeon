@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class WriterDataModel(
     @SerialName("id") val writerId: Long,
     @SerialName("nickname") val nickname: String,
-    @SerialName("profileImage") val profileImage: String,
+    @SerialName("profileImage") val profileImage: String?,
 )
