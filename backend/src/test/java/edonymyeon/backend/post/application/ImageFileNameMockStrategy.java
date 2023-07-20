@@ -5,6 +5,7 @@ import edonymyeon.backend.image.ImageFileNameStrategy;
 public class ImageFileNameMockStrategy implements ImageFileNameStrategy {
 
     private final String mockPrefix;
+
     private Long count = -1L;
 
     public ImageFileNameMockStrategy(final String mockPrefix) {
