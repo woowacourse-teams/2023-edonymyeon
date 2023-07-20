@@ -9,11 +9,11 @@ object OkHttpClient {
     ): OkHttpClient = OkHttpClient.Builder()
         .run {
             addInterceptor(interceptor)
-            addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            })
+            addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                },
+            )
             build()
         }
 }
-
-
