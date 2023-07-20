@@ -59,7 +59,7 @@ class PostEditorActivity : AppCompatActivity() {
     }
 
     private val originActivityKey by lazy {
-        intent.getIntExtra(KEY_POST_EDITOR_ID, 0)
+        intent.getIntExtra(KEY_POST_EDITOR_CHECK, 0)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,14 +67,14 @@ class PostEditorActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initBinding()
+        initializeViewModelWithPostIfUpdate()
         initAppbar()
         setCameraAndGalleryClickListener()
         observeImages()
         setAdapter()
     }
 
-    override fun onStart() {
-        super.onStart()
+    private fun initializeViewModelWithPostIfUpdate() {
         if (originActivityKey == UPDATE_CODE) {
             val post = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 intent.getParcelableExtra(KEY_POST_EDITOR_POST, PostUiModel::class.java)
@@ -95,15 +95,14 @@ class PostEditorActivity : AppCompatActivity() {
             R.id.action_post_save -> {
                 viewModel.postTitle.observe(
                     this,
-                    Observer {
-                        if (it.isNotEmpty() || it != null) {
-                            savePost()
-                            finish()
-                        } else {
-                            showSnackbarForMissingTitle()
-                        }
-                    },
-                )
+                ) {
+                    if (it.isNotEmpty() || it != null) {
+                        savePost()
+                        finish()
+                    } else {
+                        showSnackbarForMissingTitle()
+                    }
+                }
                 return true
             }
 
@@ -263,7 +262,7 @@ class PostEditorActivity : AppCompatActivity() {
 
     companion object {
         private const val MAX_IMAGES_COUNT = 10
-        private const val KEY_POST_EDITOR_ID = "key_post_editor_id"
+        private const val KEY_POST_EDITOR_CHECK = "key_post_editor_check"
         private const val KEY_POST_EDITOR_POST = "key_post_editor_post"
         private const val POST_CODE = 2000
         private const val UPDATE_CODE = 3000
@@ -276,9 +275,9 @@ class PostEditorActivity : AppCompatActivity() {
             Manifest.permission.READ_EXTERNAL_STORAGE,
         )
 
-        fun newIntent(context: Context, post: PostUiModel, key: Int): Intent {
+        fun newIntent(context: Context, post: PostUiModel, code: Int): Intent {
             return Intent(context, PostEditorActivity::class.java).apply {
-                putExtra(KEY_POST_EDITOR_ID, key)
+                putExtra(KEY_POST_EDITOR_CHECK, code)
                 putExtra(KEY_POST_EDITOR_POST, post)
             }
         }
