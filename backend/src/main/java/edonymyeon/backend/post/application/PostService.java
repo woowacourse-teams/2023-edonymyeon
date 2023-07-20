@@ -5,7 +5,6 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_N
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_FORBIDDEN;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.image.postimage.PostImageInfoRepository;
@@ -17,7 +16,7 @@ import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.application.dto.ReactionCountResponse;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
-import edonymyeon.backend.post.application.dto.WriterResponse;
+import edonymyeon.backend.post.application.dto.WriterDetailResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.thumbs.application.ThumbsService;
@@ -106,7 +105,7 @@ public class PostService {
                 0 // TODO: 스크랩 기능 구현 필요
         );
         final AllThumbsInPostResponse allThumbsInPost = thumbsService.findAllThumbsInPost(postId);
-        final WriterResponse writerResponse = getWriterResponse(post.getMember());
+        final WriterDetailResponse writerDetailResponse = getWriterResponse(post.getMember());
 
         if (member.isEmpty()) {
             return new SpecificPostInfoResponse(
@@ -116,7 +115,7 @@ public class PostService {
                     post.getContent(),
                     post.getCreateAt(),
                     post.getPostImageInfos().stream().map(ImageInfo::getFullPath).toList(),
-                    writerResponse,
+                    writerDetailResponse,
                     reactionCountResponse,
                     allThumbsInPost.thumbsUpCount(),
                     allThumbsInPost.thumbsDownCount(),
@@ -136,7 +135,7 @@ public class PostService {
                 post.getContent(),
                 post.getCreateAt(),
                 post.getPostImageInfos().stream().map(ImageInfo::getFullPath).toList(),
-                writerResponse,
+                writerDetailResponse,
                 reactionCountResponse,
                 allThumbsInPost.thumbsUpCount(),
                 allThumbsInPost.thumbsDownCount(),
@@ -147,8 +146,8 @@ public class PostService {
         );
     }
 
-    private WriterResponse getWriterResponse(final Member member) {
-        return new WriterResponse(
+    private WriterDetailResponse getWriterResponse(final Member member) {
+        return new WriterDetailResponse(
                 member.getId(),
                 member.getNickname(),
                 member.getProfileImageInfo().getFileDirectory()
