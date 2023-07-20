@@ -3,19 +3,18 @@ package com.app.edonymyeon.presentation.ui.postdetail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
 import com.app.edonymyeon.presentation.uimodel.RecommendationUiModel
-import com.domain.edonymyeon.model.Count
 import com.domain.edonymyeon.model.Post
-import com.domain.edonymyeon.model.ReactionCount
-import com.domain.edonymyeon.model.Recommendation
-import com.domain.edonymyeon.model.Writer
-import java.time.LocalDateTime
+import com.domain.edonymyeon.repository.PostRepository
+import kotlinx.coroutines.launch
 
-class PostDetailViewModel() : ViewModel() {
+class PostDetailViewModel(postId: Long, private val repository: PostRepository) : ViewModel() {
     private val _post = MutableLiveData<PostUiModel>()
     val post: LiveData<PostUiModel>
         get() = _post
@@ -33,26 +32,27 @@ class PostDetailViewModel() : ViewModel() {
         get() = _isScrap
 
     init {
-        _post.value = postData.toUiModel()
-        _recommendation.value = postData.recommendation.toUiModel()
-        _reactionCount.value = postData.reactionCount.toUiModel()
-        _isScrap.value = postData.isScrap
+        /*        _post.value = postData.toUiModel()
+                _recommendation.value = postData.recommendation.toUiModel()
+                _reactionCount.value = postData.reactionCount.toUiModel()
+                _isScrap.value = postData.isScrap*/
+        getPostDetail(postId)
     }
 
-    /*    fun getPostDetail(postId: Long) {
-            viewModelScope.launch {
-                repository.getPostDetail(postId).onSuccess {
-                    it as Post
-                    _post.value = it.toUiModel()
-                    _recommendation.value = it.recommendation.toUiModel()
-                    _isScrap.value = it.isScrap
-                }.onFailure {
-                    it as CustomThrowable
-                    when (it.code) {
-                    }
+    fun getPostDetail(postId: Long) {
+        viewModelScope.launch {
+            repository.getPostDetail(postId).onSuccess {
+                it as Post
+                _post.value = it.toUiModel()
+                _recommendation.value = it.recommendation.toUiModel()
+                _isScrap.value = it.isScrap
+            }.onFailure {
+                it as CustomThrowable
+                when (it.code) {
                 }
             }
-        }*/
+        }
+    }
 
     fun updateUpRecommendation(isChecked: Boolean) {
         val oldRecommendation = _recommendation.value?.toDomain() ?: return
@@ -125,7 +125,7 @@ class PostDetailViewModel() : ViewModel() {
     }
 }
 
-private val postData = Post(
+/*private val postData = Post(
     id = 1,
     title = "립스틱 살까 말까 고민 중인데..",
     price = 44100,
@@ -153,4 +153,4 @@ private val postData = Post(
     ),
     isScrap = true,
     isWriter = false,
-)
+)*/

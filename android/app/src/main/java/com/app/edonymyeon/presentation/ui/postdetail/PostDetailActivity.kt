@@ -7,6 +7,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostDetailBinding
+import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
+import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.google.android.material.snackbar.Snackbar
 
 class PostDetailActivity : AppCompatActivity() {
@@ -14,13 +16,12 @@ class PostDetailActivity : AppCompatActivity() {
         ActivityPostDetailBinding.inflate(layoutInflater)
     }
 
-    /*    private val viewModel: PostDetailViewModel by lazy {
-            PostDetailViewModelFactory(PostRepositoryImpl(PostRemoteDataSource())).create(
-                PostDetailViewModel::class.java,
-            )
-        }*/
-
-    private val viewModel: PostDetailViewModel by viewModels()
+    private val viewModel: PostDetailViewModel by viewModels {
+        PostDetailViewModelFactory(
+            0L,
+            PostRepositoryImpl(PostRemoteDataSource()),
+        )
+    }
 
     private val dialog: DeleteDialog by lazy {
         DeleteDialog {
@@ -36,7 +37,8 @@ class PostDetailActivity : AppCompatActivity() {
 
         initBinding()
         initAppbar()
-        //        viewModel.getPostDetail(0L)
+        val id = 0L
+//        viewModel.getPostDetail(id)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
