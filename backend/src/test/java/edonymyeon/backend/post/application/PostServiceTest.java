@@ -23,6 +23,7 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -300,10 +301,23 @@ class PostServiceTest {
 
                 assertSoftly(softly -> {
                             softly.assertThat(findPost.getPostImageInfos().size()).isEqualTo(게시글_수정_요청.images().size());
-                            softly.assertThat(바꾸기_전_이미지_정보.getUrl().equals(바꾼_후_이미지_정보.getUrl())).isFalse();
+                    softly.assertThat(바꾸기_전_이미지_정보.getStoreName().equals(바꾼_후_이미지_정보.getStoreName())).isFalse();
                         }
                 );
             }
         }
+    }
+
+    @Test
+    void 작성자의_프로필_사진이_없더라도_상세조회가_가능하다() throws IOException {
+        final Member member = new Member("anonymous@gmail.com", "password", "엘렐레", null);
+        memberRepository.save(member);
+
+        final MemberIdDto memberIdDto = new MemberIdDto(member.getId());
+        final PostResponse postResponse = postService.createPost(memberIdDto, getPostRequest());
+
+        Assertions
+                .assertThatCode(() -> postService.findSpecificPost(postResponse.id(), memberIdDto))
+                .doesNotThrowAnyException();
     }
 }
