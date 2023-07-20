@@ -21,7 +21,8 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
-    public static final long NON_EXISTING_MEMBER_ID = 0L;
+    public static final long NON_EXISTING_MEMBER_ID = -999L;
+
     private final AuthService authService;
 
     @Override

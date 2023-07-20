@@ -1,5 +1,6 @@
 package edonymyeon.backend.thumbs.application;
 
+import static edonymyeon.backend.auth.ui.argumentresolver.AuthArgumentResolver.NON_EXISTING_MEMBER_ID;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.member.application.dto.MemberIdDto;
@@ -112,7 +113,7 @@ public class ThumbsInPostServiceTest {
         thumbsUp(otherMember, postResponse);
 
         // when
-        MemberIdDto emptyId = new MemberIdDto(null);
+        MemberIdDto emptyId = new MemberIdDto(NON_EXISTING_MEMBER_ID);
         ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.findThumbsStatusInPost(emptyId,
                 postResponse.id());
 
