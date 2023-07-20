@@ -65,7 +65,7 @@ public class Post {
 
     @CreatedDate
     @Column(nullable = false)
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     // todo: 테스트 코드에서 자꾸 null 값으로 조회되서 일단 하드코딩
     @ColumnDefault("0")

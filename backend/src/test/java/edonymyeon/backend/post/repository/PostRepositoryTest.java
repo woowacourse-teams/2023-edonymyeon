@@ -49,8 +49,8 @@ class PostRepositoryTest {
         assertSoftly(softly -> {
                     softly.assertThat(target.getId()).isNotNull();
                     softly.assertThat(target.getTitle()).isEqualTo("호바");
-                    softly.assertThat(target.getCreateAt()).isNotNull();
-                    softly.assertThat(target.getViewCount()).isEqualTo(0L);
+            softly.assertThat(target.getCreatedAt()).isNotNull();
+            softly.assertThat(target.getViewCount()).isEqualTo(0L);
             softly.assertThat(target.getMember().getId()).isEqualTo(member.getId());
                 }
         );

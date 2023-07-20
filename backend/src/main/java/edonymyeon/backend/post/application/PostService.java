@@ -12,6 +12,8 @@ import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
+import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.domain.Post;
@@ -20,6 +22,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -150,5 +155,25 @@ public class PostService {
         post.updateImages(updatePostImageInfos);
         postImageInfoRepository.saveAll(updatePostImageInfos);
         originalImageInfos.forEach(imageFileUploader::removeFile);
+    }
+
+    public List<GeneralPostInfoResponse> findAllPost(final GeneralFindingCondition generalFindingCondition) {
+        final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
+        final Slice<Post> foundPosts = postRepository.findAll(pageRequest);
+        return foundPosts
+                .map(GeneralPostInfoResponse::from)
+                .toList();
+    }
+
+    private static PageRequest convertConditionToPageRequest(final GeneralFindingCondition generalFindingCondition) {
+        return PageRequest.of(
+                generalFindingCondition.getPage(),
+                generalFindingCondition.getSize(),
+                switch (generalFindingCondition.getSortDirection()) {
+                    case ASC -> Direction.ASC;
+                    case DESC -> Direction.DESC;
+                },
+                generalFindingCondition.getSortBy().getName()
+        );
     }
 }

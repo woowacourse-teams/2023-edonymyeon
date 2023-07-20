@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_post_save"
+        android:title="@string/post_editor_page_write"
+        android:icon="@drawable/btn_post_save"
+        app:showAsAction="always"/>
+
+</menu>
