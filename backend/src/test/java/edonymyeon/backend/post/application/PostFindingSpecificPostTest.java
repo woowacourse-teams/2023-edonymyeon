@@ -121,11 +121,11 @@ public class PostFindingSpecificPostTest {
 
     private ProfileImageInfo saveProfileImageInfo() {
         return profileImageInfoRepository.save(
-                new ProfileImageInfo("/static/img/file/test_image_1.jpg", "test_image_1.jpg"));
+                new ProfileImageInfo("test_image_1.jpg"));
     }
 
     private ProfileImageInfo saveProfileImageInfo2() {
         return profileImageInfoRepository.save(
-                new ProfileImageInfo("/static/img/file/test_image_2.jpg", "test_image_2.jpg"));
+                new ProfileImageInfo("test_image_2.jpg"));
     }
 }

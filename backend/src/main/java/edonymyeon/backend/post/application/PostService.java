@@ -118,7 +118,7 @@ public class PostService {
     private List<ImageInfo> findImageInfosFromPost(final Post post) {
         return post.getPostImageInfos()
                 .stream()
-                .map(postImage -> new ImageInfo(postImage.getFileDirectory(), postImage.getStoreName()))
+                .map(postImage -> new ImageInfo(postImage.getStoreName()))
                 .toList();
     }
 
@@ -225,7 +225,7 @@ public class PostService {
         return new WriterDetailResponse(
                 member.getId(),
                 member.getNickname(),
-                member.getProfileImageInfo().getFileDirectory()
+                member.getProfileImageInfo().getUrl()
         );
     }
 }

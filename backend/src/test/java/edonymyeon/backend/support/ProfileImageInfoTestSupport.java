@@ -18,14 +18,8 @@ public class ProfileImageInfoTestSupport {
 
     public final class ProfileImageInfoBuilder {
 
-        private String fileDirectory;
 
         private String storeName;
-
-        public ProfileImageInfoBuilder fileDirectory(final String fileDirectory) {
-            this.fileDirectory = fileDirectory;
-            return this;
-        }
 
         public ProfileImageInfoBuilder storeName(final String storeName) {
             this.storeName = storeName;
@@ -35,7 +29,6 @@ public class ProfileImageInfoTestSupport {
         public ProfileImageInfo build() {
             return profileImageInfoRepository.save(
                     new ProfileImageInfo(
-                            fileDirectory == null ? UUID.randomUUID().toString() : fileDirectory,
                             storeName == null ? UUID.randomUUID().toString() : storeName
                     )
             );
