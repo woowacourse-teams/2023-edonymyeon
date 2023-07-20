@@ -18,13 +18,13 @@ class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepos
         }
     }
 
-    override suspend fun postPost(
+    override suspend fun savePost(
         title: String,
         content: String,
         price: Int,
         images: List<String>,
     ): Result<Any> {
-        val result = postDataSource.postPost(title, content, price, images.map { Uri.parse(it) })
+        val result = postDataSource.savePost(title, content, price, images.map { Uri.parse(it) })
         return if (result.isSuccessful) {
             Result.success(result.body() as PostEditorResponse)
         } else {
@@ -32,14 +32,14 @@ class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepos
         }
     }
 
-    override suspend fun putPost(
+    override suspend fun updatePost(
         postId: Long,
         title: String,
         content: String,
         price: Int,
         images: List<String>,
     ): Result<Any> {
-        val result = postDataSource.putPost(postId, title, content, price, images.map { Uri.parse(it) })
+        val result = postDataSource.updatePost(postId, title, content, price, images.map { Uri.parse(it) })
         return if (result.isSuccessful) {
             Result.success(result.body() as PostEditorResponse)
         } else {

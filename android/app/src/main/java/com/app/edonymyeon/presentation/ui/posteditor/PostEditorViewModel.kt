@@ -42,9 +42,9 @@ class PostEditorViewModel(private val repository: PostRepository) : ViewModel() 
         _galleryImages.value = images
     }
 
-    fun postPost() {
+    fun savePost() {
         viewModelScope.launch {
-            repository.postPost(
+            repository.savePost(
                 _postTitle.value.toString(),
                 _postContent.value.toString(),
                 _postPrice.value?.toInt() ?: 0,
@@ -59,9 +59,9 @@ class PostEditorViewModel(private val repository: PostRepository) : ViewModel() 
         }
     }
 
-    fun putPost(id: Long) {
+    fun updatePost(id: Long) {
         viewModelScope.launch {
-            repository.putPost(
+            repository.updatePost(
                 id,
                 _postTitle.value.toString(),
                 _postContent.value.toString(),

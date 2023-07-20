@@ -121,11 +121,11 @@ class PostEditorActivity : AppCompatActivity() {
     private fun savePost() {
         when (originActivityKey) {
             POST_CODE -> {
-                viewModel.postPost()
+                viewModel.savePost()
             }
 
             UPDATE_CODE -> {
-                post?.let { viewModel.putPost(it.id) }
+                post?.let { viewModel.updatePost(it.id) }
             }
         }
     }

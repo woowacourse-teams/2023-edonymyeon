@@ -21,7 +21,7 @@ class PostRemoteDataSource : PostDataSource {
         return postService.getPost(postId)
     }
 
-    override suspend fun postPost(
+    override suspend fun savePost(
         title: String,
         content: String,
         price: Int,
@@ -30,10 +30,10 @@ class PostRemoteDataSource : PostDataSource {
         val partWrappers = generatePartWrappers(imageUris)
 
         val postEditorRequest = PostEditorRequest(title, content, price, partWrappers)
-        return postService.postPost(postEditorRequest)
+        return postService.savePost(postEditorRequest)
     }
 
-    override suspend fun putPost(
+    override suspend fun updatePost(
         id: Long,
         title: String,
         content: String,
@@ -42,7 +42,7 @@ class PostRemoteDataSource : PostDataSource {
     ): Response<PostEditorResponse> {
         val partWrappers = generatePartWrappers(imageUris)
         val postEditorRequest = PostEditorRequest(title, content, price, partWrappers)
-        return postService.putPost(id, postEditorRequest)
+        return postService.updatePost(id, postEditorRequest)
     }
 
     private fun generatePartWrappers(imageUris: List<Uri>) =
