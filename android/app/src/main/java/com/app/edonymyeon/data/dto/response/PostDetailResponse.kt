@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PostDetailResponse(
+    val id: Long,
     @SerialName("id") val id: Long,
     @SerialName("title") val title: String,
     @SerialName("price") val price: Int,
