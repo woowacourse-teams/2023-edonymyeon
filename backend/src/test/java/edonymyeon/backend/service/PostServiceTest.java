@@ -32,12 +32,12 @@ import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-@Transactional
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @TestConstructor(autowireMode = AutowireMode.ALL)
 @Import(TestConfig.class)
+@Transactional
 @SpringBootTest
 class PostServiceTest {
 

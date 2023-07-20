@@ -10,9 +10,7 @@ public record PostFindingResponse(
         String content,
         WriterResponse writer,
         LocalDateTime createdAt,
-        int viewCount,
-        int scrapCount,
-        int commentCount
+        ReactionCountResponse reactionCount
 ) {
     public static PostFindingResponse from(Post post) {
         return new PostFindingResponse(
@@ -22,9 +20,10 @@ public record PostFindingResponse(
                 post.getContent(),
                 new WriterResponse(post.getMember().getNickname()),
                 post.getCreatedAt(),
-                0, // TODO: 조회수
-                0, // TODO: 스크랩 수
-                0 // TODO: 댓글 수
+                new ReactionCountResponse(0, 0, 0)
+                // TODO: 조회수
+                // TODO: 스크랩 수
+                // TODO: 댓글 수
         );
     }
 
