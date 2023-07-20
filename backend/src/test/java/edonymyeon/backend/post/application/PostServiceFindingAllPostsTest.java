@@ -15,6 +15,7 @@ import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.repository.PostRepository;
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
@@ -44,25 +46,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostServiceFindingAllPostsTest {
 
     public static final String POST_REQUEST1_TITLE = "Lost in Time";
-
     public static final String POST_REQUEST1_CONTENT = "A young archaeologist discovers a mysterious artifact that transports her back in time, forcing her to navigate ancient civilizations and find a way back home before history unravels.";
-
     public static final long POST_REQUEST1_PRICE = 14_000L;
-
     public static final String POST_REQUEST2_TITLE = "Whispers in the Dark";
-
     public static final String POST_REQUEST2_CONTENT = "A renowned detective embarks on a perilous journey to solve a series of murders that are linked to a secret society.";
-
     public static final long POST_REQUEST2_PRICE = 20_000L;
-
     public static final String POST_REQUEST3_TITLE = "Silent Shadows";
-
     public static final String POST_REQUEST3_CONTENT = "In a desolate town plagued by a decades-old curse, a curious teenager ventures into an abandoned mansion.";
-
     public static final long POST_REQUEST3_PRICE = 25_000L;
-
     public static final String IMAGE1_RELATIVE_PATH = "/static/img/file/test_image_1.jpg";
-
     public static final String IMAGE2_RELATIVE_PATH = "/static/img/file/test_image_2.jpg";
 
     private final PostService postService;
@@ -70,6 +62,13 @@ public class PostServiceFindingAllPostsTest {
     private final MemberRepository memberRepository;
 
     private MemberIdDto memberId;
+
+    @Value("${domain}")
+    private String domain;
+
+    private final Pattern 파일_경로_형식 = Pattern.compile(
+            domain + "test-inserting\\d+\\.(png|jpg)"
+    );
 
     @BeforeAll
     void 사용자_만들기() {
@@ -112,9 +111,7 @@ public class PostServiceFindingAllPostsTest {
                                 POST_REQUEST2_CONTENT,
                                 POST_REQUEST3_CONTENT
                         ),
-                () -> assertThat(postFindingResponses)
-                        .extracting(GeneralPostInfoResponse::image)
-                        .containsOnly("src/test/resources/static/img/test_store/test-inserting0.jpg"),
+                () -> assertThat(파일_경로_형식.matcher(postFindingResponses.get(0).image()).matches()).isTrue(),
                 () -> assertThat(postFindingResponses)
                         .extracting(GeneralPostInfoResponse::createdAt)
                         .hasSize(3),

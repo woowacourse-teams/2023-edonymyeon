@@ -29,7 +29,6 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
@@ -62,16 +61,11 @@ class PostServiceTest {
 
     private final ImageFileUploader imageFileUploader;
 
-    @Value("domain")
-    private String domain;
-
     private MemberIdDto memberId;
 
     @BeforeEach
     public void setUp() {
         Member member = memberTestSupport.builder()
-                .email("email")
-                .password("password")
                 .build();
         memberRepository.save(member);
         memberId = new MemberIdDto(member.getId());
@@ -147,8 +141,12 @@ class PostServiceTest {
             List<PostImageInfo> imageFiles = postImageInfoRepository.findAllByPostId(postId);
             assertSoftly(softly -> {
                         softly.assertThat(imageFiles).hasSize(2);
-                        softly.assertThat(파일_경로_형식.matcher(imageFileUploader.getFullPath(imageFiles.get(0).getStoreName())).matches()).isTrue();
-                        softly.assertThat(파일_경로_형식.matcher(imageFileUploader.getFullPath(imageFiles.get(1).getStoreName())).matches()).isTrue();
+                        softly.assertThat(
+                                        파일_경로_형식.matcher(imageFileUploader.getFullPath(imageFiles.get(0).getStoreName())).matches())
+                                .isTrue();
+                        softly.assertThat(
+                                        파일_경로_형식.matcher(imageFileUploader.getFullPath(imageFiles.get(1).getStoreName())).matches())
+                                .isTrue();
                     }
             );
         }
@@ -301,8 +299,8 @@ class PostServiceTest {
                 final PostImageInfo 바꾼_후_이미지_정보 = findPost.getPostImageInfos().get(0);
 
                 assertSoftly(softly -> {
-                    softly.assertThat(findPost.getPostImageInfos().size()).isEqualTo(게시글_수정_요청.images().size());
-                    softly.assertThat(바꾸기_전_이미지_정보.getUrl().equals(바꾼_후_이미지_정보.getUrl())).isFalse();
+                            softly.assertThat(findPost.getPostImageInfos().size()).isEqualTo(게시글_수정_요청.images().size());
+                            softly.assertThat(바꾸기_전_이미지_정보.getUrl().equals(바꾼_후_이미지_정보.getUrl())).isFalse();
                         }
                 );
             }
