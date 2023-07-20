@@ -15,12 +15,12 @@ interface PostService {
     suspend fun getPost(@Path("postId") postId: Long): Response<PostDetailResponse>
 
     @POST("/posts")
-    suspend fun postPost(
+    suspend fun savePost(
         @Body postEditorRequest: PostEditorRequest,
     ): Response<PostEditorResponse>
 
     @PUT("/posts/{postId}")
-    suspend fun putPost(
+    suspend fun updatePost(
         @Path("postId") postId: Long,
         @Body postEditorRequest: PostEditorRequest,
     ): Response<PostEditorResponse>

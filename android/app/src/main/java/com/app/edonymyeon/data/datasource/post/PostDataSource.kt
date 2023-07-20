@@ -8,14 +8,14 @@ import retrofit2.Response
 interface PostDataSource {
     suspend fun getPostDetail(postId: Long): Response<PostDetailResponse>
 
-    suspend fun postPost(
+    suspend fun savePost(
         title: String,
         content: String,
         price: Int,
         images: List<Uri>,
     ): Response<PostEditorResponse>
 
-    suspend fun putPost(
+    suspend fun updatePost(
         id: Long,
         title: String,
         content: String,
