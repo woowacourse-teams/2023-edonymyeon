@@ -15,7 +15,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostEditorBinding
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
@@ -23,6 +22,7 @@ import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import com.app.edonymyeon.presentation.ui.posteditor.adapter.PostEditorImagesAdapter
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
+import com.app.edonymyeon.presentation.util.getParcelableExtraCompat
 import com.google.android.material.snackbar.Snackbar
 
 class PostEditorActivity : AppCompatActivity() {
@@ -70,11 +70,7 @@ class PostEditorActivity : AppCompatActivity() {
     }
 
     private val post by lazy {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra(KEY_POST_EDITOR_POST, PostUiModel::class.java)
-        } else {
-            intent.getParcelableExtra<PostUiModel>(KEY_POST_EDITOR_POST)
-        }
+        intent.getParcelableExtraCompat(KEY_POST_EDITOR_POST) as? PostUiModel
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,11 +78,11 @@ class PostEditorActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initBinding()
+        setAdapter()
+        observeImages()
         initializeViewModelWithPostIfUpdate()
         initAppbar()
         setCameraAndGalleryClickListener()
-        observeImages()
-        setAdapter()
     }
 
     private fun initializeViewModelWithPostIfUpdate() {
@@ -184,6 +180,7 @@ class PostEditorActivity : AppCompatActivity() {
     }
 
     private fun setAdapter() {
+        Log.d("post", "setAdapter")
         binding.rvPostEditorImages.adapter = adapter
     }
 
@@ -192,12 +189,9 @@ class PostEditorActivity : AppCompatActivity() {
     }
 
     private fun observeImages() {
-        viewModel.galleryImages.observe(
-            this,
-            Observer { images ->
-                adapter.submitList(images)
-            },
-        )
+        viewModel.galleryImages.observe(this) { images ->
+            adapter.setImages(images)
+        }
     }
 
     private fun showPermissionSnackbar() {

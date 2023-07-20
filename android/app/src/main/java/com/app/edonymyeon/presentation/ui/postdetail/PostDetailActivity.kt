@@ -17,6 +17,7 @@ import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.datasource.recommend.RecommendRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.data.repository.RecommendRepositoryImpl
+import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
 import com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity
@@ -24,8 +25,9 @@ import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.util.makeSnackbar
 
 class PostDetailActivity : AppCompatActivity() {
-    // intent 연결해서 수정할 값
-    private val id: Long = 23L
+    private val id: Long by lazy {
+        intent.getLongExtra(KEY_POST_ID, -1)
+    }
 
     private val binding: ActivityPostDetailBinding by lazy {
         ActivityPostDetailBinding.inflate(layoutInflater)
@@ -44,7 +46,8 @@ class PostDetailActivity : AppCompatActivity() {
             viewModel.deletePost(id)
             binding.root.makeSnackbar("delete")
             dialog.dismiss()
-            // 게시글 목록으로 이동
+            startActivity(PostActivity.newIntent(this))
+            finish()
         }
     }
 
@@ -78,13 +81,18 @@ class PostDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_update -> {
-                binding.root.makeSnackbar("update")
-                startActivity(PostEditorActivity.newIntent(this, PostEditorActivity.UPDATE_CODE))
+                val post = viewModel.post.value ?: return false
+                startActivity(PostEditorActivity.newIntent(this, post, PostEditorActivity.UPDATE_CODE))
                 true
             }
 
             R.id.action_delete -> {
                 dialog.show(supportFragmentManager, "DeleteDialog")
+                true
+            }
+
+            android.R.id.home -> {
+                finish()
                 true
             }
 

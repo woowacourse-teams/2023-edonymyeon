@@ -8,6 +8,7 @@ import android.os.Build
 import android.provider.MediaStore
 import android.text.Editable
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -49,10 +50,11 @@ class PostEditorViewModel(
     }
 
     fun initViewModelOnUpdate(post: PostUiModel) {
+        Log.d("post", post.images.toString())
         _postTitle.value = post.title
         _postPrice.value = post.price.toString()
         _postContent.value = post.content
-        _galleryImages.value = images
+        _galleryImages.value = post.images.map { it.toUri().toString() }
     }
 
     fun savePost() {

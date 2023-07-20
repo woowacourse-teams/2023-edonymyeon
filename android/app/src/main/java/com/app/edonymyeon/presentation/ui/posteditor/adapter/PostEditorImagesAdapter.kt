@@ -1,5 +1,6 @@
 package com.app.edonymyeon.presentation.ui.posteditor.adapter
 
+import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.app.edonymyeon.presentation.ui.posteditor.viewholder.PostEditorImagesViewHolder
@@ -13,5 +14,10 @@ class PostEditorImagesAdapter(
 
     override fun onBindViewHolder(holder: PostEditorImagesViewHolder, position: Int) {
         holder.bind(currentList[position], deleteImage)
+    }
+
+    fun setImages(images: List<String>) {
+        Log.d("post", "submit Images into adapter: ${images.size}")
+        submitList(images)
     }
 }
