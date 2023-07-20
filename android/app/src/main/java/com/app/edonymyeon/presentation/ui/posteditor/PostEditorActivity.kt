@@ -10,6 +10,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
@@ -243,6 +244,7 @@ class PostEditorActivity : AppCompatActivity() {
     private fun addSelectedImagesFromClipData(count: Int, clipData: ClipData) {
         for (i in 0 until count) {
             val imageUri = clipData.getItemAt(i).uri
+            Log.d("dfsdfs", imageUri.toString())
             viewModel.addSelectedImages(imageUri.toString())
         }
     }

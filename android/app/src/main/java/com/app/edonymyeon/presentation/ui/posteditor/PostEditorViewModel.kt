@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.text.Editable
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -65,6 +66,7 @@ class PostEditorViewModel(
                         ?: listOf(),
                 ),
             ).onSuccess {
+                Log.d("id", (it as PostEditorResponse).id.toString())
                 _postId.value = (it as PostEditorResponse).id
             }.onFailure {
                 it as CustomThrowable
