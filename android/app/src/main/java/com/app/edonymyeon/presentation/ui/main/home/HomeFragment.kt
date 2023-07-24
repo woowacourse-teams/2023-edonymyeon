@@ -9,6 +9,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import app.edonymyeon.databinding.FragmentHomeBinding
 import com.app.edonymyeon.presentation.ui.main.home.adapter.AllPostAdapter
+import com.app.edonymyeon.presentation.ui.post.PostActivity
+import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import com.app.edonymyeon.presentation.uimodel.AllPostItemUiModel
 
 class HomeFragment : Fragment() {
@@ -32,6 +34,9 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initObserve()
         viewModel.getAllPosts()
+        binding.ivAllPostMore.setOnClickListener {
+            startActivity(PostActivity.newIntent(requireContext()))
+        }
     }
 
     private fun initObserve() {
@@ -42,6 +47,7 @@ class HomeFragment : Fragment() {
 
     private fun initAllPostAdapter(it: List<AllPostItemUiModel>) {
         binding.rvAllPost.adapter = AllPostAdapter(it) { id ->
+            PostDetailActivity.newIntent(requireContext(), id)
         }
     }
 }

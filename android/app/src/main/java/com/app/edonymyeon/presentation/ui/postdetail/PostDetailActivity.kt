@@ -1,5 +1,7 @@
 package com.app.edonymyeon.presentation.ui.postdetail
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -15,13 +17,17 @@ import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.datasource.recommend.RecommendRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.data.repository.RecommendRepositoryImpl
+import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
+import com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.util.makeSnackbar
 
 class PostDetailActivity : AppCompatActivity() {
-    private val id: Long = 23L
+    private val id: Long by lazy {
+        intent.getLongExtra(KEY_POST_ID, -1)
+    }
 
     private val binding: ActivityPostDetailBinding by lazy {
         ActivityPostDetailBinding.inflate(layoutInflater)
@@ -40,7 +46,8 @@ class PostDetailActivity : AppCompatActivity() {
             viewModel.deletePost(id)
             binding.root.makeSnackbar("delete")
             dialog.dismiss()
-            // 게시글 목록으로 이동
+            startActivity(PostActivity.newIntent(this))
+            finish()
         }
     }
 
@@ -54,10 +61,11 @@ class PostDetailActivity : AppCompatActivity() {
         initBinding()
         initAppbar()
         setRecommendationCheckedListener()
-        setImageIndicators()
+
 
         viewModel.post.observe(this) {
             setImageSlider(it)
+            setImageIndicators()
         }
 
         viewModel.reactionCount.observe(this) {
@@ -74,13 +82,18 @@ class PostDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_update -> {
-                // 글 작성으로 이동
-                binding.root.makeSnackbar("update")
+                val post = viewModel.post.value ?: return false
+                startActivity(PostEditorActivity.newIntent(this, post, PostEditorActivity.UPDATE_CODE))
                 true
             }
 
             R.id.action_delete -> {
                 dialog.show(supportFragmentManager, "DeleteDialog")
+                true
+            }
+
+            android.R.id.home -> {
+                finish()
                 true
             }
 
@@ -183,6 +196,13 @@ class PostDetailActivity : AppCompatActivity() {
             } else {
                 indicatorView.setImageResource(R.drawable.ic_indicator_focus_off)
             }
+        }
+    }
+
+    companion object {
+        private const val KEY_POST_ID = "key_post_id"
+        fun newIntent(context: Context, postId: Long): Intent {
+            return Intent(context, PostDetailActivity::class.java).putExtra(KEY_POST_ID, postId)
         }
     }
 }
