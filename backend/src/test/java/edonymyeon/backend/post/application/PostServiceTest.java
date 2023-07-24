@@ -174,7 +174,7 @@ class PostServiceTest {
 
             // when
             assertThatThrownBy(() -> postService.createPost(memberId, request)).isInstanceOf(EdonymyeonException.class)
-                    .hasMessage(ExceptionInformation.POST_IMAGE_NUMBER_INVALID.getMessage());
+                    .hasMessage(ExceptionInformation.POST_IMAGE_COUNT_INVALID.getMessage());
         }
     }
 
@@ -293,7 +293,7 @@ class PostServiceTest {
                 );
                 assertThatThrownBy(() -> postService.updatePost(memberId, post.id(), request)).isInstanceOf(
                                 EdonymyeonException.class)
-                        .hasMessage(ExceptionInformation.POST_IMAGE_NUMBER_INVALID.getMessage());
+                        .hasMessage(ExceptionInformation.POST_IMAGE_COUNT_INVALID.getMessage());
             }
 
             @Test
