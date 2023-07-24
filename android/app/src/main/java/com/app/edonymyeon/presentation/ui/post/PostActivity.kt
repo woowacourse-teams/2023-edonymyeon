@@ -31,22 +31,26 @@ class PostActivity : AppCompatActivity() {
                 startActivity(PostDetailActivity.newIntent(this, postId))
             })
         }
-        viewModel.getPosts(20, 0)
 
         binding.ivPostNew.setOnClickListener {
             startPostEditorActivity()
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getPosts(20, 0)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return super.onOptionsItemSelected(item)
-        when (item.itemId) {
+        return when (item.itemId) {
             android.R.id.home -> {
                 finish()
+                true
             }
 
             else -> {
-
+                false
             }
         }
     }

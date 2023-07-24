@@ -24,6 +24,10 @@ import com.app.edonymyeon.presentation.ui.posteditor.adapter.PostEditorImagesAda
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.util.getParcelableExtraCompat
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PostEditorActivity : AppCompatActivity() {
 
@@ -104,7 +108,11 @@ class PostEditorActivity : AppCompatActivity() {
                 ) {
                     if (it.isNotEmpty() || it != null) {
                         savePost()
-                        navigateToDetail()
+                        CoroutineScope(Dispatchers.IO).launch {
+                            delay(2000)
+                            navigateToDetail()
+                        }
+
                     } else {
                         showSnackbarForMissingTitle()
                     }

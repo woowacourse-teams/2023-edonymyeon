@@ -61,10 +61,11 @@ class PostDetailActivity : AppCompatActivity() {
         initBinding()
         initAppbar()
         setRecommendationCheckedListener()
-        setImageIndicators()
+
 
         viewModel.post.observe(this) {
             setImageSlider(it)
+            setImageIndicators()
         }
 
         viewModel.reactionCount.observe(this) {
