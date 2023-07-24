@@ -6,6 +6,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
@@ -20,6 +21,7 @@ import edonymyeon.backend.support.MemberTestSupport;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -151,6 +153,31 @@ class PostServiceTest {
                     }
             );
         }
+
+        @Test
+        void 이미지가_10개_초과일_수_없다()
+                throws IOException {
+            // given
+            List<MultipartFile> images = new ArrayList<>();
+            for (int i = 0; i < 11; i++) {
+                images.add(createMockMultipartFile());
+            }
+            final PostRequest request = new PostRequest(
+                    "사도 돼요?",
+                    "얼마 안해요",
+                    100_000L,
+                    images
+            );
+
+            // when
+            assertThatThrownBy(() -> postService.createPost(memberId, request)).isInstanceOf(EdonymyeonException.class)
+                    .hasMessage(ExceptionInformation.POST_IMAGE_NUMBER_INVALID.getMessage());
+        }
+    }
+
+    private MockMultipartFile createMockMultipartFile() throws IOException {
+        return new MockMultipartFile("imageFiles", "test_image_1.jpg", "image/jpg",
+                getClass().getResourceAsStream("/static/img/file/test_image_1.jpg"));
     }
 
     @Nested
@@ -242,6 +269,28 @@ class PostServiceTest {
             );
 
             이미지를_수정하는_경우() throws IOException {
+            }
+
+            @Test
+            void 이미지가_10개_초과일_수_없다()
+                    throws IOException {
+                // given
+                final PostResponse post = postService.createPost(memberId, 이미지가_없는_요청);
+
+                // when
+                List<MultipartFile> images = new ArrayList<>();
+                for (int i = 0; i < 11; i++) {
+                    images.add(createMockMultipartFile());
+                }
+                final PostRequest request = new PostRequest(
+                        "사도 돼요?",
+                        "얼마 안해요",
+                        100_000L,
+                        images
+                );
+                assertThatThrownBy(() -> postService.updatePost(memberId, post.id(), request)).isInstanceOf(
+                                EdonymyeonException.class)
+                        .hasMessage(ExceptionInformation.POST_IMAGE_NUMBER_INVALID.getMessage());
             }
 
             @Test

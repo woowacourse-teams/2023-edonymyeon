@@ -1,6 +1,7 @@
 package edonymyeon.backend.post.domain;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_CONTENT_ILLEGAL_LENGTH;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_IMAGE_NUMBER_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_EMPTY;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_PRICE_ILLEGAL_SIZE;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_TITLE_ILLEGAL_LENGTH;
@@ -41,6 +42,8 @@ public class Post {
     private static final int MAX_CONTENT_LENGTH = 1_000;
     private static final long MAX_PRICE = 10_000_000_000L;
     private static final int MIN_PRICE = 0;
+    public static final int MAX_IMAGE_NUMBER = 10;
+    public static final int MIN_IMAGE_NUMBER = 0;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -125,7 +128,18 @@ public class Post {
         if (this.postImageInfos.contains(postImageInfo)) {
             return;
         }
+        checkImageNumber(this.postImageInfos);
         this.postImageInfos.add(postImageInfo);
+    }
+
+    private void checkImageNumber(final List<PostImageInfo> postImageInfos) {
+        if (!isValidImageNumber(postImageInfos.size())) {
+            throw new EdonymyeonException(POST_IMAGE_NUMBER_INVALID);
+        }
+    }
+
+    public boolean isValidImageNumber(final Integer imageNumber) {
+        return imageNumber >= MIN_IMAGE_NUMBER && imageNumber < MAX_IMAGE_NUMBER;
     }
 
     public void update(final String title, final String content, final Long price) {
@@ -150,6 +164,7 @@ public class Post {
     }
 
     public void updateImages(final List<PostImageInfo> postImageInfos) {
+        checkImageNumber(postImageInfos);
         this.postImageInfos.clear();
         this.postImageInfos.addAll(postImageInfos);
     }

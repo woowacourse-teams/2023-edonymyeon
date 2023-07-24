@@ -2,6 +2,7 @@ package edonymyeon.backend.post.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_IMAGE_NUMBER_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_FORBIDDEN;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
@@ -70,9 +71,14 @@ public class PostService {
             return new PostResponse(post.getId());
         }
 
+        if (!post.isValidImageNumber(postRequest.images().size())) {
+            throw new EdonymyeonException(POST_IMAGE_NUMBER_INVALID);
+        }
+
         final List<PostImageInfo> postImageInfos = uploadImages(postRequest).stream()
                 .map(imageInfo -> PostImageInfo.of(imageInfo, post))
                 .toList();
+        post.updateImages(postImageInfos);
         postImageInfoRepository.saveAll(postImageInfos);
 
         return new PostResponse(post.getId());
@@ -153,6 +159,9 @@ public class PostService {
             return new PostResponse(postId);
         }
 
+        if (!post.isValidImageNumber(postRequest.images().size())) {
+            throw new EdonymyeonException(POST_IMAGE_NUMBER_INVALID);
+        }
         updateImagesOfPost(postRequest, post, originalImageInfos);
         return new PostResponse(postId);
     }
