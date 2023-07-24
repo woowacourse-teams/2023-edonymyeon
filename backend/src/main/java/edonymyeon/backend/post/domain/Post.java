@@ -128,17 +128,17 @@ public class Post {
         if (this.postImageInfos.contains(postImageInfo)) {
             return;
         }
-        checkImageCount(this.postImageInfos);
+        checkImageCount(this.postImageInfos.size());
         this.postImageInfos.add(postImageInfo);
     }
 
-    private void checkImageCount(final List<PostImageInfo> postImageInfos) {
+    public void checkImageCount(final Integer imageCount) {
         if (isInvalidImageCount(postImageInfos.size())) {
             throw new EdonymyeonException(POST_IMAGE_COUNT_INVALID);
         }
     }
 
-    public boolean isInvalidImageCount(final Integer imageCount) {
+    private boolean isInvalidImageCount(final Integer imageCount) {
         return imageCount > MAX_IMAGE_COUNT;
     }
 
@@ -164,7 +164,7 @@ public class Post {
     }
 
     public void updateImages(final List<PostImageInfo> postImageInfos) {
-        checkImageCount(postImageInfos);
+        checkImageCount(postImageInfos.size());
         this.postImageInfos.clear();
         this.postImageInfos.addAll(postImageInfos);
     }
