@@ -8,6 +8,7 @@ import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
+import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
@@ -70,12 +71,10 @@ public class PostService {
         }
         post.checkImageCount(postRequest.images().size());
 
-        final List<PostImageInfo> postImageInfos = imageFileUploader.uploadFiles(postRequest.images())
-                .stream()
-                .map(imageInfo -> PostImageInfo.of(imageInfo, post))
-                .toList();
-        post.updateImages(postImageInfos);
-        postImageInfoRepository.saveAll(postImageInfos);
+        final PostImageInfos postImageInfos = PostImageInfos.of(post,
+                imageFileUploader.uploadFiles(postRequest.images()));
+        post.updateImages(postImageInfos.getPostImageInfos());
+        postImageInfoRepository.saveAll(postImageInfos.getPostImageInfos());
 
         return new PostResponse(post.getId());
     }
@@ -151,12 +150,10 @@ public class PostService {
             final Post post,
             final List<PostImageInfo> originalImageInfos
     ) {
-        final List<PostImageInfo> updatePostImageInfos = imageFileUploader.uploadFiles(postRequest.images())
-                .stream()
-                .map(imageInfo -> PostImageInfo.of(imageInfo, post))
-                .toList();
-        post.updateImages(updatePostImageInfos);
-        postImageInfoRepository.saveAll(updatePostImageInfos);
+        final PostImageInfos updatedPostImageInfos = PostImageInfos.of(post,
+                imageFileUploader.uploadFiles(postRequest.images()));
+        post.updateImages(updatedPostImageInfos.getPostImageInfos());
+        postImageInfoRepository.saveAll(updatedPostImageInfos.getPostImageInfos());
         originalImageInfos.forEach(imageFileUploader::removeFile);
     }
 
