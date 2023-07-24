@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
@@ -14,12 +15,9 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.List;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +28,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class PostIntegrationTest extends IntegrationTest {
+public class PostIntegrationTest extends IntegrationTest implements ImageFileCleaner {
 
     @LocalServerPort
     private int port;
@@ -328,19 +326,5 @@ public class PostIntegrationTest extends IntegrationTest {
                 13_000L,
                 multipartFiles
         );
-    }
-
-    @AfterEach
-    public void cleanImageStoreDirectory() {
-        final File targetFolder = new File("src/test/resources/static/img/test_store/");
-        FilenameFilter filter = new FilenameFilter() {
-            @Override
-            public boolean accept(final File dir, final String name) {
-                return !name.equals("test.txt");
-            }
-        };
-        File[] files = targetFolder.listFiles(filter);
-        assert files != null;
-        Arrays.stream(files).forEach(file -> file.delete());
     }
 }

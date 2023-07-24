@@ -7,16 +7,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.support.MemberTestSupport;
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Base64;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -38,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-class PostControllerTest {
+class PostControllerTest implements ImageFileCleaner {
 
     @Autowired
     MockMvc mockMvc;
@@ -181,7 +178,7 @@ class PostControllerTest {
         );
     }
 
-    @AfterEach
+/*    @AfterEach
     public void cleanImageStoreDirectory() {
         final File targetFolder = new File("src/test/resources/static/img/test_store/");
         FilenameFilter filter = new FilenameFilter() {
@@ -193,5 +190,5 @@ class PostControllerTest {
         File[] files = targetFolder.listFiles(filter);
         assert files != null;
         Arrays.stream(files).forEach(file -> file.delete());
-    }
+    }*/
 }

@@ -13,22 +13,20 @@ import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.support.MemberTestSupport;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -50,7 +48,7 @@ import org.springframework.web.multipart.MultipartFile;
 @TestConstructor(autowireMode = AutowireMode.ALL)
 @Import(TestConfig.class)
 @SpringBootTest
-class PostServiceTest {
+class PostServiceTest implements ImageFileCleaner {
 
     private static final Pattern 이미지_UUID_와_확장자_형식 = Pattern.compile("test-inserting\\d+\\.(png|jpg)");
     private static final Pattern 파일_경로_형식 = Pattern.compile(
@@ -352,7 +350,7 @@ class PostServiceTest {
                 final PostImageInfo 바꾼_후_이미지_정보 = findPost.getPostImageInfos().get(0);
 
                 assertSoftly(softly -> {
-                            softly.assertThat(findPost.getPostImageInfos().size()).isEqualTo(게시글_수정_요청.images().size());
+                    softly.assertThat(findPost.getPostImageInfos().size()).isEqualTo(게시글_수정_요청.images().size());
                     softly.assertThat(바꾸기_전_이미지_정보.getStoreName().equals(바꾼_후_이미지_정보.getStoreName())).isFalse();
                         }
                 );
@@ -371,19 +369,5 @@ class PostServiceTest {
         Assertions
                 .assertThatCode(() -> postService.findSpecificPost(postResponse.id(), memberIdDto))
                 .doesNotThrowAnyException();
-    }
-
-    @AfterEach
-    public void cleanImageStoreDirectory() {
-        final File targetFolder = new File("src/test/resources/static/img/test_store/");
-        FilenameFilter filter = new FilenameFilter() {
-            @Override
-            public boolean accept(final File dir, final String name) {
-                return !name.equals("test.txt");
-            }
-        };
-        File[] files = targetFolder.listFiles(filter);
-        assert files != null;
-        Arrays.stream(files).forEach(file -> file.delete());
     }
 }
