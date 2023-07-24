@@ -1,13 +1,13 @@
 package edonymyeon.backend.post.domain;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_CONTENT_ILLEGAL_LENGTH;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_IMAGE_COUNT_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_EMPTY;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_PRICE_ILLEGAL_SIZE;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_TITLE_ILLEGAL_LENGTH;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
+import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.member.domain.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,9 +18,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import lombok.AccessLevel;
@@ -42,8 +40,6 @@ public class Post {
     private static final int MAX_CONTENT_LENGTH = 1_000;
     private static final long MAX_PRICE = 10_000_000_000L;
     private static final int MIN_PRICE = 0;
-    public static final int MAX_IMAGE_COUNT = 10;
-    public static final int MIN_IMAGE_COUNT = 0;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,9 +58,7 @@ public class Post {
     @JoinColumn(nullable = false)
     private Member member;
 
-    // TODO: cascade
-    @OneToMany(mappedBy = "post")
-    private List<PostImageInfo> postImageInfos;
+    private PostImageInfos postImageInfos;
 
     @CreatedDate
     @Column(nullable = false)
@@ -85,7 +79,7 @@ public class Post {
         this.content = content;
         this.price = price;
         this.member = member;
-        this.postImageInfos = new ArrayList<>();
+        this.postImageInfos = PostImageInfos.create();
     }
 
     private void validate(
@@ -125,21 +119,11 @@ public class Post {
     }
 
     public void addPostImageInfo(final PostImageInfo postImageInfo) {
-        if (this.postImageInfos.contains(postImageInfo)) {
-            return;
-        }
-        checkImageCount(this.postImageInfos.size());
-        this.postImageInfos.add(postImageInfo);
+        postImageInfos.add(postImageInfo);
     }
 
     public void checkImageCount(final Integer imageCount) {
-        if (isInvalidImageCount(postImageInfos.size())) {
-            throw new EdonymyeonException(POST_IMAGE_COUNT_INVALID);
-        }
-    }
-
-    private boolean isInvalidImageCount(final Integer imageCount) {
-        return imageCount > MAX_IMAGE_COUNT;
+        postImageInfos.checkImageCount(imageCount);
     }
 
     public void update(final String title, final String content, final Long price) {
@@ -163,13 +147,15 @@ public class Post {
         this.price = price;
     }
 
-    public void updateImages(final List<PostImageInfo> postImageInfos) {
-        checkImageCount(postImageInfos.size());
-        this.postImageInfos.clear();
-        this.postImageInfos.addAll(postImageInfos);
+    public void updateImages(final PostImageInfos postImageInfos) {
+        this.postImageInfos.update(postImageInfos.getPostImageInfos());
     }
 
     public boolean isSameMember(final Member member) {
         return this.member.equals(member);
+    }
+
+    public List<PostImageInfo> getPostImageInfos() {
+        return this.postImageInfos.getPostImageInfos();
     }
 }
