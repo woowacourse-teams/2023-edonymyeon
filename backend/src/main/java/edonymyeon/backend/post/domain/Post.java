@@ -133,13 +133,13 @@ public class Post {
     }
 
     private void checkImageCount(final List<PostImageInfo> postImageInfos) {
-        if (!isValidImageCount(postImageInfos.size())) {
+        if (isInvalidImageCount(postImageInfos.size())) {
             throw new EdonymyeonException(POST_IMAGE_COUNT_INVALID);
         }
     }
 
-    public boolean isValidImageCount(final Integer imageCount) {
-        return imageCount >= MIN_IMAGE_COUNT && imageCount < MAX_IMAGE_COUNT;
+    public boolean isInvalidImageCount(final Integer imageCount) {
+        return imageCount > MAX_IMAGE_COUNT;
     }
 
     public void update(final String title, final String content, final Long price) {

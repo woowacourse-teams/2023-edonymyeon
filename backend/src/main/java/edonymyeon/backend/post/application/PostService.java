@@ -71,7 +71,7 @@ public class PostService {
             return new PostResponse(post.getId());
         }
 
-        if (!post.isValidImageCount(postRequest.images().size())) {
+        if (post.isInvalidImageCount(postRequest.images().size())) {
             throw new EdonymyeonException(POST_IMAGE_COUNT_INVALID);
         }
 
@@ -159,7 +159,7 @@ public class PostService {
             return new PostResponse(postId);
         }
 
-        if (!post.isValidImageCount(postRequest.images().size())) {
+        if (post.isInvalidImageCount(postRequest.images().size())) {
             throw new EdonymyeonException(POST_IMAGE_COUNT_INVALID);
         }
         updateImagesOfPost(postRequest, post, originalImageInfos);
