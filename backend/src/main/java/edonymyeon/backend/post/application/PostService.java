@@ -7,7 +7,6 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMB
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.domain.Domain;
-import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
@@ -103,7 +102,7 @@ public class PostService {
         final Post post = findPostById(postId);
         checkWriter(member, post);
 
-        final List<ImageInfo> imageInfos = findImageInfosFromPost(post);
+        final List<PostImageInfo> imageInfos = post.getPostImageInfos();
         thumbsService.deleteAllThumbsInPost(postId);
         postImageInfoRepository.deleteAllByPostId(postId);
         postRepository.deleteById(postId);
@@ -113,13 +112,6 @@ public class PostService {
     private Post findPostById(final Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new EdonymyeonException(POST_ID_NOT_FOUND));
-    }
-
-    private List<ImageInfo> findImageInfosFromPost(final Post post) {
-        return post.getPostImageInfos()
-                .stream()
-                .map(postImage -> new ImageInfo(postImage.getStoreName()))
-                .toList();
     }
 
     private void checkWriter(final Member member, final Post post) {
@@ -140,7 +132,7 @@ public class PostService {
 
         post.update(postRequest.title(), postRequest.content(), postRequest.price());
 
-        final List<ImageInfo> originalImageInfos = findImageInfosFromPost(post);
+        final List<PostImageInfo> originalImageInfos = post.getPostImageInfos();
         postImageInfoRepository.deleteAllByPostId(postId);
 
         if (isImagesEmpty(postRequest)) {
@@ -157,7 +149,7 @@ public class PostService {
     private void updateImagesOfPost(
             final PostRequest postRequest,
             final Post post,
-            final List<ImageInfo> originalImageInfos
+            final List<PostImageInfo> originalImageInfos
     ) {
         final List<PostImageInfo> updatePostImageInfos = imageFileUploader.uploadFiles(postRequest.images())
                 .stream()
