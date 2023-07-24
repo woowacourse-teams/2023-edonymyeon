@@ -9,10 +9,14 @@ import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.support.MemberTestSupport;
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Base64;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -175,5 +179,19 @@ class PostControllerTest {
                     softly.assertThat(예외_응답.errorCode()).isEqualTo(POST_MEMBER_FORBIDDEN.getCode());
                 }
         );
+    }
+
+    @AfterEach
+    public void cleanImageStoreDirectory() {
+        final File targetFolder = new File("src/test/resources/static/img/test_store/");
+        FilenameFilter filter = new FilenameFilter() {
+            @Override
+            public boolean accept(final File dir, final String name) {
+                return !name.equals("test.txt");
+            }
+        };
+        File[] files = targetFolder.listFiles(filter);
+        assert files != null;
+        Arrays.stream(files).forEach(file -> file.delete());
     }
 }

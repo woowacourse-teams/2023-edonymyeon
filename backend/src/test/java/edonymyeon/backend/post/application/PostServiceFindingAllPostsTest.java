@@ -13,10 +13,14 @@ import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.repository.PostRepository;
+import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -229,5 +233,19 @@ public class PostServiceFindingAllPostsTest {
         );
 
         return postService.createPost(memberId, POST_REQUEST3);
+    }
+
+    @AfterEach
+    public void cleanImageStoreDirectory() {
+        final File targetFolder = new File("src/test/resources/static/img/test_store/");
+        FilenameFilter filter = new FilenameFilter() {
+            @Override
+            public boolean accept(final File dir, final String name) {
+                return !name.equals("test.txt");
+            }
+        };
+        File[] files = targetFolder.listFiles(filter);
+        assert files != null;
+        Arrays.stream(files).forEach(file -> file.delete());
     }
 }
