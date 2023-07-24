@@ -71,7 +71,8 @@ public class PostService {
         }
         post.checkImageCount(postRequest.images().size());
 
-        final List<PostImageInfo> postImageInfos = uploadImages(postRequest).stream()
+        final List<PostImageInfo> postImageInfos = imageFileUploader.uploadFiles(postRequest.images())
+                .stream()
                 .map(imageInfo -> PostImageInfo.of(imageInfo, post))
                 .toList();
         post.updateImages(postImageInfos);
@@ -94,13 +95,6 @@ public class PostService {
 
     private boolean isDummy(final MultipartFile multipartFile) {
         return multipartFile.isEmpty();
-    }
-
-    private List<ImageInfo> uploadImages(final PostRequest postRequest) {
-        return postRequest.images()
-                .stream()
-                .map(imageFileUploader::uploadFile)
-                .toList();
     }
 
     @Transactional
@@ -165,7 +159,8 @@ public class PostService {
             final Post post,
             final List<ImageInfo> originalImageInfos
     ) {
-        final List<PostImageInfo> updatePostImageInfos = uploadImages(postRequest).stream()
+        final List<PostImageInfo> updatePostImageInfos = imageFileUploader.uploadFiles(postRequest.images())
+                .stream()
                 .map(imageInfo -> PostImageInfo.of(imageInfo, post))
                 .toList();
         post.updateImages(updatePostImageInfos);
