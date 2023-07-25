@@ -172,7 +172,7 @@ public class PostService {
 
     public List<GeneralPostInfoResponse> findAllPost(final GeneralFindingCondition generalFindingCondition) {
         final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
-        final Slice<Post> foundPosts = postRepository.findAll(pageRequest);
+        final Slice<Post> foundPosts = postRepository.findAllBy(pageRequest);
         return foundPosts
                 .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()))
                 .toList();

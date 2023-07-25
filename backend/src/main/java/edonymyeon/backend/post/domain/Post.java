@@ -25,6 +25,7 @@ import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
@@ -60,7 +61,8 @@ public class Post {
     private Member member;
 
     // TODO: cascade
-    @OneToMany(mappedBy = "post")
+    @BatchSize(size = 20)
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
     private List<PostImageInfo> postImageInfos;
 
     @CreatedDate
