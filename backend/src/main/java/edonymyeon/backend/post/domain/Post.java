@@ -59,7 +59,10 @@ public class Post {
     @JoinColumn(nullable = false)
     private Member member;
 
-    private PostImageInfos postImageInfos;
+    // TODO: cascade
+    @BatchSize(size = 20)
+    @OneToMany(mappedBy = "post", fetch = FetchType.EAGER)
+    private List<PostImageInfo> postImageInfos;
 
     @CreatedDate
     @Column(nullable = false)
