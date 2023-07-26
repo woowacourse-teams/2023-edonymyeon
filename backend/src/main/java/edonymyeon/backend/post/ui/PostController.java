@@ -70,7 +70,7 @@ public class PostController {
                         : SortDirection.valueOf(sortDirection))
                 .build();
 
-        final List<GeneralPostInfoResponse> posts = postService.findAllPost(generalFindingCondition);
+        final List<GeneralPostInfoResponse> posts = postService.findPostsByPagingCondition(generalFindingCondition);
         return ResponseEntity
                 .ok()
                 .body(new GeneralPostsResponse(posts));

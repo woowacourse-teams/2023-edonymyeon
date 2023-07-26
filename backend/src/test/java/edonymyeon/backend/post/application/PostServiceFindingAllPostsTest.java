@@ -94,7 +94,7 @@ public class PostServiceFindingAllPostsTest implements ImageFileCleaner {
     @Test
     void 작성된_모든_게시글을_조회할_수_있다() {
         final var postFindingCondition = GeneralFindingCondition.builder().build();
-        final var postFindingResponses = postService.findAllPost(postFindingCondition);
+        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
 
         assertAll(
                 () -> assertThat(postFindingResponses).hasSize(3),
@@ -128,7 +128,7 @@ public class PostServiceFindingAllPostsTest implements ImageFileCleaner {
     @Test
     void 게시글은_기본으로_등록일_내림차순으로_정렬된다() {
         final var postFindingCondition = GeneralFindingCondition.builder().build();
-        final var postFindingResponses = postService.findAllPost(postFindingCondition);
+        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
         final var createdAts = postFindingResponses.stream()
                 .map(GeneralPostInfoResponse::createdAt)
                 .toList();
@@ -147,7 +147,7 @@ public class PostServiceFindingAllPostsTest implements ImageFileCleaner {
         final var postFindingCondition = GeneralFindingCondition.builder()
                 .size(10)
                 .build();
-        final var postFindingResponses = postService.findAllPost(postFindingCondition);
+        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
 
         assertThat(postFindingResponses)
                 .hasSize(10);
@@ -159,7 +159,7 @@ public class PostServiceFindingAllPostsTest implements ImageFileCleaner {
                 .size(1)
                 .page(1)
                 .build();
-        final var postFindingResponses = postService.findAllPost(postFindingCondition);
+        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
 
         assertThat(postFindingResponses.get(0).title())
                 .isEqualTo(POST_REQUEST2_TITLE);
@@ -174,7 +174,7 @@ public class PostServiceFindingAllPostsTest implements ImageFileCleaner {
         postRepository.deleteAll();
 
         final var postFindingCondition = GeneralFindingCondition.builder().build();
-        final var postFindingResponses = postService.findAllPost(postFindingCondition);
+        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
 
         assertThat(postFindingResponses)
                 .isNotNull()

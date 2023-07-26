@@ -196,7 +196,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
 
         final var jsonPath = 게시글_전체_조회_결과.body().jsonPath();
 
-        final var 전체조회_4번째_게시글 = postService.findAllPost(
+        final var 전체조회_4번째_게시글 = postService.findPostsByPagingCondition(
                         GeneralFindingCondition.builder()
                                 .size(3)
                                 .page(1)

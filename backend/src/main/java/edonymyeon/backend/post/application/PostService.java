@@ -156,7 +156,7 @@ public class PostService {
         originalImageInfos.forEach(imageFileUploader::removeFile);
     }
 
-    public List<GeneralPostInfoResponse> findAllPost(final GeneralFindingCondition generalFindingCondition) {
+    public List<GeneralPostInfoResponse> findPostsByPagingCondition(final GeneralFindingCondition generalFindingCondition) {
         final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
         final Slice<Post> foundPosts = postRepository.findAllBy(pageRequest);
         return foundPosts
