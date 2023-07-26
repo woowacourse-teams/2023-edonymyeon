@@ -7,6 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.support.MemberTestSupport;
 import java.io.IOException;
@@ -34,7 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-class PostControllerTest {
+class PostControllerTest implements ImageFileCleaner {
 
     @Autowired
     MockMvc mockMvc;
