@@ -109,6 +109,11 @@ public class ThumbsService {
     }
 
     @Transactional
+    public void deleteAllThumbsInPost(final Long postId) {
+        thumbsRepository.deleteAllByPostId(postId);
+    }
+
+    @Transactional
     public void deleteThumbsUp(final MemberIdDto memberId, final Long postId) {
         Member loginMember = findMemberById(memberId);
         Post post = findPostById(postId);

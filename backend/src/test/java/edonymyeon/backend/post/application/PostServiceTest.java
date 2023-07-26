@@ -6,12 +6,14 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.domain.Post;
@@ -20,6 +22,7 @@ import edonymyeon.backend.support.MemberTestSupport;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +48,7 @@ import org.springframework.web.multipart.MultipartFile;
 @TestConstructor(autowireMode = AutowireMode.ALL)
 @Import(TestConfig.class)
 @SpringBootTest
-class PostServiceTest {
+class PostServiceTest implements ImageFileCleaner {
 
     private static final Pattern 이미지_UUID_와_확장자_형식 = Pattern.compile("test-inserting\\d+\\.(png|jpg)");
     private static final Pattern 파일_경로_형식 = Pattern.compile(
@@ -151,6 +154,31 @@ class PostServiceTest {
                     }
             );
         }
+
+        @Test
+        void 이미지가_10개_초과일_수_없다()
+                throws IOException {
+            // given
+            List<MultipartFile> images = new ArrayList<>();
+            for (int i = 0; i < 11; i++) {
+                images.add(createMockMultipartFile());
+            }
+            final PostRequest request = new PostRequest(
+                    "사도 돼요?",
+                    "얼마 안해요",
+                    100_000L,
+                    images
+            );
+
+            // when
+            assertThatThrownBy(() -> postService.createPost(memberId, request)).isInstanceOf(EdonymyeonException.class)
+                    .hasMessage(ExceptionInformation.POST_IMAGE_COUNT_INVALID.getMessage());
+        }
+    }
+
+    private MockMultipartFile createMockMultipartFile() throws IOException {
+        return new MockMultipartFile("imageFiles", "test_image_1.jpg", "image/jpg",
+                getClass().getResourceAsStream("/static/img/file/test_image_1.jpg"));
     }
 
     @Nested
@@ -245,6 +273,28 @@ class PostServiceTest {
             }
 
             @Test
+            void 이미지가_10개_초과일_수_없다()
+                    throws IOException {
+                // given
+                final PostResponse post = postService.createPost(memberId, 이미지가_없는_요청);
+
+                // when
+                List<MultipartFile> images = new ArrayList<>();
+                for (int i = 0; i < 11; i++) {
+                    images.add(createMockMultipartFile());
+                }
+                final PostRequest request = new PostRequest(
+                        "사도 돼요?",
+                        "얼마 안해요",
+                        100_000L,
+                        images
+                );
+                assertThatThrownBy(() -> postService.updatePost(memberId, post.id(), request)).isInstanceOf(
+                                EdonymyeonException.class)
+                        .hasMessage(ExceptionInformation.POST_IMAGE_COUNT_INVALID.getMessage());
+            }
+
+            @Test
             void 이미지를_추가할_수_있다(@Autowired PostRepository postRepository) throws IOException {
                 // given
                 final PostResponse post = postService.createPost(memberId, 이미지가_없는_요청);
@@ -300,7 +350,7 @@ class PostServiceTest {
                 final PostImageInfo 바꾼_후_이미지_정보 = findPost.getPostImageInfos().get(0);
 
                 assertSoftly(softly -> {
-                            softly.assertThat(findPost.getPostImageInfos().size()).isEqualTo(게시글_수정_요청.images().size());
+                    softly.assertThat(findPost.getPostImageInfos().size()).isEqualTo(게시글_수정_요청.images().size());
                     softly.assertThat(바꾸기_전_이미지_정보.getStoreName().equals(바꾼_후_이미지_정보.getStoreName())).isFalse();
                         }
                 );

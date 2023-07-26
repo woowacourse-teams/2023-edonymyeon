@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -37,6 +39,12 @@ public class ImageFileUploader {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<ImageInfo> uploadFiles(final List<MultipartFile> multipartFiles) {
+        return multipartFiles.stream()
+                .map(this::uploadFile)
+                .collect(Collectors.toList());
     }
 
     public String getFullPath(String storeName) {

@@ -7,6 +7,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_TITL
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
+import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.member.domain.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,9 +18,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import lombok.AccessLevel;
@@ -59,9 +58,7 @@ public class Post {
     @JoinColumn(nullable = false)
     private Member member;
 
-    // TODO: cascade
-    @OneToMany(mappedBy = "post")
-    private List<PostImageInfo> postImageInfos;
+    private PostImageInfos postImageInfos;
 
     @CreatedDate
     @Column(nullable = false)
@@ -82,7 +79,7 @@ public class Post {
         this.content = content;
         this.price = price;
         this.member = member;
-        this.postImageInfos = new ArrayList<>();
+        this.postImageInfos = PostImageInfos.create();
     }
 
     private void validate(
@@ -122,10 +119,11 @@ public class Post {
     }
 
     public void addPostImageInfo(final PostImageInfo postImageInfo) {
-        if (this.postImageInfos.contains(postImageInfo)) {
-            return;
-        }
-        this.postImageInfos.add(postImageInfo);
+        postImageInfos.add(postImageInfo);
+    }
+
+    public void checkImageCount(final Integer imageCount) {
+        postImageInfos.checkImageCount(imageCount);
     }
 
     public void update(final String title, final String content, final Long price) {
@@ -149,12 +147,15 @@ public class Post {
         this.price = price;
     }
 
-    public void updateImages(final List<PostImageInfo> postImageInfos) {
-        this.postImageInfos.clear();
-        this.postImageInfos.addAll(postImageInfos);
+    public void updateImages(final PostImageInfos postImageInfos) {
+        this.postImageInfos.update(postImageInfos.getPostImageInfos());
     }
 
     public boolean isSameMember(final Member member) {
         return this.member.equals(member);
+    }
+
+    public List<PostImageInfo> getPostImageInfos() {
+        return this.postImageInfos.getPostImageInfos();
     }
 }

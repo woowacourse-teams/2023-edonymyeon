@@ -89,6 +89,7 @@
             app:layout_constraintTop_toBottomOf="@id/space_filter_bottom" />
 
         <ImageButton
+            android:id="@+id/iv_post_new"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginEnd="24dp"

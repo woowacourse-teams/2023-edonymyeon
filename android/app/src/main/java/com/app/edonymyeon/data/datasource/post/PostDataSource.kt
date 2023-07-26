@@ -7,7 +7,7 @@ import retrofit2.Response
 
 interface PostDataSource {
     suspend fun getPostDetail(postId: Long): Response<PostDetailResponse>
-
+    suspend fun deletePost(postId: Long): Response<Unit>
     suspend fun getPosts(size: Int, page: Int): Response<Posts>
 
     suspend fun savePost(
@@ -24,5 +24,4 @@ interface PostDataSource {
         price: Int,
         Images: List<String>,
     ): Response<PostEditorResponse>
-
 }

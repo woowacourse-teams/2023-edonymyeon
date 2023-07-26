@@ -19,6 +19,15 @@ class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepos
         }
     }
 
+    override suspend fun deletePost(postId: Long): Result<Any> {
+        val result = postDataSource.deletePost(postId)
+        return if (result.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(CustomThrowable(result.code(), result.message()))
+        }
+    }
+
     override suspend fun getPosts(size: Int, page: Int): Result<List<PostItem>> {
         val result = postDataSource.getPosts(size, page)
         return if (result.isSuccessful) {
