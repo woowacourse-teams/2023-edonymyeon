@@ -51,7 +51,7 @@ jobs:
       run: ./gradlew ktlintCheck
       
     - name: Run Unit test
-      run: ./gradlew test
+      run: ./gradlew --info test
       
     - name: Publish Unit test results
       uses: EnricoMi/publish-unit-test-result-action@v1
