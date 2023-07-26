@@ -62,7 +62,6 @@ class PostDetailActivity : AppCompatActivity() {
         initAppbar()
         setRecommendationCheckedListener()
 
-
         viewModel.post.observe(this) {
             setImageSlider(it)
             setImageIndicators()
