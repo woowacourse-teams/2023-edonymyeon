@@ -57,6 +57,7 @@ class PostActivity : AppCompatActivity() {
 
     private fun startPostEditorActivity() {
         startActivity(PostEditorActivity.newIntent(this, PostEditorActivity.POST_CODE))
+        viewModel.getPosts(20, 0)
     }
 
     private fun initAppbar() {

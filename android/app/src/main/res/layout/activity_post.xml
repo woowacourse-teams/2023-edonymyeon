@@ -57,11 +57,11 @@
             app:layout_constraintWidth_percent="0.016" />
 
         <TextView
-            android:text="최신순"
             android:id="@+id/tv_post_filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/dohyeon"
+            android:text="최신순"
             android:textColor="@color/black_434343"
             android:textSize="10sp"
             app:layout_constraintEnd_toStartOf="@id/iv_post_filter_open"
