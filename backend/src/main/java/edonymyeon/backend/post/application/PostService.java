@@ -7,8 +7,8 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMB
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.domain.Domain;
-import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
+import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
@@ -25,7 +25,6 @@ import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.thumbs.application.ThumbsService;
 import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
 import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -69,11 +68,12 @@ public class PostService {
         if (isImagesEmpty(postRequest)) {
             return new PostResponse(post.getId());
         }
+        post.checkImageCount(postRequest.images().size());
 
-        final List<PostImageInfo> postImageInfos = uploadImages(postRequest).stream()
-                .map(imageInfo -> PostImageInfo.of(imageInfo, post))
-                .toList();
-        postImageInfoRepository.saveAll(postImageInfos);
+        final PostImageInfos postImageInfos = PostImageInfos.of(post,
+                imageFileUploader.uploadFiles(postRequest.images()));
+        post.updateImages(postImageInfos);
+        postImageInfoRepository.saveAll(postImageInfos.getPostImageInfos());
 
         return new PostResponse(post.getId());
     }
@@ -94,36 +94,22 @@ public class PostService {
         return multipartFile.isEmpty();
     }
 
-    private List<ImageInfo> uploadImages(final PostRequest postRequest) {
-        return postRequest.images()
-                .stream()
-                .map(imageFileUploader::uploadFile)
-                .toList();
-    }
-
     @Transactional
     public void deletePost(final MemberIdDto memberIdDto, final Long postId) {
         final Member member = findMemberById(memberIdDto);
         final Post post = findPostById(postId);
         checkWriter(member, post);
 
-        final List<ImageInfo> imageInfos = findImageInfosFromPost(post);
+        final List<PostImageInfo> postImageInfos = post.getPostImageInfos();
         thumbsService.deleteAllThumbsInPost(postId);
         postImageInfoRepository.deleteAllByPostId(postId);
         postRepository.deleteById(postId);
-        imageInfos.forEach(imageFileUploader::removeFile);
+        postImageInfos.forEach(imageFileUploader::removeFile);
     }
 
     private Post findPostById(final Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new EdonymyeonException(POST_ID_NOT_FOUND));
-    }
-
-    private List<ImageInfo> findImageInfosFromPost(final Post post) {
-        return post.getPostImageInfos()
-                .stream()
-                .map(postImage -> new ImageInfo(postImage.getStoreName()))
-                .toList();
     }
 
     private void checkWriter(final Member member, final Post post) {
@@ -144,15 +130,16 @@ public class PostService {
 
         post.update(postRequest.title(), postRequest.content(), postRequest.price());
 
-        final List<ImageInfo> originalImageInfos = findImageInfosFromPost(post);
+        final List<PostImageInfo> originalImageInfos = post.getPostImageInfos();
         postImageInfoRepository.deleteAllByPostId(postId);
 
         if (isImagesEmpty(postRequest)) {
-            post.updateImages(Collections.emptyList());
+            post.updateImages(PostImageInfos.create());
             originalImageInfos.forEach(imageFileUploader::removeFile);
             return new PostResponse(postId);
         }
 
+        post.checkImageCount(postRequest.images().size());
         updateImagesOfPost(postRequest, post, originalImageInfos);
         return new PostResponse(postId);
     }
@@ -160,13 +147,12 @@ public class PostService {
     private void updateImagesOfPost(
             final PostRequest postRequest,
             final Post post,
-            final List<ImageInfo> originalImageInfos
+            final List<PostImageInfo> originalImageInfos
     ) {
-        final List<PostImageInfo> updatePostImageInfos = uploadImages(postRequest).stream()
-                .map(imageInfo -> PostImageInfo.of(imageInfo, post))
-                .toList();
-        post.updateImages(updatePostImageInfos);
-        postImageInfoRepository.saveAll(updatePostImageInfos);
+        final PostImageInfos updatedPostImageInfos = PostImageInfos.of(post,
+                imageFileUploader.uploadFiles(postRequest.images()));
+        post.updateImages(updatedPostImageInfos);
+        postImageInfoRepository.saveAll(updatedPostImageInfos.getPostImageInfos());
         originalImageInfos.forEach(imageFileUploader::removeFile);
     }
 

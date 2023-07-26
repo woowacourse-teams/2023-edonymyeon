@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.PostRequest;
@@ -30,7 +31,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class PostIntegrationTest extends IntegrationTest {
+public class PostIntegrationTest extends IntegrationTest implements ImageFileCleaner {
 
     @LocalServerPort
     private int port;

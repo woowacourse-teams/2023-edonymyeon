@@ -8,6 +8,7 @@ import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
@@ -42,7 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Import(TestConfig.class)
 @TestInstance(Lifecycle.PER_CLASS)
 @DisplayName("게시글 전체 조회 테스트")
-public class PostServiceFindingAllPostsTest {
+public class PostServiceFindingAllPostsTest implements ImageFileCleaner {
 
     public static final String POST_REQUEST1_TITLE = "Lost in Time";
     public static final String POST_REQUEST1_CONTENT = "A young archaeologist discovers a mysterious artifact that transports her back in time, forcing her to navigate ancient civilizations and find a way back home before history unravels.";

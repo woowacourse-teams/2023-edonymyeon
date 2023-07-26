@@ -19,6 +19,7 @@ public enum ExceptionInformation {
     POST_PRICE_ILLEGAL_SIZE(2543, "가격은 0원 이상 100억 이하여야 합니다."),
     POST_MEMBER_EMPTY(2544, "게시글에는 작성자가 있어야 합니다."),
     POST_MEMBER_FORBIDDEN(2666, "게시글 작성자만 게시글을 수정/삭제할 수 있습니다."),
+    POST_IMAGE_COUNT_INVALID(2667, "게시글 하나에 이미지는 최대 10개까지 등록 가능합니다."),
 
     // 3___: 회원 관련
     MEMBER_ID_NOT_FOUND(3000, "존재하지 않는 회원입니다."),
