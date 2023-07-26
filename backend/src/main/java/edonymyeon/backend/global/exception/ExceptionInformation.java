@@ -20,6 +20,7 @@ public enum ExceptionInformation {
     POST_MEMBER_EMPTY(2544, "게시글에는 작성자가 있어야 합니다."),
     POST_MEMBER_FORBIDDEN(2666, "게시글 작성자만 게시글을 수정/삭제할 수 있습니다."),
     POST_IMAGE_COUNT_INVALID(2667, "게시글 하나에 이미지는 최대 10개까지 등록 가능합니다."),
+    POST_MEMBER_NOT_SAME(2666, "게시글 작성자가 아닙니다."),
 
     // 3___: 회원 관련
     MEMBER_ID_NOT_FOUND(3000, "존재하지 않는 회원입니다."),
@@ -37,7 +38,10 @@ public enum ExceptionInformation {
     THUMBS_DOWN_DELETE_FAIL_WHEN_THUMBS_UP(4006, "추천 한 게시글의 비추천을 취소할 수 없습니다."),
 
     // 5___: 이미지 관련
-    IMAGE_EXTENSION_INVALID(5000, "등록할 수 없는 이미지 확장자입니다.");
+    IMAGE_EXTENSION_INVALID(5000, "등록할 수 없는 이미지 확장자입니다."),
+
+    // 6___: 소비, 절약 관련
+    CONSUMPTION_POST_ID_ALREADY_EXIST(6000, "이미 소비, 절약 여부가 확정된 게시글입니다.");
 
     private int code;
 

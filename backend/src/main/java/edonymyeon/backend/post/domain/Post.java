@@ -2,6 +2,7 @@ package edonymyeon.backend.post.domain;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_CONTENT_ILLEGAL_LENGTH;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_EMPTY;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_PRICE_ILLEGAL_SIZE;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_TITLE_ILLEGAL_LENGTH;
 
@@ -157,5 +158,11 @@ public class Post {
 
     public List<PostImageInfo> getPostImageInfos() {
         return this.postImageInfos.getPostImageInfos();
+    }
+
+    public void checkWriter(final Member member) {
+        if (isSameMember(member)) {
+            throw new EdonymyeonException(POST_MEMBER_NOT_SAME);
+        }
     }
 }
