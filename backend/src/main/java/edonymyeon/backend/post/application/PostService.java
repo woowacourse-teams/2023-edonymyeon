@@ -5,6 +5,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_N
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_FORBIDDEN;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
@@ -157,7 +158,7 @@ public class PostService {
     }
 
     public List<GeneralPostInfoResponse> findPostsByPagingCondition(final GeneralFindingCondition generalFindingCondition) {
-        final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
+        PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
         final Slice<Post> foundPosts = postRepository.findAllBy(pageRequest);
         return foundPosts
                 .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()))
@@ -165,15 +166,19 @@ public class PostService {
     }
 
     private static PageRequest convertConditionToPageRequest(final GeneralFindingCondition generalFindingCondition) {
-        return PageRequest.of(
-                generalFindingCondition.getPage(),
-                generalFindingCondition.getSize(),
-                switch (generalFindingCondition.getSortDirection()) {
-                    case ASC -> Direction.ASC;
-                    case DESC -> Direction.DESC;
-                },
-                generalFindingCondition.getSortBy().getName()
-        );
+        try {
+            return PageRequest.of(
+                    generalFindingCondition.getPage(),
+                    generalFindingCondition.getSize(),
+                    switch (generalFindingCondition.getSortDirection()) {
+                        case ASC -> Direction.ASC;
+                        case DESC -> Direction.DESC;
+                    },
+                    generalFindingCondition.getSortBy().getName()
+            );
+        } catch (IllegalArgumentException e) {
+            throw new EdonymyeonException(ExceptionInformation.POST_INVALID_PAGINATION_CONDITION);
+        }
     }
 
     public SpecificPostInfoResponse findSpecificPost(final Long postId, final MemberIdDto memberIdDto) {

@@ -1,9 +1,12 @@
 package edonymyeon.backend.post.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import edonymyeon.backend.TestConfig;
+import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
@@ -179,6 +182,18 @@ public class PostServiceFindingAllPostsTest implements ImageFileCleaner {
         assertThat(postFindingResponses)
                 .isNotNull()
                 .isEmpty();
+    }
+
+    @Test
+    void 유효하지_않은_검색_조건이_주어진_경우_예외가_발생한다() {
+        final var postFindingCondition = GeneralFindingCondition.builder()
+                .size(-1)
+                .page(1)
+                .build();
+
+        assertThatThrownBy(() -> postService.findPostsByPagingCondition(postFindingCondition))
+                .isInstanceOf(EdonymyeonException.class)
+                .hasMessage(ExceptionInformation.POST_INVALID_PAGINATION_CONDITION.getMessage());
     }
 
     private PostResponse 게시글1_만들기() throws IOException {
