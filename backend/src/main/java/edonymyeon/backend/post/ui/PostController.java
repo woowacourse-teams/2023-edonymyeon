@@ -11,6 +11,7 @@ import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.application.dto.SortBy;
 import edonymyeon.backend.post.application.dto.SortDirection;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
+import edonymyeon.backend.post.domain.Post;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
@@ -63,8 +64,8 @@ public class PostController {
             @RequestParam(required = false) String sortDirection
     ) {
         final GeneralFindingCondition generalFindingCondition = GeneralFindingCondition.builder()
-                .page(Objects.isNull(page) ? GeneralFindingCondition.DEFAULT_SIZE : page)
-                .size(Objects.isNull(size) ? GeneralFindingCondition.DEFAULT_LIMIT : size)
+                .page(Objects.isNull(page) ? GeneralFindingCondition.DEFAULT_PAGE : page)
+                .size(Objects.isNull(size) ? Post.DEFAULT_BATCH_SIZE : size)
                 .sortBy(Objects.isNull(sortBy) ? GeneralFindingCondition.DEFAULT_SORT_BY : SortBy.valueOf(sortBy))
                 .sortDirection(Objects.isNull(sortDirection) ? GeneralFindingCondition.DEFAULT_SORT_DIRECTION
                         : SortDirection.valueOf(sortDirection))
