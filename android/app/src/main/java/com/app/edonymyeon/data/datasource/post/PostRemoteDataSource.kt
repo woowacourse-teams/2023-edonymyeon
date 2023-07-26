@@ -25,7 +25,6 @@ class PostRemoteDataSource : PostDataSource {
         return postService.getPosts(size, page)
     }
 
-    
     override suspend fun savePost(
         title: String,
         content: String,

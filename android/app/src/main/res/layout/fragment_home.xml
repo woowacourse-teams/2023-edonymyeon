@@ -1,5 +1,7 @@
 <layout>
+
     <data>
+
         <variable
             name="homeViewModel"
             type="com.app.edonymyeon.presentation.ui.main.home.HomeViewModel" />

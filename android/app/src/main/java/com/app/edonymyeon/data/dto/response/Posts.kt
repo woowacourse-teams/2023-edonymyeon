@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Posts(
     @SerialName("posts")
-    val post : List<Post>
+    val post: List<Post>
 )

@@ -25,7 +25,7 @@ class PostActivity : AppCompatActivity() {
             binding.rvPost.adapter = PostAdapter(it, onClick = {
             })
         }
-        viewModel.getPosts(20,0)
+        viewModel.getPosts(20, 0)
     }
 
     private fun initAppbar() {
