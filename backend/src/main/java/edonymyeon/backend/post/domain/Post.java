@@ -12,6 +12,7 @@ import edonymyeon.backend.member.domain.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,6 +29,9 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
+import org.springframework.data.jpa.repository.Query;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -55,8 +59,7 @@ public class Post {
     @Column(nullable = false)
     private Long price;
 
-    @ManyToOne
-    @BatchSize(size = DEFAULT_BATCH_SIZE)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Member member;
 
@@ -156,6 +159,10 @@ public class Post {
 
     public boolean isSameMember(final Member member) {
         return this.member.equals(member);
+    }
+
+    public Member getMember() {
+        return member;
     }
 
     public List<PostImageInfo> getPostImageInfos() {
