@@ -1,18 +1,15 @@
 <configuration>
     <root level="info">
-        <appender-ref ref="json"/>
+        <appender-ref ref="INFO"/>
+        <appender-ref ref="ERROR"/>
     </root>
 
-    <property name="LOG_HOME" value="./logs"/>
-    <property name="JSON_LOG_FILE" value="json-logFile.log"/>
-    <appender name="json" class="ch.qos.logback.core.ConsoleAppender">
-        <file>${LOG_HOME}/${JSON_LOG_FILE}</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_HOME}/rolling/json-logFile.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
-            <maxFileSize>50MB</maxFileSize>
-            <maxHistory>7</maxHistory>
-            <totalSizeCap>2GB</totalSizeCap>
-        </rollingPolicy>
+    <appender name="INFO" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch> <!-- 해당 레벨만 기록한다. -->
+            <onMismatch>DENY</onMismatch> <!-- 다른 수준의 레벨은 기록하지 않는다.(상위 레벨도 기록 안함), 상위 수준의 레벨에 대한 기록을 원하면 ACCEPT 로 하면 기록된다. -->
+        </filter> <!-- 레벨별 필터링이 필요없을 경우 filter class 관련된 부분을 삭제하면 됨-->
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
                 <mdc/>
@@ -24,16 +21,6 @@
                         }
                     </pattern>
                 </pattern>
-                <stackTrace>
-                    <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
-                        <maxDepthPerThrowable>30</maxDepthPerThrowable>
-                        <maxLength>2048</maxLength>
-                        <shortenedClassNameLength>20</shortenedClassNameLength>
-                        <exclude>^sun\.reflect\..*\.invoke</exclude>
-                        <exclude>^net\.sf\.cglib\.proxy\.MethodProxy\.invoke</exclude>
-                        <rootCauseFirst>true</rootCauseFirst>
-                    </throwableConverter>
-                </stackTrace>
             </providers>
             <jsonGeneratorDecorator class="net.logstash.logback.decorate.CompositeJsonGeneratorDecorator">
                 <decorator class="net.logstash.logback.decorate.PrettyPrintingJsonGeneratorDecorator"/>
@@ -41,4 +28,31 @@
             <timestampPattern>yyyyMMddHHmmss.SSSSSS</timestampPattern>
         </encoder>
     </appender>
+
+    <appender name="ERROR" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch> <!-- 해당 레벨만 기록한다. -->
+            <onMismatch>DENY</onMismatch> <!-- 다른 수준의 레벨은 기록하지 않는다.(상위 레벨도 기록 안함), 상위 수준의 레벨에 대한 기록을 원하면 ACCEPT 로 하면 기록된다. -->
+        </filter> <!-- 레벨별 필터링이 필요없을 경우 filter class 관련된 부분을 삭제하면 됨-->
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <mdc/>
+                <pattern>
+                    <pattern>
+                        {
+                        "timestamp": "%date{yyyyMMdd HHmmss.SSSSSS}",
+                        "message": "%message",
+                        "stacktrace": "%rEx"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+            <jsonGeneratorDecorator class="net.logstash.logback.decorate.CompositeJsonGeneratorDecorator">
+                <decorator class="net.logstash.logback.decorate.PrettyPrintingJsonGeneratorDecorator"/>
+            </jsonGeneratorDecorator>
+            <timestampPattern>yyyyMMddHHmmss.SSSSSS</timestampPattern>
+        </encoder>
+    </appender>
+
 </configuration>
