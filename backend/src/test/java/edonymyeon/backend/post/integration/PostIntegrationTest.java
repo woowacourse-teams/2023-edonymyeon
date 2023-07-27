@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +47,6 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
     void 사진_첨부_성공_테스트() {
         final Member member = memberTestSupport.builder()
                 .email("email")
-                .password("password")
                 .build();
 
         RestAssured.given()
@@ -80,7 +80,6 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
     void 본인이_작성한_게시글_삭제_가능_테스트() {
         final Member member = memberTestSupport.builder()
                 .email("email")
-                .password("password")
                 .build();
 
         final ExtractableResponse<Response> 게시글_생성_요청_결과 = RestAssured.given()
@@ -111,7 +110,6 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
     void 본인이_작성하지_않은_게시글_삭제_불가능_테스트() {
         final Member member = memberTestSupport.builder()
                 .email("email")
-                .password("password")
                 .build();
 
         final ExtractableResponse<Response> 게시글_생성_요청_결과 = RestAssured.given()
@@ -132,7 +130,6 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
 
         final Member otherMember = memberTestSupport.builder()
                 .email("other")
-                .password("password")
                 .build();
 
         RestAssured.given()
@@ -147,7 +144,6 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
     void 로그인하지_않은_사용자가_게시글_하나를_상세조회하는_경우(@Autowired PostService postService) throws IOException {
         final Member member = memberTestSupport.builder()
                 .email("email")
-                .password("password")
                 .build();
         final PostRequest postRequest = getPostRequest();
         final PostResponse postResponse = postService.createPost(new MemberIdDto(member.getId()), postRequest);
@@ -200,7 +196,6 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
     void 로그인한_사용자가_자신의_게시글_하나를_상세조회하는_경우(@Autowired PostService postService) throws IOException {
         final Member member = memberTestSupport.builder()
                 .email("email")
-                .password("password")
                 .build();
         final PostRequest postRequest = getPostRequest();
         final PostResponse postResponse = postService.createPost(new MemberIdDto(member.getId()), postRequest);
@@ -208,7 +203,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         final ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .when()
-                .auth().preemptive().basic("email", "password")
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .get("/posts/" + postResponse.id())
                 .then().log().all()
                 .extract();
@@ -252,60 +247,61 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
 
     @Test
     void 로그인한_사용자가_타인의_게시글_하나를_상세조회하는_경우(@Autowired PostService postService) throws IOException {
-        final Member member = memberTestSupport.builder()
+        final Member writer = memberTestSupport.builder()
                 .email("email")
-                .password("password")
                 .build();
-        final Member member2 = memberTestSupport.builder()
+        final Member reader = memberTestSupport.builder()
                 .email("email1")
-                .password("password")
                 .build();
 
         final PostRequest postRequest = getPostRequest();
-        final PostResponse postResponse = postService.createPost(new MemberIdDto(member.getId()), postRequest);
+        final PostResponse postResponse = postService.createPost(new MemberIdDto(writer.getId()), postRequest);
 
         final ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .when()
-                .auth().preemptive().basic("email1", "password")
+                .auth().preemptive().basic(reader.getEmail(), reader.getPassword())
                 .get("/posts/" + postResponse.id())
                 .then().log().all()
                 .extract();
 
         final SpecificPostInfoResponse post = postService.findSpecificPost(postResponse.id(),
-                new MemberIdDto(member2.getId()));
+                new MemberIdDto(reader.getId()));
 
         assertThat(response.statusCode()).isEqualTo(200);
-        assertAll(
-                () -> assertThat(response.body().jsonPath().getLong("id")).isEqualTo(post.id()),
-                () -> assertThat(response.body().jsonPath().getString("title")).isEqualTo(post.title()),
-                () -> assertThat(response.body().jsonPath().getLong("price")).isEqualTo(post.price()),
-                () -> assertThat(response.body().jsonPath().getString("content")).isEqualTo(post.content()),
+        SoftAssertions.assertSoftly(
+                softAssertions -> {
 
-                () -> assertThat(response.body().jsonPath().getList("images")).hasSize(2),
-                () -> assertThat(response.body().jsonPath().getString("images[0]")).isEqualTo(post.images().get(0)),
-                () -> assertThat(response.body().jsonPath().getString("images[1]")).isEqualTo(post.images().get(1)),
+                    softAssertions.assertThat(response.body().jsonPath().getLong("id")).isEqualTo(post.id());
+                    softAssertions.assertThat(response.body().jsonPath().getString("title")).isEqualTo(post.title());
+                    softAssertions.assertThat(response.body().jsonPath().getLong("price")).isEqualTo(post.price());
+                    softAssertions.assertThat(response.body().jsonPath().getString("content")).isEqualTo(post.content());
 
-                () -> assertThat(response.body().jsonPath().getLong("writer.id")).isEqualTo(
-                        post.writer().id()),
-                () -> assertThat(response.body().jsonPath().getString("writer.nickname")).isEqualTo(
-                        post.writer().nickname()),
-                () -> assertThat(response.body().jsonPath().getString("writer.profileImage")).isEqualTo(
-                        post.writer().profileImage()),
+                    softAssertions.assertThat(response.body().jsonPath().getList("images")).hasSize(2);
+                    softAssertions.assertThat(response.body().jsonPath().getString("images[0]")).isEqualTo(post.images().get(0));
+                    softAssertions.assertThat(response.body().jsonPath().getString("images[1]")).isEqualTo(post.images().get(1));
 
-                () -> assertThat(response.body().jsonPath().getInt("reactionCount.viewCount")).isEqualTo(
-                        post.reactionCount().viewCount()),
-                () -> assertThat(response.body().jsonPath().getInt("reactionCount.commentCount")).isEqualTo(
-                        post.reactionCount().commentCount()),
-                () -> assertThat(response.body().jsonPath().getInt("reactionCount.scrapCount")).isEqualTo(
-                        post.reactionCount().scrapCount()),
+                    softAssertions.assertThat(response.body().jsonPath().getLong("writer.id")).isEqualTo(
+                            post.writer().id());
+                    softAssertions.assertThat(response.body().jsonPath().getString("writer.nickname")).isEqualTo(
+                            post.writer().nickname());
+                    softAssertions.assertThat(response.body().jsonPath().getString("writer.profileImage")).isEqualTo(
+                            post.writer().profileImage());
 
-                () -> assertThat(response.body().jsonPath().getInt("upCount")).isEqualTo(post.upCount()),
-                () -> assertThat(response.body().jsonPath().getInt("downCount")).isEqualTo(post.downCount()),
-                () -> assertThat(response.body().jsonPath().getBoolean("isUp")).isEqualTo(post.isUp()),
-                () -> assertThat(response.body().jsonPath().getBoolean("isDown")).isEqualTo(post.isDown()),
-                () -> assertThat(response.body().jsonPath().getBoolean("isScrap")).isEqualTo(post.isScrap()),
-                () -> assertThat(response.body().jsonPath().getBoolean("isWriter")).isEqualTo(false)
+                    softAssertions.assertThat(response.body().jsonPath().getInt("reactionCount.viewCount")).isEqualTo(
+                            post.reactionCount().viewCount());
+                    softAssertions.assertThat(response.body().jsonPath().getInt("reactionCount.commentCount")).isEqualTo(
+                            post.reactionCount().commentCount());
+                    softAssertions.assertThat(response.body().jsonPath().getInt("reactionCount.scrapCount")).isEqualTo(
+                            post.reactionCount().scrapCount());
+
+                    softAssertions.assertThat(response.body().jsonPath().getInt("upCount")).isEqualTo(post.upCount());
+                    softAssertions.assertThat(response.body().jsonPath().getInt("downCount")).isEqualTo(post.downCount());
+                    softAssertions.assertThat(response.body().jsonPath().getBoolean("isUp")).isEqualTo(post.isUp());
+                    softAssertions.assertThat(response.body().jsonPath().getBoolean("isDown")).isEqualTo(post.isDown());
+                    softAssertions.assertThat(response.body().jsonPath().getBoolean("isScrap")).isEqualTo(post.isScrap());
+                    softAssertions.assertThat(response.body().jsonPath().getBoolean("isWriter")).isEqualTo(false);
+                }
         );
     }
 
