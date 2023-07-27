@@ -128,8 +128,8 @@ public class Post {
         postImageInfos.add(postImageInfo);
     }
 
-    public void checkImageCount(final Integer imageCount) {
-        postImageInfos.checkImageCount(imageCount);
+    public void checkImageAdditionCount(final Integer imageAdditionCount) {
+        postImageInfos.checkImageAdditionCount(imageAdditionCount);
     }
 
     public void update(final String title, final String content, final Long price) {
@@ -154,7 +154,7 @@ public class Post {
     }
 
     public void updateImages(final PostImageInfos postImageInfos) {
-        this.postImageInfos.update(postImageInfos.getPostImageInfos());
+        this.postImageInfos.addAll(postImageInfos.getPostImageInfos());
     }
 
     public boolean isSameMember(final Member member) {
@@ -167,5 +167,13 @@ public class Post {
 
     public List<PostImageInfo> getPostImageInfos() {
         return this.postImageInfos.getPostImageInfos();
+    }
+
+    public List<PostImageInfo> getUnmatchedPostImageInfos(final List<String> storeNames) {
+        return this.postImageInfos.getUnmatchedPostImageInfos(storeNames);
+    }
+
+    public void removePostImageInfos(final List<PostImageInfo> deletedImagesOfPost) {
+        this.postImageInfos.remove(deletedImagesOfPost);
     }
 }
