@@ -12,6 +12,7 @@ import edonymyeon.backend.post.application.dto.SortBy;
 import edonymyeon.backend.post.application.dto.SortDirection;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
 import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.post.ui.annotation.PostPaging;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
@@ -57,20 +58,7 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<GeneralPostsResponse> findAllPosts(
-            @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer size,
-            @RequestParam(required = false) String sortBy,
-            @RequestParam(required = false) String sortDirection
-    ) {
-
-        final GeneralFindingCondition generalFindingCondition = GeneralFindingCondition.of(
-                page,
-                size,
-                sortBy,
-                sortDirection
-        );
-
+    public ResponseEntity<GeneralPostsResponse> findAllPosts(@PostPaging GeneralFindingCondition generalFindingCondition) {
         final List<GeneralPostInfoResponse> posts = postService.findPostsByPagingCondition(generalFindingCondition);
         return ResponseEntity
                 .ok()
