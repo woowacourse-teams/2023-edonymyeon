@@ -43,7 +43,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
         <activity
             android:name="com.app.edonymyeon.presentation.ui.post.PostActivity"
             android:exported="true" />
