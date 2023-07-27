@@ -1,0 +1,2254 @@
+{
+  "@timestamp" : "2023-07-27 15:00:24.441",
+  "@version" : "1",
+  "message" : "Starting BackendApplication using Java 19.0.2 with PID 4924 (/Users/backfox/Desktop/문서 - 우테코/코딩/projects/2023-edonymyeon/backend/build/classes/java/main started by backfox in /Users/backfox/Desktop/문서 - 우테코/코딩/projects/2023-edonymyeon/backend)",
+  "logger_name" : "edonymyeon.backend.BackendApplication",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.boot.StartupInfoLogger",
+  "caller_method_name" : "logStarting",
+  "caller_file_name" : "StartupInfoLogger.java",
+  "caller_line_number" : 51
+}
+{
+  "@timestamp" : "2023-07-27 15:00:24.444",
+  "@version" : "1",
+  "message" : "The following 1 profile is active: \"prod\"",
+  "logger_name" : "edonymyeon.backend.BackendApplication",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.boot.SpringApplication",
+  "caller_method_name" : "logStartupProfileInfo",
+  "caller_file_name" : "SpringApplication.java",
+  "caller_line_number" : 640
+}
+{
+  "@timestamp" : "2023-07-27 15:00:24.708",
+  "@version" : "1",
+  "message" : "Bootstrapping Spring Data JPA repositories in DEFAULT mode.",
+  "logger_name" : "org.springframework.data.repository.config.RepositoryConfigurationDelegate",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.data.repository.config.RepositoryConfigurationDelegate",
+  "caller_method_name" : "registerRepositoriesIn",
+  "caller_file_name" : "RepositoryConfigurationDelegate.java",
+  "caller_line_number" : 138
+}
+{
+  "@timestamp" : "2023-07-27 15:00:24.738",
+  "@version" : "1",
+  "message" : "Finished Spring Data repository scanning in 26 ms. Found 5 JPA repository interfaces.",
+  "logger_name" : "org.springframework.data.repository.config.RepositoryConfigurationDelegate",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.data.repository.config.RepositoryConfigurationDelegate",
+  "caller_method_name" : "registerRepositoriesIn",
+  "caller_file_name" : "RepositoryConfigurationDelegate.java",
+  "caller_line_number" : 208
+}
+{
+  "@timestamp" : "2023-07-27 15:00:24.946",
+  "@version" : "1",
+  "message" : "Tomcat initialized with port(s): 8080 (http)",
+  "logger_name" : "org.springframework.boot.web.embedded.tomcat.TomcatWebServer",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.boot.web.embedded.tomcat.TomcatWebServer",
+  "caller_method_name" : "initialize",
+  "caller_file_name" : "TomcatWebServer.java",
+  "caller_line_number" : 108
+}
+{
+  "@timestamp" : "2023-07-27 15:00:24.950",
+  "@version" : "1",
+  "message" : "Initializing ProtocolHandler [\"http-nio-8080\"]",
+  "logger_name" : "org.apache.coyote.http11.Http11NioProtocol",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.apache.juli.logging.DirectJDKLog",
+  "caller_method_name" : "log",
+  "caller_file_name" : "DirectJDKLog.java",
+  "caller_line_number" : 173
+}
+{
+  "@timestamp" : "2023-07-27 15:00:24.950",
+  "@version" : "1",
+  "message" : "Starting service [Tomcat]",
+  "logger_name" : "org.apache.catalina.core.StandardService",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.apache.juli.logging.DirectJDKLog",
+  "caller_method_name" : "log",
+  "caller_file_name" : "DirectJDKLog.java",
+  "caller_line_number" : 173
+}
+{
+  "@timestamp" : "2023-07-27 15:00:24.950",
+  "@version" : "1",
+  "message" : "Starting Servlet engine: [Apache Tomcat/10.1.10]",
+  "logger_name" : "org.apache.catalina.core.StandardEngine",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.apache.juli.logging.DirectJDKLog",
+  "caller_method_name" : "log",
+  "caller_file_name" : "DirectJDKLog.java",
+  "caller_line_number" : 173
+}
+{
+  "@timestamp" : "2023-07-27 15:00:24.989",
+  "@version" : "1",
+  "message" : "Initializing Spring embedded WebApplicationContext",
+  "logger_name" : "org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/]",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.apache.juli.logging.DirectJDKLog",
+  "caller_method_name" : "log",
+  "caller_file_name" : "DirectJDKLog.java",
+  "caller_line_number" : 173
+}
+{
+  "@timestamp" : "2023-07-27 15:00:24.990",
+  "@version" : "1",
+  "message" : "Root WebApplicationContext: initialization completed in 529 ms",
+  "logger_name" : "org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext",
+  "caller_method_name" : "prepareWebApplicationContext",
+  "caller_file_name" : "ServletWebServerApplicationContext.java",
+  "caller_line_number" : 291
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.015",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Starting...",
+  "logger_name" : "com.zaxxer.hikari.HikariDataSource",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.zaxxer.hikari.HikariDataSource",
+  "caller_method_name" : "getConnection",
+  "caller_file_name" : "HikariDataSource.java",
+  "caller_line_number" : 110
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.088",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA",
+  "logger_name" : "com.zaxxer.hikari.pool.HikariPool",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.zaxxer.hikari.pool.HikariPool",
+  "caller_method_name" : "checkFailFast",
+  "caller_file_name" : "HikariPool.java",
+  "caller_line_number" : 565
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.089",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Start completed.",
+  "logger_name" : "com.zaxxer.hikari.HikariDataSource",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.zaxxer.hikari.HikariDataSource",
+  "caller_method_name" : "getConnection",
+  "caller_file_name" : "HikariDataSource.java",
+  "caller_line_number" : 123
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.094",
+  "@version" : "1",
+  "message" : "H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'",
+  "logger_name" : "org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration",
+  "caller_method_name" : "logDataSources",
+  "caller_file_name" : "H2ConsoleAutoConfiguration.java",
+  "caller_line_number" : 88
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.156",
+  "@version" : "1",
+  "message" : "HHH000204: Processing PersistenceUnitInfo [name: default]",
+  "logger_name" : "org.hibernate.jpa.internal.util.LogHelper",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.hibernate.jpa.internal.util.LogHelper",
+  "caller_method_name" : "logPersistenceUnitInformation",
+  "caller_file_name" : "LogHelper.java",
+  "caller_line_number" : 31
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.180",
+  "@version" : "1",
+  "message" : "HHH000412: Hibernate ORM core version 6.2.5.Final",
+  "logger_name" : "org.hibernate.Version",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.hibernate.Version",
+  "caller_method_name" : "logVersion",
+  "caller_file_name" : "Version.java",
+  "caller_line_number" : 44
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.181",
+  "@version" : "1",
+  "message" : "HHH000406: Using bytecode reflection optimizer",
+  "logger_name" : "org.hibernate.cfg.Environment",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.hibernate.cfg.Environment",
+  "caller_method_name" : "<clinit>",
+  "caller_file_name" : "Environment.java",
+  "caller_line_number" : 191
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.236",
+  "@version" : "1",
+  "message" : "HHH000021: Bytecode provider name : bytebuddy",
+  "logger_name" : "org.hibernate.bytecode.internal.BytecodeProviderInitiator",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.hibernate.bytecode.internal.BytecodeProviderInitiator",
+  "caller_method_name" : "buildBytecodeProvider",
+  "caller_file_name" : "BytecodeProviderInitiator.java",
+  "caller_line_number" : 53
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.292",
+  "@version" : "1",
+  "message" : "No LoadTimeWeaver setup: ignoring JPA class transformer",
+  "logger_name" : "org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo",
+  "caller_method_name" : "addTransformer",
+  "caller_file_name" : "SpringPersistenceUnitInfo.java",
+  "caller_line_number" : 87
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.310",
+  "@version" : "1",
+  "message" : "HHH90000026: MySQL57Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead",
+  "logger_name" : "org.hibernate.orm.deprecation",
+  "thread_name" : "main",
+  "level" : "WARN",
+  "level_value" : 30000,
+  "caller_class_name" : "org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl",
+  "caller_method_name" : "logSelectedDialect",
+  "caller_file_name" : "DialectFactoryImpl.java",
+  "caller_line_number" : 100
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.404",
+  "@version" : "1",
+  "message" : "HHH000021: Bytecode provider name : bytebuddy",
+  "logger_name" : "org.hibernate.bytecode.internal.BytecodeProviderInitiator",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.hibernate.bytecode.internal.BytecodeProviderInitiator",
+  "caller_method_name" : "buildBytecodeProvider",
+  "caller_file_name" : "BytecodeProviderInitiator.java",
+  "caller_line_number" : 53
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.690",
+  "@version" : "1",
+  "message" : "HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]",
+  "logger_name" : "org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator",
+  "caller_method_name" : "initiateService",
+  "caller_file_name" : "JtaPlatformInitiator.java",
+  "caller_line_number" : 51
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.715",
+  "@version" : "1",
+  "message" : "#1690437625715 | took 3ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table member (id bigint not null auto_increment, email varchar(255) not null, nickname varchar(255) not null, password varchar(255) not null, profile_image_info_id bigint, primary key (id)) engine=InnoDB\ncreate table member (id bigint not null auto_increment, email varchar(255) not null, nickname varchar(255) not null, password varchar(255) not null, profile_image_info_id bigint, primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.716",
+  "@version" : "1",
+  "message" : "#1690437625716 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table post (id bigint not null auto_increment, content longtext not null, created_at datetime(6) not null, price bigint not null, title varchar(255) not null, view_count bigint default 0, member_id bigint not null, primary key (id)) engine=InnoDB\ncreate table post (id bigint not null auto_increment, content longtext not null, created_at datetime(6) not null, price bigint not null, title varchar(255) not null, view_count bigint default 0, member_id bigint not null, primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.716",
+  "@version" : "1",
+  "message" : "#1690437625716 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table post_image_info (id bigint not null auto_increment, store_name varchar(255), post_id bigint, primary key (id)) engine=InnoDB\ncreate table post_image_info (id bigint not null auto_increment, store_name varchar(255), post_id bigint, primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.717",
+  "@version" : "1",
+  "message" : "#1690437625717 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table profile_image_info (id bigint not null auto_increment, store_name varchar(255), primary key (id)) engine=InnoDB\ncreate table profile_image_info (id bigint not null auto_increment, store_name varchar(255), primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.717",
+  "@version" : "1",
+  "message" : "#1690437625717 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table thumbs (id bigint not null auto_increment, thumbs_type enum ('DOWN','UP'), member_id bigint, post_id bigint, primary key (id)) engine=InnoDB\ncreate table thumbs (id bigint not null auto_increment, thumbs_type enum ('DOWN','UP'), member_id bigint, post_id bigint, primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.718",
+  "@version" : "1",
+  "message" : "#1690437625718 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member drop index UK_mbmcqelty0fbrvxp1q58dn57t\nalter table member drop index UK_mbmcqelty0fbrvxp1q58dn57t;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.719",
+  "@version" : "1",
+  "message" : "#1690437625719 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member add constraint UK_mbmcqelty0fbrvxp1q58dn57t unique (email)\nalter table member add constraint UK_mbmcqelty0fbrvxp1q58dn57t unique (email);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.719",
+  "@version" : "1",
+  "message" : "#1690437625719 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member drop index UK_hh9kg6jti4n1eoiertn2k6qsc\nalter table member drop index UK_hh9kg6jti4n1eoiertn2k6qsc;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.720",
+  "@version" : "1",
+  "message" : "#1690437625720 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member add constraint UK_hh9kg6jti4n1eoiertn2k6qsc unique (nickname)\nalter table member add constraint UK_hh9kg6jti4n1eoiertn2k6qsc unique (nickname);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.720",
+  "@version" : "1",
+  "message" : "#1690437625720 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member drop index UK_sfbk9yq815m9vckxafoy4ed8i\nalter table member drop index UK_sfbk9yq815m9vckxafoy4ed8i;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.720",
+  "@version" : "1",
+  "message" : "#1690437625720 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member add constraint UK_sfbk9yq815m9vckxafoy4ed8i unique (profile_image_info_id)\nalter table member add constraint UK_sfbk9yq815m9vckxafoy4ed8i unique (profile_image_info_id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.725",
+  "@version" : "1",
+  "message" : "#1690437625725 | took 4ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member add constraint FK93dhogh0dg2gy1qsykj5i9q1c foreign key (profile_image_info_id) references profile_image_info (id)\nalter table member add constraint FK93dhogh0dg2gy1qsykj5i9q1c foreign key (profile_image_info_id) references profile_image_info (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.725",
+  "@version" : "1",
+  "message" : "#1690437625725 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table post add constraint FK83s99f4kx8oiqm3ro0sasmpww foreign key (member_id) references member (id)\nalter table post add constraint FK83s99f4kx8oiqm3ro0sasmpww foreign key (member_id) references member (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.726",
+  "@version" : "1",
+  "message" : "#1690437625726 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table post_image_info add constraint FK5a3s586s9gqx285hdugmi0v8r foreign key (post_id) references post (id)\nalter table post_image_info add constraint FK5a3s586s9gqx285hdugmi0v8r foreign key (post_id) references post (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.727",
+  "@version" : "1",
+  "message" : "#1690437625727 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table thumbs add constraint FKlq0xarjmjfcg7u4lbj9baav99 foreign key (member_id) references member (id)\nalter table thumbs add constraint FKlq0xarjmjfcg7u4lbj9baav99 foreign key (member_id) references member (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.727",
+  "@version" : "1",
+  "message" : "#1690437625727 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table thumbs add constraint FKnrqs0uqm5lnra6j2p5eibpiek foreign key (post_id) references post (id)\nalter table thumbs add constraint FKnrqs0uqm5lnra6j2p5eibpiek foreign key (post_id) references post (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.728",
+  "@version" : "1",
+  "message" : "Initialized JPA EntityManagerFactory for persistence unit 'default'",
+  "logger_name" : "org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.orm.jpa.AbstractEntityManagerFactoryBean",
+  "caller_method_name" : "buildNativeEntityManagerFactory",
+  "caller_file_name" : "AbstractEntityManagerFactoryBean.java",
+  "caller_line_number" : 437
+}
+{
+  "@timestamp" : "2023-07-27 15:00:25.890",
+  "@version" : "1",
+  "message" : "Hibernate is in classpath; If applicable, HQL parser will be used.",
+  "logger_name" : "org.springframework.data.jpa.repository.query.QueryEnhancerFactory",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.data.jpa.repository.query.QueryEnhancerFactory",
+  "caller_method_name" : "<clinit>",
+  "caller_file_name" : "QueryEnhancerFactory.java",
+  "caller_line_number" : 47
+}
+{
+  "@timestamp" : "2023-07-27 15:00:26.180",
+  "@version" : "1",
+  "message" : "#1690437626180 | took 1ms | statement | connection 3| url jdbc:h2:mem:testdb\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'sehozzang@nate.com', '이세호', 'seho123')\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'sehozzang@nate.com', '이세호', 'seho123');",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "2023-07-27 15:00:26.181",
+  "@version" : "1",
+  "message" : "#1690437626181 | took 0ms | statement | connection 3| url jdbc:h2:mem:testdb\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'beautifulneo@naver.com', '네오', 'neo123')\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'beautifulneo@naver.com', '네오', 'neo123');",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "2023-07-27 15:00:26.181",
+  "@version" : "1",
+  "message" : "#1690437626181 | took 0ms | statement | connection 3| url jdbc:h2:mem:testdb\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'princessleah@gmail.com', '레아공듀', 'leah123')\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'princessleah@gmail.com', '레아공듀', 'leah123');",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "2023-07-27 15:00:26.200",
+  "@version" : "1",
+  "message" : "Starting ProtocolHandler [\"http-nio-8080\"]",
+  "logger_name" : "org.apache.coyote.http11.Http11NioProtocol",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.apache.juli.logging.DirectJDKLog",
+  "caller_method_name" : "log",
+  "caller_file_name" : "DirectJDKLog.java",
+  "caller_line_number" : 173
+}
+{
+  "@timestamp" : "2023-07-27 15:00:26.207",
+  "@version" : "1",
+  "message" : "Tomcat started on port(s): 8080 (http) with context path ''",
+  "logger_name" : "org.springframework.boot.web.embedded.tomcat.TomcatWebServer",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.boot.web.embedded.tomcat.TomcatWebServer",
+  "caller_method_name" : "start",
+  "caller_file_name" : "TomcatWebServer.java",
+  "caller_line_number" : 220
+}
+{
+  "@timestamp" : "2023-07-27 15:00:26.211",
+  "@version" : "1",
+  "message" : "Started BackendApplication in 1.903 seconds (process running for 2.27)",
+  "logger_name" : "edonymyeon.backend.BackendApplication",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.boot.StartupInfoLogger",
+  "caller_method_name" : "logStarted",
+  "caller_file_name" : "StartupInfoLogger.java",
+  "caller_line_number" : 57
+}
+{
+  "@timestamp" : "2023-07-27 15:01:29.708",
+  "@version" : "1",
+  "message" : "Closing JPA EntityManagerFactory for persistence unit 'default'",
+  "logger_name" : "org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean",
+  "thread_name" : "SpringApplicationShutdownHook",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.orm.jpa.AbstractEntityManagerFactoryBean",
+  "caller_method_name" : "destroy",
+  "caller_file_name" : "AbstractEntityManagerFactoryBean.java",
+  "caller_line_number" : 650
+}
+{
+  "@timestamp" : "2023-07-27 15:01:29.711",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Shutdown initiated...",
+  "logger_name" : "com.zaxxer.hikari.HikariDataSource",
+  "thread_name" : "SpringApplicationShutdownHook",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.zaxxer.hikari.HikariDataSource",
+  "caller_method_name" : "close",
+  "caller_file_name" : "HikariDataSource.java",
+  "caller_line_number" : 350
+}
+{
+  "@timestamp" : "2023-07-27 15:01:29.712",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Shutdown completed.",
+  "logger_name" : "com.zaxxer.hikari.HikariDataSource",
+  "thread_name" : "SpringApplicationShutdownHook",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.zaxxer.hikari.HikariDataSource",
+  "caller_method_name" : "close",
+  "caller_file_name" : "HikariDataSource.java",
+  "caller_line_number" : 352
+}
+{
+  "@timestamp" : "20230727150132.000623",
+  "@version" : "1",
+  "message" : "Starting BackendApplication using Java 19.0.2 with PID 4939 (/Users/backfox/Desktop/문서 - 우테코/코딩/projects/2023-edonymyeon/backend/build/classes/java/main started by backfox in /Users/backfox/Desktop/문서 - 우테코/코딩/projects/2023-edonymyeon/backend)",
+  "logger_name" : "edonymyeon.backend.BackendApplication",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.boot.StartupInfoLogger",
+  "caller_method_name" : "logStarting",
+  "caller_file_name" : "StartupInfoLogger.java",
+  "caller_line_number" : 51
+}
+{
+  "@timestamp" : "20230727150132.000626",
+  "@version" : "1",
+  "message" : "The following 1 profile is active: \"prod\"",
+  "logger_name" : "edonymyeon.backend.BackendApplication",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.boot.SpringApplication",
+  "caller_method_name" : "logStartupProfileInfo",
+  "caller_file_name" : "SpringApplication.java",
+  "caller_line_number" : 640
+}
+{
+  "@timestamp" : "20230727150132.000890",
+  "@version" : "1",
+  "message" : "Bootstrapping Spring Data JPA repositories in DEFAULT mode.",
+  "logger_name" : "org.springframework.data.repository.config.RepositoryConfigurationDelegate",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.data.repository.config.RepositoryConfigurationDelegate",
+  "caller_method_name" : "registerRepositoriesIn",
+  "caller_file_name" : "RepositoryConfigurationDelegate.java",
+  "caller_line_number" : 138
+}
+{
+  "@timestamp" : "20230727150132.000925",
+  "@version" : "1",
+  "message" : "Finished Spring Data repository scanning in 32 ms. Found 5 JPA repository interfaces.",
+  "logger_name" : "org.springframework.data.repository.config.RepositoryConfigurationDelegate",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.data.repository.config.RepositoryConfigurationDelegate",
+  "caller_method_name" : "registerRepositoriesIn",
+  "caller_file_name" : "RepositoryConfigurationDelegate.java",
+  "caller_line_number" : 208
+}
+{
+  "@timestamp" : "20230727150133.000137",
+  "@version" : "1",
+  "message" : "Tomcat initialized with port(s): 8080 (http)",
+  "logger_name" : "org.springframework.boot.web.embedded.tomcat.TomcatWebServer",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.boot.web.embedded.tomcat.TomcatWebServer",
+  "caller_method_name" : "initialize",
+  "caller_file_name" : "TomcatWebServer.java",
+  "caller_line_number" : 108
+}
+{
+  "@timestamp" : "20230727150133.000141",
+  "@version" : "1",
+  "message" : "Initializing ProtocolHandler [\"http-nio-8080\"]",
+  "logger_name" : "org.apache.coyote.http11.Http11NioProtocol",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.apache.juli.logging.DirectJDKLog",
+  "caller_method_name" : "log",
+  "caller_file_name" : "DirectJDKLog.java",
+  "caller_line_number" : 173
+}
+{
+  "@timestamp" : "20230727150133.000142",
+  "@version" : "1",
+  "message" : "Starting service [Tomcat]",
+  "logger_name" : "org.apache.catalina.core.StandardService",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.apache.juli.logging.DirectJDKLog",
+  "caller_method_name" : "log",
+  "caller_file_name" : "DirectJDKLog.java",
+  "caller_line_number" : 173
+}
+{
+  "@timestamp" : "20230727150133.000142",
+  "@version" : "1",
+  "message" : "Starting Servlet engine: [Apache Tomcat/10.1.10]",
+  "logger_name" : "org.apache.catalina.core.StandardEngine",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.apache.juli.logging.DirectJDKLog",
+  "caller_method_name" : "log",
+  "caller_file_name" : "DirectJDKLog.java",
+  "caller_line_number" : 173
+}
+{
+  "@timestamp" : "20230727150133.000174",
+  "@version" : "1",
+  "message" : "Initializing Spring embedded WebApplicationContext",
+  "logger_name" : "org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/]",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.apache.juli.logging.DirectJDKLog",
+  "caller_method_name" : "log",
+  "caller_file_name" : "DirectJDKLog.java",
+  "caller_line_number" : 173
+}
+{
+  "@timestamp" : "20230727150133.000175",
+  "@version" : "1",
+  "message" : "Root WebApplicationContext: initialization completed in 532 ms",
+  "logger_name" : "org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext",
+  "caller_method_name" : "prepareWebApplicationContext",
+  "caller_file_name" : "ServletWebServerApplicationContext.java",
+  "caller_line_number" : 291
+}
+{
+  "@timestamp" : "20230727150133.000203",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Starting...",
+  "logger_name" : "com.zaxxer.hikari.HikariDataSource",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.zaxxer.hikari.HikariDataSource",
+  "caller_method_name" : "getConnection",
+  "caller_file_name" : "HikariDataSource.java",
+  "caller_line_number" : 110
+}
+{
+  "@timestamp" : "20230727150133.000277",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA",
+  "logger_name" : "com.zaxxer.hikari.pool.HikariPool",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.zaxxer.hikari.pool.HikariPool",
+  "caller_method_name" : "checkFailFast",
+  "caller_file_name" : "HikariPool.java",
+  "caller_line_number" : 565
+}
+{
+  "@timestamp" : "20230727150133.000278",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Start completed.",
+  "logger_name" : "com.zaxxer.hikari.HikariDataSource",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.zaxxer.hikari.HikariDataSource",
+  "caller_method_name" : "getConnection",
+  "caller_file_name" : "HikariDataSource.java",
+  "caller_line_number" : 123
+}
+{
+  "@timestamp" : "20230727150133.000283",
+  "@version" : "1",
+  "message" : "H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'",
+  "logger_name" : "org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration",
+  "caller_method_name" : "logDataSources",
+  "caller_file_name" : "H2ConsoleAutoConfiguration.java",
+  "caller_line_number" : 88
+}
+{
+  "@timestamp" : "20230727150133.000341",
+  "@version" : "1",
+  "message" : "HHH000204: Processing PersistenceUnitInfo [name: default]",
+  "logger_name" : "org.hibernate.jpa.internal.util.LogHelper",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.hibernate.jpa.internal.util.LogHelper",
+  "caller_method_name" : "logPersistenceUnitInformation",
+  "caller_file_name" : "LogHelper.java",
+  "caller_line_number" : 31
+}
+{
+  "@timestamp" : "20230727150133.000365",
+  "@version" : "1",
+  "message" : "HHH000412: Hibernate ORM core version 6.2.5.Final",
+  "logger_name" : "org.hibernate.Version",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.hibernate.Version",
+  "caller_method_name" : "logVersion",
+  "caller_file_name" : "Version.java",
+  "caller_line_number" : 44
+}
+{
+  "@timestamp" : "20230727150133.000366",
+  "@version" : "1",
+  "message" : "HHH000406: Using bytecode reflection optimizer",
+  "logger_name" : "org.hibernate.cfg.Environment",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.hibernate.cfg.Environment",
+  "caller_method_name" : "<clinit>",
+  "caller_file_name" : "Environment.java",
+  "caller_line_number" : 191
+}
+{
+  "@timestamp" : "20230727150133.000423",
+  "@version" : "1",
+  "message" : "HHH000021: Bytecode provider name : bytebuddy",
+  "logger_name" : "org.hibernate.bytecode.internal.BytecodeProviderInitiator",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.hibernate.bytecode.internal.BytecodeProviderInitiator",
+  "caller_method_name" : "buildBytecodeProvider",
+  "caller_file_name" : "BytecodeProviderInitiator.java",
+  "caller_line_number" : 53
+}
+{
+  "@timestamp" : "20230727150133.000481",
+  "@version" : "1",
+  "message" : "No LoadTimeWeaver setup: ignoring JPA class transformer",
+  "logger_name" : "org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo",
+  "caller_method_name" : "addTransformer",
+  "caller_file_name" : "SpringPersistenceUnitInfo.java",
+  "caller_line_number" : 87
+}
+{
+  "@timestamp" : "20230727150133.000496",
+  "@version" : "1",
+  "message" : "HHH90000026: MySQL57Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead",
+  "logger_name" : "org.hibernate.orm.deprecation",
+  "thread_name" : "main",
+  "level" : "WARN",
+  "level_value" : 30000,
+  "caller_class_name" : "org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl",
+  "caller_method_name" : "logSelectedDialect",
+  "caller_file_name" : "DialectFactoryImpl.java",
+  "caller_line_number" : 100
+}
+{
+  "@timestamp" : "20230727150133.000589",
+  "@version" : "1",
+  "message" : "HHH000021: Bytecode provider name : bytebuddy",
+  "logger_name" : "org.hibernate.bytecode.internal.BytecodeProviderInitiator",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.hibernate.bytecode.internal.BytecodeProviderInitiator",
+  "caller_method_name" : "buildBytecodeProvider",
+  "caller_file_name" : "BytecodeProviderInitiator.java",
+  "caller_line_number" : 53
+}
+{
+  "@timestamp" : "20230727150133.000881",
+  "@version" : "1",
+  "message" : "HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]",
+  "logger_name" : "org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator",
+  "caller_method_name" : "initiateService",
+  "caller_file_name" : "JtaPlatformInitiator.java",
+  "caller_line_number" : 51
+}
+{
+  "@timestamp" : "20230727150133.000905",
+  "@version" : "1",
+  "message" : "#1690437693905 | took 3ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table member (id bigint not null auto_increment, email varchar(255) not null, nickname varchar(255) not null, password varchar(255) not null, profile_image_info_id bigint, primary key (id)) engine=InnoDB\ncreate table member (id bigint not null auto_increment, email varchar(255) not null, nickname varchar(255) not null, password varchar(255) not null, profile_image_info_id bigint, primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "20230727150133.000906",
+  "@version" : "1",
+  "message" : "#1690437693906 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table post (id bigint not null auto_increment, content longtext not null, created_at datetime(6) not null, price bigint not null, title varchar(255) not null, view_count bigint default 0, member_id bigint not null, primary key (id)) engine=InnoDB\ncreate table post (id bigint not null auto_increment, content longtext not null, created_at datetime(6) not null, price bigint not null, title varchar(255) not null, view_count bigint default 0, member_id bigint not null, primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "20230727150133.000906",
+  "@version" : "1",
+  "message" : "#1690437693906 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table post_image_info (id bigint not null auto_increment, store_name varchar(255), post_id bigint, primary key (id)) engine=InnoDB\ncreate table post_image_info (id bigint not null auto_increment, store_name varchar(255), post_id bigint, primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "20230727150133.000907",
+  "@version" : "1",
+  "message" : "#1690437693907 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table profile_image_info (id bigint not null auto_increment, store_name varchar(255), primary key (id)) engine=InnoDB\ncreate table profile_image_info (id bigint not null auto_increment, store_name varchar(255), primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "20230727150133.000907",
+  "@version" : "1",
+  "message" : "#1690437693907 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table thumbs (id bigint not null auto_increment, thumbs_type enum ('DOWN','UP'), member_id bigint, post_id bigint, primary key (id)) engine=InnoDB\ncreate table thumbs (id bigint not null auto_increment, thumbs_type enum ('DOWN','UP'), member_id bigint, post_id bigint, primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "20230727150133.000908",
+  "@version" : "1",
+  "message" : "#1690437693908 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member drop index UK_mbmcqelty0fbrvxp1q58dn57t\nalter table member drop index UK_mbmcqelty0fbrvxp1q58dn57t;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "20230727150133.000909",
+  "@version" : "1",
+  "message" : "#1690437693909 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member add constraint UK_mbmcqelty0fbrvxp1q58dn57t unique (email)\nalter table member add constraint UK_mbmcqelty0fbrvxp1q58dn57t unique (email);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "20230727150133.000909",
+  "@version" : "1",
+  "message" : "#1690437693909 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member drop index UK_hh9kg6jti4n1eoiertn2k6qsc\nalter table member drop index UK_hh9kg6jti4n1eoiertn2k6qsc;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "20230727150133.000909",
+  "@version" : "1",
+  "message" : "#1690437693909 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member add constraint UK_hh9kg6jti4n1eoiertn2k6qsc unique (nickname)\nalter table member add constraint UK_hh9kg6jti4n1eoiertn2k6qsc unique (nickname);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "20230727150133.000909",
+  "@version" : "1",
+  "message" : "#1690437693909 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member drop index UK_sfbk9yq815m9vckxafoy4ed8i\nalter table member drop index UK_sfbk9yq815m9vckxafoy4ed8i;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "20230727150133.000910",
+  "@version" : "1",
+  "message" : "#1690437693910 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member add constraint UK_sfbk9yq815m9vckxafoy4ed8i unique (profile_image_info_id)\nalter table member add constraint UK_sfbk9yq815m9vckxafoy4ed8i unique (profile_image_info_id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "20230727150133.000914",
+  "@version" : "1",
+  "message" : "#1690437693914 | took 4ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member add constraint FK93dhogh0dg2gy1qsykj5i9q1c foreign key (profile_image_info_id) references profile_image_info (id)\nalter table member add constraint FK93dhogh0dg2gy1qsykj5i9q1c foreign key (profile_image_info_id) references profile_image_info (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "20230727150133.000915",
+  "@version" : "1",
+  "message" : "#1690437693915 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table post add constraint FK83s99f4kx8oiqm3ro0sasmpww foreign key (member_id) references member (id)\nalter table post add constraint FK83s99f4kx8oiqm3ro0sasmpww foreign key (member_id) references member (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "20230727150133.000915",
+  "@version" : "1",
+  "message" : "#1690437693915 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table post_image_info add constraint FK5a3s586s9gqx285hdugmi0v8r foreign key (post_id) references post (id)\nalter table post_image_info add constraint FK5a3s586s9gqx285hdugmi0v8r foreign key (post_id) references post (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "20230727150133.000916",
+  "@version" : "1",
+  "message" : "#1690437693916 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table thumbs add constraint FKlq0xarjmjfcg7u4lbj9baav99 foreign key (member_id) references member (id)\nalter table thumbs add constraint FKlq0xarjmjfcg7u4lbj9baav99 foreign key (member_id) references member (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "20230727150133.000916",
+  "@version" : "1",
+  "message" : "#1690437693916 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table thumbs add constraint FKnrqs0uqm5lnra6j2p5eibpiek foreign key (post_id) references post (id)\nalter table thumbs add constraint FKnrqs0uqm5lnra6j2p5eibpiek foreign key (post_id) references post (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "20230727150133.000917",
+  "@version" : "1",
+  "message" : "Initialized JPA EntityManagerFactory for persistence unit 'default'",
+  "logger_name" : "org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.orm.jpa.AbstractEntityManagerFactoryBean",
+  "caller_method_name" : "buildNativeEntityManagerFactory",
+  "caller_file_name" : "AbstractEntityManagerFactoryBean.java",
+  "caller_line_number" : 437
+}
+{
+  "@timestamp" : "20230727150134.000078",
+  "@version" : "1",
+  "message" : "Hibernate is in classpath; If applicable, HQL parser will be used.",
+  "logger_name" : "org.springframework.data.jpa.repository.query.QueryEnhancerFactory",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.data.jpa.repository.query.QueryEnhancerFactory",
+  "caller_method_name" : "<clinit>",
+  "caller_file_name" : "QueryEnhancerFactory.java",
+  "caller_line_number" : 47
+}
+{
+  "@timestamp" : "20230727150134.000365",
+  "@version" : "1",
+  "message" : "#1690437694365 | took 1ms | statement | connection 3| url jdbc:h2:mem:testdb\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'sehozzang@nate.com', '이세호', 'seho123')\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'sehozzang@nate.com', '이세호', 'seho123');",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "20230727150134.000366",
+  "@version" : "1",
+  "message" : "#1690437694366 | took 0ms | statement | connection 3| url jdbc:h2:mem:testdb\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'beautifulneo@naver.com', '네오', 'neo123')\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'beautifulneo@naver.com', '네오', 'neo123');",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "20230727150134.000366",
+  "@version" : "1",
+  "message" : "#1690437694366 | took 0ms | statement | connection 3| url jdbc:h2:mem:testdb\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'princessleah@gmail.com', '레아공듀', 'leah123')\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'princessleah@gmail.com', '레아공듀', 'leah123');",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.p6spy.engine.spy.appender.Slf4JLogger",
+  "caller_method_name" : "logSQL",
+  "caller_file_name" : "Slf4JLogger.java",
+  "caller_line_number" : 60
+}
+{
+  "@timestamp" : "20230727150134.000386",
+  "@version" : "1",
+  "message" : "Starting ProtocolHandler [\"http-nio-8080\"]",
+  "logger_name" : "org.apache.coyote.http11.Http11NioProtocol",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.apache.juli.logging.DirectJDKLog",
+  "caller_method_name" : "log",
+  "caller_file_name" : "DirectJDKLog.java",
+  "caller_line_number" : 173
+}
+{
+  "@timestamp" : "20230727150134.000392",
+  "@version" : "1",
+  "message" : "Tomcat started on port(s): 8080 (http) with context path ''",
+  "logger_name" : "org.springframework.boot.web.embedded.tomcat.TomcatWebServer",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.boot.web.embedded.tomcat.TomcatWebServer",
+  "caller_method_name" : "start",
+  "caller_file_name" : "TomcatWebServer.java",
+  "caller_line_number" : 220
+}
+{
+  "@timestamp" : "20230727150134.000397",
+  "@version" : "1",
+  "message" : "Started BackendApplication in 1.901 seconds (process running for 2.255)",
+  "logger_name" : "edonymyeon.backend.BackendApplication",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.boot.StartupInfoLogger",
+  "caller_method_name" : "logStarted",
+  "caller_file_name" : "StartupInfoLogger.java",
+  "caller_line_number" : 57
+}
+{
+  "@timestamp" : "20230727150501.000565",
+  "@version" : "1",
+  "message" : "Closing JPA EntityManagerFactory for persistence unit 'default'",
+  "logger_name" : "org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean",
+  "thread_name" : "SpringApplicationShutdownHook",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "org.springframework.orm.jpa.AbstractEntityManagerFactoryBean",
+  "caller_method_name" : "destroy",
+  "caller_file_name" : "AbstractEntityManagerFactoryBean.java",
+  "caller_line_number" : 650
+}
+{
+  "@timestamp" : "20230727150501.000568",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Shutdown initiated...",
+  "logger_name" : "com.zaxxer.hikari.HikariDataSource",
+  "thread_name" : "SpringApplicationShutdownHook",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.zaxxer.hikari.HikariDataSource",
+  "caller_method_name" : "close",
+  "caller_file_name" : "HikariDataSource.java",
+  "caller_line_number" : 350
+}
+{
+  "@timestamp" : "20230727150501.000569",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Shutdown completed.",
+  "logger_name" : "com.zaxxer.hikari.HikariDataSource",
+  "thread_name" : "SpringApplicationShutdownHook",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "caller_class_name" : "com.zaxxer.hikari.HikariDataSource",
+  "caller_method_name" : "close",
+  "caller_file_name" : "HikariDataSource.java",
+  "caller_line_number" : 352
+}
+{
+  "@timestamp" : "20230727150503.000125",
+  "@version" : "1",
+  "message" : "Starting BackendApplication using Java 19.0.2 with PID 5039 (/Users/backfox/Desktop/문서 - 우테코/코딩/projects/2023-edonymyeon/backend/build/classes/java/main started by backfox in /Users/backfox/Desktop/문서 - 우테코/코딩/projects/2023-edonymyeon/backend)",
+  "logger_name" : "edonymyeon.backend.BackendApplication",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150503.000128",
+  "@version" : "1",
+  "message" : "The following 1 profile is active: \"prod\"",
+  "logger_name" : "edonymyeon.backend.BackendApplication",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150503.000389",
+  "@version" : "1",
+  "message" : "Bootstrapping Spring Data JPA repositories in DEFAULT mode.",
+  "logger_name" : "org.springframework.data.repository.config.RepositoryConfigurationDelegate",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150503.000418",
+  "@version" : "1",
+  "message" : "Finished Spring Data repository scanning in 25 ms. Found 5 JPA repository interfaces.",
+  "logger_name" : "org.springframework.data.repository.config.RepositoryConfigurationDelegate",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150503.000630",
+  "@version" : "1",
+  "message" : "Tomcat initialized with port(s): 8080 (http)",
+  "logger_name" : "org.springframework.boot.web.embedded.tomcat.TomcatWebServer",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150503.000634",
+  "@version" : "1",
+  "message" : "Initializing ProtocolHandler [\"http-nio-8080\"]",
+  "logger_name" : "org.apache.coyote.http11.Http11NioProtocol",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150503.000635",
+  "@version" : "1",
+  "message" : "Starting service [Tomcat]",
+  "logger_name" : "org.apache.catalina.core.StandardService",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150503.000635",
+  "@version" : "1",
+  "message" : "Starting Servlet engine: [Apache Tomcat/10.1.10]",
+  "logger_name" : "org.apache.catalina.core.StandardEngine",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150503.000671",
+  "@version" : "1",
+  "message" : "Initializing Spring embedded WebApplicationContext",
+  "logger_name" : "org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/]",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150503.000671",
+  "@version" : "1",
+  "message" : "Root WebApplicationContext: initialization completed in 526 ms",
+  "logger_name" : "org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150503.000698",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Starting...",
+  "logger_name" : "com.zaxxer.hikari.HikariDataSource",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150503.000771",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA",
+  "logger_name" : "com.zaxxer.hikari.pool.HikariPool",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150503.000772",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Start completed.",
+  "logger_name" : "com.zaxxer.hikari.HikariDataSource",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150503.000782",
+  "@version" : "1",
+  "message" : "H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'",
+  "logger_name" : "org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150503.000842",
+  "@version" : "1",
+  "message" : "HHH000204: Processing PersistenceUnitInfo [name: default]",
+  "logger_name" : "org.hibernate.jpa.internal.util.LogHelper",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150503.000872",
+  "@version" : "1",
+  "message" : "HHH000412: Hibernate ORM core version 6.2.5.Final",
+  "logger_name" : "org.hibernate.Version",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150503.000873",
+  "@version" : "1",
+  "message" : "HHH000406: Using bytecode reflection optimizer",
+  "logger_name" : "org.hibernate.cfg.Environment",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150503.000925",
+  "@version" : "1",
+  "message" : "HHH000021: Bytecode provider name : bytebuddy",
+  "logger_name" : "org.hibernate.bytecode.internal.BytecodeProviderInitiator",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150503.000983",
+  "@version" : "1",
+  "message" : "No LoadTimeWeaver setup: ignoring JPA class transformer",
+  "logger_name" : "org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150503.000997",
+  "@version" : "1",
+  "message" : "HHH90000026: MySQL57Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead",
+  "logger_name" : "org.hibernate.orm.deprecation",
+  "thread_name" : "main",
+  "level" : "WARN",
+  "level_value" : 30000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000098",
+  "@version" : "1",
+  "message" : "HHH000021: Bytecode provider name : bytebuddy",
+  "logger_name" : "org.hibernate.bytecode.internal.BytecodeProviderInitiator",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000385",
+  "@version" : "1",
+  "message" : "HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]",
+  "logger_name" : "org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000408",
+  "@version" : "1",
+  "message" : "#1690437904408 | took 2ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table member (id bigint not null auto_increment, email varchar(255) not null, nickname varchar(255) not null, password varchar(255) not null, profile_image_info_id bigint, primary key (id)) engine=InnoDB\ncreate table member (id bigint not null auto_increment, email varchar(255) not null, nickname varchar(255) not null, password varchar(255) not null, profile_image_info_id bigint, primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000409",
+  "@version" : "1",
+  "message" : "#1690437904409 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table post (id bigint not null auto_increment, content longtext not null, created_at datetime(6) not null, price bigint not null, title varchar(255) not null, view_count bigint default 0, member_id bigint not null, primary key (id)) engine=InnoDB\ncreate table post (id bigint not null auto_increment, content longtext not null, created_at datetime(6) not null, price bigint not null, title varchar(255) not null, view_count bigint default 0, member_id bigint not null, primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000409",
+  "@version" : "1",
+  "message" : "#1690437904409 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table post_image_info (id bigint not null auto_increment, store_name varchar(255), post_id bigint, primary key (id)) engine=InnoDB\ncreate table post_image_info (id bigint not null auto_increment, store_name varchar(255), post_id bigint, primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000410",
+  "@version" : "1",
+  "message" : "#1690437904410 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table profile_image_info (id bigint not null auto_increment, store_name varchar(255), primary key (id)) engine=InnoDB\ncreate table profile_image_info (id bigint not null auto_increment, store_name varchar(255), primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000410",
+  "@version" : "1",
+  "message" : "#1690437904410 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table thumbs (id bigint not null auto_increment, thumbs_type enum ('DOWN','UP'), member_id bigint, post_id bigint, primary key (id)) engine=InnoDB\ncreate table thumbs (id bigint not null auto_increment, thumbs_type enum ('DOWN','UP'), member_id bigint, post_id bigint, primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000411",
+  "@version" : "1",
+  "message" : "#1690437904411 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member drop index UK_mbmcqelty0fbrvxp1q58dn57t\nalter table member drop index UK_mbmcqelty0fbrvxp1q58dn57t;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000412",
+  "@version" : "1",
+  "message" : "#1690437904412 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member add constraint UK_mbmcqelty0fbrvxp1q58dn57t unique (email)\nalter table member add constraint UK_mbmcqelty0fbrvxp1q58dn57t unique (email);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000412",
+  "@version" : "1",
+  "message" : "#1690437904412 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member drop index UK_hh9kg6jti4n1eoiertn2k6qsc\nalter table member drop index UK_hh9kg6jti4n1eoiertn2k6qsc;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000412",
+  "@version" : "1",
+  "message" : "#1690437904412 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member add constraint UK_hh9kg6jti4n1eoiertn2k6qsc unique (nickname)\nalter table member add constraint UK_hh9kg6jti4n1eoiertn2k6qsc unique (nickname);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000412",
+  "@version" : "1",
+  "message" : "#1690437904412 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member drop index UK_sfbk9yq815m9vckxafoy4ed8i\nalter table member drop index UK_sfbk9yq815m9vckxafoy4ed8i;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000413",
+  "@version" : "1",
+  "message" : "#1690437904413 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member add constraint UK_sfbk9yq815m9vckxafoy4ed8i unique (profile_image_info_id)\nalter table member add constraint UK_sfbk9yq815m9vckxafoy4ed8i unique (profile_image_info_id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000417",
+  "@version" : "1",
+  "message" : "#1690437904417 | took 4ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member add constraint FK93dhogh0dg2gy1qsykj5i9q1c foreign key (profile_image_info_id) references profile_image_info (id)\nalter table member add constraint FK93dhogh0dg2gy1qsykj5i9q1c foreign key (profile_image_info_id) references profile_image_info (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000418",
+  "@version" : "1",
+  "message" : "#1690437904418 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table post add constraint FK83s99f4kx8oiqm3ro0sasmpww foreign key (member_id) references member (id)\nalter table post add constraint FK83s99f4kx8oiqm3ro0sasmpww foreign key (member_id) references member (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000418",
+  "@version" : "1",
+  "message" : "#1690437904418 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table post_image_info add constraint FK5a3s586s9gqx285hdugmi0v8r foreign key (post_id) references post (id)\nalter table post_image_info add constraint FK5a3s586s9gqx285hdugmi0v8r foreign key (post_id) references post (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000419",
+  "@version" : "1",
+  "message" : "#1690437904419 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table thumbs add constraint FKlq0xarjmjfcg7u4lbj9baav99 foreign key (member_id) references member (id)\nalter table thumbs add constraint FKlq0xarjmjfcg7u4lbj9baav99 foreign key (member_id) references member (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000419",
+  "@version" : "1",
+  "message" : "#1690437904419 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table thumbs add constraint FKnrqs0uqm5lnra6j2p5eibpiek foreign key (post_id) references post (id)\nalter table thumbs add constraint FKnrqs0uqm5lnra6j2p5eibpiek foreign key (post_id) references post (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000420",
+  "@version" : "1",
+  "message" : "Initialized JPA EntityManagerFactory for persistence unit 'default'",
+  "logger_name" : "org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000580",
+  "@version" : "1",
+  "message" : "Hibernate is in classpath; If applicable, HQL parser will be used.",
+  "logger_name" : "org.springframework.data.jpa.repository.query.QueryEnhancerFactory",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000899",
+  "@version" : "1",
+  "message" : "#1690437904899 | took 1ms | statement | connection 3| url jdbc:h2:mem:testdb\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'sehozzang@nate.com', '이세호', 'seho123')\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'sehozzang@nate.com', '이세호', 'seho123');",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000900",
+  "@version" : "1",
+  "message" : "#1690437904900 | took 0ms | statement | connection 3| url jdbc:h2:mem:testdb\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'beautifulneo@naver.com', '네오', 'neo123')\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'beautifulneo@naver.com', '네오', 'neo123');",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000900",
+  "@version" : "1",
+  "message" : "#1690437904900 | took 0ms | statement | connection 3| url jdbc:h2:mem:testdb\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'princessleah@gmail.com', '레아공듀', 'leah123')\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'princessleah@gmail.com', '레아공듀', 'leah123');",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000919",
+  "@version" : "1",
+  "message" : "Starting ProtocolHandler [\"http-nio-8080\"]",
+  "logger_name" : "org.apache.coyote.http11.Http11NioProtocol",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000926",
+  "@version" : "1",
+  "message" : "Tomcat started on port(s): 8080 (http) with context path ''",
+  "logger_name" : "org.springframework.boot.web.embedded.tomcat.TomcatWebServer",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727150504.000931",
+  "@version" : "1",
+  "message" : "Started BackendApplication in 1.934 seconds (process running for 2.321)",
+  "logger_name" : "edonymyeon.backend.BackendApplication",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727152337.000783",
+  "@version" : "1",
+  "message" : "Closing JPA EntityManagerFactory for persistence unit 'default'",
+  "logger_name" : "org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean",
+  "thread_name" : "SpringApplicationShutdownHook",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727152337.000790",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Shutdown initiated...",
+  "logger_name" : "com.zaxxer.hikari.HikariDataSource",
+  "thread_name" : "SpringApplicationShutdownHook",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727152337.000793",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Shutdown completed.",
+  "logger_name" : "com.zaxxer.hikari.HikariDataSource",
+  "thread_name" : "SpringApplicationShutdownHook",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171101.000923",
+  "@version" : "1",
+  "message" : "Starting BackendApplication using Java 19.0.2 with PID 8058 (/Users/backfox/Desktop/문서 - 우테코/코딩/projects/2023-edonymyeon/backend/build/classes/java/main started by backfox in /Users/backfox/Desktop/문서 - 우테코/코딩/projects/2023-edonymyeon/backend)",
+  "logger_name" : "edonymyeon.backend.BackendApplication",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171101.000927",
+  "@version" : "1",
+  "message" : "The following 1 profile is active: \"prod\"",
+  "logger_name" : "edonymyeon.backend.BackendApplication",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171102.000209",
+  "@version" : "1",
+  "message" : "Bootstrapping Spring Data JPA repositories in DEFAULT mode.",
+  "logger_name" : "org.springframework.data.repository.config.RepositoryConfigurationDelegate",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171102.000252",
+  "@version" : "1",
+  "message" : "Finished Spring Data repository scanning in 37 ms. Found 5 JPA repository interfaces.",
+  "logger_name" : "org.springframework.data.repository.config.RepositoryConfigurationDelegate",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171102.000520",
+  "@version" : "1",
+  "message" : "Tomcat initialized with port(s): 8080 (http)",
+  "logger_name" : "org.springframework.boot.web.embedded.tomcat.TomcatWebServer",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171102.000524",
+  "@version" : "1",
+  "message" : "Initializing ProtocolHandler [\"http-nio-8080\"]",
+  "logger_name" : "org.apache.coyote.http11.Http11NioProtocol",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171102.000524",
+  "@version" : "1",
+  "message" : "Starting service [Tomcat]",
+  "logger_name" : "org.apache.catalina.core.StandardService",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171102.000525",
+  "@version" : "1",
+  "message" : "Starting Servlet engine: [Apache Tomcat/10.1.10]",
+  "logger_name" : "org.apache.catalina.core.StandardEngine",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171102.000562",
+  "@version" : "1",
+  "message" : "Initializing Spring embedded WebApplicationContext",
+  "logger_name" : "org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/]",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171102.000563",
+  "@version" : "1",
+  "message" : "Root WebApplicationContext: initialization completed in 618 ms",
+  "logger_name" : "org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171102.000591",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Starting...",
+  "logger_name" : "com.zaxxer.hikari.HikariDataSource",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171102.000679",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA",
+  "logger_name" : "com.zaxxer.hikari.pool.HikariPool",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171102.000680",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Start completed.",
+  "logger_name" : "com.zaxxer.hikari.HikariDataSource",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171102.000690",
+  "@version" : "1",
+  "message" : "H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:testdb'",
+  "logger_name" : "org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171102.000754",
+  "@version" : "1",
+  "message" : "HHH000204: Processing PersistenceUnitInfo [name: default]",
+  "logger_name" : "org.hibernate.jpa.internal.util.LogHelper",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171102.000786",
+  "@version" : "1",
+  "message" : "HHH000412: Hibernate ORM core version 6.2.5.Final",
+  "logger_name" : "org.hibernate.Version",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171102.000788",
+  "@version" : "1",
+  "message" : "HHH000406: Using bytecode reflection optimizer",
+  "logger_name" : "org.hibernate.cfg.Environment",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171102.000850",
+  "@version" : "1",
+  "message" : "HHH000021: Bytecode provider name : bytebuddy",
+  "logger_name" : "org.hibernate.bytecode.internal.BytecodeProviderInitiator",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171102.000916",
+  "@version" : "1",
+  "message" : "No LoadTimeWeaver setup: ignoring JPA class transformer",
+  "logger_name" : "org.springframework.orm.jpa.persistenceunit.SpringPersistenceUnitInfo",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171102.000932",
+  "@version" : "1",
+  "message" : "HHH90000026: MySQL57Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead",
+  "logger_name" : "org.hibernate.orm.deprecation",
+  "thread_name" : "main",
+  "level" : "WARN",
+  "level_value" : 30000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000042",
+  "@version" : "1",
+  "message" : "HHH000021: Bytecode provider name : bytebuddy",
+  "logger_name" : "org.hibernate.bytecode.internal.BytecodeProviderInitiator",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000341",
+  "@version" : "1",
+  "message" : "HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]",
+  "logger_name" : "org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000366",
+  "@version" : "1",
+  "message" : "#1690445463366 | took 3ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table member (id bigint not null auto_increment, email varchar(255) not null, nickname varchar(255) not null, password varchar(255) not null, profile_image_info_id bigint, primary key (id)) engine=InnoDB\ncreate table member (id bigint not null auto_increment, email varchar(255) not null, nickname varchar(255) not null, password varchar(255) not null, profile_image_info_id bigint, primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000367",
+  "@version" : "1",
+  "message" : "#1690445463367 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table post (id bigint not null auto_increment, content longtext not null, created_at datetime(6) not null, price bigint not null, title varchar(255) not null, view_count bigint default 0, member_id bigint not null, primary key (id)) engine=InnoDB\ncreate table post (id bigint not null auto_increment, content longtext not null, created_at datetime(6) not null, price bigint not null, title varchar(255) not null, view_count bigint default 0, member_id bigint not null, primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000368",
+  "@version" : "1",
+  "message" : "#1690445463368 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table post_image_info (id bigint not null auto_increment, store_name varchar(255), post_id bigint, primary key (id)) engine=InnoDB\ncreate table post_image_info (id bigint not null auto_increment, store_name varchar(255), post_id bigint, primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000368",
+  "@version" : "1",
+  "message" : "#1690445463368 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table profile_image_info (id bigint not null auto_increment, store_name varchar(255), primary key (id)) engine=InnoDB\ncreate table profile_image_info (id bigint not null auto_increment, store_name varchar(255), primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000369",
+  "@version" : "1",
+  "message" : "#1690445463369 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\ncreate table thumbs (id bigint not null auto_increment, thumbs_type enum ('DOWN','UP'), member_id bigint, post_id bigint, primary key (id)) engine=InnoDB\ncreate table thumbs (id bigint not null auto_increment, thumbs_type enum ('DOWN','UP'), member_id bigint, post_id bigint, primary key (id)) engine=InnoDB;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000370",
+  "@version" : "1",
+  "message" : "#1690445463370 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member drop index UK_mbmcqelty0fbrvxp1q58dn57t\nalter table member drop index UK_mbmcqelty0fbrvxp1q58dn57t;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000371",
+  "@version" : "1",
+  "message" : "#1690445463371 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member add constraint UK_mbmcqelty0fbrvxp1q58dn57t unique (email)\nalter table member add constraint UK_mbmcqelty0fbrvxp1q58dn57t unique (email);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000371",
+  "@version" : "1",
+  "message" : "#1690445463371 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member drop index UK_hh9kg6jti4n1eoiertn2k6qsc\nalter table member drop index UK_hh9kg6jti4n1eoiertn2k6qsc;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000372",
+  "@version" : "1",
+  "message" : "#1690445463372 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member add constraint UK_hh9kg6jti4n1eoiertn2k6qsc unique (nickname)\nalter table member add constraint UK_hh9kg6jti4n1eoiertn2k6qsc unique (nickname);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000372",
+  "@version" : "1",
+  "message" : "#1690445463372 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member drop index UK_sfbk9yq815m9vckxafoy4ed8i\nalter table member drop index UK_sfbk9yq815m9vckxafoy4ed8i;",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000372",
+  "@version" : "1",
+  "message" : "#1690445463372 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member add constraint UK_sfbk9yq815m9vckxafoy4ed8i unique (profile_image_info_id)\nalter table member add constraint UK_sfbk9yq815m9vckxafoy4ed8i unique (profile_image_info_id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000378",
+  "@version" : "1",
+  "message" : "#1690445463378 | took 5ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table member add constraint FK93dhogh0dg2gy1qsykj5i9q1c foreign key (profile_image_info_id) references profile_image_info (id)\nalter table member add constraint FK93dhogh0dg2gy1qsykj5i9q1c foreign key (profile_image_info_id) references profile_image_info (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000380",
+  "@version" : "1",
+  "message" : "#1690445463380 | took 2ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table post add constraint FK83s99f4kx8oiqm3ro0sasmpww foreign key (member_id) references member (id)\nalter table post add constraint FK83s99f4kx8oiqm3ro0sasmpww foreign key (member_id) references member (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000381",
+  "@version" : "1",
+  "message" : "#1690445463381 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table post_image_info add constraint FK5a3s586s9gqx285hdugmi0v8r foreign key (post_id) references post (id)\nalter table post_image_info add constraint FK5a3s586s9gqx285hdugmi0v8r foreign key (post_id) references post (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000382",
+  "@version" : "1",
+  "message" : "#1690445463382 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table thumbs add constraint FKlq0xarjmjfcg7u4lbj9baav99 foreign key (member_id) references member (id)\nalter table thumbs add constraint FKlq0xarjmjfcg7u4lbj9baav99 foreign key (member_id) references member (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000383",
+  "@version" : "1",
+  "message" : "#1690445463383 | took 0ms | statement | connection 2| url jdbc:h2:mem:testdb\nalter table thumbs add constraint FKnrqs0uqm5lnra6j2p5eibpiek foreign key (post_id) references post (id)\nalter table thumbs add constraint FKnrqs0uqm5lnra6j2p5eibpiek foreign key (post_id) references post (id);",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000384",
+  "@version" : "1",
+  "message" : "Initialized JPA EntityManagerFactory for persistence unit 'default'",
+  "logger_name" : "org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000579",
+  "@version" : "1",
+  "message" : "Hibernate is in classpath; If applicable, HQL parser will be used.",
+  "logger_name" : "org.springframework.data.jpa.repository.query.QueryEnhancerFactory",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000888",
+  "@version" : "1",
+  "message" : "#1690445463888 | took 1ms | statement | connection 3| url jdbc:h2:mem:testdb\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'sehozzang@nate.com', '이세호', 'seho123')\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'sehozzang@nate.com', '이세호', 'seho123');",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000888",
+  "@version" : "1",
+  "message" : "#1690445463888 | took 0ms | statement | connection 3| url jdbc:h2:mem:testdb\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'beautifulneo@naver.com', '네오', 'neo123')\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'beautifulneo@naver.com', '네오', 'neo123');",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000889",
+  "@version" : "1",
+  "message" : "#1690445463889 | took 0ms | statement | connection 3| url jdbc:h2:mem:testdb\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'princessleah@gmail.com', '레아공듀', 'leah123')\nINSERT INTO MEMBER (profile_image_info_id, email, nickname, password) VALUES (null, 'princessleah@gmail.com', '레아공듀', 'leah123');",
+  "logger_name" : "p6spy",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000908",
+  "@version" : "1",
+  "message" : "Starting ProtocolHandler [\"http-nio-8080\"]",
+  "logger_name" : "org.apache.coyote.http11.Http11NioProtocol",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000915",
+  "@version" : "1",
+  "message" : "Tomcat started on port(s): 8080 (http) with context path ''",
+  "logger_name" : "org.springframework.boot.web.embedded.tomcat.TomcatWebServer",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727171103.000920",
+  "@version" : "1",
+  "message" : "Started BackendApplication in 2.141 seconds (process running for 3.198)",
+  "logger_name" : "edonymyeon.backend.BackendApplication",
+  "thread_name" : "main",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727180052.000041",
+  "@version" : "1",
+  "message" : "Closing JPA EntityManagerFactory for persistence unit 'default'",
+  "logger_name" : "org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean",
+  "thread_name" : "SpringApplicationShutdownHook",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727180052.000045",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Shutdown initiated...",
+  "logger_name" : "com.zaxxer.hikari.HikariDataSource",
+  "thread_name" : "SpringApplicationShutdownHook",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
+{
+  "@timestamp" : "20230727180052.000046",
+  "@version" : "1",
+  "message" : "HikariPool-1 - Shutdown completed.",
+  "logger_name" : "com.zaxxer.hikari.HikariDataSource",
+  "thread_name" : "SpringApplicationShutdownHook",
+  "level" : "INFO",
+  "level_value" : 20000,
+  "uid" : "Gello"
+}
