@@ -10,7 +10,7 @@ import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
 
 class PostViewHolder(parent: ViewGroup, onClick: (Int) -> Unit) :
     RecyclerView.ViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false)
+        LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false),
     ) {
     val binding = ItemPostBinding.bind(itemView)
 

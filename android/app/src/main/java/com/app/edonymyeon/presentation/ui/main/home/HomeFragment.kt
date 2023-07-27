@@ -23,7 +23,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         binding.lifecycleOwner = this
         binding.homeViewModel = viewModel
         return binding.root
