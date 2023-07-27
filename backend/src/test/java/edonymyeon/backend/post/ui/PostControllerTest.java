@@ -68,8 +68,6 @@ class PostControllerTest implements ImageFileCleaner {
     @Test
     void 사진_첨부_성공_테스트() throws Exception {
         final Member member = memberTestSupport.builder()
-                .email("email")
-                .password("password")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/posts")
@@ -102,8 +100,6 @@ class PostControllerTest implements ImageFileCleaner {
     @Test
     void 본인이_작성한_게시글_삭제_가능_테스트() throws Exception {
         final Member member = memberTestSupport.builder()
-                .email("email")
-                .password("password")
                 .build();
 
         final MvcResult 게시글_생성_요청_결과 = mockMvc.perform(MockMvcRequestBuilders.multipart("/posts")
@@ -139,8 +135,6 @@ class PostControllerTest implements ImageFileCleaner {
     @Test
     void 본인이_작성하지_않은_게시글_삭제_불가능_테스트() throws Exception {
         final Member member = memberTestSupport.builder()
-                .email("email")
-                .password("password")
                 .build();
 
         final MvcResult 게시글_생성_요청_결과 = mockMvc.perform(MockMvcRequestBuilders.multipart("/posts")
@@ -158,8 +152,6 @@ class PostControllerTest implements ImageFileCleaner {
 
         PostResponse 게시글_생성_응답 = extractResponseFromResult(게시글_생성_요청_결과, PostResponse.class);
         final Member otherMember = memberTestSupport.builder()
-                .email("other")
-                .password("password")
                 .build();
 
         final MvcResult 게시글_삭제_요청_결과 = mockMvc.perform(MockMvcRequestBuilders.delete("/posts/" + 게시글_생성_응답.id())

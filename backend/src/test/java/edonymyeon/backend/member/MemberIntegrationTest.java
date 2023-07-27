@@ -23,8 +23,6 @@ public class MemberIntegrationTest extends IntegrationTest {
     @Test
     void 회원_정보_조회시_OK를_응답한다() {
         final Member member = memberTestSupport.builder()
-                .email("email")
-                .password("password")
                 .build();
 
         final ExtractableResponse<Response> response = RestAssured
