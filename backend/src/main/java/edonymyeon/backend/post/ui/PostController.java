@@ -63,13 +63,13 @@ public class PostController {
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false) String sortDirection
     ) {
-        final GeneralFindingCondition generalFindingCondition = GeneralFindingCondition.builder()
-                .page(Objects.isNull(page) ? GeneralFindingCondition.DEFAULT_PAGE : page)
-                .size(Objects.isNull(size) ? Post.DEFAULT_BATCH_SIZE : size)
-                .sortBy(Objects.isNull(sortBy) ? GeneralFindingCondition.DEFAULT_SORT_BY : SortBy.valueOf(sortBy))
-                .sortDirection(Objects.isNull(sortDirection) ? GeneralFindingCondition.DEFAULT_SORT_DIRECTION
-                        : SortDirection.valueOf(sortDirection))
-                .build();
+
+        final GeneralFindingCondition generalFindingCondition = GeneralFindingCondition.of(
+                page,
+                size,
+                sortBy,
+                sortDirection
+        );
 
         final List<GeneralPostInfoResponse> posts = postService.findPostsByPagingCondition(generalFindingCondition);
         return ResponseEntity

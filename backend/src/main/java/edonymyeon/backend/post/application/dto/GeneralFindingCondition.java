@@ -1,6 +1,7 @@
 package edonymyeon.backend.post.application.dto;
 
 import edonymyeon.backend.post.domain.Post;
+import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -23,4 +24,19 @@ public class GeneralFindingCondition {
 
     @Builder.Default
     private final SortDirection sortDirection = DEFAULT_SORT_DIRECTION;
+
+    public static GeneralFindingCondition of(
+            final Integer page,
+            final Integer size,
+            final String sortBy,
+            final String sortDirection
+    ) {
+        return builder()
+                .page(Objects.isNull(page) ? GeneralFindingCondition.DEFAULT_PAGE : page)
+                .size(Objects.isNull(size) ? Post.DEFAULT_BATCH_SIZE : size)
+                .sortBy(Objects.isNull(sortBy) ? GeneralFindingCondition.DEFAULT_SORT_BY : SortBy.valueOf(sortBy))
+                .sortDirection(Objects.isNull(sortDirection) ? GeneralFindingCondition.DEFAULT_SORT_DIRECTION
+                        : SortDirection.valueOf(sortDirection))
+                .build();
+    }
 }
