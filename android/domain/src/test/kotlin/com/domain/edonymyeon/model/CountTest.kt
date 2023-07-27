@@ -16,7 +16,7 @@ internal class CountTest {
     fun `카운트가 1 증가한다`() {
         var count = Count(5)
         count = count.increase()
-        assertEquals(7, count.value)
+        assertEquals(6, count.value)
     }
 
     @Test
