@@ -14,6 +14,7 @@ import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
+import edonymyeon.backend.support.PostTestSupport;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -107,24 +108,18 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
     }
 
     private Member 사용자를_하나_만든다() {
-        return memberTestSupport.builder()
-                .email("email")
-                .password("password")
-                .build();
+        return memberTestSupport.builder().build();
     }
 
-    private static ExtractableResponse<Response> 게시글을_하나_만든다(final Member member) {
-        return RestAssured.given()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .multiPart("title", "this is title")
-                .multiPart("content", "this is content")
-                .multiPart("price", 1000)
-                .multiPart("images", 이미지1, MediaType.IMAGE_JPEG_VALUE)
-                .multiPart("images", 이미지2, MediaType.IMAGE_JPEG_VALUE)
-                .when()
-                .post("/posts")
-                .then()
-                .extract();
+    private ExtractableResponse<Response> 게시글을_하나_만든다(final Member member) {
+        return postIntegrationTestSupport.builder()
+                .member(member)
+                .title("this is title")
+                .content("this is content")
+                .price(1000L)
+                .image1(이미지1)
+                .image2(이미지2)
+                .build();
     }
 
     @Test
@@ -288,7 +283,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         final ExtractableResponse<Response> response = RestAssured
                 .given().log().all()
                 .when()
-                .auth().preemptive().basic("email", "password")
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .get("/posts/" + postResponse.id())
                 .then().log().all()
                 .extract();
