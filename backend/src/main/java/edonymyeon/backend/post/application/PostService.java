@@ -227,4 +227,13 @@ public class PostService {
                 domain.getDomain() + member.getProfileImageInfo().getStoreName()
         );
     }
+
+    public List<GeneralPostInfoResponse> searchPosts(final String query) {
+        final List<Post> foundPosts = postRepository.searchBy(query);
+
+        return foundPosts
+                .stream()
+                .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()))
+                .toList();
+    }
 }
