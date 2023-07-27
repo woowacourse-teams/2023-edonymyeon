@@ -34,9 +34,9 @@ public class GeneralFindingCondition {
         return builder()
                 .page(Objects.isNull(page) ? GeneralFindingCondition.DEFAULT_PAGE : page)
                 .size(Objects.isNull(size) ? Post.DEFAULT_BATCH_SIZE : size)
-                .sortBy(Objects.isNull(sortBy) ? GeneralFindingCondition.DEFAULT_SORT_BY : SortBy.valueOf(sortBy))
+                .sortBy(Objects.isNull(sortBy) ? GeneralFindingCondition.DEFAULT_SORT_BY : SortBy.of(sortBy))
                 .sortDirection(Objects.isNull(sortDirection) ? GeneralFindingCondition.DEFAULT_SORT_DIRECTION
-                        : SortDirection.valueOf(sortDirection))
+                        : SortDirection.of(sortDirection))
                 .build();
     }
 }
