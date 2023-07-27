@@ -67,7 +67,7 @@ class PostRemoteDataSource : PostDataSource {
 
     private fun generateMultiPart(imageUris: List<String>) =
         imageUris.map { imageUri ->
-            val file = File(imageUri ?: "")
+            val file = File(imageUri)
             val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
             MultipartBody.Part.createFormData("images", file.name, requestFile)
         }
