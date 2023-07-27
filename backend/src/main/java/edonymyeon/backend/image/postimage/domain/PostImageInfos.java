@@ -12,6 +12,7 @@ import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -21,6 +22,7 @@ public class PostImageInfos {
     public static final int MAX_IMAGE_COUNT = 10;
     public static final int MIN_IMAGE_COUNT = 0;
 
+    @BatchSize(size = Post.DEFAULT_BATCH_SIZE)
     @OneToMany(mappedBy = "post")
     private List<PostImageInfo> postImageInfos;
 

@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import app.edonymyeon.databinding.FragmentHomeBinding
 import com.app.edonymyeon.presentation.ui.main.home.adapter.AllPostAdapter
 import com.app.edonymyeon.presentation.ui.post.PostActivity
@@ -24,7 +23,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         binding.lifecycleOwner = this
         binding.homeViewModel = viewModel
         return binding.root
@@ -40,9 +39,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun initObserve() {
-        viewModel.allPosts.observe(viewLifecycleOwner, Observer {
+        viewModel.allPosts.observe(viewLifecycleOwner) {
             initAllPostAdapter(it)
-        })
+        }
     }
 
     private fun initAllPostAdapter(it: List<AllPostItemUiModel>) {

@@ -21,7 +21,7 @@ class HomeViewModel : ViewModel() {
             content = "content $it",
             nickname = "nickname $it",
             date = "date $it",
-            thumbnailUrl = "thumbnailUrl $it"
+            thumbnailUrl = "thumbnailUrl $it",
         )
     }
 }
