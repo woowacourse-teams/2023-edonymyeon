@@ -20,10 +20,10 @@ import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.support.ImageMockMultipartFileSupport;
 import edonymyeon.backend.support.MemberTestSupport;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -66,8 +66,9 @@ class PostServiceTest implements ImageFileCleaner {
 
     private final MemberTestSupport memberTestSupport;
 
-    private final ImageFileUploader imageFileUploader;
+    private final ImageMockMultipartFileSupport imageFileSupport;
 
+    private final ImageFileUploader imageFileUploader;
     private MemberIdDto memberId;
 
     @BeforeEach
@@ -79,15 +80,10 @@ class PostServiceTest implements ImageFileCleaner {
     }
 
     private PostRequest getPostRequest() throws IOException {
-        final InputStream file1InputStream = getClass().getResourceAsStream("/static/img/file/test_image_1.jpg");
-        final MockMultipartFile file1 = new MockMultipartFile("imageFiles", "test_image_1.jpg", "image/jpg",
-                file1InputStream);
+        final MockMultipartFile file = imageFileSupport.builder()
+                .buildImagesForCreatePost();
 
-        final InputStream file2InputStream = getClass().getResourceAsStream("/static/img/file/test_image_2.jpg");
-        final MockMultipartFile file2 = new MockMultipartFile("imageFiles", "test_image_2.jpg", "image/jpg",
-                file2InputStream);
-
-        final List<MultipartFile> multipartFiles = List.of(file1, file2);
+        final List<MultipartFile> multipartFiles = List.of(file, file);
 
         return new PostRequest(
                 "I love you",
@@ -119,8 +115,6 @@ class PostServiceTest implements ImageFileCleaner {
             final PostRequest postRequest = getPostRequest();
 
             // when
-            System.out.println("폴더에_저장하는_이미지의_이름은_UUID_와_확장자명_형식으로_지어진다");
-            System.out.println("memberId.id() = " + memberId.id());
             final var postId = postService.createPost(memberId, postRequest).id();
 
             // then
@@ -140,8 +134,6 @@ class PostServiceTest implements ImageFileCleaner {
             final PostRequest postRequest = getPostRequest();
 
             // when
-            System.out.println("폴더에_이미지를_저장한_후_Post_도메인에는_파일의_경로를_넘긴다");
-            System.out.println("memberId.id() = " + memberId.id());
             final Long postId = postService.createPost(memberId, postRequest).id();
 
             // then
@@ -164,7 +156,8 @@ class PostServiceTest implements ImageFileCleaner {
             // given
             List<MultipartFile> images = new ArrayList<>();
             for (int i = 0; i < 11; i++) {
-                images.add(createMockMultipartFile());
+                images.add(imageFileSupport.builder()
+                        .buildImagesForCreatePost());
             }
             final PostRequest request = new PostRequest(
                     "사도 돼요?",
@@ -177,11 +170,6 @@ class PostServiceTest implements ImageFileCleaner {
             assertThatThrownBy(() -> postService.createPost(memberId, request)).isInstanceOf(EdonymyeonException.class)
                     .hasMessage(ExceptionInformation.POST_IMAGE_COUNT_INVALID.getMessage());
         }
-    }
-
-    private MockMultipartFile createMockMultipartFile() throws IOException {
-        return new MockMultipartFile("imageFiles", "test_image_1.jpg", "image/jpg",
-                getClass().getResourceAsStream("/static/img/file/test_image_1.jpg"));
     }
 
     @Nested
@@ -214,8 +202,6 @@ class PostServiceTest implements ImageFileCleaner {
 
             // when
             Member 다른_사람 = memberTestSupport.builder()
-                    .email("otheremail")
-                    .password("password")
                     .build();
             memberRepository.save(다른_사람);
             memberId = new MemberIdDto(다른_사람.getId());
@@ -286,7 +272,8 @@ class PostServiceTest implements ImageFileCleaner {
                 // when
                 List<MultipartFile> images = new ArrayList<>();
                 for (int i = 0; i < 11; i++) {
-                    images.add(createMockMultipartFile());
+                    images.add(imageFileSupport.builder()
+                            .buildImagesForUpdatePost());
                 }
                 final PostModificationRequest request = new PostModificationRequest(
                         "I hate you",
@@ -307,7 +294,8 @@ class PostServiceTest implements ImageFileCleaner {
                 final SpecificPostInfoResponse 게시글_상세조회_결과 = postService.findSpecificPost(게시글_생성_결과.id(), memberId);
 
                 // when
-                final List<MultipartFile> 추가할_이미지 = List.of(createMockMultipartFile());
+                final List<MultipartFile> 추가할_이미지 = List.of(imageFileSupport.builder()
+                        .buildImagesForUpdatePost());
                 final PostModificationRequest request = new PostModificationRequest(
                         "I hate you",
                         "change!!",
@@ -346,8 +334,7 @@ class PostServiceTest implements ImageFileCleaner {
             @Test
             void 이미지를_바꿀_수_있다(@Autowired PostRepository postRepository) throws IOException {
                 //given
-                final MockMultipartFile 바꾸기_전_이미지 = new MockMultipartFile("imageFiles", "test_image_1.jpg", "image/jpg",
-                        getClass().getResourceAsStream("/static/img/file/test_image_1.jpg"));
+                final MockMultipartFile 바꾸기_전_이미지 = imageFileSupport.builder().buildImagesForCreatePost();
                 final PostRequest 게시글_생성_요청 = new PostRequest(
                         "I love you",
                         "He wisely contented himself with his family and his love of nature.",
@@ -358,8 +345,7 @@ class PostServiceTest implements ImageFileCleaner {
                 final PostImageInfo 바꾸기_전_이미지_정보 = postRepository.findById(post.id()).get().getPostImageInfos().get(0);
 
                 // when
-                final MockMultipartFile 바꾼_후_이미지 = new MockMultipartFile("imageFiles", "test_image_2.jpg", "image/jpg",
-                        getClass().getResourceAsStream("/static/img/file/test_image_2.jpg"));
+                final MockMultipartFile 바꾼_후_이미지 = imageFileSupport.builder().buildImagesForUpdatePost();
                 final PostModificationRequest 게시글_수정_요청 = new PostModificationRequest(
                         "I love you",
                         "He wisely contented himself with his family and his love of nature.",
