@@ -1,5 +1,6 @@
 package edonymyeon.backend.image.postimage.domain;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_STORE_NAME_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_IMAGE_COUNT_INVALID;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
@@ -9,6 +10,7 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +27,7 @@ public class PostImageInfos {
     private List<PostImageInfo> postImageInfos;
 
     private PostImageInfos(final List<PostImageInfo> postImageInfos) {
-        checkImageCount(postImageInfos.size());
+        validateImageCount(postImageInfos.size());
         this.postImageInfos = postImageInfos;
     }
 
@@ -40,27 +42,47 @@ public class PostImageInfos {
         return new PostImageInfos(postImageInfos);
     }
 
-    public void add(final PostImageInfo postImageInfo) {
-        if (this.postImageInfos.contains(postImageInfo)) {
-            return;
-        }
-        checkImageCount(this.postImageInfos.size());
-        this.postImageInfos.add(postImageInfo);
-    }
-
-    public void update(final List<PostImageInfo> postImageInfos) {
-        checkImageCount(postImageInfos.size());
-        this.postImageInfos.clear();
-        this.postImageInfos.addAll(postImageInfos);
-    }
-
-    public void checkImageCount(final Integer imageCount) {
+    private void validateImageCount(final int imageCount) {
         if (isInvalidImageCount(imageCount)) {
             throw new EdonymyeonException(POST_IMAGE_COUNT_INVALID);
         }
     }
 
+    public void add(final PostImageInfo postImageInfo) {
+        if (this.postImageInfos.contains(postImageInfo)) {
+            return;
+        }
+        checkImageAdditionCount(1);
+        this.postImageInfos.add(postImageInfo);
+    }
+
+    public void checkImageAdditionCount(final Integer imageAdditionCount) {
+        if (isInvalidImageCount(this.postImageInfos.size() + imageAdditionCount)) {
+            throw new EdonymyeonException(POST_IMAGE_COUNT_INVALID);
+        }
+    }
+
+    public void addAll(final List<PostImageInfo> postImageInfos) {
+        postImageInfos.forEach(this::add);
+    }
+
     private boolean isInvalidImageCount(final Integer imageCount) {
         return imageCount > MAX_IMAGE_COUNT;
+    }
+
+    public List<PostImageInfo> getUnmatchedPostImageInfos(final List<String> storeNames) {
+        final List<PostImageInfo> unmatchedPostImageInfos = this.postImageInfos.stream().
+                filter(postImageInfo -> !storeNames.contains(postImageInfo.getStoreName()))
+                .collect(Collectors.toList());
+
+        if (storeNames.size() + unmatchedPostImageInfos.size() != this.postImageInfos.size()) {
+            throw new EdonymyeonException(IMAGE_STORE_NAME_INVALID);
+        }
+        return unmatchedPostImageInfos;
+    }
+
+    public void remove(final List<PostImageInfo> deletedImagesOfPost) {
+        this.postImageInfos.removeAll(deletedImagesOfPost);
+        //todo: postImageInfos의 post를 null로 세팅해줘야 할까?
     }
 }

@@ -6,6 +6,7 @@ import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.GeneralPostsResponse;
+import edonymyeon.backend.post.application.dto.PostModificationRequest;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.application.dto.SortBy;
@@ -49,9 +50,9 @@ public class PostController {
 
     @PutMapping("/{postId}")
     public ResponseEntity<PostResponse> updatePost(@AuthPrincipal MemberIdDto memberId,
-                                                   @ModelAttribute PostRequest postRequest,
+                                                   @ModelAttribute PostModificationRequest postModificationRequest,
                                                    @PathVariable Long postId) {
-        final PostResponse postResponse = postService.updatePost(memberId, postId, postRequest);
+        final PostResponse postResponse = postService.updatePost(memberId, postId, postModificationRequest);
         return ResponseEntity.ok().body(postResponse);
     }
 

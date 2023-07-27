@@ -37,7 +37,9 @@ public enum ExceptionInformation {
     THUMBS_DOWN_DELETE_FAIL_WHEN_THUMBS_UP(4006, "추천 한 게시글의 비추천을 취소할 수 없습니다."),
 
     // 5___: 이미지 관련
-    IMAGE_EXTENSION_INVALID(5000, "등록할 수 없는 이미지 확장자입니다.");
+    IMAGE_EXTENSION_INVALID(5000, "등록할 수 없는 이미지 확장자입니다."),
+    IMAGE_DOMAIN_INVALID(50001, "이미지의 url 경로가 잘못되었습니다."),
+    IMAGE_STORE_NAME_INVALID(5002, "유효하지 않은 이미지 이름이 포함되어 있습니다.");
 
     private int code;
 
