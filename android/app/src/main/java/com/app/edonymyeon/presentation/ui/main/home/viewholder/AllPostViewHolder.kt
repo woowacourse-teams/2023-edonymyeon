@@ -9,8 +9,10 @@ import com.app.edonymyeon.presentation.uimodel.AllPostItemUiModel
 
 class AllPostViewHolder(parent: ViewGroup, onClick: (Int) -> Unit) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(
-        R.layout.item_all_post, parent, false
-    )
+        R.layout.item_all_post,
+        parent,
+        false,
+    ),
 ) {
     private val binding = ItemAllPostBinding.bind(itemView)
 

@@ -1,16 +1,20 @@
 package edonymyeon.backend.post.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.PostService;
+import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
+import edonymyeon.backend.support.PostTestSupport;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -45,26 +49,15 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
 
     @Test
     void 사진_첨부_성공_테스트() {
-        final Member member = memberTestSupport.builder()
-                .email("email")
-                .build();
+        final Member member = 사용자를_하나_만든다();
+        final var 게시글_생성_결과 = 게시글을_하나_만든다(member);
 
-        RestAssured.given()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .multiPart("title", "this is title")
-                .multiPart("content", "this is content")
-                .multiPart("price", 1000)
-                .multiPart("images", 이미지1, MediaType.IMAGE_JPEG_VALUE)
-                .multiPart("images", 이미지2, MediaType.IMAGE_JPEG_VALUE)
-                .when()
-                .post("/posts")
-                .then()
-                .statusCode(HttpStatus.CREATED.value());
+        assertThat(게시글_생성_결과.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     @Test
     void 회원이_아니면_게시글_작성_불가_테스트() {
-        RestAssured.given()
+        final var response = RestAssured.given()
                 .multiPart("title", "this is title")
                 .multiPart("content", "this is content")
                 .multiPart("price", 1000)
@@ -73,29 +66,17 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .when()
                 .post("/posts")
                 .then()
-                .statusCode(HttpStatus.UNAUTHORIZED.value());
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
     }
 
     @Test
     void 본인이_작성한_게시글_삭제_가능_테스트() {
-        final Member member = memberTestSupport.builder()
-                .email("email")
-                .build();
+        final Member member = 사용자를_하나_만든다();
+        final ExtractableResponse<Response> 게시글_생성_결과 = 게시글을_하나_만든다(member);
 
-        final ExtractableResponse<Response> 게시글_생성_요청_결과 = RestAssured.given()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .multiPart("title", "this is title")
-                .multiPart("content", "this is content")
-                .multiPart("price", 1000)
-                .multiPart("images", 이미지1, MediaType.IMAGE_JPEG_VALUE)
-                .multiPart("images", 이미지2, MediaType.IMAGE_JPEG_VALUE)
-                .when()
-                .post("/posts")
-                .then()
-                .statusCode(HttpStatus.CREATED.value())
-                .extract();
-
-        final String location = 게시글_생성_요청_결과.header("location");
+        final String location = 게시글_생성_결과.header("location");
         final long 게시글_id = Long.parseLong(location.split("/")[2]);
 
         RestAssured.given()
@@ -108,22 +89,9 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
 
     @Test
     void 본인이_작성하지_않은_게시글_삭제_불가능_테스트() {
-        final Member member = memberTestSupport.builder()
-                .email("email")
-                .build();
+        final Member member = 사용자를_하나_만든다();
+        final ExtractableResponse<Response> 게시글_생성_요청_결과 = 게시글을_하나_만든다(member);
 
-        final ExtractableResponse<Response> 게시글_생성_요청_결과 = RestAssured.given()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .multiPart("title", "this is title")
-                .multiPart("content", "this is content")
-                .multiPart("price", 1000)
-                .multiPart("images", 이미지1, MediaType.IMAGE_JPEG_VALUE)
-                .multiPart("images", 이미지2, MediaType.IMAGE_JPEG_VALUE)
-                .when()
-                .post("/posts")
-                .then()
-                .statusCode(HttpStatus.CREATED.value())
-                .extract();
 
         final String location = 게시글_생성_요청_결과.header("location");
         final long 게시글_id = Long.parseLong(location.split("/")[2]);
@@ -140,11 +108,127 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .statusCode(HttpStatus.FORBIDDEN.value());
     }
 
+    private Member 사용자를_하나_만든다() {
+        return memberTestSupport.builder().build();
+    }
+
+    private ExtractableResponse<Response> 게시글을_하나_만든다(final Member member) {
+        return postIntegrationTestSupport.builder()
+                .member(member)
+                .title("this is title")
+                .content("this is content")
+                .price(1000L)
+                .image1(이미지1)
+                .image2(이미지2)
+                .build();
+    }
+
+    @Test
+    void 기본조건으로_전체게시글_조회(@Autowired PostService postService) {
+        한_사용자가_게시글을_서른개_작성한다(postService);
+
+        final var 게시글_전체_조회_결과 = RestAssured
+                .when()
+                .get("/posts")
+                .then()
+                .extract();
+
+        final var jsonPath = 게시글_전체_조회_결과.body().jsonPath();
+
+        assertSoftly(softly -> {
+            softly.assertThat(jsonPath.getList("posts")).hasSize(20);
+            softly.assertThat(jsonPath.getLong("posts[0].id")).isNotNull();
+            softly.assertThat(jsonPath.getString("posts[0].title")).isNotNull();
+            softly.assertThat(jsonPath.getString("posts[0].image")).isNotNull();
+            softly.assertThat(jsonPath.getString("posts[0].content")).isNotNull();
+            softly.assertThat(jsonPath.getString("posts[0].writer.nickName")).isNotNull();
+            softly.assertThat(jsonPath.getString("posts[0].createdAt")).isNotNull();
+            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.viewCount")).isNotNull();
+            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.commentCount")).isNotNull();
+            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.scrapCount")).isNotNull();
+        });
+    }
+
+    @Test
+    void 한_번에_3개씩_조회하는_조건으로_전체게시글_조회(@Autowired PostService postService) {
+        한_사용자가_게시글을_서른개_작성한다(postService);
+
+        final var 게시글_전체_조회_결과 = RestAssured
+                .given()
+                .param("size", 3)
+                .when()
+                .get("/posts")
+                .then()
+                .extract();
+
+        final var jsonPath = 게시글_전체_조회_결과.body().jsonPath();
+
+        assertSoftly(softly -> {
+            softly.assertThat(jsonPath.getList("posts")).hasSize(3);
+            softly.assertThat(jsonPath.getLong("posts[0].id")).isNotNull();
+            softly.assertThat(jsonPath.getString("posts[0].title")).isNotNull();
+            softly.assertThat(jsonPath.getString("posts[0].image")).isNotNull();
+            softly.assertThat(jsonPath.getString("posts[0].content")).isNotNull();
+            softly.assertThat(jsonPath.getString("posts[0].writer.nickName")).isNotNull();
+            softly.assertThat(jsonPath.getString("posts[0].createdAt")).isNotNull();
+            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.viewCount")).isNotNull();
+            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.commentCount")).isNotNull();
+            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.scrapCount")).isNotNull();
+        });
+    }
+
+    @Test
+    void 한_번에_3개씩_조회하는_조건으로_2페이지_전체게시글_조회(@Autowired PostService postService) {
+        한_사용자가_게시글을_서른개_작성한다(postService);
+
+        final var 게시글_전체_조회_결과 = RestAssured
+                .given()
+                .param("size", 3)
+                .param("page", 1)
+                .when()
+                .get("/posts")
+                .then()
+                .extract();
+
+        final var jsonPath = 게시글_전체_조회_결과.body().jsonPath();
+
+        final var 전체조회_4번째_게시글 = postService.findPostsByPagingCondition(
+                        GeneralFindingCondition.builder()
+                                .size(3)
+                                .page(1)
+                                .build())
+                .get(0);
+
+        assertSoftly(softly -> {
+            softly.assertThat(jsonPath.getList("posts")).hasSize(3);
+            softly.assertThat(jsonPath.getLong("posts[0].id")).isEqualTo(전체조회_4번째_게시글.id());
+            softly.assertThat(jsonPath.getString("posts[0].title")).isEqualTo(전체조회_4번째_게시글.title());
+            softly.assertThat(jsonPath.getString("posts[0].image")).isEqualTo(전체조회_4번째_게시글.image());
+            softly.assertThat(jsonPath.getString("posts[0].content")).isEqualTo(전체조회_4번째_게시글.content());
+            softly.assertThat(jsonPath.getString("posts[0].writer.nickName")).isEqualTo(전체조회_4번째_게시글.writer().nickName());
+            softly.assertThat(jsonPath.getString("posts[0].createdAt")).isNotNull();
+            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.viewCount")).isEqualTo(전체조회_4번째_게시글.reactionCount().viewCount());
+            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.commentCount")).isEqualTo(전체조회_4번째_게시글.reactionCount().commentCount());
+            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.scrapCount")).isEqualTo(전체조회_4번째_게시글.reactionCount().scrapCount());
+        });
+    }
+
+    private void 한_사용자가_게시글을_서른개_작성한다(PostService postService) {
+        final Member member = 사용자를_하나_만든다();
+        for (int i = 0; i < 30; i++) {
+            try {
+                final PostRequest postRequest = getPostRequest();
+                postService.createPost(new MemberIdDto(member.getId()), postRequest);
+            } catch (IOException e) {
+                fail(e);
+            }
+        }
+    }
+
     @Test
     void 로그인하지_않은_사용자가_게시글_하나를_상세조회하는_경우(@Autowired PostService postService) throws IOException {
-        final Member member = memberTestSupport.builder()
-                .email("email")
-                .build();
+        final Member member = 사용자를_하나_만든다();
+
         final PostRequest postRequest = getPostRequest();
         final PostResponse postResponse = postService.createPost(new MemberIdDto(member.getId()), postRequest);
 
@@ -194,9 +278,8 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
 
     @Test
     void 로그인한_사용자가_자신의_게시글_하나를_상세조회하는_경우(@Autowired PostService postService) throws IOException {
-        final Member member = memberTestSupport.builder()
-                .email("email")
-                .build();
+        final Member member = 사용자를_하나_만든다();
+
         final PostRequest postRequest = getPostRequest();
         final PostResponse postResponse = postService.createPost(new MemberIdDto(member.getId()), postRequest);
 
@@ -247,9 +330,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
 
     @Test
     void 로그인한_사용자가_타인의_게시글_하나를_상세조회하는_경우(@Autowired PostService postService) throws IOException {
-        final Member writer = memberTestSupport.builder()
-                .email("email")
-                .build();
+        final Member writer = 사용자를_하나_만든다();
         final Member reader = memberTestSupport.builder()
                 .email("email1")
                 .build();

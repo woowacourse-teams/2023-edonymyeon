@@ -12,7 +12,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -21,6 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Edonymyeon"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
         <activity
@@ -28,13 +28,11 @@
             android:exported="true" />
         <activity
             android:name="com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true" />
 
         <activity
             android:name="com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
 
         <activity
             android:name="com.app.edonymyeon.presentation.ui.main.MainActivity"
@@ -45,10 +43,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.app.edonymyeon.presentation.ui.post.PostActivity"
-            android:exported="true" >
-        </activity>
+            android:exported="true" />
     </application>
 
 </manifest>

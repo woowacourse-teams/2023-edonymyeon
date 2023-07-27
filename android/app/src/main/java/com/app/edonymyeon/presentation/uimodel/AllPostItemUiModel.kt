@@ -6,5 +6,5 @@ data class AllPostItemUiModel(
     val content: String,
     val nickname: String,
     val date: String,
-    val thumbnailUrl: String?
+    val thumbnailUrl: String?,
 )
