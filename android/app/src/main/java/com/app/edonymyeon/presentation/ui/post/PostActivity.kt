@@ -31,6 +31,7 @@ class PostActivity : AppCompatActivity() {
                 startActivity(PostDetailActivity.newIntent(this, postId))
             })
         }
+        viewModel.getPosts(20, 0)
 
         binding.ivPostNew.setOnClickListener {
             startPostEditorActivity()
