@@ -14,8 +14,10 @@ import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
+import edonymyeon.backend.post.application.dto.PostModificationRequest;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.support.MemberTestSupport;
@@ -23,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -103,7 +106,7 @@ class PostServiceTest implements ImageFileCleaner {
                     "사도 돼요?",
                     "얼마 안해요",
                     100_000L,
-                    null
+                    Collections.emptyList()
             );
 
             final PostResponse target = postService.createPost(memberId, request);
@@ -205,7 +208,7 @@ class PostServiceTest implements ImageFileCleaner {
                     "I love you",
                     "He wisely contented himself with his family and his love of nature.",
                     13_000L,
-                    null
+                    Collections.emptyList()
             );
             final PostResponse post = postService.createPost(memberId, postRequest);
 
@@ -216,11 +219,12 @@ class PostServiceTest implements ImageFileCleaner {
                     .build();
             memberRepository.save(다른_사람);
             memberId = new MemberIdDto(다른_사람.getId());
-            final PostRequest updatedPostRequest = new PostRequest(
+            final PostModificationRequest updatedPostRequest = new PostModificationRequest(
                     "I hate you",
                     "change!!",
                     26_000L,
-                    null
+                    Collections.emptyList(),
+                    Collections.emptyList()
             );
             assertThatThrownBy(
                     () -> postService.updatePost(new MemberIdDto(다른_사람.getId()), post.id(), updatedPostRequest))
@@ -239,11 +243,12 @@ class PostServiceTest implements ImageFileCleaner {
             final PostResponse post = postService.createPost(memberId, postRequest);
 
             // when
-            final PostRequest updatedPostRequest = new PostRequest(
+            final PostModificationRequest updatedPostRequest = new PostModificationRequest(
                     "I hate you",
                     "change!!",
                     26_000L,
-                    null
+                    Collections.emptyList(),
+                    Collections.emptyList()
             );
             postService.updatePost(memberId, post.id(), updatedPostRequest);
 
@@ -266,7 +271,7 @@ class PostServiceTest implements ImageFileCleaner {
                     "I love you",
                     "He wisely contented himself with his family and his love of nature.",
                     13_000L,
-                    null
+                    Collections.emptyList()
             );
 
             이미지를_수정하는_경우() throws IOException {
@@ -283,10 +288,11 @@ class PostServiceTest implements ImageFileCleaner {
                 for (int i = 0; i < 11; i++) {
                     images.add(createMockMultipartFile());
                 }
-                final PostRequest request = new PostRequest(
-                        "사도 돼요?",
-                        "얼마 안해요",
-                        100_000L,
+                final PostModificationRequest request = new PostModificationRequest(
+                        "I hate you",
+                        "change!!",
+                        26_000L,
+                        Collections.emptyList(),
                         images
                 );
                 assertThatThrownBy(() -> postService.updatePost(memberId, post.id(), request)).isInstanceOf(
@@ -297,14 +303,24 @@ class PostServiceTest implements ImageFileCleaner {
             @Test
             void 이미지를_추가할_수_있다(@Autowired PostRepository postRepository) throws IOException {
                 // given
-                final PostResponse post = postService.createPost(memberId, 이미지가_없는_요청);
+                final PostResponse 게시글_생성_결과 = postService.createPost(memberId, 이미지가_없는_요청);
+                final SpecificPostInfoResponse 게시글_상세조회_결과 = postService.findSpecificPost(게시글_생성_결과.id(), memberId);
 
                 // when
-                postService.updatePost(memberId, post.id(), 이미지가_2개_있는_요청);
+                final List<MultipartFile> 추가할_이미지 = List.of(createMockMultipartFile());
+                final PostModificationRequest request = new PostModificationRequest(
+                        "I hate you",
+                        "change!!",
+                        26_000L,
+                        게시글_상세조회_결과.images(),
+                        추가할_이미지
+                );
+                postService.updatePost(memberId, 게시글_생성_결과.id(), request);
 
                 // then
-                final Post findPost = postRepository.findById(post.id()).get();
-                assertThat(findPost.getPostImageInfos().size()).isEqualTo(이미지가_2개_있는_요청.images().size());
+                final Post findPost = postRepository.findById(게시글_생성_결과.id()).get();
+                assertThat(findPost.getPostImageInfos().size()).isEqualTo(
+                        request.newImages().size() + request.originalImages().size());
             }
 
             @Test
@@ -313,6 +329,13 @@ class PostServiceTest implements ImageFileCleaner {
                 final PostResponse post = postService.createPost(memberId, 이미지가_2개_있는_요청);
 
                 // when
+                final PostModificationRequest 이미지가_없는_요청 = new PostModificationRequest(
+                        "I hate you",
+                        "change!!",
+                        26_000L,
+                        Collections.emptyList(),
+                        Collections.emptyList()
+                );
                 postService.updatePost(memberId, post.id(), 이미지가_없는_요청);
 
                 // then
@@ -337,10 +360,11 @@ class PostServiceTest implements ImageFileCleaner {
                 // when
                 final MockMultipartFile 바꾼_후_이미지 = new MockMultipartFile("imageFiles", "test_image_2.jpg", "image/jpg",
                         getClass().getResourceAsStream("/static/img/file/test_image_2.jpg"));
-                final PostRequest 게시글_수정_요청 = new PostRequest(
+                final PostModificationRequest 게시글_수정_요청 = new PostModificationRequest(
                         "I love you",
                         "He wisely contented himself with his family and his love of nature.",
                         13_000L,
+                        Collections.emptyList(),
                         List.of(바꾼_후_이미지)
                 );
                 postService.updatePost(memberId, post.id(), 게시글_수정_요청);
@@ -350,7 +374,7 @@ class PostServiceTest implements ImageFileCleaner {
                 final PostImageInfo 바꾼_후_이미지_정보 = findPost.getPostImageInfos().get(0);
 
                 assertSoftly(softly -> {
-                    softly.assertThat(findPost.getPostImageInfos().size()).isEqualTo(게시글_수정_요청.images().size());
+                    softly.assertThat(findPost.getPostImageInfos().size()).isEqualTo(게시글_수정_요청.newImages().size());
                     softly.assertThat(바꾸기_전_이미지_정보.getStoreName().equals(바꾼_후_이미지_정보.getStoreName())).isFalse();
                         }
                 );
