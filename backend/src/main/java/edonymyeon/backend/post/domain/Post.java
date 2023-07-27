@@ -24,10 +24,14 @@ import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
+import org.springframework.data.jpa.repository.Query;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,6 +40,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 public class Post {
 
+    public static final int DEFAULT_BATCH_SIZE = 20;
     private static final int MAX_TITLE_LENGTH = 30;
     private static final int MAX_CONTENT_LENGTH = 1_000;
     private static final long MAX_PRICE = 10_000_000_000L;
@@ -54,10 +59,11 @@ public class Post {
     @Column(nullable = false)
     private Long price;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Member member;
 
+    // TODO: cascade
     private PostImageInfos postImageInfos;
 
     @CreatedDate
@@ -153,6 +159,10 @@ public class Post {
 
     public boolean isSameMember(final Member member) {
         return this.member.equals(member);
+    }
+
+    public Member getMember() {
+        return member;
     }
 
     public List<PostImageInfo> getPostImageInfos() {

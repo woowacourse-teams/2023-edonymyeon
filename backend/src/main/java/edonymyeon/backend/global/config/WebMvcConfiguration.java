@@ -1,6 +1,7 @@
 package edonymyeon.backend.global.config;
 
 import edonymyeon.backend.auth.ui.argumentresolver.AuthArgumentResolver;
+import edonymyeon.backend.post.ui.argumentresolver.PostPagingArgumentResolver;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +13,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
     private final AuthArgumentResolver authArgumentResolver;
+    private final PostPagingArgumentResolver postPagingArgumentResolver;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(authArgumentResolver);
+        resolvers.add(postPagingArgumentResolver);
     }
 }
