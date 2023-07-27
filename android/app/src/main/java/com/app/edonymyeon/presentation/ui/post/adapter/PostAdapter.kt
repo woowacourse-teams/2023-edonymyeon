@@ -8,10 +8,13 @@ import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
 class PostAdapter(private val posts: List<PostItemUiModel>, private val onClick: (Long) -> Unit) :
     RecyclerView.Adapter<PostViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        return PostViewHolder(parent, onClick =
-        {
-            onClick(posts[it].id)
-        })
+        return PostViewHolder(
+            parent,
+            onClick =
+            {
+                onClick(posts[it].id)
+            },
+        )
     }
 
     override fun getItemCount(): Int = posts.size
