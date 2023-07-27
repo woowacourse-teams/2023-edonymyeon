@@ -62,7 +62,6 @@ class PostDetailActivity : AppCompatActivity() {
         initAppbar()
         setRecommendationCheckedListener()
 
-
         viewModel.post.observe(this) {
             setImageSlider(it)
             setImageIndicators()
@@ -83,7 +82,13 @@ class PostDetailActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_update -> {
                 val post = viewModel.post.value ?: return false
-                startActivity(PostEditorActivity.newIntent(this, post, PostEditorActivity.UPDATE_CODE))
+                startActivity(
+                    PostEditorActivity.newIntent(
+                        this,
+                        post,
+                        PostEditorActivity.UPDATE_CODE,
+                    ),
+                )
                 true
             }
 
