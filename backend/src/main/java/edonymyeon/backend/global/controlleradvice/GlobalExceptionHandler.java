@@ -2,6 +2,7 @@ package edonymyeon.backend.global.controlleradvice;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.AUTHORIZATION_EMPTY;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_NOT_FOUND;
+import static edonymyeon.backend.global.exception.ExceptionInformation.REQUEST_PARAMETER_NOT_EXIST;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_FORBIDDEN;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -14,6 +15,7 @@ import java.util.EnumMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -48,4 +50,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(httpStatus)
                 .body(exceptionResponse);
     }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ExceptionResponse> handleMissingServletRequestParameterException(final MissingServletRequestParameterException e) {
+        final ExceptionResponse exceptionResponse = new ExceptionResponse(REQUEST_PARAMETER_NOT_EXIST.getCode(),
+                REQUEST_PARAMETER_NOT_EXIST.getMessage() + e.getMessage());
+
+        return ResponseEntity.status(BAD_REQUEST)
+                .body(exceptionResponse);
+    }
+
 }

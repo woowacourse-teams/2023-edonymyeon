@@ -23,6 +23,7 @@ import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
 import edonymyeon.backend.post.application.dto.WriterDetailResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.post.repository.PostSpecification;
 import edonymyeon.backend.thumbs.application.ThumbsService;
 import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
 import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
@@ -33,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -233,8 +235,11 @@ public class PostService {
         );
     }
 
-    public List<GeneralPostInfoResponse> searchPosts(final String query) {
-        final List<Post> foundPosts = postRepository.searchBy(query);
+    public List<GeneralPostInfoResponse> searchPosts(final String searchWord, final GeneralFindingCondition generalFindingCondition) {
+        final Specification<Post> searchResults = PostSpecification.searchBy(searchWord);
+        final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
+
+        final Slice<Post> foundPosts = postRepository.findAll(searchResults, pageRequest);
 
         return foundPosts
                 .stream()
