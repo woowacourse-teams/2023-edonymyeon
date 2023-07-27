@@ -112,7 +112,6 @@ class PostEditorActivity : AppCompatActivity() {
                             delay(2000)
                             navigateToDetail()
                         }
-
                     } else {
                         showSnackbarForMissingTitle()
                     }
