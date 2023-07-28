@@ -2,7 +2,7 @@ package edonymyeon.backend.auth.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_DUPLICATE;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_DUPLICATE;
+import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_INVALID;
 
 import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
@@ -67,12 +67,14 @@ public class AuthService {
     }
 
     private void validateDuplicateEmail(final String email) {
-        memberRepository.findByEmail(email)
-                .orElseThrow(() -> new EdonymyeonException(MEMBER_EMAIL_DUPLICATE));
+        if (memberRepository.findByEmail(email).isPresent()) {
+            throw new EdonymyeonException(MEMBER_EMAIL_DUPLICATE);
+        }
     }
 
     private void validateDuplicateNickname(final String nickname) {
-        memberRepository.findByNickname(nickname)
-                .orElseThrow(() -> new EdonymyeonException(MEMBER_NICKNAME_DUPLICATE));
+        if (memberRepository.findByNickname(nickname).isPresent()) {
+            throw new EdonymyeonException(MEMBER_NICKNAME_INVALID);
+        }
     }
 }
