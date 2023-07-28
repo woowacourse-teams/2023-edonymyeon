@@ -11,6 +11,8 @@ public enum ExceptionInformation {
     // 1___: 인증 관련
     MEMBER_EMAIL_NOT_FOUND(1511, "회원의 이메일이 존재하지 않습니다."),
     AUTHORIZATION_EMPTY(1523, "인증 정보가 없습니다."),
+    ILLEGAL_ARGUMENT_TYPE(1524, "잘못된 타입의 요청입니다."),
+
 
     // 2___: 게시글 관련
     POST_ID_NOT_FOUND(2000, "존재하지 않는 게시글입니다."),
