@@ -2,7 +2,6 @@ package com.app.edonymyeon.presentation.ui.posteditor
 
 import android.app.Application
 import android.content.Context
-import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -128,38 +127,28 @@ class PostEditorViewModel(
     }
 
     private fun getAbsolutePathFromUri(context: Context, uri: Uri): String? {
-        var absolutePath: String? = null
-
-        if (uri.scheme == "content") {
-            val projection = arrayOf(MediaStore.Images.Media.DATA)
-            var cursor: Cursor? = null
-
-            try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    val resolver = context.contentResolver
-                    cursor = resolver.query(uri, projection, null, null, null)
-                    cursor?.let {
-                        if (it.moveToFirst()) {
-                            val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-                            absolutePath = it.getString(columnIndex)
-                        }
-                    }
-                } else {
-                    val cursorLoader = CursorLoader(context, uri, projection, null, null, null)
-                    cursor = cursorLoader.loadInBackground()
-                    cursor?.let {
-                        if (it.moveToFirst()) {
-                            val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-                            absolutePath = it.getString(columnIndex)
-                        }
-                    }
-                }
-            } finally {
-                cursor?.close()
-            }
-        } else if (uri.scheme == "file") {
-            absolutePath = uri.path
+        return when (uri.scheme) {
+            "content" -> getAbsolutePathFromContentUri(context, uri)
+            "http" -> getAbsolutePathFromHttp(uri)
+            else -> null
         }
-        return absolutePath
     }
+
+    private fun getAbsolutePathFromContentUri(context: Context, uri: Uri): String? {
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            context.contentResolver.query(uri, projection, null, null, null)
+        } else {
+            CursorLoader(context, uri, projection, null, null, null).loadInBackground()
+        }
+        cursor?.use {
+            if (it.moveToFirst()) {
+                val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                return it.getString(columnIndex)
+            }
+        }
+        return null
+    }
+
+    private fun getAbsolutePathFromHttp(uri: Uri): String = uri.toString()
 }

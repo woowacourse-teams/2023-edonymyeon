@@ -61,14 +61,17 @@ class PostRemoteDataSource : PostDataSource {
         postEditorMap["title"] = title.toRequestBody("text/plain".toMediaTypeOrNull())
         postEditorMap["content"] = content.toRequestBody("text/plain".toMediaTypeOrNull())
         postEditorMap["price"] = price.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        imageUris.filter { it.startsWith("http") }.forEach {
+            postEditorMap["originalImages"] = it.toRequestBody("text/plain".toMediaTypeOrNull())
+        }
 
         return postService.updatePost(id, postEditorMap, images)
     }
 
     private fun generateMultiPart(imageUris: List<String>) =
-        imageUris.map { imageUri ->
-            val file = File(imageUri ?: "")
+        imageUris.filter { it.startsWith("http").not() }.map { imageUri ->
+            val file = File(imageUri)
             val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-            MultipartBody.Part.createFormData("images", file.name, requestFile)
+            MultipartBody.Part.createFormData("newImages", file.name, requestFile)
         }
 }
