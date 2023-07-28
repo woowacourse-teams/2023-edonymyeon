@@ -40,7 +40,7 @@ class PostRemoteDataSource : PostDataSource {
         price: Int,
         imageUris: List<String>,
     ): Response<PostEditorResponse> {
-        val images = generateMultiPart(imageUris)
+        val images = generateMultiPartFromUri(imageUris)
         val postEditorMap: HashMap<String, RequestBody> = hashMapOf()
         postEditorMap["title"] = title.toRequestBody("text/plain".toMediaTypeOrNull())
         postEditorMap["content"] = content.toRequestBody("text/plain".toMediaTypeOrNull())
@@ -56,19 +56,23 @@ class PostRemoteDataSource : PostDataSource {
         price: Int,
         imageUris: List<String>,
     ): Response<PostEditorResponse> {
-        val images = generateMultiPart(imageUris)
+        val images = generateMultiPartFromUri(imageUris)
         val postEditorMap: HashMap<String, RequestBody> = hashMapOf()
         postEditorMap["title"] = title.toRequestBody("text/plain".toMediaTypeOrNull())
         postEditorMap["content"] = content.toRequestBody("text/plain".toMediaTypeOrNull())
         postEditorMap["price"] = price.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-        imageUris.filter { it.startsWith("http") }.forEach {
-            postEditorMap["originalImages"] = it.toRequestBody("text/plain".toMediaTypeOrNull())
-        }
+        val originalImages = generateMultiPartFromUrl(imageUris)
 
-        return postService.updatePost(id, postEditorMap, images)
+        return postService.updatePost(id, postEditorMap, originalImages, images)
     }
 
-    private fun generateMultiPart(imageUris: List<String>) =
+    private fun generateMultiPartFromUrl(imageUris: List<String>) =
+        imageUris.filter { it.startsWith("http") }.map {
+            val requestBody = it.toRequestBody("text/plain".toMediaTypeOrNull())
+            MultipartBody.Part.createFormData("originalImages", null, requestBody)
+        }
+
+    private fun generateMultiPartFromUri(imageUris: List<String>) =
         imageUris.filter { it.startsWith("http").not() }.map { imageUri ->
             val file = File(imageUri)
             val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())

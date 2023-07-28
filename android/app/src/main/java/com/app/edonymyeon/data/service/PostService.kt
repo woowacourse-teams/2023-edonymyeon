@@ -33,7 +33,7 @@ interface PostService {
     @POST("/posts")
     suspend fun savePost(
         @PartMap postEditorRequest: HashMap<String, RequestBody>,
-        @Part images: List<MultipartBody.Part>,
+        @Part newImages: List<MultipartBody.Part>,
     ): Response<PostEditorResponse>
 
     @Multipart
@@ -41,6 +41,7 @@ interface PostService {
     suspend fun updatePost(
         @Path("postId") postId: Long,
         @PartMap postEditorRequest: HashMap<String, RequestBody>,
-        @Part images: List<MultipartBody.Part>,
+        @Part originalImages: List<MultipartBody.Part>,
+        @Part newImages: List<MultipartBody.Part>,
     ): Response<PostEditorResponse>
 }
