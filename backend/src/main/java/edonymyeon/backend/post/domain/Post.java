@@ -121,11 +121,11 @@ public class Post {
     }
 
     public void addPostImageInfo(final PostImageInfo postImageInfo) {
-        this.postImageInfos.add(postImageInfo);
+        postImageInfos.add(postImageInfo);
     }
 
-    public void validateImageAdditionCount(final Integer imageAdditionCount) {
-        this.postImageInfos.validateImageAdditionCount(imageAdditionCount);
+    public void checkImageCount(final Integer imageCount) {
+        postImageInfos.checkImageCount(imageCount);
     }
 
     public void update(final String title, final String content, final Long price) {
