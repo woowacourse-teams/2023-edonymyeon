@@ -342,36 +342,37 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 new MemberIdDto(작성자.getId()));
 
         assertThat(게시글_상세_조회_응답.statusCode()).isEqualTo(200);
-        assertAll(
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getLong("id")).isEqualTo(게시글.id()),
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getString("title")).isEqualTo(게시글.title()),
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getLong("price")).isEqualTo(게시글.price()),
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getString("content")).isEqualTo(게시글.content()),
+        assertSoftly(softAssertions -> {
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getLong("id")).isEqualTo(게시글.id());
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getString("title")).isEqualTo(게시글.title());
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getLong("price")).isEqualTo(게시글.price());
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getString("content")).isEqualTo(게시글.content());
 
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getList("images")).hasSize(2),
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getString("images[0]")).isEqualTo(게시글.images().get(0)),
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getString("images[1]")).isEqualTo(게시글.images().get(1)),
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getList("images")).hasSize(2);
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getString("images[0]")).isEqualTo(게시글.images().get(0));
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getString("images[1]")).isEqualTo(게시글.images().get(1));
 
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getLong("writer.id")).isEqualTo(
-                        게시글.writer().id()),
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getString("writer.nickname")).isEqualTo(
-                        게시글.writer().nickname()),
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getString("writer.profileImage")).isEqualTo(
-                        게시글.writer().profileImage()),
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getLong("writer.id")).isEqualTo(
+                            게시글.writer().id());
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getString("writer.nickname")).isEqualTo(
+                            게시글.writer().nickname());
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getString("writer.profileImage")).isEqualTo(
+                            게시글.writer().profileImage());
 
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.viewCount")).isEqualTo(
-                        게시글.reactionCount().viewCount()),
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.commentCount")).isEqualTo(
-                        게시글.reactionCount().commentCount()),
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.scrapCount")).isEqualTo(
-                        게시글.reactionCount().scrapCount()),
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.viewCount")).isEqualTo(
+                            게시글.reactionCount().viewCount());
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.commentCount")).isEqualTo(
+                            게시글.reactionCount().commentCount());
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.scrapCount")).isEqualTo(
+                            게시글.reactionCount().scrapCount());
 
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("upCount")).isEqualTo(게시글.upCount()),
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("downCount")).isEqualTo(게시글.downCount()),
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isUp")).isEqualTo(게시글.isUp()),
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isDown")).isEqualTo(게시글.isDown()),
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isScrap")).isEqualTo(게시글.isScrap()),
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isWriter")).isEqualTo(true)
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("upCount")).isEqualTo(게시글.upCount());
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("downCount")).isEqualTo(게시글.downCount());
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isUp")).isEqualTo(게시글.isUp());
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isDown")).isEqualTo(게시글.isDown());
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isScrap")).isEqualTo(게시글.isScrap());
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isWriter")).isEqualTo(true);
+                }
         );
     }
 
@@ -397,7 +398,6 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         assertThat(게시글_상세_조회_결과.statusCode()).isEqualTo(200);
         SoftAssertions.assertSoftly(
                 softAssertions -> {
-
                     softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getLong("id")).isEqualTo(게시글.id());
                     softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getString("title"))
                             .isEqualTo(게시글.title());
@@ -524,7 +524,6 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .extract();
 
         final String 유지할_이미지의_url = 게시글_상세_조회_응답.body().jsonPath().getString("images[0]");
-        System.out.println("유지할_이미지의_url = " + 유지할_이미지의_url);
         final ExtractableResponse<Response> 게시글_수정_응답 = RestAssured.given()
                 .multiPart("title", "제목을 수정하자")
                 .multiPart("content", "내용을 수정하자")
