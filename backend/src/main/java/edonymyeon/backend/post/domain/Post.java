@@ -124,8 +124,8 @@ public class Post {
         postImageInfos.add(postImageInfo);
     }
 
-    public void checkImageCount(final Integer imageCount) {
-        postImageInfos.checkImageCount(imageCount);
+    public void validateImageAdditionCount(final Integer imageCount) {
+        postImageInfos.validateImageAdditionCount(imageCount);
     }
 
     public void update(final String title, final String content, final Long price) {
