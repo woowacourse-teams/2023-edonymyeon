@@ -134,7 +134,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:fontFamily="@font/dohyeon"
-                android:text="@string/my_page_purchase_title"
                 android:textColor="@color/gray_434343"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="@id/tv_purchase_title"
