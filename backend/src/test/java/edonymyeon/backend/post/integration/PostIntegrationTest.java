@@ -447,7 +447,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         final ExtractableResponse<Response> 게시글_상세_조회_응답 = RestAssured
                 .given()
                 .when()
-                .auth().preemptive().basic(작성자가_아닌_사람.getEmail(), 작성자가_아닌_사람.getPassword())
+                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
                 .get("/posts/" + 게시글_id)
                 .then()
                 .extract();
