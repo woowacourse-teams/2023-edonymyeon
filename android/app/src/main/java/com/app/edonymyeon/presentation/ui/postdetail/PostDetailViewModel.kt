@@ -14,6 +14,7 @@ import com.app.edonymyeon.presentation.uimodel.RecommendationUiModel
 import com.domain.edonymyeon.model.Post
 import com.domain.edonymyeon.repository.PostRepository
 import com.domain.edonymyeon.repository.RecommendRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PostDetailViewModel(
@@ -37,6 +38,12 @@ class PostDetailViewModel(
     private val _isScrap = MutableLiveData<Boolean>()
     val isScrap: LiveData<Boolean>
         get() = _isScrap
+
+    // 추천/비추천 요청 완료 여부 (기본은 true, 클릭하면 false, 응답을 받으면 다시 true)
+    // TODO: 응답이 끝나지 않았는데 다른 페이지로 나갔다 오면 어떻게 될까요?
+    private val _isRecommendationRequestDone = MutableLiveData<Boolean>(true)
+    val isRecommendationRequestDone: LiveData<Boolean>
+        get() = _isRecommendationRequestDone
 
     init {
         getPostDetail(postId)
@@ -98,6 +105,11 @@ class PostDetailViewModel(
         }
 
         if (oldRecommendation.isUp == isChecked) return
+
+        // 클릭 후 서버 통신을 보내기 전 우선 false가 된다
+        _isRecommendationRequestDone.value = false
+        Log.d("PostDetailViewModel", "up clicked! request done: false")
+
         if (isChecked) {
             saveRecommendation(postId, RecommendRepository::saveRecommendUp)
         } else {
@@ -130,6 +142,11 @@ class PostDetailViewModel(
         }
 
         if (oldRecommendation.isDown == isChecked) return
+
+        // 클릭 후 서버 통신을 보내기 전 우선 false가 된다
+        _isRecommendationRequestDone.value = false
+        Log.d("PostDetailViewModel", "down clicked! request done: false")
+
         if (isChecked) {
             saveRecommendation(postId, RecommendRepository::saveRecommendDown)
         } else {
@@ -141,9 +158,19 @@ class PostDetailViewModel(
         postId: Long,
         event: suspend RecommendRepository.(Long) -> Result<Any>,
     ) {
+        // 서버 통신 요청 보낸다
+        Log.d("PostDetailViewModel", "saveRecommendation")
         viewModelScope.launch {
             recommendRepository.event(postId)
+                .onSuccess {
+                    // 응답이 도착했지만 테스트를 위해 3초 기다리기 추가했습니당
+                    delay(3000L)
+                    _isRecommendationRequestDone.value = true
+                    Log.d("PostDetailViewModel", "onSuccess! request done: true")
+                }
                 .onFailure {
+                    _isRecommendationRequestDone.value = true
+                    Log.d("PostDetailViewModel", "onFailure! request done: true")
                     it as CustomThrowable
                     when (it.code) {
                     }

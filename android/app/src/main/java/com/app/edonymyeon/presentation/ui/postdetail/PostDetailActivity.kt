@@ -70,6 +70,9 @@ class PostDetailActivity : AppCompatActivity() {
         viewModel.reactionCount.observe(this) {
             binding.postReactionCtv.reactionCount = it
         }
+
+        // 추천/비추천 체크박스 클릭 시 활성화/비활성화
+        observeRecommendationCheckboxActivation()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -201,6 +204,13 @@ class PostDetailActivity : AppCompatActivity() {
             } else {
                 indicatorView.setImageResource(R.drawable.ic_indicator_focus_off)
             }
+        }
+    }
+
+    private fun observeRecommendationCheckboxActivation() {
+        viewModel.isRecommendationRequestDone.observe(this) {
+            binding.cbUp.isEnabled = it
+            binding.cbDown.isEnabled = it
         }
     }
 
