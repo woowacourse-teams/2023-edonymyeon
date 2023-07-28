@@ -2,7 +2,7 @@ package edonymyeon.backend.auth.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_DUPLICATE;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_INVALID;
+import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_DUPLICATE;
 
 import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
@@ -37,13 +37,13 @@ public class AuthService {
     public DuplicateCheckResponse checkDuplicate(final String target, final String value) {
         final ValidateType validateType = ValidateType.from(target);
 
-        if (findByValidateType(validateType, value).isPresent()) {
-            return new DuplicateCheckResponse(false);
+        if (findMemberByValidateType(validateType, value).isEmpty()) {
+            return new DuplicateCheckResponse(true);
         }
-        return new DuplicateCheckResponse(true);
+        return new DuplicateCheckResponse(false);
     }
 
-    private Optional<Member> findByValidateType(final ValidateType validateType, final String value) {
+    private Optional<Member> findMemberByValidateType(final ValidateType validateType, final String value) {
         if (validateType.equals(ValidateType.EMAIL)) {
             return memberRepository.findByEmail(value);
         }
@@ -67,14 +67,12 @@ public class AuthService {
     }
 
     private void validateDuplicateEmail(final String email) {
-        if (memberRepository.findByEmail(email).isPresent()) {
-            throw new EdonymyeonException(MEMBER_EMAIL_DUPLICATE);
-        }
+        memberRepository.findByEmail(email)
+                .orElseThrow(() -> new EdonymyeonException(MEMBER_EMAIL_DUPLICATE));
     }
 
     private void validateDuplicateNickname(final String nickname) {
-        if (memberRepository.findByNickname(nickname).isPresent()) {
-            throw new EdonymyeonException(MEMBER_NICKNAME_INVALID);
-        }
+        memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new EdonymyeonException(MEMBER_NICKNAME_DUPLICATE));
     }
 }
