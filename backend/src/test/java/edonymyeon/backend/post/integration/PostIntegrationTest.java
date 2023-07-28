@@ -14,7 +14,6 @@ import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
-import edonymyeon.backend.support.PostTestSupport;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -91,7 +90,6 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
     void 본인이_작성하지_않은_게시글_삭제_불가능_테스트() {
         final Member member = 사용자를_하나_만든다();
         final ExtractableResponse<Response> 게시글_생성_요청_결과 = 게시글을_하나_만든다(member);
-
 
         final String location = 게시글_생성_요청_결과.header("location");
         final long 게시글_id = Long.parseLong(location.split("/")[2]);
@@ -205,11 +203,15 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
             softly.assertThat(jsonPath.getString("posts[0].title")).isEqualTo(전체조회_4번째_게시글.title());
             softly.assertThat(jsonPath.getString("posts[0].image")).isEqualTo(전체조회_4번째_게시글.image());
             softly.assertThat(jsonPath.getString("posts[0].content")).isEqualTo(전체조회_4번째_게시글.content());
-            softly.assertThat(jsonPath.getString("posts[0].writer.nickName")).isEqualTo(전체조회_4번째_게시글.writer().nickName());
+            softly.assertThat(jsonPath.getString("posts[0].writer.nickName"))
+                    .isEqualTo(전체조회_4번째_게시글.writer().nickName());
             softly.assertThat(jsonPath.getString("posts[0].createdAt")).isNotNull();
-            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.viewCount")).isEqualTo(전체조회_4번째_게시글.reactionCount().viewCount());
-            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.commentCount")).isEqualTo(전체조회_4번째_게시글.reactionCount().commentCount());
-            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.scrapCount")).isEqualTo(전체조회_4번째_게시글.reactionCount().scrapCount());
+            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.viewCount"))
+                    .isEqualTo(전체조회_4번째_게시글.reactionCount().viewCount());
+            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.commentCount"))
+                    .isEqualTo(전체조회_4번째_게시글.reactionCount().commentCount());
+            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.scrapCount"))
+                    .isEqualTo(전체조회_4번째_게시글.reactionCount().scrapCount());
         });
     }
 
@@ -356,11 +358,14 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                     softAssertions.assertThat(response.body().jsonPath().getLong("id")).isEqualTo(post.id());
                     softAssertions.assertThat(response.body().jsonPath().getString("title")).isEqualTo(post.title());
                     softAssertions.assertThat(response.body().jsonPath().getLong("price")).isEqualTo(post.price());
-                    softAssertions.assertThat(response.body().jsonPath().getString("content")).isEqualTo(post.content());
+                    softAssertions.assertThat(response.body().jsonPath().getString("content"))
+                            .isEqualTo(post.content());
 
                     softAssertions.assertThat(response.body().jsonPath().getList("images")).hasSize(2);
-                    softAssertions.assertThat(response.body().jsonPath().getString("images[0]")).isEqualTo(post.images().get(0));
-                    softAssertions.assertThat(response.body().jsonPath().getString("images[1]")).isEqualTo(post.images().get(1));
+                    softAssertions.assertThat(response.body().jsonPath().getString("images[0]"))
+                            .isEqualTo(post.images().get(0));
+                    softAssertions.assertThat(response.body().jsonPath().getString("images[1]"))
+                            .isEqualTo(post.images().get(1));
 
                     softAssertions.assertThat(response.body().jsonPath().getLong("writer.id")).isEqualTo(
                             post.writer().id());
@@ -371,16 +376,19 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
 
                     softAssertions.assertThat(response.body().jsonPath().getInt("reactionCount.viewCount")).isEqualTo(
                             post.reactionCount().viewCount());
-                    softAssertions.assertThat(response.body().jsonPath().getInt("reactionCount.commentCount")).isEqualTo(
-                            post.reactionCount().commentCount());
+                    softAssertions.assertThat(response.body().jsonPath().getInt("reactionCount.commentCount"))
+                            .isEqualTo(
+                                    post.reactionCount().commentCount());
                     softAssertions.assertThat(response.body().jsonPath().getInt("reactionCount.scrapCount")).isEqualTo(
                             post.reactionCount().scrapCount());
 
                     softAssertions.assertThat(response.body().jsonPath().getInt("upCount")).isEqualTo(post.upCount());
-                    softAssertions.assertThat(response.body().jsonPath().getInt("downCount")).isEqualTo(post.downCount());
+                    softAssertions.assertThat(response.body().jsonPath().getInt("downCount"))
+                            .isEqualTo(post.downCount());
                     softAssertions.assertThat(response.body().jsonPath().getBoolean("isUp")).isEqualTo(post.isUp());
                     softAssertions.assertThat(response.body().jsonPath().getBoolean("isDown")).isEqualTo(post.isDown());
-                    softAssertions.assertThat(response.body().jsonPath().getBoolean("isScrap")).isEqualTo(post.isScrap());
+                    softAssertions.assertThat(response.body().jsonPath().getBoolean("isScrap"))
+                            .isEqualTo(post.isScrap());
                     softAssertions.assertThat(response.body().jsonPath().getBoolean("isWriter")).isEqualTo(false);
                 }
         );
