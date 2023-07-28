@@ -10,7 +10,6 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -75,7 +74,7 @@ public class PostImageInfos {
     public List<PostImageInfo> findImagesToDelete(final List<String> remainedStoreNames) {
         final List<PostImageInfo> unmatchedPostImageInfos = this.postImageInfos.stream().
                 filter(postImageInfo -> !remainedStoreNames.contains(postImageInfo.getStoreName()))
-                .collect(Collectors.toList());
+                .toList();
 
         if (remainedStoreNames.size() + unmatchedPostImageInfos.size() != this.postImageInfos.size()) {
             throw new EdonymyeonException(IMAGE_STORE_NAME_INVALID);
