@@ -4,11 +4,14 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.IntegrationTest;
+import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.domain.Member;
 import io.restassured.RestAssured;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class PostSearchIntegrationTest extends IntegrationTest {
@@ -32,12 +35,16 @@ public class PostSearchIntegrationTest extends IntegrationTest {
 
     @Test
     void 검색어가_포함되어있지_않으면_오류가_발생한다_400_BasRequest(){
-        RestAssured
+        ExtractableResponse<Response> response = RestAssured
                 .given()
                 .when()
                 .get("/search")
                 .then()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
+                .extract();
+
+        JsonPath jsonPath = response.body().jsonPath();
+
+        assertThat(jsonPath.getInt("errorCode")).isEqualTo(ExceptionInformation.REQUEST_PARAMETER_NOT_EXIST.getCode());
     }
 
     @Test
