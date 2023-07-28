@@ -85,6 +85,6 @@ public class PostImageInfos {
 
     public void remove(final List<PostImageInfo> deletedPostImageInfos) {
         this.postImageInfos.removeAll(deletedPostImageInfos);
-        //todo: postImageInfos의 post를 null로 세팅해줘야 할까?
+        deletedPostImageInfos.forEach(each -> each.updatePost(null));
     }
 }
