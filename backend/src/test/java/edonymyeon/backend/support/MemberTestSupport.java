@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class MemberTestSupport {
 
     private static final String DEFAULT_EMAIL = "email";
-    private static final String DEFAULT_PASSWORD = "password";
+    private static final String DEFAULT_PASSWORD = "password123!";
     private static final String DEFAULT_NICK_NAME = "nickName";
     private static int emailCount = 1;
     private static int nickNameCount = 1;

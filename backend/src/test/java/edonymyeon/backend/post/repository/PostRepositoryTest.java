@@ -32,7 +32,7 @@ class PostRepositoryTest {
     public void setUp() {
         member = new Member(
                 "email",
-                "password",
+                "password123!",
                 "nickname",
                 null
         );

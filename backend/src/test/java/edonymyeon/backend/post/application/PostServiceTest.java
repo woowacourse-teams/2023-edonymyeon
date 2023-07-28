@@ -212,7 +212,7 @@ class PostServiceTest implements ImageFileCleaner {
             // when
             Member 다른_사람 = memberTestSupport.builder()
                     .email("otheremail")
-                    .password("password")
+                    .password("password123!")
                     .build();
             memberRepository.save(다른_사람);
             memberId = new MemberIdDto(다른_사람.getId());
@@ -360,7 +360,7 @@ class PostServiceTest implements ImageFileCleaner {
 
     @Test
     void 작성자의_프로필_사진이_없더라도_상세조회가_가능하다() throws IOException {
-        final Member member = new Member("anonymous@gmail.com", "password", "엘렐레", null);
+        final Member member = new Member("anonymous@gmail.com", "password123!", "엘렐레", null);
         memberRepository.save(member);
 
         final MemberIdDto memberIdDto = new MemberIdDto(member.getId());
