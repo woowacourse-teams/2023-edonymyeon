@@ -37,14 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 class PostControllerTest implements ImageFileCleaner {
 
-    @Autowired
-    MockMvc mockMvc;
-
-    @Autowired
-    protected MemberTestSupport memberTestSupport;
-
     private static MockMultipartFile 이미지1;
-
     private static MockMultipartFile 이미지2;
 
     static {
@@ -64,6 +57,12 @@ class PostControllerTest implements ImageFileCleaner {
             throw new RuntimeException(e);
         }
     }
+
+    @Autowired
+    protected MemberTestSupport memberTestSupport;
+
+    @Autowired
+    MockMvc mockMvc;
 
     @Test
     void 사진_첨부_성공_테스트() throws Exception {

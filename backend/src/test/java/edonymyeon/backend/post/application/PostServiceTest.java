@@ -94,6 +94,19 @@ class PostServiceTest implements ImageFileCleaner {
         );
     }
 
+    @Test
+    void 작성자의_프로필_사진이_없더라도_상세조회가_가능하다() throws IOException {
+        final Member member = new Member("anonymous@gmail.com", "password123!", "엘렐레", null);
+        memberRepository.save(member);
+
+        final MemberIdDto memberIdDto = new MemberIdDto(member.getId());
+        final PostResponse postResponse = postService.createPost(memberIdDto, getPostRequest());
+
+        Assertions
+                .assertThatCode(() -> postService.findSpecificPost(postResponse.id(), memberIdDto))
+                .doesNotThrowAnyException();
+    }
+
     @Nested
     class 게시글을_생성할_때 {
 
@@ -363,24 +376,11 @@ class PostServiceTest implements ImageFileCleaner {
                 final PostImageInfo 바꾼_후_이미지_정보 = findPost.getPostImageInfos().get(0);
 
                 assertSoftly(softly -> {
-                    softly.assertThat(findPost.getPostImageInfos().size()).isEqualTo(게시글_수정_요청.newImages().size());
-                    softly.assertThat(바꾸기_전_이미지_정보.getStoreName().equals(바꾼_후_이미지_정보.getStoreName())).isFalse();
+                            softly.assertThat(findPost.getPostImageInfos().size()).isEqualTo(게시글_수정_요청.newImages().size());
+                            softly.assertThat(바꾸기_전_이미지_정보.getStoreName().equals(바꾼_후_이미지_정보.getStoreName())).isFalse();
                         }
                 );
             }
         }
-    }
-
-    @Test
-    void 작성자의_프로필_사진이_없더라도_상세조회가_가능하다() throws IOException {
-        final Member member = new Member("anonymous@gmail.com", "password123!", "엘렐레", null);
-        memberRepository.save(member);
-
-        final MemberIdDto memberIdDto = new MemberIdDto(member.getId());
-        final PostResponse postResponse = postService.createPost(memberIdDto, getPostRequest());
-
-        Assertions
-                .assertThatCode(() -> postService.findSpecificPost(postResponse.id(), memberIdDto))
-                .doesNotThrowAnyException();
     }
 }
