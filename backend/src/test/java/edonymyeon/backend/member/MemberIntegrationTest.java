@@ -9,16 +9,11 @@ import edonymyeon.backend.member.domain.Member;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class MemberIntegrationTest extends IntegrationTest {
-
-    @Autowired
-    EntityManager entityManager;
 
     @Test
     void 회원_정보_조회시_OK를_응답한다() {

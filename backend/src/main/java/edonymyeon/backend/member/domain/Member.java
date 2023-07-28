@@ -65,13 +65,13 @@ public class Member {
     }
 
     private void validateEmail(final String email) {
-        if (Objects.isNull(email) || email.length() > MAX_EMAIL_LENGTH) {
+        if (Objects.isNull(email) || email.isBlank() || email.length() > MAX_EMAIL_LENGTH) {
             throw new EdonymyeonException(MEMBER_EMAIL_INVALID);
         }
     }
 
     private void validateNickName(final String nickname) {
-        if (Objects.isNull(nickname) || nickname.length() > MAX_NICKNAME_LENGTH) {
+        if (Objects.isNull(nickname) || nickname.isBlank() || nickname.length() > MAX_NICKNAME_LENGTH) {
             throw new EdonymyeonException(MEMBER_NICKNAME_INVALID);
         }
     }
