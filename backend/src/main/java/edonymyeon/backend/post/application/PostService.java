@@ -71,7 +71,7 @@ public class PostService {
         if (isImagesEmpty(postRequest.images())) {
             return new PostResponse(post.getId());
         }
-        post.checkImageAdditionCount(postRequest.images().size());
+        post.validateImageAdditionCount(postRequest.images().size());
 
         final PostImageInfos postImageInfos = PostImageInfos.of(post,
                 imageFileUploader.uploadFiles(postRequest.images()));
@@ -134,7 +134,7 @@ public class PostService {
         post.update(request.title(), request.content(), request.price());
 
         final List<String> imageStoreNames = convertUrlToStoreName(request.originalImages());
-        final List<PostImageInfo> deletedImagesOfPost = post.getUnmatchedPostImageInfos(imageStoreNames);
+        final List<PostImageInfo> deletedImagesOfPost = post.findImagesToDelete(imageStoreNames);
         post.removePostImageInfos(deletedImagesOfPost);
         postImageInfoRepository.deleteAll(deletedImagesOfPost);
 
@@ -143,7 +143,7 @@ public class PostService {
             return new PostResponse(postId);
         }
 
-        post.checkImageAdditionCount(request.newImages().size());
+        post.validateImageAdditionCount(request.newImages().size());
         updateImagesOfPost(request, post);
         deletedImagesOfPost.forEach(imageFileUploader::removeFile);
         return new PostResponse(postId);

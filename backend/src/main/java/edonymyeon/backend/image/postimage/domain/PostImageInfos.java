@@ -54,11 +54,11 @@ public class PostImageInfos {
         if (this.postImageInfos.contains(postImageInfo)) {
             return;
         }
-        checkImageAdditionCount(1);
+        validateImageAdditionCount(1);
         this.postImageInfos.add(postImageInfo);
     }
 
-    public void checkImageAdditionCount(final Integer imageAdditionCount) {
+    public void validateImageAdditionCount(final Integer imageAdditionCount) {
         if (isInvalidImageCount(this.postImageInfos.size() + imageAdditionCount)) {
             throw new EdonymyeonException(POST_IMAGE_COUNT_INVALID);
         }
@@ -72,19 +72,19 @@ public class PostImageInfos {
         return imageCount > MAX_IMAGE_COUNT;
     }
 
-    public List<PostImageInfo> getUnmatchedPostImageInfos(final List<String> storeNames) {
+    public List<PostImageInfo> findImagesToDelete(final List<String> remainedStoreNames) {
         final List<PostImageInfo> unmatchedPostImageInfos = this.postImageInfos.stream().
-                filter(postImageInfo -> !storeNames.contains(postImageInfo.getStoreName()))
+                filter(postImageInfo -> !remainedStoreNames.contains(postImageInfo.getStoreName()))
                 .collect(Collectors.toList());
 
-        if (storeNames.size() + unmatchedPostImageInfos.size() != this.postImageInfos.size()) {
+        if (remainedStoreNames.size() + unmatchedPostImageInfos.size() != this.postImageInfos.size()) {
             throw new EdonymyeonException(IMAGE_STORE_NAME_INVALID);
         }
         return unmatchedPostImageInfos;
     }
 
-    public void remove(final List<PostImageInfo> deletedImagesOfPost) {
-        this.postImageInfos.removeAll(deletedImagesOfPost);
+    public void remove(final List<PostImageInfo> deletedPostImageInfos) {
+        this.postImageInfos.removeAll(deletedPostImageInfos);
         //todo: postImageInfos의 post를 null로 세팅해줘야 할까?
     }
 }
