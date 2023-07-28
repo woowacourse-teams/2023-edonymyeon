@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class ImageMockMultipartFileSupport {
+public class MockMultipartFileTestSupport {
 
     public MockMultipartFileBuilder builder() {
         return new MockMultipartFileBuilder();

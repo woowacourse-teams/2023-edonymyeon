@@ -20,8 +20,8 @@ import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
-import edonymyeon.backend.support.ImageMockMultipartFileSupport;
 import edonymyeon.backend.support.MemberTestSupport;
+import edonymyeon.backend.support.MockMultipartFileTestSupport;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ class PostServiceTest implements ImageFileCleaner {
 
     private final MemberTestSupport memberTestSupport;
 
-    private final ImageMockMultipartFileSupport imageFileSupport;
+    private final MockMultipartFileTestSupport mockMultipartFileTestSupport;
 
     private final ImageFileUploader imageFileUploader;
 
@@ -81,7 +81,7 @@ class PostServiceTest implements ImageFileCleaner {
     }
 
     private PostRequest getPostRequest() throws IOException {
-        final MockMultipartFile file = imageFileSupport.builder()
+        final MockMultipartFile file = mockMultipartFileTestSupport.builder()
                 .buildImagesForCreatePost();
 
         final List<MultipartFile> multipartFiles = List.of(file, file);
@@ -157,7 +157,7 @@ class PostServiceTest implements ImageFileCleaner {
             // given
             List<MultipartFile> images = new ArrayList<>();
             for (int i = 0; i < 11; i++) {
-                images.add(imageFileSupport.builder()
+                images.add(mockMultipartFileTestSupport.builder()
                         .buildImagesForCreatePost());
             }
             final PostRequest request = new PostRequest(
@@ -275,7 +275,7 @@ class PostServiceTest implements ImageFileCleaner {
                 // when
                 List<MultipartFile> images = new ArrayList<>();
                 for (int i = 0; i < 11; i++) {
-                    images.add(imageFileSupport.builder()
+                    images.add(mockMultipartFileTestSupport.builder()
                             .buildImagesForUpdatePost());
                 }
                 final PostModificationRequest request = new PostModificationRequest(
@@ -297,7 +297,7 @@ class PostServiceTest implements ImageFileCleaner {
                 final SpecificPostInfoResponse 게시글_상세조회_결과 = postService.findSpecificPost(게시글_생성_결과.id(), memberId);
 
                 // when
-                final List<MultipartFile> 추가할_이미지 = List.of(imageFileSupport.builder()
+                final List<MultipartFile> 추가할_이미지 = List.of(mockMultipartFileTestSupport.builder()
                         .buildImagesForUpdatePost());
                 final PostModificationRequest request = new PostModificationRequest(
                         "I hate you",
@@ -337,7 +337,7 @@ class PostServiceTest implements ImageFileCleaner {
             @Test
             void 이미지를_바꿀_수_있다(@Autowired PostRepository postRepository) throws IOException {
                 //given
-                final MockMultipartFile 바꾸기_전_이미지 = imageFileSupport.builder().buildImagesForCreatePost();
+                final MockMultipartFile 바꾸기_전_이미지 = mockMultipartFileTestSupport.builder().buildImagesForCreatePost();
                 final PostRequest 게시글_생성_요청 = new PostRequest(
                         "I love you",
                         "He wisely contented himself with his family and his love of nature.",
@@ -348,7 +348,7 @@ class PostServiceTest implements ImageFileCleaner {
                 final PostImageInfo 바꾸기_전_이미지_정보 = postRepository.findById(post.id()).get().getPostImageInfos().get(0);
 
                 // when
-                final MockMultipartFile 바꾼_후_이미지 = imageFileSupport.builder().buildImagesForUpdatePost();
+                final MockMultipartFile 바꾼_후_이미지 = mockMultipartFileTestSupport.builder().buildImagesForUpdatePost();
                 final PostModificationRequest 게시글_수정_요청 = new PostModificationRequest(
                         "I love you",
                         "He wisely contented himself with his family and his love of nature.",

@@ -3,7 +3,6 @@ package edonymyeon.backend.post.integration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
@@ -11,101 +10,23 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
-import edonymyeon.backend.post.application.dto.PostRequest;
-import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
+import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class PostIntegrationTest extends IntegrationTest implements ImageFileCleaner {
 
-    @LocalServerPort
-    private int port;
-
     private static File 이미지1 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
-
     private static File 이미지2 = new File("./src/test/resources/static/img/file/test_image_2.jpg");
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-    }
-
-    @Test
-    void 사진_첨부_성공_테스트() {
-        final Member member = 사용자를_하나_만든다();
-        final var 게시글_생성_결과 = 게시글을_하나_만든다(member);
-
-        assertThat(게시글_생성_결과.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-    }
-
-    @Test
-    void 회원이_아니면_게시글_작성_불가_테스트() {
-        final var response = RestAssured.given()
-                .multiPart("title", "this is title")
-                .multiPart("content", "this is content")
-                .multiPart("price", 1000)
-                .multiPart("images", 이미지1, MediaType.IMAGE_JPEG_VALUE)
-                .multiPart("images", 이미지2, MediaType.IMAGE_JPEG_VALUE)
-                .when()
-                .post("/posts")
-                .then()
-                .extract();
-
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
-    }
-
-    @Test
-    void 본인이_작성한_게시글_삭제_가능_테스트() {
-        final Member member = 사용자를_하나_만든다();
-        final ExtractableResponse<Response> 게시글_생성_결과 = 게시글을_하나_만든다(member);
-
-        final String location = 게시글_생성_결과.header("location");
-        final long 게시글_id = Long.parseLong(location.split("/")[2]);
-
-        RestAssured.given()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .when()
-                .delete("/posts/" + 게시글_id)
-                .then()
-                .statusCode(HttpStatus.NO_CONTENT.value());
-    }
-
-    @Test
-    void 본인이_작성하지_않은_게시글_삭제_불가능_테스트() {
-        final Member member = 사용자를_하나_만든다();
-        final ExtractableResponse<Response> 게시글_생성_요청_결과 = 게시글을_하나_만든다(member);
-
-        final String location = 게시글_생성_요청_결과.header("location");
-        final long 게시글_id = Long.parseLong(location.split("/")[2]);
-
-        final Member otherMember = memberTestSupport.builder()
-                .email("other")
-                .password("password")
-                .build();
-
-        RestAssured.given()
-                .auth().preemptive().basic(otherMember.getEmail(), otherMember.getPassword())
-                .when()
-                .delete("/posts/" + 게시글_id)
-                .then()
-                .statusCode(HttpStatus.FORBIDDEN.value());
-    }
 
     private Member 사용자를_하나_만든다() {
         return memberTestSupport.builder().build();
@@ -122,17 +43,105 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .build();
     }
 
-    @Test
-    void 기본조건으로_전체게시글_조회(@Autowired PostService postService) {
-        한_사용자가_게시글을_서른개_작성한다(postService);
+    private long 응답의_location헤더에서_id를_추출한다(final ExtractableResponse<Response> 게시글_생성_요청_결과) {
+        final String location = 게시글_생성_요청_결과.header("location");
+        return Long.parseLong(location.split("/")[2]);
+    }
 
-        final var 게시글_전체_조회_결과 = RestAssured
+    @Test
+    void 사진을_첨부해서_게시글_작성_가능하다() {
+        final Member 작성자 = 사용자를_하나_만든다();
+        final var 게시글_생성_결과 = 게시글을_하나_만든다(작성자);
+
+        assertThat(게시글_생성_결과.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    @Test
+    void 회원이_아니면_게시글_작성_불가능하다() {
+        final var response = RestAssured.given()
+                .multiPart("title", "this is title")
+                .multiPart("content", "this is content")
+                .multiPart("price", 1000)
+                .multiPart("images", 이미지1, MediaType.IMAGE_JPEG_VALUE)
+                .multiPart("images", 이미지2, MediaType.IMAGE_JPEG_VALUE)
+                .when()
+                .post("/posts")
+                .then()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @Test
+    void 본인이_작성한_게시글은_삭제_가능하다() {
+        final Member 작성자 = 사용자를_하나_만든다();
+        final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
+        final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
+
+        RestAssured.given()
+                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
+                .when()
+                .delete("/posts/" + 게시글_id)
+                .then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    void 본인이_작성하지_않은_게시글은_삭제_불가능하다() {
+        final Member 작성자 = 사용자를_하나_만든다();
+        final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
+        final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
+
+        final Member 작성자가_아닌_사람 = 사용자를_하나_만든다();
+        RestAssured.given()
+                .auth().preemptive().basic(작성자가_아닌_사람.getEmail(), 작성자가_아닌_사람.getPassword())
+                .when()
+                .delete("/posts/" + 게시글_id)
+                .then()
+                .statusCode(HttpStatus.FORBIDDEN.value());
+    }
+
+    @Test
+    void 게시글이_추천이_되어있다면_게시글_삭제시_추천도_삭제된다(@Autowired ThumbsRepository thumbsRepository) {
+        //given
+        final Member 작성자 = 사용자를_하나_만든다();
+        final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
+        final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
+        final Member 추천하는_사람 = 사용자를_하나_만든다();
+        RestAssured.given()
+                .auth().preemptive().basic(추천하는_사람.getEmail(), 추천하는_사람.getPassword())
+                .when()
+                .put("posts/" + 게시글_id + "/up")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+
+        //when
+        final ExtractableResponse<Response> 게시글_삭제_응답 = RestAssured.given()
+                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
+                .when()
+                .delete("posts/" + 게시글_id)
+                .then()
+                .extract();
+
+        //then
+        assertSoftly(softly -> {
+                    softly.assertThat(thumbsRepository.findByPostId(게시글_id)).isEmpty();
+                    softly.assertThat(게시글_삭제_응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+                }
+        );
+    }
+
+    @Test
+    void 기본조건으로_전체게시글_조회() {
+        한_사용자가_게시글을_서른개_작성한다();
+
+        final var 게시글_전체_조회_응답 = RestAssured
                 .when()
                 .get("/posts")
                 .then()
                 .extract();
 
-        final var jsonPath = 게시글_전체_조회_결과.body().jsonPath();
+        final var jsonPath = 게시글_전체_조회_응답.body().jsonPath();
 
         assertSoftly(softly -> {
             softly.assertThat(jsonPath.getList("posts")).hasSize(20);
@@ -149,10 +158,10 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
     }
 
     @Test
-    void 한_번에_3개씩_조회하는_조건으로_전체게시글_조회(@Autowired PostService postService) {
-        한_사용자가_게시글을_서른개_작성한다(postService);
+    void 한_번에_3개씩_조회하는_조건으로_전체게시글_조회() {
+        한_사용자가_게시글을_서른개_작성한다();
 
-        final var 게시글_전체_조회_결과 = RestAssured
+        final var 게시글_전체_조회_응답 = RestAssured
                 .given()
                 .param("size", 3)
                 .when()
@@ -160,7 +169,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .then()
                 .extract();
 
-        final var jsonPath = 게시글_전체_조회_결과.body().jsonPath();
+        final var jsonPath = 게시글_전체_조회_응답.body().jsonPath();
 
         assertSoftly(softly -> {
             softly.assertThat(jsonPath.getList("posts")).hasSize(3);
@@ -178,9 +187,9 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
 
     @Test
     void 한_번에_3개씩_조회하는_조건으로_2페이지_전체게시글_조회(@Autowired PostService postService) {
-        한_사용자가_게시글을_서른개_작성한다(postService);
+        한_사용자가_게시글을_서른개_작성한다();
 
-        final var 게시글_전체_조회_결과 = RestAssured
+        final var 게시글_전체_조회_응답 = RestAssured
                 .given()
                 .param("size", 3)
                 .param("page", 1)
@@ -189,7 +198,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .then()
                 .extract();
 
-        final var jsonPath = 게시글_전체_조회_결과.body().jsonPath();
+        final var jsonPath = 게시글_전체_조회_응답.body().jsonPath();
 
         final var 전체조회_4번째_게시글 = postService.findPostsByPagingCondition(
                         GeneralFindingCondition.builder()
@@ -216,200 +225,179 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         });
     }
 
-    private void 한_사용자가_게시글을_서른개_작성한다(PostService postService) {
-        final Member member = 사용자를_하나_만든다();
+    private void 한_사용자가_게시글을_서른개_작성한다() {
+        final Member 작성자 = 사용자를_하나_만든다();
         for (int i = 0; i < 30; i++) {
-            try {
-                final PostRequest postRequest = getPostRequest();
-                postService.createPost(new MemberIdDto(member.getId()), postRequest);
-            } catch (IOException e) {
-                fail(e);
-            }
+            게시글을_하나_만든다(작성자);
         }
     }
 
     @Test
-    void 로그인하지_않은_사용자가_게시글_하나를_상세조회하는_경우(@Autowired PostService postService) throws IOException {
-        final Member member = 사용자를_하나_만든다();
+    void 로그인하지_않은_사용자가_게시글_하나를_상세조회하는_경우(@Autowired PostService postService) {
+        final Member 작성자 = 사용자를_하나_만든다();
+        final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
+        final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
 
-        final PostRequest postRequest = getPostRequest();
-        final PostResponse postResponse = postService.createPost(new MemberIdDto(member.getId()), postRequest);
-
-        final ExtractableResponse<Response> response = RestAssured
+        final ExtractableResponse<Response> 게시글_상세_조회_응답 = RestAssured
                 .given()
                 .when()
-                .get("/posts/" + postResponse.id())
+                .get("/posts/" + 게시글_id)
                 .then()
                 .extract();
 
-        final SpecificPostInfoResponse post = postService.findSpecificPost(postResponse.id(),
+        final SpecificPostInfoResponse 게시글 = postService.findSpecificPost(게시글_id,
                 new MemberIdDto(0L));
 
-        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(게시글_상세_조회_응답.statusCode()).isEqualTo(200);
         assertAll(
-                () -> assertThat(response.body().jsonPath().getLong("id")).isEqualTo(post.id()),
-                () -> assertThat(response.body().jsonPath().getString("title")).isEqualTo(post.title()),
-                () -> assertThat(response.body().jsonPath().getLong("price")).isEqualTo(post.price()),
-                () -> assertThat(response.body().jsonPath().getString("content")).isEqualTo(post.content()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getLong("id")).isEqualTo(게시글.id()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getString("title")).isEqualTo(게시글.title()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getLong("price")).isEqualTo(게시글.price()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getString("content")).isEqualTo(게시글.content()),
 
-                () -> assertThat(response.body().jsonPath().getList("images")).hasSize(2),
-                () -> assertThat(response.body().jsonPath().getString("images[0]")).isEqualTo(post.images().get(0)),
-                () -> assertThat(response.body().jsonPath().getString("images[1]")).isEqualTo(post.images().get(1)),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getList("images")).hasSize(2),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getString("images[0]")).isEqualTo(게시글.images().get(0)),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getString("images[1]")).isEqualTo(게시글.images().get(1)),
 
-                () -> assertThat(response.body().jsonPath().getLong("writer.id")).isEqualTo(
-                        post.writer().id()),
-                () -> assertThat(response.body().jsonPath().getString("writer.nickname")).isEqualTo(
-                        post.writer().nickname()),
-                () -> assertThat(response.body().jsonPath().getString("writer.profileImage")).isEqualTo(
-                        post.writer().profileImage()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getLong("writer.id")).isEqualTo(
+                        게시글.writer().id()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getString("writer.nickname")).isEqualTo(
+                        게시글.writer().nickname()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getString("writer.profileImage")).isEqualTo(
+                        게시글.writer().profileImage()),
 
-                () -> assertThat(response.body().jsonPath().getInt("reactionCount.viewCount")).isEqualTo(
-                        post.reactionCount().viewCount()),
-                () -> assertThat(response.body().jsonPath().getInt("reactionCount.commentCount")).isEqualTo(
-                        post.reactionCount().commentCount()),
-                () -> assertThat(response.body().jsonPath().getInt("reactionCount.scrapCount")).isEqualTo(
-                        post.reactionCount().scrapCount()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.viewCount")).isEqualTo(
+                        게시글.reactionCount().viewCount()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.commentCount")).isEqualTo(
+                        게시글.reactionCount().commentCount()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.scrapCount")).isEqualTo(
+                        게시글.reactionCount().scrapCount()),
 
-                () -> assertThat(response.body().jsonPath().getInt("upCount")).isEqualTo(post.upCount()),
-                () -> assertThat(response.body().jsonPath().getInt("downCount")).isEqualTo(post.downCount()),
-                () -> assertThat(response.body().jsonPath().getBoolean("isUp")).isEqualTo(post.isUp()),
-                () -> assertThat(response.body().jsonPath().getBoolean("isDown")).isEqualTo(post.isDown()),
-                () -> assertThat(response.body().jsonPath().getBoolean("isScrap")).isEqualTo(post.isScrap()),
-                () -> assertThat(response.body().jsonPath().getBoolean("isWriter")).isEqualTo(false)
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("upCount")).isEqualTo(게시글.upCount()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("downCount")).isEqualTo(게시글.downCount()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isUp")).isEqualTo(게시글.isUp()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isDown")).isEqualTo(게시글.isDown()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isScrap")).isEqualTo(게시글.isScrap()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isWriter")).isEqualTo(false)
         );
     }
 
     @Test
-    void 로그인한_사용자가_자신의_게시글_하나를_상세조회하는_경우(@Autowired PostService postService) throws IOException {
-        final Member member = 사용자를_하나_만든다();
-        final PostRequest postRequest = getPostRequest();
-        final PostResponse postResponse = postService.createPost(new MemberIdDto(member.getId()), postRequest);
+    void 로그인한_사용자가_자신의_게시글_하나를_상세조회하는_경우(@Autowired PostService postService) {
+        final Member 작성자 = 사용자를_하나_만든다();
+        final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
+        final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
 
-        final ExtractableResponse<Response> response = RestAssured
+        final ExtractableResponse<Response> 게시글_상세_조회_응답 = RestAssured
                 .given()
                 .when()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .get("/posts/" + postResponse.id())
+                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
+                .get("/posts/" + 게시글_id)
                 .then()
                 .extract();
 
-        final SpecificPostInfoResponse post = postService.findSpecificPost(postResponse.id(),
-                new MemberIdDto(member.getId()));
+        final SpecificPostInfoResponse 게시글 = postService.findSpecificPost(게시글_id,
+                new MemberIdDto(작성자.getId()));
 
-        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(게시글_상세_조회_응답.statusCode()).isEqualTo(200);
         assertAll(
-                () -> assertThat(response.body().jsonPath().getLong("id")).isEqualTo(post.id()),
-                () -> assertThat(response.body().jsonPath().getString("title")).isEqualTo(post.title()),
-                () -> assertThat(response.body().jsonPath().getLong("price")).isEqualTo(post.price()),
-                () -> assertThat(response.body().jsonPath().getString("content")).isEqualTo(post.content()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getLong("id")).isEqualTo(게시글.id()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getString("title")).isEqualTo(게시글.title()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getLong("price")).isEqualTo(게시글.price()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getString("content")).isEqualTo(게시글.content()),
 
-                () -> assertThat(response.body().jsonPath().getList("images")).hasSize(2),
-                () -> assertThat(response.body().jsonPath().getString("images[0]")).isEqualTo(post.images().get(0)),
-                () -> assertThat(response.body().jsonPath().getString("images[1]")).isEqualTo(post.images().get(1)),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getList("images")).hasSize(2),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getString("images[0]")).isEqualTo(게시글.images().get(0)),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getString("images[1]")).isEqualTo(게시글.images().get(1)),
 
-                () -> assertThat(response.body().jsonPath().getLong("writer.id")).isEqualTo(
-                        post.writer().id()),
-                () -> assertThat(response.body().jsonPath().getString("writer.nickname")).isEqualTo(
-                        post.writer().nickname()),
-                () -> assertThat(response.body().jsonPath().getString("writer.profileImage")).isEqualTo(
-                        post.writer().profileImage()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getLong("writer.id")).isEqualTo(
+                        게시글.writer().id()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getString("writer.nickname")).isEqualTo(
+                        게시글.writer().nickname()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getString("writer.profileImage")).isEqualTo(
+                        게시글.writer().profileImage()),
 
-                () -> assertThat(response.body().jsonPath().getInt("reactionCount.viewCount")).isEqualTo(
-                        post.reactionCount().viewCount()),
-                () -> assertThat(response.body().jsonPath().getInt("reactionCount.commentCount")).isEqualTo(
-                        post.reactionCount().commentCount()),
-                () -> assertThat(response.body().jsonPath().getInt("reactionCount.scrapCount")).isEqualTo(
-                        post.reactionCount().scrapCount()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.viewCount")).isEqualTo(
+                        게시글.reactionCount().viewCount()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.commentCount")).isEqualTo(
+                        게시글.reactionCount().commentCount()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.scrapCount")).isEqualTo(
+                        게시글.reactionCount().scrapCount()),
 
-                () -> assertThat(response.body().jsonPath().getInt("upCount")).isEqualTo(post.upCount()),
-                () -> assertThat(response.body().jsonPath().getInt("downCount")).isEqualTo(post.downCount()),
-                () -> assertThat(response.body().jsonPath().getBoolean("isUp")).isEqualTo(post.isUp()),
-                () -> assertThat(response.body().jsonPath().getBoolean("isDown")).isEqualTo(post.isDown()),
-                () -> assertThat(response.body().jsonPath().getBoolean("isScrap")).isEqualTo(post.isScrap()),
-                () -> assertThat(response.body().jsonPath().getBoolean("isWriter")).isEqualTo(true)
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("upCount")).isEqualTo(게시글.upCount()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("downCount")).isEqualTo(게시글.downCount()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isUp")).isEqualTo(게시글.isUp()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isDown")).isEqualTo(게시글.isDown()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isScrap")).isEqualTo(게시글.isScrap()),
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isWriter")).isEqualTo(true)
         );
     }
 
     @Test
-    void 로그인한_사용자가_타인의_게시글_하나를_상세조회하는_경우(@Autowired PostService postService) throws IOException {
-        final Member writer = 사용자를_하나_만든다();
-        final Member reader = memberTestSupport.builder()
-                .email("email1")
-                .build();
+    void 로그인한_사용자가_타인의_게시글_하나를_상세조회하는_경우(@Autowired PostService postService) {
+        final Member 작성자 = 사용자를_하나_만든다();
+        final Member 작성자가_아닌_사람 = 사용자를_하나_만든다();
 
-        final PostRequest postRequest = getPostRequest();
-        final PostResponse postResponse = postService.createPost(new MemberIdDto(writer.getId()), postRequest);
+        final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
+        final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
 
-        final ExtractableResponse<Response> response = RestAssured
+        final ExtractableResponse<Response> 게시글_상세_조회_결과 = RestAssured
                 .given()
                 .when()
-                .auth().preemptive().basic(reader.getEmail(), reader.getPassword())
-                .get("/posts/" + postResponse.id())
+                .auth().preemptive().basic(작성자가_아닌_사람.getEmail(), 작성자가_아닌_사람.getPassword())
+                .get("/posts/" + 게시글_id)
                 .then()
                 .extract();
 
-        final SpecificPostInfoResponse post = postService.findSpecificPost(postResponse.id(),
-                new MemberIdDto(reader.getId()));
+        final SpecificPostInfoResponse 게시글 = postService.findSpecificPost(게시글_id,
+                new MemberIdDto(작성자가_아닌_사람.getId()));
 
-        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(게시글_상세_조회_결과.statusCode()).isEqualTo(200);
         SoftAssertions.assertSoftly(
                 softAssertions -> {
 
-                    softAssertions.assertThat(response.body().jsonPath().getLong("id")).isEqualTo(post.id());
-                    softAssertions.assertThat(response.body().jsonPath().getString("title")).isEqualTo(post.title());
-                    softAssertions.assertThat(response.body().jsonPath().getLong("price")).isEqualTo(post.price());
-                    softAssertions.assertThat(response.body().jsonPath().getString("content"))
-                            .isEqualTo(post.content());
+                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getLong("id")).isEqualTo(게시글.id());
+                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getString("title"))
+                            .isEqualTo(게시글.title());
+                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getLong("price")).isEqualTo(게시글.price());
+                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getString("content"))
+                            .isEqualTo(게시글.content());
 
-                    softAssertions.assertThat(response.body().jsonPath().getList("images")).hasSize(2);
-                    softAssertions.assertThat(response.body().jsonPath().getString("images[0]"))
-                            .isEqualTo(post.images().get(0));
-                    softAssertions.assertThat(response.body().jsonPath().getString("images[1]"))
-                            .isEqualTo(post.images().get(1));
+                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getList("images")).hasSize(2);
+                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getString("images[0]"))
+                            .isEqualTo(게시글.images().get(0));
+                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getString("images[1]"))
+                            .isEqualTo(게시글.images().get(1));
 
-                    softAssertions.assertThat(response.body().jsonPath().getLong("writer.id")).isEqualTo(
-                            post.writer().id());
-                    softAssertions.assertThat(response.body().jsonPath().getString("writer.nickname")).isEqualTo(
-                            post.writer().nickname());
-                    softAssertions.assertThat(response.body().jsonPath().getString("writer.profileImage")).isEqualTo(
-                            post.writer().profileImage());
-
-                    softAssertions.assertThat(response.body().jsonPath().getInt("reactionCount.viewCount")).isEqualTo(
-                            post.reactionCount().viewCount());
-                    softAssertions.assertThat(response.body().jsonPath().getInt("reactionCount.commentCount"))
+                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getLong("writer.id")).isEqualTo(
+                            게시글.writer().id());
+                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getString("writer.nickname")).isEqualTo(
+                            게시글.writer().nickname());
+                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getString("writer.profileImage"))
                             .isEqualTo(
-                                    post.reactionCount().commentCount());
-                    softAssertions.assertThat(response.body().jsonPath().getInt("reactionCount.scrapCount")).isEqualTo(
-                            post.reactionCount().scrapCount());
+                                    게시글.writer().profileImage());
 
-                    softAssertions.assertThat(response.body().jsonPath().getInt("upCount")).isEqualTo(post.upCount());
-                    softAssertions.assertThat(response.body().jsonPath().getInt("downCount"))
-                            .isEqualTo(post.downCount());
-                    softAssertions.assertThat(response.body().jsonPath().getBoolean("isUp")).isEqualTo(post.isUp());
-                    softAssertions.assertThat(response.body().jsonPath().getBoolean("isDown")).isEqualTo(post.isDown());
-                    softAssertions.assertThat(response.body().jsonPath().getBoolean("isScrap"))
-                            .isEqualTo(post.isScrap());
-                    softAssertions.assertThat(response.body().jsonPath().getBoolean("isWriter")).isEqualTo(false);
+                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getInt("reactionCount.viewCount"))
+                            .isEqualTo(
+                                    게시글.reactionCount().viewCount());
+                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getInt("reactionCount.commentCount"))
+                            .isEqualTo(
+                                    게시글.reactionCount().commentCount());
+                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getInt("reactionCount.scrapCount"))
+                            .isEqualTo(
+                                    게시글.reactionCount().scrapCount());
+
+                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getInt("upCount"))
+                            .isEqualTo(게시글.upCount());
+                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getInt("downCount"))
+                            .isEqualTo(게시글.downCount());
+                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getBoolean("isUp")).isEqualTo(게시글.isUp());
+                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getBoolean("isDown"))
+                            .isEqualTo(게시글.isDown());
+                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getBoolean("isScrap"))
+                            .isEqualTo(게시글.isScrap());
+                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getBoolean("isWriter")).isEqualTo(false);
                 }
-        );
-    }
-
-    private PostRequest getPostRequest() throws IOException {
-        final InputStream file1InputStream = getClass().getResourceAsStream("/static/img/file/test_image_1.jpg");
-        final MockMultipartFile file1 = new MockMultipartFile("imageFiles", "test_image_1.jpg", "image/jpg",
-                file1InputStream);
-
-        final InputStream file2InputStream = getClass().getResourceAsStream("/static/img/file/test_image_2.jpg");
-        final MockMultipartFile file2 = new MockMultipartFile("imageFiles", "test_image_2.jpg", "image/jpg",
-                file2InputStream);
-
-        final List<MultipartFile> multipartFiles = List.of(file1, file2);
-
-        return new PostRequest(
-                "I love you",
-                "He wisely contented himself with his family and his love of nature.",
-                13_000L,
-                multipartFiles
         );
     }
 }
