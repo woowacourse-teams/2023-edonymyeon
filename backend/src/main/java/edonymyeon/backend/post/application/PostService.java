@@ -68,13 +68,13 @@ public class PostService {
         );
         postRepository.save(post);
 
-        if (isImagesEmpty(postRequest.images())) {
+        if (isImagesEmpty(postRequest.newImages())) {
             return new PostResponse(post.getId());
         }
-        post.validateImageAdditionCount(postRequest.images().size());
+        post.validateImageAdditionCount(postRequest.newImages().size());
 
         final PostImageInfos postImageInfos = PostImageInfos.of(post,
-                imageFileUploader.uploadFiles(postRequest.images()));
+                imageFileUploader.uploadFiles(postRequest.newImages()));
         post.updateImages(postImageInfos);
         postImageInfoRepository.saveAll(postImageInfos.getPostImageInfos());
 
