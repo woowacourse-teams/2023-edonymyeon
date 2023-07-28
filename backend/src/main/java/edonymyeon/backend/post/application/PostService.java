@@ -153,9 +153,7 @@ public class PostService {
         if (originalImageUrls == null || originalImageUrls.isEmpty()) {
             return Collections.emptyList();
         }
-        return originalImageUrls.stream()
-                .map(domain::removeDomainFromUrl)
-                .toList();
+        return domain.removeDomainFromUrl(originalImageUrls);
     }
 
     private void updateImagesOfPost(final PostModificationRequest request, final Post post) {
