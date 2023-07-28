@@ -68,7 +68,7 @@ class PostEditorViewModel(
                 ),
             ).onSuccess {
                 Log.d("id", (it as PostEditorResponse).id.toString())
-                _postId.value = (it as PostEditorResponse).id
+                _postId.value = it.id
             }.onFailure {
                 it as CustomThrowable
                 when (it.code) {
