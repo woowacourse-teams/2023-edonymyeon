@@ -4,43 +4,39 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.IntegrationTest;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.post.application.PostService;
-import edonymyeon.backend.post.application.dto.PostRequest;
 import io.restassured.RestAssured;
-import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class PostSearchIntegrationTest extends IntegrationTest {
 
-    @Autowired
-    private MemberRepository memberRepository;
-
-    @Autowired
-    private PostService postService;
-
     @BeforeEach
     void 테스트_실행전_한_회원의_가입과_두_게시글_작성을_실행한다() {
         Member member = memberTestSupport.builder().build();
-        memberRepository.save(member);
 
-        writePost(member, "애플 먹고 싶어요", "사먹어도 되나요? 자취생인데...", 14_000L);
-        writePost(member, "사과 먹고 싶어요", "사먹어도 되나요? 자취생인데...", 14_000L);
+        postTestSupport.builder()
+                .member(member)
+                .title("애플 먹고 싶어요")
+                .content("사먹어도 되나요? 자취생인데...")
+                .build();
+
+        postTestSupport.builder()
+                .member(member)
+                .title("사과 먹고 싶어요")
+                .content("사먹어도 되나요? 자취생인데...")
+                .build();
     }
 
     @Test
     void 검색어가_포함되어있지_않으면_오류가_발생한다_400_BasRequest(){
         RestAssured
-                .given().log().all()
+                .given()
                 .when()
                 .get("/search")
-                .then().log().all()
+                .then()
                 .statusCode(HttpStatus.BAD_REQUEST.value());
     }
 
@@ -94,15 +90,5 @@ public class PostSearchIntegrationTest extends IntegrationTest {
         final var jsonPath = 검색된_게시글_조회_결과.body().jsonPath();
 
         assertThat(jsonPath.getList("posts").size()).isEqualTo(0);
-    }
-
-    private void writePost(Member member,String title, String content, Long price) {
-        PostRequest postRequest = new PostRequest(
-                title,
-                content,
-                price,
-                Collections.emptyList()
-        );
-        postService.createPost(new MemberIdDto(member.getId()), postRequest);
     }
 }
