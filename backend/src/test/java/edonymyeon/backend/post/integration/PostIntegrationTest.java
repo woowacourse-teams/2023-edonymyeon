@@ -279,10 +279,10 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         final PostResponse postResponse = postService.createPost(new MemberIdDto(member.getId()), postRequest);
 
         final ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
+                .given()
                 .when()
                 .get("/posts/" + postResponse.id())
-                .then().log().all()
+                .then()
                 .extract();
 
         final SpecificPostInfoResponse post = postService.findSpecificPost(postResponse.id(),
@@ -329,11 +329,11 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         final PostResponse postResponse = postService.createPost(new MemberIdDto(member.getId()), postRequest);
 
         final ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
+                .given()
                 .when()
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .get("/posts/" + postResponse.id())
-                .then().log().all()
+                .then()
                 .extract();
 
         final SpecificPostInfoResponse post = postService.findSpecificPost(postResponse.id(),
@@ -385,11 +385,11 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         final PostResponse postResponse = postService.createPost(new MemberIdDto(member.getId()), postRequest);
 
         final ExtractableResponse<Response> response = RestAssured
-                .given().log().all()
+                .given()
                 .when()
                 .auth().preemptive().basic("email1", "password")
                 .get("/posts/" + postResponse.id())
-                .then().log().all()
+                .then()
                 .extract();
 
         final SpecificPostInfoResponse post = postService.findSpecificPost(postResponse.id(),
