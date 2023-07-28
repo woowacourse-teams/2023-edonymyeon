@@ -49,10 +49,10 @@ class PostEditorViewModel(
     }
 
     fun initViewModelOnUpdate(post: PostUiModel) {
-        Log.d("post", post.images.toString())
         _postTitle.value = post.title
         _postPrice.value = post.price.toString()
         _postContent.value = post.content
+        images.addAll(post.images.map { it.toUri().toString() })
         _galleryImages.value = post.images.map { it.toUri().toString() }
     }
 
