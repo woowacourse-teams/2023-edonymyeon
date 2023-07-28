@@ -14,7 +14,7 @@ import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
-import edonymyeon.backend.support.PostTestSupport;
+import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -105,6 +105,50 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .delete("/posts/" + 게시글_id)
                 .then()
                 .statusCode(HttpStatus.FORBIDDEN.value());
+    }
+
+    @Test
+    void 게시글이_추천이_되어있다면_게시글_삭제시_추천도_삭제된다(@Autowired ThumbsRepository thumbsRepository) {
+        //given
+        final Member 게시글_쓴_사람 = memberTestSupport.builder()
+                .build();
+        final ExtractableResponse<Response> 게시글_생성_요청_결과 = RestAssured.given()
+                .auth().preemptive().basic(게시글_쓴_사람.getEmail(), 게시글_쓴_사람.getPassword())
+                .multiPart("title", "this is title")
+                .multiPart("content", "this is content")
+                .multiPart("price", 1000)
+                .multiPart("images", 이미지1, MediaType.IMAGE_JPEG_VALUE)
+                .multiPart("images", 이미지2, MediaType.IMAGE_JPEG_VALUE)
+                .when()
+                .post("/posts")
+                .then()
+                .statusCode(HttpStatus.CREATED.value())
+                .extract();
+        final String location = 게시글_생성_요청_결과.header("location");
+        final long 게시글_id = Long.parseLong(location.split("/")[2]);
+        final Member 추천하는_사람 = memberTestSupport.builder()
+                .build();
+        RestAssured.given()
+                .auth().preemptive().basic(추천하는_사람.getEmail(), 추천하는_사람.getPassword())
+                .when()
+                .put("posts/" + 게시글_id + "/up")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+
+        //when
+        final ExtractableResponse<Response> 게시글_삭제_결과 = RestAssured.given()
+                .auth().preemptive().basic(게시글_쓴_사람.getEmail(), 게시글_쓴_사람.getPassword())
+                .when()
+                .delete("posts/" + 게시글_id)
+                .then()
+                .extract();
+
+        //then
+        assertSoftly(softly -> {
+                    softly.assertThat(thumbsRepository.findByPostId(게시글_id)).isEmpty();
+                    softly.assertThat(게시글_삭제_결과.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+                }
+        );
     }
 
     private Member 사용자를_하나_만든다() {
@@ -204,11 +248,15 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
             softly.assertThat(jsonPath.getString("posts[0].title")).isEqualTo(전체조회_4번째_게시글.title());
             softly.assertThat(jsonPath.getString("posts[0].image")).isEqualTo(전체조회_4번째_게시글.image());
             softly.assertThat(jsonPath.getString("posts[0].content")).isEqualTo(전체조회_4번째_게시글.content());
-            softly.assertThat(jsonPath.getString("posts[0].writer.nickName")).isEqualTo(전체조회_4번째_게시글.writer().nickName());
+            softly.assertThat(jsonPath.getString("posts[0].writer.nickName"))
+                    .isEqualTo(전체조회_4번째_게시글.writer().nickName());
             softly.assertThat(jsonPath.getString("posts[0].createdAt")).isNotNull();
-            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.viewCount")).isEqualTo(전체조회_4번째_게시글.reactionCount().viewCount());
-            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.commentCount")).isEqualTo(전체조회_4번째_게시글.reactionCount().commentCount());
-            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.scrapCount")).isEqualTo(전체조회_4번째_게시글.reactionCount().scrapCount());
+            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.viewCount"))
+                    .isEqualTo(전체조회_4번째_게시글.reactionCount().viewCount());
+            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.commentCount"))
+                    .isEqualTo(전체조회_4번째_게시글.reactionCount().commentCount());
+            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.scrapCount"))
+                    .isEqualTo(전체조회_4번째_게시글.reactionCount().scrapCount());
         });
     }
 
