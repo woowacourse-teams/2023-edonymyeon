@@ -14,7 +14,6 @@ import com.app.edonymyeon.presentation.uimodel.RecommendationUiModel
 import com.domain.edonymyeon.model.Post
 import com.domain.edonymyeon.repository.PostRepository
 import com.domain.edonymyeon.repository.RecommendRepository
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PostDetailViewModel(
@@ -40,7 +39,6 @@ class PostDetailViewModel(
         get() = _isScrap
 
     // 추천/비추천 요청 완료 여부 (기본은 true, 클릭하면 false, 응답을 받으면 다시 true)
-    // TODO: 응답이 끝나지 않았는데 다른 페이지로 나갔다 오면 어떻게 될까요?
     private val _isRecommendationRequestDone = MutableLiveData<Boolean>(true)
     val isRecommendationRequestDone: LiveData<Boolean>
         get() = _isRecommendationRequestDone
@@ -147,6 +145,10 @@ class PostDetailViewModel(
         _isRecommendationRequestDone.value = false
         Log.d("PostDetailViewModel", "down clicked! request done: false")
 
+        // 서버 통신 시작 전 1초 딜레이 넣어봤습니다
+        // thread.sleep이라 그런 것 같은데... 뒤로가기 하면 통신이 완료되고 나서야 나가지더라구요?
+//        Thread.sleep(1000L)
+
         if (isChecked) {
             saveRecommendation(postId, RecommendRepository::saveRecommendDown)
         } else {
@@ -159,12 +161,10 @@ class PostDetailViewModel(
         event: suspend RecommendRepository.(Long) -> Result<Any>,
     ) {
         // 서버 통신 요청 보낸다
-        Log.d("PostDetailViewModel", "saveRecommendation")
+        Log.d("PostDetailViewModel", "start saveRecommendation")
         viewModelScope.launch {
             recommendRepository.event(postId)
                 .onSuccess {
-                    // 응답이 도착했지만 테스트를 위해 3초 기다리기 추가했습니당
-                    delay(3000L)
                     _isRecommendationRequestDone.value = true
                     Log.d("PostDetailViewModel", "onSuccess! request done: true")
                 }
