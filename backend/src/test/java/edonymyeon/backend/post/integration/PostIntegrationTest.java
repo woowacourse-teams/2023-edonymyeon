@@ -1,5 +1,6 @@
 package edonymyeon.backend.post.integration;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.AUTHORIZATION_EMPTY;
 import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_DOMAIN_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_STORE_NAME_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_FORBIDDEN;
@@ -455,6 +456,41 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                     softly.assertThat(게시글_수정_응답.jsonPath().getInt("errorCode")).isEqualTo(POST_MEMBER_FORBIDDEN.getCode());
                     softly.assertThat(게시글_수정_응답.jsonPath().getString("errorMessage"))
                             .isEqualTo(POST_MEMBER_FORBIDDEN.getMessage());
+                }
+        );
+    }
+
+    @Test
+    void 로그인하지_않으면_게시글은_수정_불가능하다() {
+        final Member 작성자 = 사용자를_하나_만든다();
+        final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
+        final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
+
+        final ExtractableResponse<Response> 게시글_상세_조회_응답 = RestAssured
+                .given()
+                .when()
+                .get("/posts/" + 게시글_id)
+                .then()
+                .extract();
+
+        final String 유지할_이미지의_url = 게시글_상세_조회_응답.body().jsonPath().getString("images[0]");
+        System.out.println("유지할_이미지의_url = " + 유지할_이미지의_url);
+        final ExtractableResponse<Response> 게시글_수정_응답 = RestAssured.given()
+                .multiPart("title", "제목을 수정하자")
+                .multiPart("content", "내용을 수정하자")
+                .multiPart("price", 10000)
+                .multiPart("originalImages", 유지할_이미지의_url)
+                .multiPart("newImages", 이미지1)
+                .when()
+                .put("/posts/" + 게시글_id)
+                .then()
+                .extract();
+
+        assertSoftly(softly -> {
+                    softly.assertThat(게시글_수정_응답.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+                    softly.assertThat(게시글_수정_응답.jsonPath().getInt("errorCode")).isEqualTo(AUTHORIZATION_EMPTY.getCode());
+                    softly.assertThat(게시글_수정_응답.jsonPath().getString("errorMessage"))
+                            .isEqualTo(AUTHORIZATION_EMPTY.getMessage());
                 }
         );
     }
