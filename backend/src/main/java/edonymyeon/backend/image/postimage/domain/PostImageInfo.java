@@ -29,4 +29,8 @@ public class PostImageInfo extends ImageInfo {
         post.addPostImageInfo(postImageInfo);
         return postImageInfo;
     }
+
+    public void updatePost(final Post post) {
+        this.post = post;
+    }
 }
