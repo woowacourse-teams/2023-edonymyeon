@@ -26,7 +26,7 @@ class AllThumbsInPostTest {
 
     @Test
     void 추천과_비추천이_수를_제대로_카운트_한다() {
-        Member member = new Member("email", "password", "nick", null);
+        Member member = new Member("email", "password123!", "nick", null);
         Post post = new Post("title", "content", 100L, member);
 
         List<Thumbs> thumbs = List.of(

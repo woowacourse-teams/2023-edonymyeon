@@ -18,7 +18,6 @@ public class ProfileImageInfoTestSupport {
 
     public final class ProfileImageInfoBuilder {
 
-
         private String storeName;
 
         public ProfileImageInfoBuilder storeName(final String storeName) {
