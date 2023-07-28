@@ -2,6 +2,7 @@ package edonymyeon.backend.global.logging;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Objects;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -14,9 +15,22 @@ public class LoggingInterceptor implements HandlerInterceptor {
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler)
             throws Exception {
 
-        MDC.put("uri", request.getRequestURI());
+        String requestURI = getRequestURI(request);
+
+        MDC.put("uri", requestURI);
         MDC.put("request-identifier", UUID.randomUUID().toString());
         return true;
+    }
+
+    private static String getRequestURI(final HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        final String queryString = request.getQueryString();
+
+        if (Objects.nonNull(queryString)) {
+            requestURI = requestURI + "?" + queryString;
+        }
+
+        return requestURI;
     }
 
     @Override
