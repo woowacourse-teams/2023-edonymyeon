@@ -69,6 +69,7 @@ class PostServiceTest implements ImageFileCleaner {
     private final ImageMockMultipartFileSupport imageFileSupport;
 
     private final ImageFileUploader imageFileUploader;
+
     private MemberIdDto memberId;
 
     @BeforeEach
