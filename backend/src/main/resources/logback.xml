@@ -5,9 +5,11 @@
     <include resource="console-warn-appender.xml" />
     <include resource="console-info-appender.xml" />
 
-    <root level="info">
-        <appender-ref ref="INFO"/>
-        <appender-ref ref="ERROR"/>
-        <appender-ref ref="WARN"/>
+    <root>
+        <springProfile name="prod">
+            <appender-ref ref="INFO"/>
+            <appender-ref ref="ERROR"/>
+            <appender-ref ref="WARN"/>
+        </springProfile>
     </root>
 </configuration>
