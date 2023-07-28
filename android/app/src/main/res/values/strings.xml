@@ -36,13 +36,17 @@
 
     <!-- my page   -->
     <string name="my_page_title">마이페이지</string>
-    <string name="my_page_payment_title">이번 달 나의 소비</string>
+    <string name="my_page_payment_title">월 별 소비/절약 그래프</string>
     <string name="my_page_my_post">내가 쓴 글</string>
     <string name="my_page_my_comment">댓글 단 글</string>
     <string name="my_page_my_scrab">스크랩</string>
     <string name="my_page_my_badge">뱃지</string>
     <string name="my_page_update_user_info">회원 정보 수정</string>
     <string name="my_page_logout">로그아웃</string>
+    <string name="my_page_login">로그인</string>
+    <string name="my_page_saving_title">절약금액:</string>
+    <string name="my_page_purchase_title">소비금액:</string>
+    <string name="my_page_required_login">로그인이 필요한 서비스입니다.</string>
 
     <!--post_editor-->
     <string name="post_editor_page_title">글쓰기</string>
