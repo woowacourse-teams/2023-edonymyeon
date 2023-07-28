@@ -11,6 +11,7 @@ public enum ExceptionInformation {
     // 1___: 인증 관련
     MEMBER_EMAIL_NOT_FOUND(1511, "회원의 이메일이 존재하지 않습니다."),
     AUTHORIZATION_EMPTY(1523, "인증 정보가 없습니다."),
+    ILLEGAL_ARGUMENT_TYPE(1524, "잘못된 타입의 요청입니다."),
 
     // 2___: 게시글 관련
     POST_ID_NOT_FOUND(2000, "존재하지 않는 게시글입니다."),
@@ -21,12 +22,15 @@ public enum ExceptionInformation {
     POST_MEMBER_FORBIDDEN(2666, "게시글 작성자만 게시글을 수정/삭제할 수 있습니다."),
     POST_IMAGE_COUNT_INVALID(2667, "게시글 하나에 이미지는 최대 10개까지 등록 가능합니다."),
     POST_MEMBER_NOT_SAME(2666, "게시글 작성자가 아닙니다."),
+    POST_INVALID_PAGINATION_CONDITION(2700, "유효하지 않은 게시글 조회 조건입니다."),
 
     // 3___: 회원 관련
     MEMBER_ID_NOT_FOUND(3000, "존재하지 않는 회원입니다."),
     MEMBER_EMAIL_INVALID(3001, "회원 이메일 정보가 잘못되었습니다."),
     MEMBER_PASSWORD_INVALID(3002, "회원 비밀번호가 잘못되었습니다."),
     MEMBER_NICKNAME_INVALID(3003, "회원 닉네임이 잘못되었습니다."),
+    MEMBER_EMAIL_DUPLICATE(3004, "이미 존재하는 이메일입니다."),
+    MEMBER_NICKNAME_DUPLICATE(3005, "이미 존재하는 닉네임입니다."),
 
     // 4___: 추천 관련
     THUMBS_UP_ALREADY_EXIST(4000, "이미 추천된 게시글 입니다."),
@@ -39,6 +43,8 @@ public enum ExceptionInformation {
 
     // 5___: 이미지 관련
     IMAGE_EXTENSION_INVALID(5000, "등록할 수 없는 이미지 확장자입니다."),
+    IMAGE_DOMAIN_INVALID(5001, "이미지의 url 경로가 잘못되었습니다."),
+    IMAGE_STORE_NAME_INVALID(5002, "유효하지 않은 이미지 이름이 포함되어 있습니다."),
 
     // 6___: 소비, 절약 관련
     CONSUMPTION_POST_ID_ALREADY_EXIST(6000, "이미 소비, 절약 여부가 확정된 게시글입니다.");

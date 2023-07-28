@@ -5,6 +5,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_N
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_FORBIDDEN;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
@@ -15,6 +16,7 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
+import edonymyeon.backend.post.application.dto.PostModificationRequest;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.application.dto.ReactionCountResponse;
@@ -25,6 +27,7 @@ import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.thumbs.application.ThumbsService;
 import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
 import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -65,13 +68,13 @@ public class PostService {
         );
         postRepository.save(post);
 
-        if (isImagesEmpty(postRequest)) {
+        if (isImagesEmpty(postRequest.newImages())) {
             return new PostResponse(post.getId());
         }
-        post.checkImageCount(postRequest.images().size());
+        post.validateImageAdditionCount(postRequest.newImages().size());
 
         final PostImageInfos postImageInfos = PostImageInfos.of(post,
-                imageFileUploader.uploadFiles(postRequest.images()));
+                imageFileUploader.uploadFiles(postRequest.newImages()));
         post.updateImages(postImageInfos);
         postImageInfoRepository.saveAll(postImageInfos.getPostImageInfos());
 
@@ -83,10 +86,10 @@ public class PostService {
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
     }
 
-    private boolean isImagesEmpty(final PostRequest postRequest) {
-        return Objects.isNull(postRequest.images()) ||
-                postRequest.images().isEmpty() ||
-                isDummy(postRequest.images().get(0)
+    private boolean isImagesEmpty(final List<MultipartFile> images) {
+        return Objects.isNull(images) ||
+                images.isEmpty() ||
+                isDummy(images.get(0)
                 );
     }
 
@@ -122,58 +125,67 @@ public class PostService {
     public PostResponse updatePost(
             final MemberIdDto memberId,
             final Long postId,
-            final PostRequest postRequest
+            final PostModificationRequest request
     ) {
         final Member member = findMemberById(memberId);
         final Post post = findPostById(postId);
         checkWriter(member, post);
 
-        post.update(postRequest.title(), postRequest.content(), postRequest.price());
+        post.update(request.title(), request.content(), request.price());
 
-        final List<PostImageInfo> originalImageInfos = post.getPostImageInfos();
-        postImageInfoRepository.deleteAllByPostId(postId);
+        final List<String> imageStoreNames = convertUrlToStoreName(request.originalImages());
+        final List<PostImageInfo> deletedImagesOfPost = post.findImagesToDelete(imageStoreNames);
+        post.removePostImageInfos(deletedImagesOfPost);
+        postImageInfoRepository.deleteAll(deletedImagesOfPost);
 
-        if (isImagesEmpty(postRequest)) {
-            post.updateImages(PostImageInfos.create());
-            originalImageInfos.forEach(imageFileUploader::removeFile);
+        if (isImagesEmpty(request.newImages())) {
+            deletedImagesOfPost.forEach(imageFileUploader::removeFile);
             return new PostResponse(postId);
         }
 
-        post.checkImageCount(postRequest.images().size());
-        updateImagesOfPost(postRequest, post, originalImageInfos);
+        post.validateImageAdditionCount(request.newImages().size());
+        updateImagesOfPost(request, post);
+        deletedImagesOfPost.forEach(imageFileUploader::removeFile);
         return new PostResponse(postId);
     }
 
-    private void updateImagesOfPost(
-            final PostRequest postRequest,
-            final Post post,
-            final List<PostImageInfo> originalImageInfos
-    ) {
-        final PostImageInfos updatedPostImageInfos = PostImageInfos.of(post,
-                imageFileUploader.uploadFiles(postRequest.images()));
-        post.updateImages(updatedPostImageInfos);
-        postImageInfoRepository.saveAll(updatedPostImageInfos.getPostImageInfos());
-        originalImageInfos.forEach(imageFileUploader::removeFile);
+    private List<String> convertUrlToStoreName(final List<String> originalImageUrls) {
+        if (originalImageUrls == null || originalImageUrls.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return domain.removeDomainFromUrl(originalImageUrls);
     }
 
-    public List<GeneralPostInfoResponse> findAllPost(final GeneralFindingCondition generalFindingCondition) {
-        final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
-        final Slice<Post> foundPosts = postRepository.findAll(pageRequest);
+    private void updateImagesOfPost(final PostModificationRequest request, final Post post) {
+        final PostImageInfos updatedPostImageInfos = PostImageInfos.of(post,
+                imageFileUploader.uploadFiles(request.newImages()));
+        post.updateImages(updatedPostImageInfos);
+        postImageInfoRepository.saveAll(updatedPostImageInfos.getPostImageInfos());
+    }
+
+    public List<GeneralPostInfoResponse> findPostsByPagingCondition(
+            final GeneralFindingCondition generalFindingCondition) {
+        PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
+        final Slice<Post> foundPosts = postRepository.findAllBy(pageRequest);
         return foundPosts
                 .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()))
                 .toList();
     }
 
     private static PageRequest convertConditionToPageRequest(final GeneralFindingCondition generalFindingCondition) {
-        return PageRequest.of(
-                generalFindingCondition.getPage(),
-                generalFindingCondition.getSize(),
-                switch (generalFindingCondition.getSortDirection()) {
-                    case ASC -> Direction.ASC;
-                    case DESC -> Direction.DESC;
-                },
-                generalFindingCondition.getSortBy().getName()
-        );
+        try {
+            return PageRequest.of(
+                    generalFindingCondition.getPage(),
+                    generalFindingCondition.getSize(),
+                    switch (generalFindingCondition.getSortDirection()) {
+                        case ASC -> Direction.ASC;
+                        case DESC -> Direction.DESC;
+                    },
+                    generalFindingCondition.getSortBy().getName()
+            );
+        } catch (IllegalArgumentException e) {
+            throw new EdonymyeonException(ExceptionInformation.POST_INVALID_PAGINATION_CONDITION);
+        }
     }
 
     public SpecificPostInfoResponse findSpecificPost(final Long postId, final MemberIdDto memberIdDto) {

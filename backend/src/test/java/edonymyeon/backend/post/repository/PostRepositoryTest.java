@@ -32,7 +32,7 @@ class PostRepositoryTest {
     public void setUp() {
         member = new Member(
                 "email",
-                "password",
+                "password123!",
                 "nickname",
                 null
         );
@@ -49,9 +49,9 @@ class PostRepositoryTest {
         assertSoftly(softly -> {
                     softly.assertThat(target.getId()).isNotNull();
                     softly.assertThat(target.getTitle()).isEqualTo("호바");
-            softly.assertThat(target.getCreatedAt()).isNotNull();
-            softly.assertThat(target.getViewCount()).isEqualTo(0L);
-            softly.assertThat(target.getMember().getId()).isEqualTo(member.getId());
+                    softly.assertThat(target.getCreatedAt()).isNotNull();
+                    softly.assertThat(target.getViewCount()).isEqualTo(0L);
+                    softly.assertThat(target.getMember().getId()).isEqualTo(member.getId());
                 }
         );
     }

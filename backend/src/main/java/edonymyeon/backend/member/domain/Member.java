@@ -60,25 +60,26 @@ public class Member {
 
     private void validate(final String email, final String password, final String nickname) {
         validateEmail(email);
-        validatePassword(password);
         validateNickName(nickname);
+        validatePassword(password);
     }
 
     private void validateEmail(final String email) {
-        if (Objects.isNull(email) || email.length() > MAX_EMAIL_LENGTH) {
+        if (Objects.isNull(email) || email.isBlank() || email.length() > MAX_EMAIL_LENGTH) {
             throw new EdonymyeonException(MEMBER_EMAIL_INVALID);
         }
     }
 
-    private void validatePassword(final String password) {
-        if (Objects.isNull(password) || password.length() > MAX_PASSWORD_LENGTH) {
-            throw new EdonymyeonException(MEMBER_PASSWORD_INVALID);
+    private void validateNickName(final String nickname) {
+        if (Objects.isNull(nickname) || nickname.isBlank() || nickname.length() > MAX_NICKNAME_LENGTH) {
+            throw new EdonymyeonException(MEMBER_NICKNAME_INVALID);
         }
     }
 
-    private void validateNickName(final String nickname) {
-        if (Objects.isNull(nickname) || nickname.length() > MAX_NICKNAME_LENGTH) {
-            throw new EdonymyeonException(MEMBER_NICKNAME_INVALID);
+    private void validatePassword(final String password) {
+        if (PasswordValidator.isValidPassword(password)) {
+            return;
         }
+        throw new EdonymyeonException(MEMBER_PASSWORD_INVALID);
     }
 }

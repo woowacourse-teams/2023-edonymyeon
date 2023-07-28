@@ -7,7 +7,7 @@ public record PostRequest(
         String title,
         String content,
         Long price,
-        List<MultipartFile> images
+        List<MultipartFile> newImages
 ) {
 
 }

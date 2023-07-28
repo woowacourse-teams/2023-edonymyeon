@@ -1,8 +1,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -71,11 +71,10 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@drawable/bg_stroke_576b9e_oval"
-                android:scaleType="centerCrop"
                 app:layout_constraintDimensionRatio="H,1:1"
                 app:layout_constraintStart_toEndOf="@id/space_my_page_profile_left"
                 app:layout_constraintTop_toBottomOf="@id/space_my_page_title_bottom"
-                app:layout_constraintWidth_percent="0.18"
+                app:layout_constraintWidth_percent="0.2"
                 tools:src="@drawable/ic_launcher_background" />
 
             <TextView
@@ -83,13 +82,78 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="18dp"
+                android:layout_marginBottom="10dp"
                 android:fontFamily="@font/dohyeon"
+                android:textColor="@color/gray_434343"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@id/iv_profile"
+                app:layout_constraintBottom_toTopOf="@id/tv_saving_title"
                 app:layout_constraintStart_toEndOf="@id/iv_profile"
                 app:layout_constraintTop_toTopOf="@id/iv_profile"
                 tools:text="케로피" />
 
+            <TextView
+                android:id="@+id/tv_saving_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/dohyeon"
+                android:text="@string/my_page_saving_title"
+                android:textColor="@color/blue_576b9e"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@id/tv_purchase_title"
+                app:layout_constraintStart_toStartOf="@id/tv_nickname"
+                app:layout_constraintTop_toBottomOf="@id/tv_nickname" />
+
+            <TextView
+                android:id="@+id/tv_purchase_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/dohyeon"
+                android:text="@string/my_page_purchase_title"
+                android:textColor="@color/blue_576b9e"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@id/iv_profile"
+                app:layout_constraintStart_toStartOf="@id/tv_nickname"
+                app:layout_constraintTop_toBottomOf="@id/tv_saving_title" />
+
+            <TextView
+                android:id="@+id/tv_my_saving"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="@font/dohyeon"
+                android:textColor="@color/gray_434343"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_saving_title"
+                app:layout_constraintStart_toEndOf="@id/tv_saving_title"
+                app:layout_constraintTop_toTopOf="@id/tv_saving_title"
+                tools:text="15,000원" />
+
+            <TextView
+                android:id="@+id/tv_my_purchase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:fontFamily="@font/dohyeon"
+                android:textColor="@color/gray_434343"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_purchase_title"
+                app:layout_constraintStart_toEndOf="@id/tv_purchase_title"
+                app:layout_constraintTop_toTopOf="@id/tv_purchase_title"
+                tools:text="15,000원" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/bg_576b9e_radius_15dp"
+                android:text="@string/my_page_login"
+                android:textColor="@color/white_ffffff"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@id/iv_profile"
+                app:layout_constraintDimensionRatio="H, 3:2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_my_purchase"
+                app:layout_constraintTop_toTopOf="@id/iv_profile"
+                app:layout_constraintWidth_percent="0.2" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -152,10 +216,21 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/space_payment_title_bottom"
                 app:layout_constraintWidth_percent="0.9" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:text="@string/my_page_required_login"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintDimensionRatio="H, 194: 24"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_my_payment_title" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Space
-            android:id="@+id/space_history_top"
+            android:id="@+id/space_graph_bottom"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintDimensionRatio="H,360:18"
@@ -164,132 +239,31 @@
             app:layout_constraintTop_toBottomOf="@id/cl_payment" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_history"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="@drawable/bg_ffffff_radius_15"
-            android:elevation="4dp"
-            app:layout_constraintDimensionRatio="H,335:84"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/space_history_top"
-            app:layout_constraintWidth_percent="0.93">
-
-            <ImageView
-                android:id="@+id/iv_my_post"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:src="@drawable/ic_my_page_post"
-                app:layout_constraintBottom_toTopOf="@id/tv_my_post"
-                app:layout_constraintDimensionRatio="H,25:26"
-                app:layout_constraintEnd_toStartOf="@id/iv_my_comment"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.074" />
-
-            <TextView
-                android:id="@+id/tv_my_post"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/my_page_my_post"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/iv_my_post"
-                app:layout_constraintStart_toStartOf="@id/iv_my_post"
-                app:layout_constraintTop_toBottomOf="@id/iv_my_post" />
-
-            <ImageView
-                android:id="@+id/iv_my_comment"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:src="@drawable/ic_my_page_comment"
-                app:layout_constraintBottom_toTopOf="@id/tv_my_comment"
-                app:layout_constraintDimensionRatio="H,31:26"
-                app:layout_constraintEnd_toStartOf="@id/iv_my_scrab"
-                app:layout_constraintStart_toEndOf="@id/iv_my_post"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.09" />
-
-            <TextView
-                android:id="@+id/tv_my_comment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/my_page_my_comment"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/iv_my_comment"
-                app:layout_constraintStart_toStartOf="@id/iv_my_comment"
-                app:layout_constraintTop_toBottomOf="@id/iv_my_comment" />
-
-            <ImageView
-                android:id="@+id/iv_my_scrab"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:src="@drawable/ic_my_page_scrab"
-                app:layout_constraintBottom_toTopOf="@id/tv_my_scrab"
-                app:layout_constraintDimensionRatio="H,29:28"
-                app:layout_constraintEnd_toStartOf="@id/iv_my_badge"
-                app:layout_constraintStart_toEndOf="@id/iv_my_comment"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.086" />
-
-            <TextView
-                android:id="@+id/tv_my_scrab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/my_page_my_scrab"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/iv_my_scrab"
-                app:layout_constraintStart_toStartOf="@id/iv_my_scrab"
-                app:layout_constraintTop_toBottomOf="@id/iv_my_comment" />
-
-            <ImageView
-                android:id="@+id/iv_my_badge"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:src="@drawable/ic_my_page_badge"
-                app:layout_constraintBottom_toTopOf="@id/tv_my_badge"
-                app:layout_constraintDimensionRatio="H,1:1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_my_scrab"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintWidth_percent="0.08" />
-
-            <TextView
-                android:id="@+id/tv_my_badge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/my_page_my_badge"
-                android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@id/iv_my_badge"
-                app:layout_constraintStart_toStartOf="@id/iv_my_badge"
-                app:layout_constraintTop_toBottomOf="@id/iv_my_badge" />
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <Space
-            android:id="@+id/space_history_bottom"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="H,360:18"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_history" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_bottom"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/bg_ffffff_radius_15"
             android:elevation="4dp"
-            app:layout_constraintDimensionRatio="H,335:113"
+            android:paddingVertical="15dp"
+            app:layout_constraintDimensionRatio="H,336:140"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/space_history_bottom"
+            app:layout_constraintTop_toBottomOf="@id/space_graph_bottom"
             app:layout_constraintWidth_percent="0.93">
+
+            <TextView
+                android:id="@+id/tv_my_post"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center_vertical"
+                android:text="@string/my_page_my_post"
+                android:textColor="@color/black_000000"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@id/tv_update_user_info"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.87" />
 
             <TextView
                 android:id="@+id/tv_update_user_info"
@@ -302,7 +276,7 @@
                 app:layout_constraintBottom_toTopOf="@id/tv_logout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_my_post"
                 app:layout_constraintWidth_percent="0.87" />
 
             <TextView
@@ -318,8 +292,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_update_user_info"
                 app:layout_constraintWidth_percent="0.87" />
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Space

@@ -1,6 +1,9 @@
 package edonymyeon.backend;
 
 import edonymyeon.backend.support.MemberTestSupport;
+import edonymyeon.backend.support.PostImageInfoTestSupport;
+import edonymyeon.backend.support.PostIntegrationTestSupport;
+import edonymyeon.backend.support.PostTestSupport;
 import edonymyeon.backend.support.ProfileImageInfoTestSupport;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +24,15 @@ public class IntegrationTest {
 
     @Autowired
     protected MemberTestSupport memberTestSupport;
+
+    @Autowired
+    protected PostTestSupport postTestSupport;
+
+    @Autowired
+    protected PostImageInfoTestSupport postImageInfoTestSupport;
+
+    @Autowired
+    protected PostIntegrationTestSupport postIntegrationTestSupport;
 
     @LocalServerPort
     private int port;

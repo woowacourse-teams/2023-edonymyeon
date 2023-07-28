@@ -1,13 +1,15 @@
 package edonymyeon.backend.post.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.TestConfig;
+import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
@@ -17,33 +19,22 @@ import edonymyeon.backend.post.repository.PostRepository;
 import java.io.IOException;
 import java.util.List;
 import java.util.regex.Pattern;
-import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
-@RequiredArgsConstructor
-@DisplayNameGeneration(ReplaceUnderscores.class)
-@TestConstructor(autowireMode = AutowireMode.ALL)
 @Transactional
-@SpringBootTest
 @Import(TestConfig.class)
 @TestInstance(Lifecycle.PER_CLASS)
 @DisplayName("게시글 전체 조회 테스트")
-public class PostServiceFindingAllPostsTest implements ImageFileCleaner {
+public class PostServiceFindingAllPostsTest extends IntegrationTest implements ImageFileCleaner {
 
     public static final String POST_REQUEST1_TITLE = "Lost in Time";
     public static final String POST_REQUEST1_CONTENT = "A young archaeologist discovers a mysterious artifact that transports her back in time, forcing her to navigate ancient civilizations and find a way back home before history unravels.";
@@ -57,11 +48,11 @@ public class PostServiceFindingAllPostsTest implements ImageFileCleaner {
     public static final String IMAGE1_RELATIVE_PATH = "/static/img/file/test_image_1.jpg";
     public static final String IMAGE2_RELATIVE_PATH = "/static/img/file/test_image_2.jpg";
 
-    private final PostService postService;
-
-    private final MemberRepository memberRepository;
+    @Autowired
+    private PostService postService;
 
     private MemberIdDto memberId;
+    private MemberIdDto memberId2;
 
 /*    @Value("${domain}")
     private String domain;*/
@@ -71,30 +62,33 @@ public class PostServiceFindingAllPostsTest implements ImageFileCleaner {
             "edonymyeon/" + "test-inserting\\d+\\.(png|jpg|jpeg)"
     );
 
-    @BeforeAll
-    void 사용자_만들기() {
-        Member member = new Member(
-                null,
-                "email",
-                "password",
-                "nickname",
-                null
-        );
-        memberRepository.save(member);
+    @BeforeEach
+    void setUp() throws IOException {
+        final var member = memberTestSupport.builder()
+                .email("email")
+                .nickname("nickname")
+                .build();
         memberId = new MemberIdDto(member.getId());
+
+        final var member2 = memberTestSupport.builder()
+                .email("email2")
+                .nickname("nickname2")
+                .build();
+        memberId2 = new MemberIdDto(member2.getId());
+
+        게시글들_등록하기();
     }
 
-    @BeforeEach
-    void 게시글들_등록하기() throws IOException {
-        게시글1_만들기();
-        게시글2_만들기();
-        게시글3_만들기();
+    private void 게시글들_등록하기() throws IOException {
+        게시글1_만들기(memberId);
+        게시글2_만들기(memberId2);
+        게시글3_만들기(memberId2);
     }
 
     @Test
     void 작성된_모든_게시글을_조회할_수_있다() {
         final var postFindingCondition = GeneralFindingCondition.builder().build();
-        final var postFindingResponses = postService.findAllPost(postFindingCondition);
+        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
 
         assertAll(
                 () -> assertThat(postFindingResponses).hasSize(3),
@@ -118,7 +112,7 @@ public class PostServiceFindingAllPostsTest implements ImageFileCleaner {
                         .hasSize(3),
                 () -> assertThat(postFindingResponses)
                         .extracting(generalPostInfoResponse -> generalPostInfoResponse.writer().nickName())
-                        .containsOnly("nickname")
+                        .containsOnly("nickname", "nickname2")
         );
         // TODO: 조회수 검증
         // TODO: 스크랩 수 검증
@@ -128,7 +122,7 @@ public class PostServiceFindingAllPostsTest implements ImageFileCleaner {
     @Test
     void 게시글은_기본으로_등록일_내림차순으로_정렬된다() {
         final var postFindingCondition = GeneralFindingCondition.builder().build();
-        final var postFindingResponses = postService.findAllPost(postFindingCondition);
+        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
         final var createdAts = postFindingResponses.stream()
                 .map(GeneralPostInfoResponse::createdAt)
                 .toList();
@@ -147,7 +141,7 @@ public class PostServiceFindingAllPostsTest implements ImageFileCleaner {
         final var postFindingCondition = GeneralFindingCondition.builder()
                 .size(10)
                 .build();
-        final var postFindingResponses = postService.findAllPost(postFindingCondition);
+        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
 
         assertThat(postFindingResponses)
                 .hasSize(10);
@@ -159,7 +153,7 @@ public class PostServiceFindingAllPostsTest implements ImageFileCleaner {
                 .size(1)
                 .page(1)
                 .build();
-        final var postFindingResponses = postService.findAllPost(postFindingCondition);
+        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
 
         assertThat(postFindingResponses.get(0).title())
                 .isEqualTo(POST_REQUEST2_TITLE);
@@ -174,14 +168,26 @@ public class PostServiceFindingAllPostsTest implements ImageFileCleaner {
         postRepository.deleteAll();
 
         final var postFindingCondition = GeneralFindingCondition.builder().build();
-        final var postFindingResponses = postService.findAllPost(postFindingCondition);
+        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
 
         assertThat(postFindingResponses)
                 .isNotNull()
                 .isEmpty();
     }
 
-    private PostResponse 게시글1_만들기() throws IOException {
+    @Test
+    void 유효하지_않은_검색_조건이_주어진_경우_예외가_발생한다() {
+        final var postFindingCondition = GeneralFindingCondition.builder()
+                .size(-1)
+                .page(1)
+                .build();
+
+        assertThatThrownBy(() -> postService.findPostsByPagingCondition(postFindingCondition))
+                .isInstanceOf(EdonymyeonException.class)
+                .hasMessage(ExceptionInformation.POST_INVALID_PAGINATION_CONDITION.getMessage());
+    }
+
+    private PostResponse 게시글1_만들기(final MemberIdDto memberId) throws IOException {
         final MockMultipartFile file1 = new MockMultipartFile("imageFiles", "test_image_1.jpg", "image/jpg",
                 getClass().getResourceAsStream(IMAGE1_RELATIVE_PATH));
 
@@ -198,7 +204,7 @@ public class PostServiceFindingAllPostsTest implements ImageFileCleaner {
         return postService.createPost(memberId, POST_REQUEST1);
     }
 
-    private PostResponse 게시글2_만들기() throws IOException {
+    private PostResponse 게시글2_만들기(final MemberIdDto memberId) throws IOException {
         final MockMultipartFile file1 = new MockMultipartFile("imageFiles", "test_image_1.jpg", "image/jpg",
                 getClass().getResourceAsStream(IMAGE1_RELATIVE_PATH));
 
@@ -215,7 +221,7 @@ public class PostServiceFindingAllPostsTest implements ImageFileCleaner {
         return postService.createPost(memberId, POST_REQUEST2);
     }
 
-    private PostResponse 게시글3_만들기() throws IOException {
+    private PostResponse 게시글3_만들기(final MemberIdDto memberId) throws IOException {
         final MockMultipartFile file1 = new MockMultipartFile("imageFiles", "test_image_1.jpg", "image/jpg",
                 getClass().getResourceAsStream(IMAGE1_RELATIVE_PATH));
 
