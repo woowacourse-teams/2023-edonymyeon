@@ -159,7 +159,7 @@
                     android:id="@+id/tv_price"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:text="@{@string/post_detail_price(postViewModel.post.price)}"
+                    android:text="@{@string/all_price(postViewModel.post.price)}"
                     android:textSize="14sp"
                     app:layout_constraintStart_toEndOf="@id/space_content_start"
                     app:layout_constraintTop_toBottomOf="@id/space_price_top"

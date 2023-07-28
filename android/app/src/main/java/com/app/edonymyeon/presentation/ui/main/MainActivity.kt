@@ -7,7 +7,6 @@ import androidx.fragment.app.commit
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityMainBinding
 import com.app.edonymyeon.presentation.ui.main.alarm.AlarmFragment
-import com.app.edonymyeon.presentation.ui.main.category.CategoryFragment
 import com.app.edonymyeon.presentation.ui.main.home.HomeFragment
 import com.app.edonymyeon.presentation.ui.main.mypage.MyPageFragment
 import com.app.edonymyeon.presentation.ui.main.search.SearchFragment
@@ -15,7 +14,6 @@ import com.app.edonymyeon.presentation.ui.main.search.SearchFragment
 class MainActivity : AppCompatActivity() {
     private val fragments = mapOf(
         FRAGMENT_SEARCH to SearchFragment(),
-        FRAGMENT_CATEGORY to CategoryFragment(),
         FRAGMENT_HOME to HomeFragment(),
         FRAGMENT_ALARM to AlarmFragment(),
         FRAGMENT_MY_PAGE to MyPageFragment(),
@@ -71,7 +69,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun getTag(itemId: Int): String = when (itemId) {
         R.id.bottom_menu_search -> FRAGMENT_SEARCH
-        R.id.bottom_menu_category -> FRAGMENT_CATEGORY
         R.id.bottom_menu_home -> FRAGMENT_HOME
         R.id.bottom_menu_alarm -> FRAGMENT_ALARM
         R.id.bottom_menu_my_page -> FRAGMENT_MY_PAGE
@@ -80,7 +77,6 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val FRAGMENT_SEARCH = "search"
-        private const val FRAGMENT_CATEGORY = "category"
         private const val FRAGMENT_HOME = "home"
         private const val FRAGMENT_ALARM = "alarm"
         private const val FRAGMENT_MY_PAGE = "myPage"
