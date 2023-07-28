@@ -1,5 +1,8 @@
 package edonymyeon.backend.post.integration;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_DOMAIN_INVALID;
+import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_STORE_NAME_INVALID;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_FORBIDDEN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -19,6 +22,7 @@ import java.io.File;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -27,6 +31,9 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
 
     private static File 이미지1 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
     private static File 이미지2 = new File("./src/test/resources/static/img/file/test_image_2.jpg");
+
+    @Value("${domain}")
+    private String domain;
 
     private Member 사용자를_하나_만든다() {
         return memberTestSupport.builder().build();
@@ -397,6 +404,127 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                     softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getBoolean("isScrap"))
                             .isEqualTo(게시글.isScrap());
                     softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getBoolean("isWriter")).isEqualTo(false);
+                }
+        );
+    }
+
+    @Test
+    void 자신이_작성한_게시글은_수정_가능하다() {
+        final Member 작성자 = 사용자를_하나_만든다();
+        final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
+        final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
+        final ExtractableResponse<Response> 게시글_상세_조회_응답 = RestAssured
+                .given()
+                .when()
+                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
+                .get("/posts/" + 게시글_id)
+                .then()
+                .extract();
+
+        final String 유지할_이미지의_url = 게시글_상세_조회_응답.body().jsonPath().getString("images[0]");
+        final ExtractableResponse<Response> 게시글_수정_응답 = RestAssured.given()
+                .multiPart("title", "제목을 수정하자")
+                .multiPart("content", "내용을 수정하자")
+                .multiPart("price", 10000)
+                .multiPart("originalImages", 유지할_이미지의_url)
+                .multiPart("newImages", 이미지1)
+                .when()
+                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
+                .put("/posts/" + 게시글_id)
+                .then()
+                .extract();
+
+        assertThat(게시글_수정_응답.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    void 타인이_작성한_게시글은_수정_불가능하다() {
+        final Member 작성자 = 사용자를_하나_만든다();
+        final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
+        final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
+
+        final Member 작성자가_아닌_사람 = 사용자를_하나_만든다();
+        final ExtractableResponse<Response> 게시글_상세_조회_응답 = RestAssured
+                .given()
+                .when()
+                .auth().preemptive().basic(작성자가_아닌_사람.getEmail(), 작성자가_아닌_사람.getPassword())
+                .get("/posts/" + 게시글_id)
+                .then()
+                .extract();
+
+        final String 유지할_이미지의_url = 게시글_상세_조회_응답.body().jsonPath().getString("images[0]");
+        System.out.println("유지할_이미지의_url = " + 유지할_이미지의_url);
+        final ExtractableResponse<Response> 게시글_수정_응답 = RestAssured.given()
+                .multiPart("title", "제목을 수정하자")
+                .multiPart("content", "내용을 수정하자")
+                .multiPart("price", 10000)
+                .multiPart("originalImages", 유지할_이미지의_url)
+                .multiPart("newImages", 이미지1)
+                .when()
+                .auth().preemptive().basic(작성자가_아닌_사람.getEmail(), 작성자가_아닌_사람.getPassword())
+                .put("/posts/" + 게시글_id)
+                .then()
+                .extract();
+
+        assertSoftly(softly -> {
+                    softly.assertThat(게시글_수정_응답.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+                    softly.assertThat(게시글_수정_응답.jsonPath().getInt("errorCode")).isEqualTo(POST_MEMBER_FORBIDDEN.getCode());
+                    softly.assertThat(게시글_수정_응답.jsonPath().getString("errorMessage"))
+                            .isEqualTo(POST_MEMBER_FORBIDDEN.getMessage());
+                }
+        );
+    }
+
+    @Test
+    void 게시글을_수정할때_이미지_url의_도메인_주소가_잘못되었다면_예외가_발생한다() {
+        final Member 작성자 = 사용자를_하나_만든다();
+        final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
+        final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
+
+        final ExtractableResponse<Response> 게시글_수정_응답 = RestAssured.given()
+                .multiPart("title", "제목을 수정하자")
+                .multiPart("content", "내용을 수정하자")
+                .multiPart("price", 10000)
+                .multiPart("originalImages", "이상한url이지롱")
+                .multiPart("newImages", 이미지1)
+                .when()
+                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
+                .put("/posts/" + 게시글_id)
+                .then()
+                .extract();
+
+        assertSoftly(softly -> {
+                    softly.assertThat(게시글_수정_응답.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                    softly.assertThat(게시글_수정_응답.jsonPath().getInt("errorCode")).isEqualTo(IMAGE_DOMAIN_INVALID.getCode());
+                    softly.assertThat(게시글_수정_응답.jsonPath().getString("errorMessage"))
+                            .isEqualTo(IMAGE_DOMAIN_INVALID.getMessage());
+                }
+        );
+    }
+
+    @Test
+    void 게시글을_수정할때_이미지_이름이_기존_게시글에_있는_이미지_이름이_아니면_예외가_발생한다() {
+        final Member 작성자 = 사용자를_하나_만든다();
+        final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
+        final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
+
+        final ExtractableResponse<Response> 게시글_수정_응답 = RestAssured.given()
+                .multiPart("title", "제목을 수정하자")
+                .multiPart("content", "내용을 수정하자")
+                .multiPart("price", 10000)
+                .multiPart("originalImages", domain + "없는이미지.jpg")
+                .multiPart("newImages", 이미지1)
+                .when()
+                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
+                .put("/posts/" + 게시글_id)
+                .then()
+                .extract();
+
+        assertSoftly(softly -> {
+                    softly.assertThat(게시글_수정_응답.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                    softly.assertThat(게시글_수정_응답.jsonPath().getInt("errorCode")).isEqualTo(IMAGE_STORE_NAME_INVALID.getCode());
+                    softly.assertThat(게시글_수정_응답.jsonPath().getString("errorMessage"))
+                            .isEqualTo(IMAGE_STORE_NAME_INVALID.getMessage());
                 }
         );
     }
