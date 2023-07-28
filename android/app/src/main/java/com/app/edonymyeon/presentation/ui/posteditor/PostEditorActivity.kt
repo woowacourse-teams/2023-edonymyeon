@@ -130,6 +130,7 @@ class PostEditorActivity : AppCompatActivity() {
 
     private fun navigateToDetail() {
         startActivity(PostDetailActivity.newIntent(this, viewModel.postId.value ?: -1))
+        finish()
     }
 
     private fun savePost() {
