@@ -54,10 +54,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ExceptionResponse> handleMissingServletRequestParameterException(final MissingServletRequestParameterException e) {
         final ExceptionResponse exceptionResponse = new ExceptionResponse(REQUEST_PARAMETER_NOT_EXIST.getCode(),
-                REQUEST_PARAMETER_NOT_EXIST.getMessage() + e.getMessage());
+                REQUEST_PARAMETER_NOT_EXIST.getMessage());
 
         return ResponseEntity.status(BAD_REQUEST)
                 .body(exceptionResponse);
     }
-
 }
