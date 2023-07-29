@@ -9,7 +9,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="com.app.edonymyeon.presentation.ui.auth.LoginActivity">
+        tools:context="com.app.edonymyeon.presentation.ui.login.LoginActivity">
 
         <Space
             android:id="@+id/space_logo_top"
