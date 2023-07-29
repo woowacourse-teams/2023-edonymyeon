@@ -24,26 +24,35 @@ public class Consumption {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // todo: 게시글이 삭제되어도, 소비확정, 구매확정 내역은 남아있어야 가격 계산이 가능하다. 지워지면 안됨.
+    // todo: 게시글이 삭제되어도, 소비확정, 구매확정 내역은 남아있어야 가격 계산이 가능하다. 지워지면 안됨. <-과연 그럴까?!
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Post post;
 
     @Enumerated(value = EnumType.STRING)
+    @Column(nullable = false)
     private ConsumptionType consumptionType;
 
-    @Column
+    @Column(nullable = false)
     private Long price;
 
-    // todo: 소비 년, 월 저장
+    @Column(nullable = false)
+    private Integer consumptionYear;
+
+    @Column(nullable = false)
+    private Integer consumptionMonth;
 
     public Consumption(
             final Post post,
             final ConsumptionType consumptionType,
-            final Long price
+            final Long price,
+            final int consumptionYear,
+            final int consumptionMonth
     ) {
         this.post = post;
         this.consumptionType = consumptionType;
         this.price = price;
+        this.consumptionYear = consumptionYear;
+        this.consumptionMonth = consumptionMonth;
     }
 }

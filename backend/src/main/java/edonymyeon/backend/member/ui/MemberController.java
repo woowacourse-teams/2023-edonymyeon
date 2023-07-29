@@ -4,7 +4,8 @@ import edonymyeon.backend.auth.annotation.AuthPrincipal;
 import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.application.dto.MyPageResponse;
-import edonymyeon.backend.member.application.dto.PurchaseConfirmRequest;
+import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
+import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,8 +38,9 @@ public class MemberController {
 
     @PostMapping("/myPosts/{postId}/saving-confirm")
     public ResponseEntity<Void> confirmSaving(@AuthPrincipal final MemberIdDto memberIdDto,
-                                              @PathVariable final Long postId) {
-        memberService.confirmSaving(memberIdDto, postId);
+                                              @PathVariable final Long postId,
+                                              @RequestBody final SavingConfirmRequest savingConfirmRequest) {
+        memberService.confirmSaving(memberIdDto, postId, savingConfirmRequest);
         return ResponseEntity.ok().build();
     }
 }

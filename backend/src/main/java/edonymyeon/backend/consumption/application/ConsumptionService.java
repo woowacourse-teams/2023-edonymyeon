@@ -10,7 +10,8 @@ import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
-import edonymyeon.backend.member.application.dto.PurchaseConfirmRequest;
+import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
+import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
@@ -38,14 +39,15 @@ public class ConsumptionService {
     ) {
         final Member member = findMemberById(memberIdDto.id());
         final Post post = findPostById(postId);
-        post.checkWriter(member);
-        checkConsumptionExist(postId);
+        post.validateWriter(member);
+        validateConsumptionExist(postId);
 
-        //todo: 년, 월받아서 저장필요
         final Consumption consumption = new Consumption(
                 post,
                 PURCHASE,
-                purchaseConfirmRequest.purchasePrice()
+                purchaseConfirmRequest.purchasePrice(),
+                purchaseConfirmRequest.year(),
+                purchaseConfirmRequest.month()
         );
         consumptionRepository.save(consumption);
     }
@@ -60,24 +62,28 @@ public class ConsumptionService {
                 .orElseThrow(() -> new EdonymyeonException(POST_ID_NOT_FOUND));
     }
 
-    private void checkConsumptionExist(final Long postId) {
+    private void validateConsumptionExist(final Long postId) {
         if (consumptionRepository.findByPostId(postId).isPresent()) {
             throw new EdonymyeonException(CONSUMPTION_POST_ID_ALREADY_EXIST);
         }
     }
 
     @Transactional
-    public void confirmSaving(final MemberIdDto memberIdDto, final Long postId) {
+    public void confirmSaving(
+            final MemberIdDto memberIdDto,
+            final Long postId,
+            final SavingConfirmRequest savingConfirmRequest) {
         final Member member = findMemberById(memberIdDto.id());
         final Post post = findPostById(postId);
-        post.checkWriter(member);
-        checkConsumptionExist(postId);
+        post.validateWriter(member);
+        validateConsumptionExist(postId);
 
-        //todo: 년, 월받아서 저장필요
         final Consumption consumption = new Consumption(
                 post,
                 SAVING,
-                post.getPrice()
+                post.getPrice(),
+                savingConfirmRequest.year(),
+                savingConfirmRequest.month()
         );
         consumptionRepository.save(consumption);
     }

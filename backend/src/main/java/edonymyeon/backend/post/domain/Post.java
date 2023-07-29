@@ -174,7 +174,7 @@ public class Post {
         this.postImageInfos.remove(deletedPostImageInfos);
     }
 
-    public void checkWriter(final Member member) {
+    public void validateWriter(final Member member) {
         if (isSameMember(member)) {
             throw new EdonymyeonException(POST_MEMBER_NOT_SAME);
         }

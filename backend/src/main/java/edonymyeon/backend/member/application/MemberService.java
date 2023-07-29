@@ -6,7 +6,8 @@ import edonymyeon.backend.consumption.application.ConsumptionService;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.application.dto.MyPageResponse;
-import edonymyeon.backend.member.application.dto.PurchaseConfirmRequest;
+import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
+import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,8 +39,8 @@ public class MemberService {
 
     public void confirmSaving(
             final MemberIdDto memberIdDto,
-            final Long postId
-    ) {
-        consumptionService.confirmSaving(memberIdDto, postId);
+            final Long postId,
+            final SavingConfirmRequest savingConfirmRequest) {
+        consumptionService.confirmSaving(memberIdDto, postId, savingConfirmRequest);
     }
 }
