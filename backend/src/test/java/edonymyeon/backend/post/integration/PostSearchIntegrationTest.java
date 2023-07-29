@@ -7,11 +7,11 @@ import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.domain.Member;
 import io.restassured.RestAssured;
-import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class PostSearchIntegrationTest extends IntegrationTest {
@@ -42,9 +42,10 @@ public class PostSearchIntegrationTest extends IntegrationTest {
                 .then()
                 .extract();
 
-        JsonPath jsonPath = response.body().jsonPath();
-
-        assertThat(jsonPath.getInt("errorCode")).isEqualTo(ExceptionInformation.REQUEST_PARAMETER_NOT_EXIST.getCode());
+        assertSoftly(softly -> {
+            softly.assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(ExceptionInformation.REQUEST_PARAMETER_NOT_EXIST.getCode());
+            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+        });
     }
 
     @Test
