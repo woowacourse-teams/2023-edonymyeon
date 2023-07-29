@@ -43,4 +43,8 @@ public class MemberService {
             final SavingConfirmRequest savingConfirmRequest) {
         consumptionService.confirmSaving(memberIdDto, postId, savingConfirmRequest);
     }
+
+    public void removeConfirm(final MemberIdDto memberIdDto, final Long postId) {
+        consumptionService.removeConfirm(memberIdDto, postId);
+    }
 }

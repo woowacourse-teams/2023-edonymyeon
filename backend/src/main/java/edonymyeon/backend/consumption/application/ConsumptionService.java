@@ -3,6 +3,7 @@ package edonymyeon.backend.consumption.application;
 import static edonymyeon.backend.consumption.domain.ConsumptionType.PURCHASE;
 import static edonymyeon.backend.consumption.domain.ConsumptionType.SAVING;
 import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_POST_ID_ALREADY_EXIST;
+import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_POST_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
 
@@ -86,5 +87,19 @@ public class ConsumptionService {
                 savingConfirmRequest.month()
         );
         consumptionRepository.save(consumption);
+    }
+
+    @Transactional
+    public void removeConfirm(final MemberIdDto memberIdDto, final Long postId) {
+        final Member member = findMemberById(memberIdDto.id());
+        final Post post = findPostById(postId);
+        post.validateWriter(member);
+        final Consumption consumption = findConsumptionByPostID(postId);
+        consumptionRepository.delete(consumption);
+    }
+
+    private Consumption findConsumptionByPostID(final Long postId) {
+        return consumptionRepository.findByPostId(postId)
+                .orElseThrow(() -> new EdonymyeonException(CONSUMPTION_POST_ID_NOT_FOUND));
     }
 }

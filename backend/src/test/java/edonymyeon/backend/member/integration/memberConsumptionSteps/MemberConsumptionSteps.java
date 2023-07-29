@@ -13,7 +13,7 @@ import org.springframework.http.MediaType;
 public class MemberConsumptionSteps {
 
     public static ExtractableResponse<Response> 구매_확정_요청을_보낸다(
-            final Member 글쓴이,
+            final Member 사용자,
             final Post 게시글,
             final PurchaseConfirmRequest 구매_확정_요청
     ) {
@@ -21,7 +21,7 @@ public class MemberConsumptionSteps {
                 .given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(구매_확정_요청)
-                .auth().preemptive().basic(글쓴이.getEmail(), 글쓴이.getPassword())
+                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
                 .when()
                 .post("/profile/myPosts/{postId}/purchase-confirm", 게시글.getId())
                 .then()
@@ -29,7 +29,7 @@ public class MemberConsumptionSteps {
     }
 
     public static ExtractableResponse<Response> 절약_확정_요청을_보낸다(
-            final Member 글쓴이,
+            final Member 사용자,
             final Post 게시글,
             final SavingConfirmRequest 절약_확정_요청
     ) {
@@ -37,9 +37,20 @@ public class MemberConsumptionSteps {
                 .given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(절약_확정_요청)
-                .auth().preemptive().basic(글쓴이.getEmail(), 글쓴이.getPassword())
+                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
                 .when()
                 .post("/profile/myPosts/{postId}/saving-confirm", 게시글.getId())
+                .then()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> 확정_취소_요청을_보낸다(final Member 사용자, final Post 게시글) {
+        return RestAssured
+                .given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
+                .when()
+                .delete("/profile/myPosts/{postId}/confirm-remove", 게시글.getId())
                 .then()
                 .extract();
     }

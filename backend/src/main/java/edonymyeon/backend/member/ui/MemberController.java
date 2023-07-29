@@ -8,6 +8,7 @@ import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,6 +42,13 @@ public class MemberController {
                                               @PathVariable final Long postId,
                                               @RequestBody final SavingConfirmRequest savingConfirmRequest) {
         memberService.confirmSaving(memberIdDto, postId, savingConfirmRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/myPosts/{postId}/confirm-remove")
+    public ResponseEntity<Void> removeConfirm(@AuthPrincipal final MemberIdDto memberIdDto,
+                                              @PathVariable final Long postId) {
+        memberService.removeConfirm(memberIdDto, postId);
         return ResponseEntity.ok().build();
     }
 }
