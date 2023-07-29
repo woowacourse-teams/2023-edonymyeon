@@ -22,18 +22,18 @@
         android:theme="@style/Theme.Edonymyeon"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
+        <activity
+            android:name="com.app.edonymyeon.presentation.ui.mypost.MyPostActivity"
+            android:exported="false" />
         <activity
             android:name="com.app.edonymyeon.presentation.ui.auth.LoginActivity"
             android:exported="true" />
         <activity
             android:name="com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity"
             android:exported="true" />
-
         <activity
             android:name="com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity"
             android:exported="true" />
-
         <activity
             android:name="com.app.edonymyeon.presentation.ui.main.MainActivity"
             android:exported="true">
@@ -43,7 +43,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.app.edonymyeon.presentation.ui.post.PostActivity"
             android:exported="true" />
