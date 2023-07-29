@@ -4,7 +4,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.AUTHORIZA
 import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_DOMAIN_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_STORE_NAME_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_IMAGE_COUNT_INVALID;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_FORBIDDEN;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -502,10 +502,10 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .extract();
 
         assertSoftly(softly -> {
-                    softly.assertThat(게시글_수정_응답.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
-                    softly.assertThat(게시글_수정_응답.jsonPath().getInt("errorCode")).isEqualTo(POST_MEMBER_FORBIDDEN.getCode());
-                    softly.assertThat(게시글_수정_응답.jsonPath().getString("errorMessage"))
-                            .isEqualTo(POST_MEMBER_FORBIDDEN.getMessage());
+            softly.assertThat(게시글_수정_응답.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+            softly.assertThat(게시글_수정_응답.jsonPath().getInt("errorCode")).isEqualTo(POST_MEMBER_NOT_SAME.getCode());
+            softly.assertThat(게시글_수정_응답.jsonPath().getString("errorMessage"))
+                    .isEqualTo(POST_MEMBER_NOT_SAME.getMessage());
                 }
         );
     }
