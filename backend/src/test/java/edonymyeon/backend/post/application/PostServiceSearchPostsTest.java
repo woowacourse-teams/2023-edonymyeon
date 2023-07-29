@@ -5,10 +5,8 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
-import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.PostTestSupport;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -60,7 +58,7 @@ public class PostServiceSearchPostsTest {
     @Test
     void 제목으로_검색이_제대로_되는지_확인한다() {
         // when
-        List<GeneralPostInfoResponse> 검색결과 = postService.searchPosts("사과", emptyFindingCondition);
+        var 검색결과 = postService.searchPosts("사과", emptyFindingCondition).posts();
 
         // then
         assertSoftly(softly -> {
@@ -73,7 +71,7 @@ public class PostServiceSearchPostsTest {
     @Test
     void 내용으로_검색이_제대로_되는지_확인한다() {
         // when
-        List<GeneralPostInfoResponse> 검색결과 = postService.searchPosts("자취생", emptyFindingCondition);
+        var 검색결과 = postService.searchPosts("자취생", emptyFindingCondition).posts();
 
         // then
         assertThat(검색결과.size()).isEqualTo(2);
@@ -82,7 +80,7 @@ public class PostServiceSearchPostsTest {
     @Test
     void 내용으로_검색시_최신순으로_조회가_된다() {
         // when
-        List<GeneralPostInfoResponse> 검색결과 = postService.searchPosts("자취생", emptyFindingCondition);
+        var 검색결과 = postService.searchPosts("자취생", emptyFindingCondition).posts();
 
         // then
         assertSoftly(softly -> {
@@ -96,7 +94,7 @@ public class PostServiceSearchPostsTest {
     @Test
     void 검색어_결과가_없을때_결과값은_빈리스트_이다() {
         // when
-        List<GeneralPostInfoResponse> 검색결과 = postService.searchPosts("이리내", emptyFindingCondition);
+        var 검색결과 = postService.searchPosts("이리내", emptyFindingCondition).posts();
 
         // then
         assertThat(검색결과.size()).isEqualTo(0);

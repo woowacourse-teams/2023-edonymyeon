@@ -16,6 +16,7 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
+import edonymyeon.backend.post.application.dto.GeneralPostsResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.application.dto.ReactionCountResponse;
@@ -235,15 +236,16 @@ public class PostService {
         );
     }
 
-    public List<GeneralPostInfoResponse> searchPosts(final String searchWord, final GeneralFindingCondition generalFindingCondition) {
+    public GeneralPostsResponse searchPosts(final String searchWord, final GeneralFindingCondition generalFindingCondition) {
         final Specification<Post> searchResults = PostSpecification.searchBy(searchWord);
         final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
 
         final Slice<Post> foundPosts = postRepository.findAll(searchResults, pageRequest);
 
-        return foundPosts
-                .stream()
+        List<GeneralPostInfoResponse> posts = foundPosts.stream()
                 .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()))
                 .toList();
+
+        return new GeneralPostsResponse(posts);
     }
 }

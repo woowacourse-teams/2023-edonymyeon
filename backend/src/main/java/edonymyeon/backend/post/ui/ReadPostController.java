@@ -2,10 +2,8 @@ package edonymyeon.backend.post.ui;
 
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
-import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.GeneralPostsResponse;
 import edonymyeon.backend.post.ui.annotation.PostPaging;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +21,9 @@ public class ReadPostController {
             @RequestParam String query,
             @PostPaging GeneralFindingCondition generalFindingCondition
     ) {
-        final List<GeneralPostInfoResponse> posts = postService.searchPosts(query, generalFindingCondition);
+        final GeneralPostsResponse posts = postService.searchPosts(query, generalFindingCondition);
         return ResponseEntity
                 .ok()
-                .body(new GeneralPostsResponse(posts));
+                .body(posts);
     }
 }
