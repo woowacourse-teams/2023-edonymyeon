@@ -48,8 +48,8 @@ public enum ExceptionInformation {
     // 6___: 소비, 절약 관련
     CONSUMPTION_POST_ID_ALREADY_EXIST(6000, "이미 소비, 절약 여부가 확정된 게시글입니다."),
     CONSUMPTION_PRICE_ILLEGAL_SIZE(6543, "가격은 0원 이상 100억 이하여야 합니다."),
-    CONSUMPTION_YEAR_ILLEGAL(6544, "소비한 년도가 유효하지 않습니다.."),
-    CONSUMPTION_MONTH_ILLEGAL(6545, "소비한 달이 유효하지 않습니다.."),
+    CONSUMPTION_YEAR_ILLEGAL(6544, "소비한 년도가 유효하지 않습니다."),
+    CONSUMPTION_MONTH_ILLEGAL(6545, "소비한 달이 유효하지 않습니다."),
     CONSUMPTION_POST_ID_NOT_FOUND(6546, "소비 확정 내역이 존재하지 않습니다");
 
     private int code;
