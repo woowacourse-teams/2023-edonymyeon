@@ -1,5 +1,10 @@
 package edonymyeon.backend.consumption.domain;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_MONTH_ILLEGAL;
+import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_PRICE_ILLEGAL_SIZE;
+import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_YEAR_ILLEGAL;
+
+import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.post.domain.Post;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +25,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Consumption {
+
+    private static final long MAX_PRICE = 10_000_000_000L;
+    private static final int MIN_PRICE = 0;
+    private static final int MIN_YEAR = 0;
+    private static final int MAX_MONTH = 12;
+    private static final int MIN_MONTH = 0;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,10 +61,35 @@ public class Consumption {
             final int consumptionYear,
             final int consumptionMonth
     ) {
+        validate(price, consumptionYear, consumptionMonth);
         this.post = post;
         this.consumptionType = consumptionType;
         this.price = price;
         this.consumptionYear = consumptionYear;
         this.consumptionMonth = consumptionMonth;
+    }
+
+    private void validate(final Long price, final Integer consumptionYear, final Integer consumptionMonth) {
+        validatePrice(price);
+        validateConsumptionYear(consumptionYear);
+        validateConsumptionMonth(consumptionMonth);
+    }
+
+    private void validatePrice(final Long price) {
+        if (Objects.isNull(price) || price < MIN_PRICE || price > MAX_PRICE) {
+            throw new EdonymyeonException(CONSUMPTION_PRICE_ILLEGAL_SIZE);
+        }
+    }
+
+    private void validateConsumptionYear(final Integer consumptionYear) {
+        if (Objects.isNull(consumptionYear) || consumptionYear < MIN_YEAR) {
+            throw new EdonymyeonException(CONSUMPTION_YEAR_ILLEGAL);
+        }
+    }
+
+    private void validateConsumptionMonth(final Integer consumptionMonth) {
+        if (Objects.isNull(consumptionMonth) || consumptionMonth < MIN_MONTH || consumptionMonth > MAX_MONTH) {
+            throw new EdonymyeonException(CONSUMPTION_MONTH_ILLEGAL);
+        }
     }
 }
