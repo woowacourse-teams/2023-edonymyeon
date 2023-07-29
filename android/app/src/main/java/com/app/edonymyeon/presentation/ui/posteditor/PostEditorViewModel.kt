@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.text.Editable
-import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -50,7 +49,6 @@ class PostEditorViewModel(
     }
 
     fun initViewModelOnUpdate(post: PostUiModel) {
-        Log.d("post", post.images.toString())
         _postTitle.value = post.title
         _postPrice.value = post.price.toString()
         _postContent.value = post.content
@@ -68,7 +66,6 @@ class PostEditorViewModel(
                         ?: listOf(),
                 ),
             ).onSuccess {
-                Log.d("id", (it as PostEditorResponse).id.toString())
                 _postId.value = (it as PostEditorResponse).id
             }.onFailure {
                 it as CustomThrowable
