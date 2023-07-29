@@ -175,7 +175,7 @@ public class Post {
     }
 
     public void validateWriter(final Member member) {
-        if (isSameMember(member)) {
+        if (!isSameMember(member)) {
             throw new EdonymyeonException(POST_MEMBER_NOT_SAME);
         }
     }
