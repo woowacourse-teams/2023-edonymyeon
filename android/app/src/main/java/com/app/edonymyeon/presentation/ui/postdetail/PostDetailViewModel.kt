@@ -37,7 +37,6 @@ class PostDetailViewModel(
     val isScrap: LiveData<Boolean>
         get() = _isScrap
 
-    // 추천/비추천 요청 완료 여부 (기본은 true, 클릭하면 false, 응답을 받으면 다시 true)
     private val _isRecommendationRequestDone = MutableLiveData<Boolean>(true)
     val isRecommendationRequestDone: LiveData<Boolean>
         get() = _isRecommendationRequestDone
@@ -99,9 +98,7 @@ class PostDetailViewModel(
 
         if (oldRecommendation.isUp == isChecked) return
 
-        // 클릭 후 서버 통신을 보내기 전 우선 false가 된다
         _isRecommendationRequestDone.value = false
-//        Log.d("PostDetailViewModel", "up clicked! request done: false")
 
         if (isChecked) {
             saveRecommendation(postId, RecommendRepository::saveRecommendUp)
@@ -136,13 +133,7 @@ class PostDetailViewModel(
 
         if (oldRecommendation.isDown == isChecked) return
 
-        // 클릭 후 서버 통신을 보내기 전 우선 false가 된다
         _isRecommendationRequestDone.value = false
-//        Log.d("PostDetailViewModel", "down clicked! request done: false")
-
-        // 서버 통신 시작 전 1초 딜레이 넣어봤습니다
-        // thread.sleep이라 그런 것 같은데... 뒤로가기 하면 통신이 완료되고 나서야 나가지더라구요?
-//        Thread.sleep(1000L)
 
         if (isChecked) {
             saveRecommendation(postId, RecommendRepository::saveRecommendDown)
@@ -155,17 +146,13 @@ class PostDetailViewModel(
         postId: Long,
         event: suspend RecommendRepository.(Long) -> Result<Any>,
     ) {
-        // 서버 통신 요청 보낸다
-//        Log.d("PostDetailViewModel", "start saveRecommendation")
         viewModelScope.launch {
             recommendRepository.event(postId)
                 .onSuccess {
                     _isRecommendationRequestDone.value = true
-//                    Log.d("PostDetailViewModel", "onSuccess! request done: true")
                 }
                 .onFailure {
                     _isRecommendationRequestDone.value = true
-                    Log.d("PostDetailViewModel", "onFailure! request done: true")
                     it as CustomThrowable
                     when (it.code) {
                     }

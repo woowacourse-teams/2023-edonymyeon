@@ -13,8 +13,11 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -255,5 +258,38 @@ class PostDetailViewModelTest() {
             isDown = true,
         ).toUiModel()
         assertEquals(actual, viewModel.recommendation.value)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `추천을 한 뒤, 응답이 오기 전까지 추천 기능이 비활성화된다`() = runTest {
+        // given
+        val post = fakePost.copy(
+            recommendation = Recommendation(
+                upCount = Count(12),
+                downCount = Count(12),
+                isUp = false,
+                isDown = false,
+            ),
+        )
+        coEvery { postRepository.getPostDetail(postId) } returns Result.success(post)
+        coEvery { recommendRepository.saveRecommendUp(postId) } coAnswers {
+            delay(3000L)
+            Result.success(Unit)
+        }
+
+        // when & then
+        viewModel.getPostDetail(postId)
+
+        // isRecommendationRequestDone의 기본값은 true이다.
+        assertEquals(true, viewModel.isRecommendationRequestDone.value)
+
+        // 통신을 요청하면 해당 값은 false로 바뀌고
+        viewModel.updateUpRecommendationUi(postId, true)
+        assertEquals(false, viewModel.isRecommendationRequestDone.value)
+
+        // 응답을 받으면 다시 true로 바뀐다.
+        advanceTimeBy(3001L)
+        assertEquals(true, viewModel.isRecommendationRequestDone.value)
     }
 }
