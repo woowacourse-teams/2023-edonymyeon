@@ -1,4 +1,4 @@
-package edonymyeon.backend.member.integration.memberConsumptionSteps;
+package edonymyeon.backend.member.integration.steps;
 
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
