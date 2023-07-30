@@ -35,7 +35,11 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel.isLoginEnabled.observe(this) { isEnable ->
             if (!isEnable) {
-                Snackbar.make(binding.svLogin, getString(R.string.login_check_logininfo_input), Snackbar.LENGTH_LONG).show()
+                Snackbar.make(
+                    binding.svLogin,
+                    getString(R.string.login_check_logininfo_input),
+                    Snackbar.LENGTH_LONG,
+                ).show()
             }
         }
 
