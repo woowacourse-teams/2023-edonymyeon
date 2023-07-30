@@ -43,6 +43,7 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
     private fun initAppbar() {
         setSupportActionBar(binding.tbMypost)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = ""
     }
 
     private fun setAdapter() {
