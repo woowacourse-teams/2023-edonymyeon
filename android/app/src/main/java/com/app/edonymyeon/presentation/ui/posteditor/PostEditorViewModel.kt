@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.text.Editable
-import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -14,7 +13,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.loader.content.CursorLoader
 import com.app.edonymyeon.data.common.CustomThrowable
-import com.app.edonymyeon.data.dto.request.PostEditorResponse
+import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.domain.edonymyeon.repository.PostRepository
 import kotlinx.coroutines.launch
@@ -67,8 +66,7 @@ class PostEditorViewModel(
                         ?: listOf(),
                 ),
             ).onSuccess {
-                Log.d("id", (it as PostEditorResponse).id.toString())
-                _postId.value = it.id
+                _postId.value = (it as PostEditorResponse).id
             }.onFailure {
                 it as CustomThrowable
                 when (it.code) {

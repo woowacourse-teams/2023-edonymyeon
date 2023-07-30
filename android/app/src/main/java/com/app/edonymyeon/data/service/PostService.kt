@@ -1,7 +1,7 @@
 package com.app.edonymyeon.data.service
 
-import com.app.edonymyeon.data.dto.request.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
+import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.Posts
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
