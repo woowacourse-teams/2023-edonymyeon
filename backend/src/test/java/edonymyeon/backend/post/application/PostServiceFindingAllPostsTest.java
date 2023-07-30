@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,15 +53,11 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
     private PostService postService;
 
     private MemberIdDto memberId;
+
     private MemberIdDto memberId2;
 
-/*    @Value("${domain}")
-    private String domain;*/
-
-    //todo: 테스트 properties 파일에 있는 도메인 경로 하드코딩함
-    private Pattern 파일_경로_형식 = Pattern.compile(
-            "edonymyeon/" + "test-inserting\\d+\\.(png|jpg|jpeg)"
-    );
+    @Value("${domain}")
+    private String domain;
 
     @BeforeEach
     void setUp() throws IOException {
@@ -89,6 +86,10 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
     void 작성된_모든_게시글을_조회할_수_있다() {
         final var postFindingCondition = GeneralFindingCondition.builder().build();
         final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
+
+        final Pattern 파일_경로_형식 = Pattern.compile(
+                domain + "test-inserting\\d+\\.(png|jpg|jpeg)"
+        );
 
         assertAll(
                 () -> assertThat(postFindingResponses).hasSize(3),
