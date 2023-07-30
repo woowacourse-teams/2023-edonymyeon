@@ -10,6 +10,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import edonymyeon.backend.member.domain.Member;
@@ -93,6 +94,7 @@ public class PostCreationDocsTest implements ImageFileCleaner {
 
         this.mockMvc.perform(게시글_작성_요청)
                 .andExpect(status().isCreated())
+                .andExpect(header().string("location", "/posts/" + 1))
                 .andDo(문서화);
     }
 }
