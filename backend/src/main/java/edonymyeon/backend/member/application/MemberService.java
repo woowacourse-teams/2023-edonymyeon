@@ -20,7 +20,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    private final ConsumptionService consumptionService;
+    private final ConsumptionConfirmService consumptionConfirmService;
 
     public MyPageResponse findMemberInfoById(final Long id) {
         final Member member = memberRepository.findById(id)
@@ -33,17 +33,17 @@ public class MemberService {
             final Long postId,
             final PurchaseConfirmRequest purchaseConfirmRequest
     ) {
-        consumptionService.confirmPurchase(memberIdDto, postId, purchaseConfirmRequest);
+        consumptionConfirmService.confirmPurchase(memberIdDto, postId, purchaseConfirmRequest);
     }
 
     public void confirmSaving(
             final MemberIdDto memberIdDto,
             final Long postId,
             final SavingConfirmRequest savingConfirmRequest) {
-        consumptionService.confirmSaving(memberIdDto, postId, savingConfirmRequest);
+        consumptionConfirmService.confirmSaving(memberIdDto, postId, savingConfirmRequest);
     }
 
     public void removeConfirm(final MemberIdDto memberIdDto, final Long postId) {
-        consumptionService.removeConfirm(memberIdDto, postId);
+        consumptionConfirmService.removeConfirm(memberIdDto, postId);
     }
 }

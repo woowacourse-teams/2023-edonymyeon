@@ -4,7 +4,7 @@ import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 
-public interface ConsumptionService {
+public interface ConsumptionConfirmService {
 
     void confirmPurchase(
             final MemberIdDto memberIdDto,
