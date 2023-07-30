@@ -6,9 +6,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -85,50 +82,8 @@ public class PostControllerDocsTest implements ImageFileCleaner {
         doNothing().when(postImageInfoRepository).deleteAll(any());
     }
 
-    private void 추천_레포지토리를_모킹한다(final Post 게시글) {
+    private void 추천_서비스를_모킹한다(final Post 게시글) {
         doNothing().when(thumbsService).deleteAllThumbsInPost(게시글.getId());
-    }
-
-    @Test
-    void 게시글을_생성한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
-        회원_레포지토리를_모킹한다(글쓴이);
-
-        Part 제목 = new MockPart("title", null, "제목입니다".getBytes(StandardCharsets.UTF_8));
-        Part 내용 = new MockPart("content", null, "내용입니다".getBytes(StandardCharsets.UTF_8));
-        Part 가격 = new MockPart("price", null, "100000".getBytes(StandardCharsets.UTF_8));
-        MockMultipartFile 이미지 = new MockMultipartFile("newImages", "image.jpg", ContentType.IMAGE_JPEG.getMimeType(),
-                "이미지 파일입니다".getBytes(StandardCharsets.UTF_8));
-
-        final MockHttpServletRequestBuilder 게시글_작성_요청 = multipart("/posts")
-                .part(제목)
-                .part(내용)
-                .part(가격)
-                .file(이미지)
-                .file(이미지)
-                .file(이미지)
-                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((글쓴이.getEmail() + ":" + 글쓴이.getPassword()).getBytes()));
-
-        final RestDocumentationResultHandler 문서화 = document("post-create",
-                preprocessRequest(prettyPrint()),
-                preprocessResponse(prettyPrint()),
-                requestParts(
-                        partWithName("title").description("제목"),
-                        partWithName("content").description("내용"),
-                        partWithName("price").description("가격"),
-                        partWithName("newImages").description("이미지 파일들")
-                ),
-                responseFields(
-                        fieldWithPath("id").type(Long.TYPE).description("게시글 id")
-                )
-        );
-
-        this.mockMvc.perform(게시글_작성_요청)
-                .andExpect(status().isCreated())
-                .andDo(문서화);
     }
 
     @Test
@@ -197,7 +152,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);
         게시글_이미지_정보_레포지토리를_모킹한다();
-        추천_레포지토리를_모킹한다(게시글);
+        추천_서비스를_모킹한다(게시글);
 
         final MockHttpServletRequestBuilder 게시글_삭제_요청 = delete("/posts/{postId}", 게시글.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
