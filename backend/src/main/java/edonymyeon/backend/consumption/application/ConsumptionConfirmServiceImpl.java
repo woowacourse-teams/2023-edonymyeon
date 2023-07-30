@@ -1,6 +1,5 @@
 package edonymyeon.backend.consumption.application;
 
-import static edonymyeon.backend.consumption.domain.ConsumptionType.PURCHASE;
 import static edonymyeon.backend.consumption.domain.ConsumptionType.SAVING;
 import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_POST_ID_ALREADY_EXIST;
 import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_POST_ID_NOT_FOUND;
@@ -8,12 +7,12 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
 
 import edonymyeon.backend.consumption.domain.Consumption;
+import edonymyeon.backend.consumption.domain.ConsumptionType;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.ConsumptionConfirmService;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
-import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
-import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
+import edonymyeon.backend.member.application.dto.YearMonthDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
@@ -33,24 +32,26 @@ public class ConsumptionConfirmServiceImpl implements ConsumptionConfirmService 
 
     private final ConsumptionRepository consumptionRepository;
 
-    @Override
     @Transactional
-    public void confirmPurchase(
+    public void confirm(
             final MemberIdDto memberIdDto,
             final Long postId,
-            final PurchaseConfirmRequest purchaseConfirmRequest
+            final Long purchasePrice,
+            final YearMonthDto yearMonth
     ) {
         final Member member = findMemberById(memberIdDto.id());
         final Post post = findPostById(postId);
         post.validateWriter(member);
         validateConsumptionExist(postId);
 
+        ConsumptionType consumptionType = ConsumptionType.classifyConsumptionType(purchasePrice);
+
         final Consumption consumption = new Consumption(
                 post,
-                PURCHASE,
-                purchaseConfirmRequest.purchasePrice(),
-                purchaseConfirmRequest.year(),
-                purchaseConfirmRequest.month()
+                consumptionType,
+                consumptionType == SAVING ? post.getPrice() : purchasePrice,
+                yearMonth.year(),
+                yearMonth.month()
         );
         consumptionRepository.save(consumption);
     }
@@ -69,27 +70,6 @@ public class ConsumptionConfirmServiceImpl implements ConsumptionConfirmService 
         if (consumptionRepository.findByPostId(postId).isPresent()) {
             throw new EdonymyeonException(CONSUMPTION_POST_ID_ALREADY_EXIST);
         }
-    }
-
-    @Override
-    @Transactional
-    public void confirmSaving(
-            final MemberIdDto memberIdDto,
-            final Long postId,
-            final SavingConfirmRequest savingConfirmRequest) {
-        final Member member = findMemberById(memberIdDto.id());
-        final Post post = findPostById(postId);
-        post.validateWriter(member);
-        validateConsumptionExist(postId);
-
-        final Consumption consumption = new Consumption(
-                post,
-                SAVING,
-                post.getPrice(),
-                savingConfirmRequest.year(),
-                savingConfirmRequest.month()
-        );
-        consumptionRepository.save(consumption);
     }
 
     @Override

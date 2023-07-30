@@ -1,21 +1,15 @@
 package edonymyeon.backend.member.application;
 
 import edonymyeon.backend.member.application.dto.MemberIdDto;
-import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
-import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
+import edonymyeon.backend.member.application.dto.YearMonthDto;
 
 public interface ConsumptionConfirmService {
 
-    void confirmPurchase(
+    void confirm(
             final MemberIdDto memberIdDto,
             final Long postId,
-            final PurchaseConfirmRequest purchaseConfirmRequest
-    );
-
-    void confirmSaving(
-            final MemberIdDto memberIdDto,
-            final Long postId,
-            final SavingConfirmRequest savingConfirmRequest
+            final Long purchasePrice,
+            final YearMonthDto yearMonth
     );
 
     void removeConfirm(final MemberIdDto memberIdDto, final Long postId);

@@ -5,6 +5,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.application.dto.MyPageResponse;
+import edonymyeon.backend.member.application.dto.YearMonthDto;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
@@ -33,14 +34,18 @@ public class MemberService {
             final Long postId,
             final PurchaseConfirmRequest purchaseConfirmRequest
     ) {
-        consumptionConfirmService.confirmPurchase(memberIdDto, postId, purchaseConfirmRequest);
+        final YearMonthDto yearMonthDto = new YearMonthDto(purchaseConfirmRequest.year(),
+                purchaseConfirmRequest.month());
+        consumptionConfirmService.confirm(memberIdDto, postId, purchaseConfirmRequest.purchasePrice(), yearMonthDto);
     }
 
     public void confirmSaving(
             final MemberIdDto memberIdDto,
             final Long postId,
             final SavingConfirmRequest savingConfirmRequest) {
-        consumptionConfirmService.confirmSaving(memberIdDto, postId, savingConfirmRequest);
+        final YearMonthDto yearMonthDto = new YearMonthDto(savingConfirmRequest.year(),
+                savingConfirmRequest.month());
+        consumptionConfirmService.confirm(memberIdDto, postId, null, yearMonthDto);
     }
 
     public void removeConfirm(final MemberIdDto memberIdDto, final Long postId) {
