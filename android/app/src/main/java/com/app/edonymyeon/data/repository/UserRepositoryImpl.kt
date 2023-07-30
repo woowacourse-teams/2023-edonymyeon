@@ -1,6 +1,5 @@
 package com.app.edonymyeon.data.repository
 
-import android.util.Log
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.datasource.auth.AuthDataSource
 import com.app.edonymyeon.data.datasource.user.UserDataSource
@@ -19,9 +18,8 @@ class UserRepositoryImpl(
             Result.success(result.body() as Unit)
         } else {
             val errorResponse = result.errorBody()?.string()
-            val json = JSONObject(errorResponse)
-            val errorMessage = json.getString("errorMessage")
-            Log.d("message", errorMessage)
+            val json = errorResponse?.let { JSONObject(it) }
+            val errorMessage = json?.getString("errorMessage") ?: ""
             Result.failure(CustomThrowable(result.code(), errorMessage))
         }
     }
