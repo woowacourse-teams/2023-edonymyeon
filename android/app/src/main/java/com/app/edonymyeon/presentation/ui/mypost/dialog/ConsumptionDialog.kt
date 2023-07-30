@@ -11,13 +11,14 @@ import app.edonymyeon.databinding.DialogInputConsumptionBinding
 
 class ConsumptionDialog : DialogFragment() {
 
-    private lateinit var binding: DialogInputConsumptionBinding
+    private val binding by lazy {
+        DialogInputConsumptionBinding.inflate(layoutInflater)
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        binding = DialogInputConsumptionBinding.inflate(inflater, container, false)
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         return super.onCreateView(inflater, container, savedInstanceState)
     }
