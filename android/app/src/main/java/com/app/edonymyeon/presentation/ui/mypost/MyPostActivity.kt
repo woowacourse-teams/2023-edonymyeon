@@ -1,5 +1,7 @@
 package com.app.edonymyeon.presentation.ui.mypost
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -60,5 +62,11 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
 
     override fun onCancelButtonClick() {
         TODO("Not yet implemented")
+    }
+
+    companion object {
+        fun newIntent(context: Context): Intent {
+            return Intent(context, MyPostActivity::class.java)
+        }
     }
 }
