@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,6 +85,10 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
         final var postFindingCondition = GeneralFindingCondition.builder().build();
         final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition).get()
                 .toList();
+
+        final Pattern 파일_경로_형식 = Pattern.compile(
+                domain + "test-inserting\\d+\\.(png|jpg|jpeg)"
+        );
 
         assertAll(
                 () -> assertThat(postFindingResponses).hasSize(3),
