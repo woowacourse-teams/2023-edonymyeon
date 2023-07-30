@@ -32,6 +32,7 @@ public class ConsumptionConfirmServiceImpl implements ConsumptionConfirmService 
 
     private final ConsumptionRepository consumptionRepository;
 
+    @Override
     @Transactional
     public void confirm(
             final MemberIdDto memberIdDto,
