@@ -4,7 +4,7 @@
 === 게시글 작성
 
 // 'generated-snippets의 하위디렉토리명[]' <- 이 형태로 [] 안에는 원하는 스니펫 순서대로 넣으면 됨. 제목까지 알아서 생성해줌.
-operation::post-create[snippets='http-request,request-parts,http-response,response-fields']
+operation::post-create[snippets='request-parts,http-request,http-response,response-fields']
 
 === 게시글 전체 조회
 

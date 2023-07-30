@@ -2,9 +2,16 @@
 == 구매 추천 반응
 
 === 게시글 추천
+operation::thumbs-up[snippets='path-parameters,http-request,http-response']
 
 === 게시글 비추천
 
+operation::thumbs-down[snippets='path-parameters,http-request,http-response']
+
 === 게시글 추천 취소
 
+operation::thumbs-up-delete[snippets='path-parameters,http-request,http-response']
+
 === 게시글 비추천 취소
+
+operation::thumbs-down-delete[snippets='path-parameters,http-request,http-response']
