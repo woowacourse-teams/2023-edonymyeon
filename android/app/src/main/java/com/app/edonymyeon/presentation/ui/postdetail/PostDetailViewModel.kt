@@ -17,7 +17,6 @@ import com.domain.edonymyeon.repository.RecommendRepository
 import kotlinx.coroutines.launch
 
 class PostDetailViewModel(
-    private val postId: Long,
     private val postRepository: PostRepository,
     private val recommendRepository: RecommendRepository,
 ) : ViewModel() {
@@ -43,11 +42,7 @@ class PostDetailViewModel(
     val isRecommendationRequestDone: LiveData<Boolean>
         get() = _isRecommendationRequestDone
 
-    init {
-        getPostDetail(postId)
-    }
-
-    private fun getPostDetail(postId: Long) {
+    fun getPostDetail(postId: Long) {
         viewModelScope.launch {
             postRepository.getPostDetail(postId)
                 .onSuccess {
@@ -78,7 +73,7 @@ class PostDetailViewModel(
         }
     }
 
-    fun updateUpRecommendationUi(isChecked: Boolean) {
+    fun updateUpRecommendationUi(postId: Long, isChecked: Boolean) {
         val oldRecommendation = _recommendation.value?.toDomain() ?: return
         if (oldRecommendation.isUp && isChecked) return
 
@@ -106,7 +101,7 @@ class PostDetailViewModel(
 
         // 클릭 후 서버 통신을 보내기 전 우선 false가 된다
         _isRecommendationRequestDone.value = false
-        Log.d("PostDetailViewModel", "up clicked! request done: false")
+//        Log.d("PostDetailViewModel", "up clicked! request done: false")
 
         if (isChecked) {
             saveRecommendation(postId, RecommendRepository::saveRecommendUp)
@@ -115,7 +110,7 @@ class PostDetailViewModel(
         }
     }
 
-    fun updateDownRecommendationUi(isChecked: Boolean) {
+    fun updateDownRecommendationUi(postId: Long, isChecked: Boolean) {
         val oldRecommendation = _recommendation.value?.toDomain() ?: return
         if (oldRecommendation.isDown && isChecked) return
 
@@ -143,7 +138,7 @@ class PostDetailViewModel(
 
         // 클릭 후 서버 통신을 보내기 전 우선 false가 된다
         _isRecommendationRequestDone.value = false
-        Log.d("PostDetailViewModel", "down clicked! request done: false")
+//        Log.d("PostDetailViewModel", "down clicked! request done: false")
 
         // 서버 통신 시작 전 1초 딜레이 넣어봤습니다
         // thread.sleep이라 그런 것 같은데... 뒤로가기 하면 통신이 완료되고 나서야 나가지더라구요?
@@ -161,12 +156,12 @@ class PostDetailViewModel(
         event: suspend RecommendRepository.(Long) -> Result<Any>,
     ) {
         // 서버 통신 요청 보낸다
-        Log.d("PostDetailViewModel", "start saveRecommendation")
+//        Log.d("PostDetailViewModel", "start saveRecommendation")
         viewModelScope.launch {
             recommendRepository.event(postId)
                 .onSuccess {
                     _isRecommendationRequestDone.value = true
-                    Log.d("PostDetailViewModel", "onSuccess! request done: true")
+//                    Log.d("PostDetailViewModel", "onSuccess! request done: true")
                 }
                 .onFailure {
                     _isRecommendationRequestDone.value = true

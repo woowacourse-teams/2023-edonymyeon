@@ -33,9 +33,8 @@ class PostDetailActivity : AppCompatActivity() {
         ActivityPostDetailBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: PostDetailViewModel by viewModels {
+    private val viewModel: PostDetailViewModel by viewModels<PostDetailViewModel> {
         PostDetailViewModelFactory(
-            id,
             PostRepositoryImpl(PostRemoteDataSource()),
             RecommendRepositoryImpl(RecommendRemoteDataSource()),
         )
@@ -60,6 +59,7 @@ class PostDetailActivity : AppCompatActivity() {
 
         initBinding()
         initAppbar()
+        getPost()
         setRecommendationCheckedListener()
 
         viewModel.post.observe(this) {
@@ -142,6 +142,10 @@ class PostDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun getPost() {
+        viewModel.getPostDetail(id)
+    }
+
     private fun setRecommendationCheckedListener() {
         binding.cbUp.setOnCheckedChangeListener { _, isChecked ->
             if (isMyPost) {
@@ -149,7 +153,7 @@ class PostDetailActivity : AppCompatActivity() {
                 binding.cbUp.isChecked = false
                 return@setOnCheckedChangeListener
             }
-            viewModel.updateUpRecommendationUi(isChecked)
+            viewModel.updateUpRecommendationUi(id, isChecked)
         }
         binding.cbDown.setOnCheckedChangeListener { _, isChecked ->
             if (isMyPost) {
@@ -157,7 +161,7 @@ class PostDetailActivity : AppCompatActivity() {
                 binding.cbDown.isChecked = false
                 return@setOnCheckedChangeListener
             }
-            viewModel.updateDownRecommendationUi(isChecked)
+            viewModel.updateDownRecommendationUi(id, isChecked)
         }
     }
 
