@@ -33,6 +33,7 @@ public class ConsumptionServiceImpl implements ConsumptionService {
 
     private final ConsumptionRepository consumptionRepository;
 
+    @Override
     @Transactional
     public void confirmPurchase(
             final MemberIdDto memberIdDto,
@@ -70,6 +71,7 @@ public class ConsumptionServiceImpl implements ConsumptionService {
         }
     }
 
+    @Override
     @Transactional
     public void confirmSaving(
             final MemberIdDto memberIdDto,
@@ -90,6 +92,7 @@ public class ConsumptionServiceImpl implements ConsumptionService {
         consumptionRepository.save(consumption);
     }
 
+    @Override
     @Transactional
     public void removeConfirm(final MemberIdDto memberIdDto, final Long postId) {
         final Member member = findMemberById(memberIdDto.id());
