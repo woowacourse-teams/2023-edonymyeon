@@ -2,7 +2,6 @@ package edonymyeon.backend.member.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 
-import edonymyeon.backend.consumption.application.ConsumptionService;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.application.dto.MyPageResponse;

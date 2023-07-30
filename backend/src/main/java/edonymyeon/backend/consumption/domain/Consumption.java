@@ -37,6 +37,7 @@ public class Consumption {
     private Long id;
 
     // todo: 게시글이 삭제되어도, 소비확정, 구매확정 내역은 남아있어야 가격 계산이 가능하다. 지워지면 안됨. <-과연 그럴까?!
+    // todo: 또, 게시글 삭제할때 확정내역이 연관되어 있는 것도 해결해야 함
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Post post;

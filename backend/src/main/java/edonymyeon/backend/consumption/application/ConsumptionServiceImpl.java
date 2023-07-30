@@ -10,6 +10,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_N
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.member.application.ConsumptionService;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
@@ -24,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
-public class ConsumptionService {
+public class ConsumptionServiceImpl implements ConsumptionService {
 
     private final MemberRepository memberRepository;
 
