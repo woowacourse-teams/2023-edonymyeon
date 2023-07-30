@@ -89,6 +89,7 @@ class PostDetailActivity : AppCompatActivity() {
                         PostEditorActivity.UPDATE_CODE,
                     ),
                 )
+                finish()
                 true
             }
 
