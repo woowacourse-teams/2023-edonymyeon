@@ -4,6 +4,8 @@ import edonymyeon.backend.auth.application.AuthService;
 import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.util.Base64;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +24,17 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         authService.findMember(loginRequest);
+        final String basicAuthValue = getBasicAuthValue(loginRequest);
+        final Cookie cookie = new Cookie(HttpHeaders.AUTHORIZATION, basicAuthValue);
+        response.addCookie(cookie);
+        return ResponseEntity.ok().build();
+    }
 
+    private String getBasicAuthValue(final LoginRequest loginRequest) {
         String valueToEncode = loginRequest.email() + ":" + loginRequest.password();
-        final String cookie = "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie).build();
+        return Base64.getEncoder().encodeToString(valueToEncode.getBytes());
     }
 
     @GetMapping("/join")
