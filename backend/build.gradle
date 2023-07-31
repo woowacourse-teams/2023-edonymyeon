@@ -45,6 +45,8 @@ dependencies {
 
 	// rest assured 추가
 	testImplementation 'io.rest-assured:rest-assured:5.3.1'
+
+	implementation 'com.mysql:mysql-connector-j'
 }
 
 tasks.named('test') {
