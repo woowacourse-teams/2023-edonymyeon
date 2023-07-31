@@ -8,7 +8,7 @@ import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityLoginBinding
 import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.data.datasource.user.UserRemoteDataSource
-import com.app.edonymyeon.data.repository.UserRepositoryImpl
+import com.app.edonymyeon.data.repository.AuthRepositoryImpl
 import com.app.edonymyeon.presentation.util.makeSnackbar
 
 class LoginActivity : AppCompatActivity() {
@@ -19,7 +19,7 @@ class LoginActivity : AppCompatActivity() {
 
     private val viewModel: LoginViewModel by lazy {
         LoginViewModelFactory(
-            UserRepositoryImpl(
+            AuthRepositoryImpl(
                 UserRemoteDataSource(),
                 AuthLocalDataSource.getInstance(this),
             ),

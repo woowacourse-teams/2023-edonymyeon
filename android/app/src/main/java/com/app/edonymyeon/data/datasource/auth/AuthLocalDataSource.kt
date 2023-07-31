@@ -3,7 +3,7 @@ package com.app.edonymyeon.data.datasource.auth
 import android.content.Context
 import android.content.SharedPreferences
 
-class AuthLocalDataSource private constructor(context: Context) : AuthDataSource {
+class AuthLocalDataSource private constructor(context: Context) : AuthDataSource() {
 
     private val sharedPreference: SharedPreferences =
         context.getSharedPreferences(AUTH_INFO, Context.MODE_PRIVATE)
