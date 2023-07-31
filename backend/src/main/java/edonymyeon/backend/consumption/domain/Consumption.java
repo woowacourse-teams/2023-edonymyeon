@@ -32,7 +32,7 @@ public class Consumption {
     private static final int MIN_PRICE = 0;
     private static final int MIN_YEAR = 0;
     private static final int MAX_MONTH = 12;
-    private static final int MIN_MONTH = 0;
+    private static final int MIN_MONTH = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
