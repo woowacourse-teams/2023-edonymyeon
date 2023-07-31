@@ -24,14 +24,10 @@ import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.EntityGraph.EntityGraphType;
-import org.springframework.data.jpa.repository.Query;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -125,11 +121,11 @@ public class Post {
     }
 
     public void addPostImageInfo(final PostImageInfo postImageInfo) {
-        postImageInfos.add(postImageInfo);
+        this.postImageInfos.add(postImageInfo);
     }
 
-    public void checkImageCount(final Integer imageCount) {
-        postImageInfos.checkImageCount(imageCount);
+    public void validateImageAdditionCount(final Integer imageAdditionCount) {
+        this.postImageInfos.validateImageAdditionCount(imageAdditionCount);
     }
 
     public void update(final String title, final String content, final Long price) {
@@ -154,7 +150,7 @@ public class Post {
     }
 
     public void updateImages(final PostImageInfos postImageInfos) {
-        this.postImageInfos.update(postImageInfos.getPostImageInfos());
+        this.postImageInfos.addAll(postImageInfos.getPostImageInfos());
     }
 
     public boolean isSameMember(final Member member) {
@@ -167,5 +163,13 @@ public class Post {
 
     public List<PostImageInfo> getPostImageInfos() {
         return this.postImageInfos.getPostImageInfos();
+    }
+
+    public List<PostImageInfo> findImagesToDelete(final List<String> remainedStoreNames) {
+        return this.postImageInfos.findImagesToDelete(remainedStoreNames);
+    }
+
+    public void removePostImageInfos(final List<PostImageInfo> deletedPostImageInfos) {
+        this.postImageInfos.remove(deletedPostImageInfos);
     }
 }

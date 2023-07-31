@@ -7,4 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByEmailAndPassword(final String email, final String password);
+
+    Optional<Member> findByEmail(final String email);
+
+    Optional<Member> findByNickname(final String nickname);
 }
