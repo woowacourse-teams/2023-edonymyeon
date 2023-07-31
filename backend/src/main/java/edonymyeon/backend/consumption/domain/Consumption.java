@@ -20,6 +20,8 @@ import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,10 +38,9 @@ public class Consumption {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // todo: 게시글이 삭제되어도, 소비확정, 구매확정 내역은 남아있어야 가격 계산이 가능하다. 지워지면 안됨. <-과연 그럴까?!
-    // todo: 또, 게시글 삭제할때 확정내역이 연관되어 있는 것도 해결해야 함
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn
+    @OnDelete(action = OnDeleteAction.CASCADE) // post가 삭제될때 연관된 소비내역도 삭제될 수 있도록 한다.
     private Post post;
 
     @Enumerated(value = EnumType.STRING)

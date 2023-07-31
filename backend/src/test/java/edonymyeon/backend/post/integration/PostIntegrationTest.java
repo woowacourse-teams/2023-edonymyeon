@@ -10,8 +10,11 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import edonymyeon.backend.IntegrationTest;
+import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.integration.steps.MemberConsumptionSteps;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
@@ -168,6 +171,31 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         //then
         assertSoftly(softly -> {
                     softly.assertThat(thumbsRepository.findByPostId(게시글_id)).isEmpty();
+                    softly.assertThat(게시글_삭제_응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+                }
+        );
+    }
+
+    @Test
+    void 게시글이_소비_확정_되어있다면_게시글_삭제시_소비_확정_내역도_삭제된다(@Autowired ConsumptionRepository consumptionRepository) {
+        //given
+        final Member 작성자 = 사용자를_하나_만든다();
+        final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
+        final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
+        final PurchaseConfirmRequest 구매_확정_요청 = new PurchaseConfirmRequest(10000L, 2023, 7);
+        MemberConsumptionSteps.구매_확정_요청을_보낸다(작성자, 게시글_id, 구매_확정_요청);
+
+        //when
+        final ExtractableResponse<Response> 게시글_삭제_응답 = RestAssured.given()
+                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
+                .when()
+                .delete("posts/" + 게시글_id)
+                .then()
+                .extract();
+
+        //then
+        assertSoftly(softly -> {
+                    softly.assertThat(consumptionRepository.findByPostId(게시글_id)).isEmpty();
                     softly.assertThat(게시글_삭제_응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
                 }
         );

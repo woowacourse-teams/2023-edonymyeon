@@ -33,7 +33,7 @@ public class MemberConsumptionIntegrationTest {
             final PurchaseConfirmRequest 구매_확정_요청 = new PurchaseConfirmRequest(10000L, 2023, 7);
 
             // when
-            final ExtractableResponse<Response> 구매_확정_응답 = 구매_확정_요청을_보낸다(글쓴이, 게시글, 구매_확정_요청);
+            final ExtractableResponse<Response> 구매_확정_응답 = 구매_확정_요청을_보낸다(글쓴이, 게시글.getId(), 구매_확정_요청);
 
             // then
             assertThat(구매_확정_응답.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -48,7 +48,7 @@ public class MemberConsumptionIntegrationTest {
             final PurchaseConfirmRequest 구매_확정_요청 = new PurchaseConfirmRequest(10000L, 2023, 7);
 
             // when
-            final ExtractableResponse<Response> 구매_확정_응답 = 구매_확정_요청을_보낸다(다른_사람, 게시글, 구매_확정_요청);
+            final ExtractableResponse<Response> 구매_확정_응답 = 구매_확정_요청을_보낸다(다른_사람, 게시글.getId(), 구매_확정_요청);
 
             // then
             final ExceptionResponse 예외_응답 = 구매_확정_응답.as(ExceptionResponse.class);
@@ -68,10 +68,10 @@ public class MemberConsumptionIntegrationTest {
             final Member 글쓴이 = memberTestSupport.builder().build();
             final Post 게시글 = postTestSupport.builder().member(글쓴이).build();
             final PurchaseConfirmRequest 구매_확정_요청 = new PurchaseConfirmRequest(10000L, 2023, 7);
-            구매_확정_요청을_보낸다(글쓴이, 게시글, 구매_확정_요청);
+            구매_확정_요청을_보낸다(글쓴이, 게시글.getId(), 구매_확정_요청);
 
             // when
-            final ExtractableResponse<Response> 구매_확정_응답 = 구매_확정_요청을_보낸다(글쓴이, 게시글, 구매_확정_요청);
+            final ExtractableResponse<Response> 구매_확정_응답 = 구매_확정_요청을_보낸다(글쓴이, 게시글.getId(), 구매_확정_요청);
 
             // then
             final ExceptionResponse 예외_응답 = 구매_확정_응답.as(ExceptionResponse.class);
@@ -98,7 +98,7 @@ public class MemberConsumptionIntegrationTest {
             final SavingConfirmRequest 절약_확정_요청 = new SavingConfirmRequest(2023, 7);
 
             // when
-            final ExtractableResponse<Response> 절약_확정_응답 = 절약_확정_요청을_보낸다(글쓴이, 게시글, 절약_확정_요청);
+            final ExtractableResponse<Response> 절약_확정_응답 = 절약_확정_요청을_보낸다(글쓴이, 게시글.getId(), 절약_확정_요청);
 
             // then
             assertThat(절약_확정_응답.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -113,7 +113,7 @@ public class MemberConsumptionIntegrationTest {
             final SavingConfirmRequest 절약_확정_요청 = new SavingConfirmRequest(2023, 7);
 
             // when
-            final ExtractableResponse<Response> 절약_확정_응답 = 절약_확정_요청을_보낸다(다른_사람, 게시글, 절약_확정_요청);
+            final ExtractableResponse<Response> 절약_확정_응답 = 절약_확정_요청을_보낸다(다른_사람, 게시글.getId(), 절약_확정_요청);
 
             // then
             final ExceptionResponse 예외_응답 = 절약_확정_응답.as(ExceptionResponse.class);
@@ -133,11 +133,11 @@ public class MemberConsumptionIntegrationTest {
             final Member 글쓴이 = memberTestSupport.builder().build();
             final Post 게시글 = postTestSupport.builder().member(글쓴이).build();
             final PurchaseConfirmRequest 구매_확정_요청 = new PurchaseConfirmRequest(10000L, 2023, 7);
-            구매_확정_요청을_보낸다(글쓴이, 게시글, 구매_확정_요청);
+            구매_확정_요청을_보낸다(글쓴이, 게시글.getId(), 구매_확정_요청);
 
             // when
             final SavingConfirmRequest 절약_확정_요청 = new SavingConfirmRequest(2023, 7);
-            final ExtractableResponse<Response> 절약_확정_응답 = 절약_확정_요청을_보낸다(글쓴이, 게시글, 절약_확정_요청);
+            final ExtractableResponse<Response> 절약_확정_응답 = 절약_확정_요청을_보낸다(글쓴이, 게시글.getId(), 절약_확정_요청);
 
             // then
             final ExceptionResponse 예외_응답 = 절약_확정_응답.as(ExceptionResponse.class);
@@ -162,10 +162,10 @@ public class MemberConsumptionIntegrationTest {
             final Member 글쓴이 = memberTestSupport.builder().build();
             final Post 게시글 = postTestSupport.builder().member(글쓴이).build();
             final SavingConfirmRequest 절약_확정_요청 = new SavingConfirmRequest(2023, 7);
-            절약_확정_요청을_보낸다(글쓴이, 게시글, 절약_확정_요청);
+            절약_확정_요청을_보낸다(글쓴이, 게시글.getId(), 절약_확정_요청);
 
             // when
-            final ExtractableResponse<Response> 확정_취소_응답 = 확정_취소_요청을_보낸다(글쓴이, 게시글);
+            final ExtractableResponse<Response> 확정_취소_응답 = 확정_취소_요청을_보낸다(글쓴이, 게시글.getId());
 
             // then
             assertThat(확정_취소_응답.statusCode()).isEqualTo(HttpStatus.OK.value());
@@ -178,10 +178,10 @@ public class MemberConsumptionIntegrationTest {
             final Post 게시글 = postTestSupport.builder().member(글쓴이).build();
             final Member 다른_사람 = memberTestSupport.builder().build();
             final SavingConfirmRequest 절약_확정_요청 = new SavingConfirmRequest(2023, 7);
-            절약_확정_요청을_보낸다(글쓴이, 게시글, 절약_확정_요청);
+            절약_확정_요청을_보낸다(글쓴이, 게시글.getId(), 절약_확정_요청);
 
             // when
-            final ExtractableResponse<Response> 확정_취소_응답 = 확정_취소_요청을_보낸다(다른_사람, 게시글);
+            final ExtractableResponse<Response> 확정_취소_응답 = 확정_취소_요청을_보낸다(다른_사람, 게시글.getId());
 
             // then
             final ExceptionResponse 예외_응답 = 확정_취소_응답.as(ExceptionResponse.class);
@@ -202,7 +202,7 @@ public class MemberConsumptionIntegrationTest {
             final Post 게시글 = postTestSupport.builder().member(글쓴이).build();
 
             // when
-            final ExtractableResponse<Response> 확정_취소_응답 = 확정_취소_요청을_보낸다(글쓴이, 게시글);
+            final ExtractableResponse<Response> 확정_취소_응답 = 확정_취소_요청을_보낸다(글쓴이, 게시글.getId());
 
             // then
             final ExceptionResponse 예외_응답 = 확정_취소_응답.as(ExceptionResponse.class);
