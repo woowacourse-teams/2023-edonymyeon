@@ -1,5 +1,8 @@
 package com.app.edonymyeon.presentation.util
 
+import android.text.Editable
+import android.text.TextWatcher
+import android.widget.EditText
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import app.edonymyeon.R
@@ -38,5 +41,27 @@ object CustomBindingAdapter {
             .circleCrop()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(view)
+    }
+
+    @BindingAdapter("onPasswordCheckTextChanged")
+    @JvmStatic
+    fun setOnPasswordCheckTextChanged(
+        editText: EditText,
+        onPasswordCheckTextChanged: OnPasswordCheckTextChanged?,
+    ) {
+        editText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                onPasswordCheckTextChanged?.onTextChanged(s?.toString() ?: "")
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
+                Unit
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
+        })
+    }
+
+    interface OnPasswordCheckTextChanged {
+        fun onTextChanged(text: String)
     }
 }

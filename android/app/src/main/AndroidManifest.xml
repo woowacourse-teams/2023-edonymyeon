@@ -22,7 +22,7 @@
         android:theme="@style/Theme.Edonymyeon"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
+        <activity android:name="com.app.edonymyeon.presentation.ui.signup.SignUpActivity" />
         <activity
             android:name="com.app.edonymyeon.presentation.ui.auth.LoginActivity"
             android:exported="true" />

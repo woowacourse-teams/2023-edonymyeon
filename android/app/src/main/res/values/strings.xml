@@ -73,4 +73,16 @@
     <string name="item_post_editor_image_delete_description">이미지 삭제 버튼</string>
     <string name="post_all_post">전체 게시물</string>
     <string name="post_filter_recent">최신순</string>
+
+    <!--sign_up-->
+    <string name="sign_up_nickname">닉네임</string>
+    <string name="sign_up_email">이메일</string>
+    <string name="sign_up_matching_password">일치</string>
+    <string name="sign_up_available">사용가능</string>
+    <string name="sign_up_unavailable">사용불가</string>
+    <string name="sign_up_verify_password">비밀번호 확인</string>
+    <string name="sign_up_password">비밀번호</string>
+    <string name="sign_up_verify_duplication">중복확인</string>
+    <string name="sign_up_nickname_policy">* 1~20자 이내로 가능합니다</string>
+    <string name="sign_up_password_policy">* 8~30자, 알파벳, 숫자, 특수기호\n 모두 1개 이상 포함되어야 합니다.</string>
 </resources>
