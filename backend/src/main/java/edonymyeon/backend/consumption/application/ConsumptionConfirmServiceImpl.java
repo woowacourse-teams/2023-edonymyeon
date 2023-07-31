@@ -13,7 +13,6 @@ import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.ConsumptionConfirmService;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.application.dto.YearMonthDto;
-import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
@@ -40,9 +39,9 @@ public class ConsumptionConfirmServiceImpl implements ConsumptionConfirmService 
             final Long purchasePrice,
             final YearMonthDto yearMonth
     ) {
-        final Member member = findMemberById(memberIdDto.id());
+        validateExistMemberById(memberIdDto.id());
         final Post post = findPostById(postId);
-        post.validateWriter(member);
+        post.validateWriter(memberIdDto.id());
         validateConsumptionExist(postId);
 
         ConsumptionType consumptionType = ConsumptionType.classifyConsumptionType(purchasePrice);
@@ -57,9 +56,11 @@ public class ConsumptionConfirmServiceImpl implements ConsumptionConfirmService 
         consumptionRepository.save(consumption);
     }
 
-    private Member findMemberById(final Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
+    private void validateExistMemberById(final Long memberId) {
+        if (memberRepository.existsById(memberId)) {
+            return;
+        }
+        throw new EdonymyeonException(MEMBER_ID_NOT_FOUND);
     }
 
     private Post findPostById(final Long postId) {
@@ -68,7 +69,7 @@ public class ConsumptionConfirmServiceImpl implements ConsumptionConfirmService 
     }
 
     private void validateConsumptionExist(final Long postId) {
-        if (consumptionRepository.findByPostId(postId).isPresent()) {
+        if (consumptionRepository.existsByPostId(postId)) {
             throw new EdonymyeonException(CONSUMPTION_POST_ID_ALREADY_EXIST);
         }
     }
@@ -76,9 +77,9 @@ public class ConsumptionConfirmServiceImpl implements ConsumptionConfirmService 
     @Override
     @Transactional
     public void removeConfirm(final MemberIdDto memberIdDto, final Long postId) {
-        final Member member = findMemberById(memberIdDto.id());
+        validateExistMemberById(memberIdDto.id());
         final Post post = findPostById(postId);
-        post.validateWriter(member);
+        post.validateWriter(memberIdDto.id());
         final Consumption consumption = findConsumptionByPostID(postId);
         consumptionRepository.delete(consumption);
     }

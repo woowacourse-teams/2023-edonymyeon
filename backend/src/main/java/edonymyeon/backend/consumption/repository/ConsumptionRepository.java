@@ -7,4 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ConsumptionRepository extends JpaRepository<Consumption, Long> {
 
     Optional<Consumption> findByPostId(Long postId);
+
+    boolean existsByPostId(Long postId);
 }

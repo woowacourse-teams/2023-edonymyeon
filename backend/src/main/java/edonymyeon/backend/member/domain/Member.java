@@ -58,6 +58,10 @@ public class Member {
         this.profileImageInfo = profileImageInfo;
     }
 
+    public Member(final Long id) {
+        this.id = id;
+    }
+
     private void validate(final String email, final String password, final String nickname) {
         validateEmail(email);
         validateNickName(nickname);
