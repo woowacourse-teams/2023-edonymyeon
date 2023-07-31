@@ -9,6 +9,7 @@ import app.edonymyeon.databinding.ActivityLoginBinding
 import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.data.datasource.user.UserRemoteDataSource
 import com.app.edonymyeon.data.repository.UserRepositoryImpl
+import com.app.edonymyeon.presentation.util.makeSnackbar
 import com.google.android.material.snackbar.Snackbar
 
 class LoginActivity : AppCompatActivity() {
@@ -35,11 +36,7 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel.isLoginEnabled.observe(this) { isEnable ->
             if (!isEnable) {
-                Snackbar.make(
-                    binding.svLogin,
-                    getString(R.string.login_check_logininfo_input),
-                    Snackbar.LENGTH_LONG,
-                ).show()
+                binding.svLogin.makeSnackbar( getString(R.string.login_check_logininfo_input))
             }
         }
 
@@ -52,11 +49,7 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel.errorMessage.observe(this) { errorMessage ->
             errorMessage?.let {
-                Snackbar.make(
-                    binding.svLogin,
-                    it,
-                    Snackbar.LENGTH_LONG,
-                ).show()
+                binding.svLogin.makeSnackbar(it)
             }
         }
         setJoinClickListener()
