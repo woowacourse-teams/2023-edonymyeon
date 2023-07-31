@@ -7,6 +7,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ExceptionInformation {
 
+    // ___: 서버 오류
+    REQUEST_PARAMETER_NOT_EXIST(1, "필수 쿼리 파라미터가 비었습니다."),
+
     // 클래스이름_필드명_틀린내용
     // 1___: 인증 관련
     MEMBER_EMAIL_NOT_FOUND(1511, "회원의 이메일이 존재하지 않습니다."),
