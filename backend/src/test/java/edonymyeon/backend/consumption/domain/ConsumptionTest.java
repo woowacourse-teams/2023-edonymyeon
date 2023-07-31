@@ -28,12 +28,12 @@ class ConsumptionTest {
 
     @Test
     void 년도는_0년_이상이어야_한다() {
-        assertDoesNotThrow(() -> new Consumption(null, ConsumptionType.SAVING, 1000L, 0, 7));
+        assertDoesNotThrow(() -> new Consumption(null, ConsumptionType.SAVING, 1_000L, 0, 7));
     }
 
     @Test
     void 년도가_0년_이하면_예외가_발생한다() {
-        assertThatThrownBy(() -> new Consumption(null, ConsumptionType.SAVING, 1000L, -1, 7))
+        assertThatThrownBy(() -> new Consumption(null, ConsumptionType.SAVING, 1_000L, -1, 7))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(ExceptionInformation.CONSUMPTION_YEAR_ILLEGAL.getMessage());
     }
@@ -41,13 +41,13 @@ class ConsumptionTest {
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12})
     void 달은_1월부터_12월까지다(final int month) {
-        assertDoesNotThrow(() -> new Consumption(null, ConsumptionType.SAVING, 1000L, 2023, month));
+        assertDoesNotThrow(() -> new Consumption(null, ConsumptionType.SAVING, 1_000L, 2023, month));
     }
 
     @ParameterizedTest
     @ValueSource(ints = {-1, 0, 13})
     void 유효하지_않은_달이_들어오면_예외가_발생한다(final int month) {
-        assertThatThrownBy(() -> new Consumption(null, ConsumptionType.SAVING, 1000L, 2023, month))
+        assertThatThrownBy(() -> new Consumption(null, ConsumptionType.SAVING, 1_000L, 2023, month))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(ExceptionInformation.CONSUMPTION_MONTH_ILLEGAL.getMessage());
     }

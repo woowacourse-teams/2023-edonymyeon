@@ -74,7 +74,7 @@ class ConsumptionConfirmServiceImplTest {
         consumptionConfirmService.confirm(
                 new MemberIdDto(글쓴이.getId()),
                 게시글.getId(),
-                10000L,
+                10_000L,
                 new YearMonthDto(2023, 7)
         );
 
@@ -83,7 +83,7 @@ class ConsumptionConfirmServiceImplTest {
                 SoftAssertions -> {
                     assertThat(소비_내역).isNotNull();
                     assertThat(소비_내역.getConsumptionType()).isEqualTo(ConsumptionType.PURCHASE);
-                    assertThat(소비_내역.getPrice()).isEqualTo(10000L);
+                    assertThat(소비_내역.getPrice()).isEqualTo(10_000L);
                     assertThat(소비_내역.getConsumptionYear()).isEqualTo(2023);
                     assertThat(소비_내역.getConsumptionMonth()).isEqualTo(7);
                 });

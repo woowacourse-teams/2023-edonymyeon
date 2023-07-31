@@ -132,7 +132,7 @@ public class MemberConsumptionIntegrationTest {
             // given
             final Member 글쓴이 = memberTestSupport.builder().build();
             final Post 게시글 = postTestSupport.builder().member(글쓴이).build();
-            final PurchaseConfirmRequest 구매_확정_요청 = new PurchaseConfirmRequest(10000L, 2023, 7);
+            final PurchaseConfirmRequest 구매_확정_요청 = new PurchaseConfirmRequest(10_000L, 2023, 7);
             구매_확정_요청을_보낸다(글쓴이, 게시글.getId(), 구매_확정_요청);
 
             // when
