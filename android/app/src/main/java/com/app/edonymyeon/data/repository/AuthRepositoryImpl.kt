@@ -4,13 +4,13 @@ import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.datasource.auth.AuthDataSource
 import com.app.edonymyeon.data.datasource.user.UserDataSource
 import com.app.edonymyeon.data.dto.LoginDataModel
-import com.domain.edonymyeon.repository.UserRepository
+import com.domain.edonymyeon.repository.AuthRepository
 import org.json.JSONObject
 
-class UserRepositoryImpl(
+class AuthRepositoryImpl(
     private val userDataSource: UserDataSource,
     private val authDataSource: AuthDataSource,
-) : UserRepository {
+) : AuthRepository {
     override suspend fun login(email: String, password: String): Result<Any> {
         val result = userDataSource.login(LoginDataModel(email, password))
         return if (result.isSuccessful) {

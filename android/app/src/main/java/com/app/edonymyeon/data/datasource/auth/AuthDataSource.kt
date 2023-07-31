@@ -1,7 +1,7 @@
 package com.app.edonymyeon.data.datasource.auth
 
-interface AuthDataSource {
+abstract class AuthDataSource {
 
-    fun getAuthToken(): String?
-    fun setAuthToken(token: String)
+    abstract fun getAuthToken(): String?
+    abstract fun setAuthToken(token: String)
 }

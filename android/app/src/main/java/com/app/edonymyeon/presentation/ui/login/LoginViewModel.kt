@@ -7,10 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.presentation.uimodel.LoginUiModel
-import com.domain.edonymyeon.repository.UserRepository
+import com.domain.edonymyeon.repository.AuthRepository
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val repository: UserRepository) :
+class LoginViewModel(private val repository: AuthRepository) :
     ViewModel() {
 
     private val _loginInfo = MutableLiveData<LoginUiModel>()
