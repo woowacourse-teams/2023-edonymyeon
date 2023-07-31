@@ -1,5 +1,6 @@
 package edonymyeon.backend.consumption.domain;
 
+import static edonymyeon.backend.consumption.domain.ConsumptionType.SAVING;
 import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_MONTH_ILLEGAL;
 import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_PRICE_ILLEGAL_SIZE;
 import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_YEAR_ILLEGAL;
@@ -56,7 +57,7 @@ public class Consumption {
     @Column(nullable = false)
     private Integer consumptionMonth;
 
-    public Consumption(
+    private Consumption(
             final Post post,
             final ConsumptionType consumptionType,
             final Long price,
@@ -69,6 +70,20 @@ public class Consumption {
         this.price = price;
         this.consumptionYear = consumptionYear;
         this.consumptionMonth = consumptionMonth;
+    }
+
+    public static Consumption of(
+            final Post post,
+            final Long purchasePrice,
+            final Integer year,
+            final Integer month
+    ) {
+        ConsumptionType consumptionType = ConsumptionType.classifyConsumptionType(purchasePrice);
+        Long price = purchasePrice;
+        if (consumptionType == SAVING) {
+            price = post.getPrice();
+        }
+        return new Consumption(post, consumptionType, price, year, month);
     }
 
     private void validate(final Long price, final Integer consumptionYear, final Integer consumptionMonth) {

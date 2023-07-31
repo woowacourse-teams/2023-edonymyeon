@@ -1,12 +1,10 @@
 package edonymyeon.backend.consumption.application;
 
-import static edonymyeon.backend.consumption.domain.ConsumptionType.SAVING;
 import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_POST_ID_ALREADY_EXIST;
 import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_POST_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
 
 import edonymyeon.backend.consumption.domain.Consumption;
-import edonymyeon.backend.consumption.domain.ConsumptionType;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.ConsumptionConfirmService;
@@ -39,12 +37,9 @@ public class ConsumptionConfirmServiceImpl implements ConsumptionConfirmService 
         post.validateWriter(memberIdDto.id());
         validateConsumptionExist(postId);
 
-        ConsumptionType consumptionType = ConsumptionType.classifyConsumptionType(purchasePrice);
-
-        final Consumption consumption = new Consumption(
+        final Consumption consumption = Consumption.of(
                 post,
-                consumptionType,
-                consumptionType == SAVING ? post.getPrice() : purchasePrice,
+                purchasePrice,
                 yearMonth.year(),
                 yearMonth.month()
         );
