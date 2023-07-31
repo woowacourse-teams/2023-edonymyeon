@@ -10,7 +10,6 @@ import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.data.datasource.user.UserRemoteDataSource
 import com.app.edonymyeon.data.repository.UserRepositoryImpl
 import com.app.edonymyeon.presentation.util.makeSnackbar
-import com.google.android.material.snackbar.Snackbar
 
 class LoginActivity : AppCompatActivity() {
 
@@ -36,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel.isLoginEnabled.observe(this) { isEnable ->
             if (!isEnable) {
-                binding.svLogin.makeSnackbar( getString(R.string.login_check_logininfo_input))
+                binding.svLogin.makeSnackbar(getString(R.string.login_check_logininfo_input))
             }
         }
 
