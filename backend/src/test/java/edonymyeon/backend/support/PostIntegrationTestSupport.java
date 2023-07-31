@@ -1,7 +1,6 @@
 package edonymyeon.backend.support;
 
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -87,8 +86,10 @@ public class PostIntegrationTestSupport {
                     .multiPart("title", this.title == null ? DEFAULT_TITLE : this.title)
                     .multiPart("content", this.content == null ? DEFAULT_CONTENT : this.content)
                     .multiPart("price", this.price == null ? DEFAULT_PRICE : this.price)
-                    .multiPart("images", this.image == null ? DEFAULT_IMAGE1 : this.image, MediaType.IMAGE_JPEG_VALUE)
-                    .multiPart("images", this.image2 == null ? DEFAULT_IMAGE2 : this.image2, MediaType.IMAGE_JPEG_VALUE)
+                    .multiPart("newImages", this.image == null ? DEFAULT_IMAGE1 : this.image,
+                            MediaType.IMAGE_JPEG_VALUE)
+                    .multiPart("newImages", this.image2 == null ? DEFAULT_IMAGE2 : this.image2,
+                            MediaType.IMAGE_JPEG_VALUE)
                     .when()
                     .post("/posts")
                     .then()
