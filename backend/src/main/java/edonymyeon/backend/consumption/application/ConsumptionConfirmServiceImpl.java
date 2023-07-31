@@ -3,7 +3,6 @@ package edonymyeon.backend.consumption.application;
 import static edonymyeon.backend.consumption.domain.ConsumptionType.SAVING;
 import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_POST_ID_ALREADY_EXIST;
 import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_POST_ID_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
 
 import edonymyeon.backend.consumption.domain.Consumption;
@@ -13,7 +12,6 @@ import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.ConsumptionConfirmService;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.application.dto.YearMonthDto;
-import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @Service
 public class ConsumptionConfirmServiceImpl implements ConsumptionConfirmService {
-
-    private final MemberRepository memberRepository;
 
     private final PostRepository postRepository;
 
@@ -39,7 +35,6 @@ public class ConsumptionConfirmServiceImpl implements ConsumptionConfirmService 
             final Long purchasePrice,
             final YearMonthDto yearMonth
     ) {
-        validateExistMemberById(memberIdDto.id());
         final Post post = findPostById(postId);
         post.validateWriter(memberIdDto.id());
         validateConsumptionExist(postId);
@@ -56,13 +51,6 @@ public class ConsumptionConfirmServiceImpl implements ConsumptionConfirmService 
         consumptionRepository.save(consumption);
     }
 
-    private void validateExistMemberById(final Long memberId) {
-        if (memberRepository.existsById(memberId)) {
-            return;
-        }
-        throw new EdonymyeonException(MEMBER_ID_NOT_FOUND);
-    }
-
     private Post findPostById(final Long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new EdonymyeonException(POST_ID_NOT_FOUND));
@@ -77,7 +65,6 @@ public class ConsumptionConfirmServiceImpl implements ConsumptionConfirmService 
     @Override
     @Transactional
     public void removeConfirm(final MemberIdDto memberIdDto, final Long postId) {
-        validateExistMemberById(memberIdDto.id());
         final Post post = findPostById(postId);
         post.validateWriter(memberIdDto.id());
         final Consumption consumption = findConsumptionByPostID(postId);
