@@ -40,32 +40,32 @@ class MyPageFragment : Fragment() {
         // 로그인이 되어있다면
         binding.tvRequiredLogin.isVisible = false
 
+        viewModel.setConsumptions()
         setConsumptionChart()
     }
 
     private fun setConsumptionChart() {
-        val savingEntries: List<Entry> = listOf(
-            Entry(1F, 10000f),
-            Entry(2F, 20000f),
-            Entry(3F, 40000f),
-            Entry(4F, 30000f),
-            Entry(5F, 30000f),
-            Entry(6F, 60000f),
-        )
-        val purchaseEntries: List<Entry> = listOf(
-            Entry(1F, 260000f),
-            Entry(2F, 54000f),
-            Entry(3F, 42000f),
-            Entry(4F, 35000f),
-            Entry(5F, 20000f),
-            Entry(6F, 10000f),
-        )
-
-        val savingLineDataSet =
-            setLineDataSet(savingEntries, "절약금액 (단위 10,000원)", R.color.blue_576b9e)
-        val purchaseLineDataSet =
-            setLineDataSet(purchaseEntries, "소비금액 (단위 10,000원)", R.color.red_ba3030)
-        setChart(LineData(savingLineDataSet, purchaseLineDataSet))
+        viewModel.consumptions.observe(viewLifecycleOwner) {
+            val savingEntries = it.consumptions.mapIndexed { index, consumption ->
+                Entry(index + 1F, consumption.saving.toFloat())
+            }
+            val purchaseEntries = it.consumptions.mapIndexed { index, consumption ->
+                Entry(index + 1F, consumption.purchase.toFloat())
+            }
+            val savingLineDataSet =
+                setLineDataSet(
+                    savingEntries,
+                    getString(R.string.my_page_graph_saving),
+                    R.color.blue_576b9e,
+                )
+            val purchaseLineDataSet =
+                setLineDataSet(
+                    purchaseEntries,
+                    getString(R.string.my_page_graph_purchase),
+                    R.color.red_ba3030,
+                )
+            setChart(LineData(savingLineDataSet, purchaseLineDataSet))
+        }
     }
 
     private fun setLineDataSet(
@@ -89,7 +89,6 @@ class MyPageFragment : Fragment() {
     private fun setChart(lineData: LineData) {
         binding.chartMyPayment.apply {
             data = lineData
-            setTouchEnabled(true)
             setExtraOffsets(3f, 0f, 3f, 15f)
             isDoubleTapToZoomEnabled = false
             setDrawGridBackground(false)
@@ -112,15 +111,7 @@ class MyPageFragment : Fragment() {
         xAxis.textSize = 8f
         xAxis.valueFormatter = object : IndexAxisValueFormatter() {
             override fun getFormattedValue(value: Float): String {
-                return when (value) {
-                    1f -> "2022.12"
-                    2f -> "2023.01"
-                    3f -> "2023.02"
-                    4f -> "2023.03"
-                    5f -> "2023.04"
-                    6f -> "2023.05"
-                    else -> ""
-                }
+                return viewModel.getMonthLists()[value.toInt() - 1]
             }
         }
     }
