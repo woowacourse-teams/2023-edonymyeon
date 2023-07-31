@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -11,12 +12,15 @@ import androidx.fragment.app.viewModels
 import app.edonymyeon.R
 import app.edonymyeon.databinding.FragmentMyPageBinding
 import com.github.mikephil.charting.components.Legend
+import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.utils.MPPointF
 
 class MyPageFragment : Fragment() {
     private val binding: FragmentMyPageBinding by lazy {
@@ -42,6 +46,7 @@ class MyPageFragment : Fragment() {
 
         viewModel.setConsumptions()
         setConsumptionChart()
+        setMarkerView()
     }
 
     private fun setConsumptionChart() {
@@ -89,7 +94,8 @@ class MyPageFragment : Fragment() {
     private fun setChart(lineData: LineData) {
         binding.chartMyPayment.apply {
             data = lineData
-            setExtraOffsets(3f, 0f, 3f, 15f)
+            setTouchEnabled(true)
+            setExtraOffsets(10f, 0f, 15f, 15f)
             isDoubleTapToZoomEnabled = false
             setDrawGridBackground(false)
             description = null
@@ -133,5 +139,21 @@ class MyPageFragment : Fragment() {
         legend.textColor = resources.getColor(R.color.gray_615f5f, null)
         legend.xEntrySpace = 20f
         legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+    }
+
+    private fun setMarkerView() {
+        binding.chartMyPayment.marker = object : MarkerView(context, R.layout.item_chart_marker) {
+            val chartContentText = findViewById<TextView>(R.id.tv_chart_content)
+
+            override fun refreshContent(e: Entry, highlight: Highlight?) {
+                chartContentText.text =
+                    resources.getString(R.string.my_page_graph_price, e.y.toInt())
+                super.refreshContent(e, highlight)
+            }
+
+            override fun getOffset(): MPPointF {
+                return MPPointF(-(width / 1.5).toFloat(), -height.toFloat())
+            }
+        }
     }
 }
