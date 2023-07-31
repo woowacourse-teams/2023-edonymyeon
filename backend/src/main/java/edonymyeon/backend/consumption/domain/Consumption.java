@@ -4,6 +4,7 @@ import static edonymyeon.backend.consumption.domain.ConsumptionType.SAVING;
 import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_MONTH_ILLEGAL;
 import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_PRICE_ILLEGAL_SIZE;
 import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_YEAR_ILLEGAL;
+import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_YEAR_MONTH_ILLEGAL;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.post.domain.Post;
@@ -17,6 +18,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import java.time.LocalDate;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -90,6 +92,7 @@ public class Consumption {
         validatePrice(price);
         validateConsumptionYear(consumptionYear);
         validateConsumptionMonth(consumptionMonth);
+        validateConsumptionYearMonth(consumptionYear, consumptionMonth);
     }
 
     private void validatePrice(final Long price) {
@@ -107,6 +110,15 @@ public class Consumption {
     private void validateConsumptionMonth(final Integer consumptionMonth) {
         if (Objects.isNull(consumptionMonth) || consumptionMonth < MIN_MONTH || consumptionMonth > MAX_MONTH) {
             throw new EdonymyeonException(CONSUMPTION_MONTH_ILLEGAL);
+        }
+    }
+
+    private void validateConsumptionYearMonth(final Integer consumptionYear, final Integer consumptionMonth) {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate inputDate = LocalDate.of(consumptionYear, consumptionMonth, 1);
+
+        if (inputDate.isAfter(currentDate)) {
+            throw new EdonymyeonException(CONSUMPTION_YEAR_MONTH_ILLEGAL);
         }
     }
 }

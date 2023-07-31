@@ -53,7 +53,8 @@ public enum ExceptionInformation {
     CONSUMPTION_PRICE_ILLEGAL_SIZE(6543, "가격은 0원 이상 100억 이하여야 합니다."),
     CONSUMPTION_YEAR_ILLEGAL(6544, "소비한 년도가 유효하지 않습니다."),
     CONSUMPTION_MONTH_ILLEGAL(6545, "소비한 달이 유효하지 않습니다."),
-    CONSUMPTION_POST_ID_NOT_FOUND(6546, "소비 확정 내역이 존재하지 않습니다");
+    CONSUMPTION_POST_ID_NOT_FOUND(6546, "소비 확정 내역이 존재하지 않습니다."),
+    CONSUMPTION_YEAR_MONTH_ILLEGAL(6547, "소비 확정 년도, 달이 현재 시각보다 미래입니다.");
 
     private int code;
 

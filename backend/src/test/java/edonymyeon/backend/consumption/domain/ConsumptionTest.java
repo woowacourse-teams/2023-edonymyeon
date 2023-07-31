@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
+import java.time.LocalDate;
+import java.time.Month;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -41,14 +43,25 @@ class ConsumptionTest {
     @ParameterizedTest
     @ValueSource(ints = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12})
     void 달은_1월부터_12월까지다(final int month) {
-        assertDoesNotThrow(() -> Consumption.of(null, 1_000L, 2023, month));
+        assertDoesNotThrow(() -> Consumption.of(null, 1_000L, 2000, month));
     }
 
     @ParameterizedTest
     @ValueSource(ints = {-1, 0, 13})
     void 유효하지_않은_달이_들어오면_예외가_발생한다(final int month) {
-        assertThatThrownBy(() -> Consumption.of(null, 1_000L, 2023, month))
+        assertThatThrownBy(() -> Consumption.of(null, 1_000L, 2000, month))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(ExceptionInformation.CONSUMPTION_MONTH_ILLEGAL.getMessage());
+    }
+
+    @Test
+    void 미래_시각이_들어오면_예외가_발생한다() {
+        final LocalDate currentDate = LocalDate.now();
+        final int year = currentDate.getYear();
+        final Month month = currentDate.getMonth().plus(1);
+
+        assertThatThrownBy(() -> Consumption.of(null, 1_000L, year, month.getValue()))
+                .isInstanceOf(EdonymyeonException.class)
+                .hasMessage(ExceptionInformation.CONSUMPTION_YEAR_MONTH_ILLEGAL.getMessage());
     }
 }
