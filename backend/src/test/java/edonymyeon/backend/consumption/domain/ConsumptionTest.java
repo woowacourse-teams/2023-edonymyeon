@@ -14,13 +14,13 @@ class ConsumptionTest {
 
     @ParameterizedTest
     @ValueSource(longs = {0L, 10_000_000_000L})
-    void 가격은_0원_이상_1억원_이하여야_한다(final long price) {
+    void 가격은_0원_이상_100억원_이하여야_한다(final long price) {
         assertDoesNotThrow(() -> new Consumption(null, ConsumptionType.SAVING, price, 2023, 7));
     }
 
     @ParameterizedTest
     @ValueSource(longs = {-1L, 10_000_000_001L})
-    void 가격이_0원_이상_1억원_이하가_아니면_예외가_발생한다(final long price) {
+    void 가격이_0원_이상_100억원_이하가_아니면_예외가_발생한다(final long price) {
         assertThatThrownBy(() -> new Consumption(null, ConsumptionType.SAVING, price, 2023, 7))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(ExceptionInformation.CONSUMPTION_PRICE_ILLEGAL_SIZE.getMessage());
@@ -32,7 +32,7 @@ class ConsumptionTest {
     }
 
     @Test
-    void 년도가_0년_이하면_예외가_발생한다() {
+    void 년도가_0년_미만이면_예외가_발생한다() {
         assertThatThrownBy(() -> new Consumption(null, ConsumptionType.SAVING, 1_000L, -1, 7))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(ExceptionInformation.CONSUMPTION_YEAR_ILLEGAL.getMessage());
