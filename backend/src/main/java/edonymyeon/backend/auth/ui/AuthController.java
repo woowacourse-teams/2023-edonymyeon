@@ -24,10 +24,15 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest) {
         authService.findMember(loginRequest);
+        final String basicAuthValue = getBasicAuthValue(loginRequest);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, basicAuthValue)
+                .build();
+    }
 
+    private String getBasicAuthValue(final LoginRequest loginRequest) {
         String valueToEncode = loginRequest.email() + ":" + loginRequest.password();
-        final String cookie = "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie).build();
+        return "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
     }
 
     @GetMapping("/join")
