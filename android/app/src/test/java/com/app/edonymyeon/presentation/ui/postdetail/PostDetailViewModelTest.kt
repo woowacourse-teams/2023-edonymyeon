@@ -121,7 +121,11 @@ class PostDetailViewModelTest() {
 
         // when
         viewModel.getPostDetail(postId)
-        viewModel.updateRecommendationUi(postId, isChecked = true, isUpRecommendation = true)
+        viewModel.updateRecommendationUi(
+            postId = postId,
+            isChecked = true,
+            isUpRecommendation = true,
+        )
 
         // then
         val actual = Recommendation(
@@ -149,7 +153,11 @@ class PostDetailViewModelTest() {
 
         // when
         viewModel.getPostDetail(postId)
-        viewModel.updateRecommendationUi(postId, isChecked = true, isUpRecommendation = false)
+        viewModel.updateRecommendationUi(
+            postId = postId,
+            isChecked = true,
+            isUpRecommendation = false,
+        )
 
         // then
         val actual = Recommendation(
@@ -177,7 +185,11 @@ class PostDetailViewModelTest() {
 
         // when
         viewModel.getPostDetail(postId)
-        viewModel.updateRecommendationUi(postId, isChecked = false, isUpRecommendation = true)
+        viewModel.updateRecommendationUi(
+            postId = postId,
+            isChecked = false,
+            isUpRecommendation = true,
+        )
 
         // then
         val actual = Recommendation(
@@ -205,8 +217,16 @@ class PostDetailViewModelTest() {
 
         // when
         viewModel.getPostDetail(postId)
-        viewModel.updateRecommendationUi(postId, isChecked = true, isUpRecommendation = true)
-        viewModel.updateRecommendationUi(postId, isChecked = false, isUpRecommendation = false)
+        viewModel.updateRecommendationUi(
+            postId = postId,
+            isChecked = true,
+            isUpRecommendation = true,
+        )
+        viewModel.updateRecommendationUi(
+            postId = postId,
+            isChecked = false,
+            isUpRecommendation = false,
+        )
 
         // then
         val actual = Recommendation(
@@ -234,7 +254,11 @@ class PostDetailViewModelTest() {
 
         // when
         viewModel.getPostDetail(postId)
-        viewModel.updateRecommendationUi(postId, isChecked = false, isUpRecommendation = false)
+        viewModel.updateRecommendationUi(
+            postId = postId,
+            isChecked = false,
+            isUpRecommendation = false,
+        )
 
         // then
         val actual = Recommendation(
@@ -262,8 +286,16 @@ class PostDetailViewModelTest() {
 
         // when
         viewModel.getPostDetail(postId)
-        viewModel.updateRecommendationUi(postId, isChecked = false, isUpRecommendation = true)
-        viewModel.updateRecommendationUi(postId, isChecked = true, isUpRecommendation = false)
+        viewModel.updateRecommendationUi(
+            postId = postId,
+            isChecked = false,
+            isUpRecommendation = true,
+        )
+        viewModel.updateRecommendationUi(
+            postId = postId,
+            isChecked = true,
+            isUpRecommendation = false,
+        )
 
         // then
         val actual = Recommendation(
@@ -300,7 +332,11 @@ class PostDetailViewModelTest() {
         assertEquals(true, viewModel.isRecommendationRequestDone.value)
 
         // 통신을 요청하면 해당 값은 false로 바뀌고
-        viewModel.updateRecommendationUi(postId, isChecked = true, isUpRecommendation = true)
+        viewModel.updateRecommendationUi(
+            postId = postId,
+            isChecked = true,
+            isUpRecommendation = true,
+        )
         assertEquals(false, viewModel.isRecommendationRequestDone.value)
 
         // 응답을 받으면 다시 true로 바뀐다.
