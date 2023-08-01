@@ -61,6 +61,9 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     testImplementation("androidx.arch.core:core-testing:2.2.0")
 
+    // mock
+    testImplementation("io.mockk:mockk-android:1.13.5")
+
     // constraint layout
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 

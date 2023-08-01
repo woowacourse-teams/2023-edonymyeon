@@ -2,6 +2,7 @@ package edonymyeon.backend.post.domain;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_CONTENT_ILLEGAL_LENGTH;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_EMPTY;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_PRICE_ILLEGAL_SIZE;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_TITLE_ILLEGAL_LENGTH;
 
@@ -36,6 +37,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 public class Post {
 
+    public static final int DEFAULT_BATCH_SIZE = 20;
     private static final int MAX_TITLE_LENGTH = 30;
     private static final int MAX_CONTENT_LENGTH = 1_000;
     private static final long MAX_PRICE = 10_000_000_000L;
@@ -54,10 +56,11 @@ public class Post {
     @Column(nullable = false)
     private Long price;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Member member;
 
+    // TODO: cascade
     private PostImageInfos postImageInfos;
 
     @CreatedDate
@@ -119,11 +122,11 @@ public class Post {
     }
 
     public void addPostImageInfo(final PostImageInfo postImageInfo) {
-        postImageInfos.add(postImageInfo);
+        this.postImageInfos.add(postImageInfo);
     }
 
-    public void checkImageCount(final Integer imageCount) {
-        postImageInfos.checkImageCount(imageCount);
+    public void validateImageAdditionCount(final Integer imageAdditionCount) {
+        this.postImageInfos.validateImageAdditionCount(imageAdditionCount);
     }
 
     public void update(final String title, final String content, final Long price) {
@@ -148,14 +151,33 @@ public class Post {
     }
 
     public void updateImages(final PostImageInfos postImageInfos) {
-        this.postImageInfos.update(postImageInfos.getPostImageInfos());
+        this.postImageInfos.addAll(postImageInfos.getPostImageInfos());
     }
 
     public boolean isSameMember(final Member member) {
         return this.member.equals(member);
     }
 
+    public Member getMember() {
+        return member;
+    }
+
     public List<PostImageInfo> getPostImageInfos() {
         return this.postImageInfos.getPostImageInfos();
+    }
+
+    public List<PostImageInfo> findImagesToDelete(final List<String> remainedStoreNames) {
+        return this.postImageInfos.findImagesToDelete(remainedStoreNames);
+    }
+
+    public void removePostImageInfos(final List<PostImageInfo> deletedPostImageInfos) {
+        this.postImageInfos.remove(deletedPostImageInfos);
+    }
+
+    public void validateWriter(final Long memberId) {
+        final Member other = new Member(memberId);
+        if (!isSameMember(other)) {
+            throw new EdonymyeonException(POST_MEMBER_NOT_SAME);
+        }
     }
 }

@@ -1,6 +1,6 @@
 package edonymyeon.backend.post.ui;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_FORBIDDEN;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -37,14 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 class PostControllerTest implements ImageFileCleaner {
 
-    @Autowired
-    MockMvc mockMvc;
-
-    @Autowired
-    protected MemberTestSupport memberTestSupport;
-
     private static MockMultipartFile 이미지1;
-
     private static MockMultipartFile 이미지2;
 
     static {
@@ -65,11 +58,15 @@ class PostControllerTest implements ImageFileCleaner {
         }
     }
 
+    @Autowired
+    protected MemberTestSupport memberTestSupport;
+
+    @Autowired
+    MockMvc mockMvc;
+
     @Test
     void 사진_첨부_성공_테스트() throws Exception {
         final Member member = memberTestSupport.builder()
-                .email("email")
-                .password("password")
                 .build();
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/posts")
@@ -102,8 +99,6 @@ class PostControllerTest implements ImageFileCleaner {
     @Test
     void 본인이_작성한_게시글_삭제_가능_테스트() throws Exception {
         final Member member = memberTestSupport.builder()
-                .email("email")
-                .password("password")
                 .build();
 
         final MvcResult 게시글_생성_요청_결과 = mockMvc.perform(MockMvcRequestBuilders.multipart("/posts")
@@ -139,8 +134,6 @@ class PostControllerTest implements ImageFileCleaner {
     @Test
     void 본인이_작성하지_않은_게시글_삭제_불가능_테스트() throws Exception {
         final Member member = memberTestSupport.builder()
-                .email("email")
-                .password("password")
                 .build();
 
         final MvcResult 게시글_생성_요청_결과 = mockMvc.perform(MockMvcRequestBuilders.multipart("/posts")
@@ -158,8 +151,6 @@ class PostControllerTest implements ImageFileCleaner {
 
         PostResponse 게시글_생성_응답 = extractResponseFromResult(게시글_생성_요청_결과, PostResponse.class);
         final Member otherMember = memberTestSupport.builder()
-                .email("other")
-                .password("password")
                 .build();
 
         final MvcResult 게시글_삭제_요청_결과 = mockMvc.perform(MockMvcRequestBuilders.delete("/posts/" + 게시글_생성_응답.id())
@@ -172,8 +163,8 @@ class PostControllerTest implements ImageFileCleaner {
         ExceptionResponse 예외_응답 = extractResponseFromResult(게시글_삭제_요청_결과, ExceptionResponse.class);
 
         assertSoftly(softly -> {
-                    softly.assertThat(예외_응답.errorCode()).isEqualTo(POST_MEMBER_FORBIDDEN.getCode());
-                    softly.assertThat(예외_응답.errorCode()).isEqualTo(POST_MEMBER_FORBIDDEN.getCode());
+                    softly.assertThat(예외_응답.errorCode()).isEqualTo(POST_MEMBER_NOT_SAME.getCode());
+                    softly.assertThat(예외_응답.errorCode()).isEqualTo(POST_MEMBER_NOT_SAME.getCode());
                 }
         );
     }

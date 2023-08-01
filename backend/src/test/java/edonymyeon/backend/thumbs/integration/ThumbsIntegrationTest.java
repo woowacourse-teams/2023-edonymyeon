@@ -107,7 +107,6 @@ class ThumbsIntegrationTest extends IntegrationTest {
                             .isTrue();
                 }
         );
-
     }
 
     @Test
