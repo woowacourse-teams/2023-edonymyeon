@@ -30,6 +30,6 @@ internal class CountTest {
     fun `카운트가 0이면 감소하지 않는다`() {
         var count = Count(0)
         count = count.decrease()
-        assertEquals(1, count.value)
+        assertEquals(0, count.value)
     }
 }
