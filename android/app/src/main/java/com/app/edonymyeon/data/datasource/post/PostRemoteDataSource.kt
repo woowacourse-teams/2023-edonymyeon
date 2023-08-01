@@ -1,7 +1,7 @@
 package com.app.edonymyeon.data.datasource.post
 
-import com.app.edonymyeon.data.dto.request.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
+import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.Posts
 import com.app.edonymyeon.data.service.PostService
 import com.app.edonymyeon.data.service.client.RetrofitClient
@@ -40,7 +40,7 @@ class PostRemoteDataSource : PostDataSource {
         price: Int,
         imageUris: List<String>,
     ): Response<PostEditorResponse> {
-        val images = generateMultiPart(imageUris)
+        val images = generateMultiPartFromUri(imageUris)
         val postEditorMap: HashMap<String, RequestBody> = hashMapOf()
         postEditorMap["title"] = title.toRequestBody("text/plain".toMediaTypeOrNull())
         postEditorMap["content"] = content.toRequestBody("text/plain".toMediaTypeOrNull())
@@ -56,19 +56,26 @@ class PostRemoteDataSource : PostDataSource {
         price: Int,
         imageUris: List<String>,
     ): Response<PostEditorResponse> {
-        val images = generateMultiPart(imageUris)
+        val images = generateMultiPartFromUri(imageUris)
         val postEditorMap: HashMap<String, RequestBody> = hashMapOf()
         postEditorMap["title"] = title.toRequestBody("text/plain".toMediaTypeOrNull())
         postEditorMap["content"] = content.toRequestBody("text/plain".toMediaTypeOrNull())
         postEditorMap["price"] = price.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        val originalImages = generateMultiPartFromUrl(imageUris)
 
-        return postService.updatePost(id, postEditorMap, images)
+        return postService.updatePost(id, postEditorMap, originalImages, images)
     }
 
-    private fun generateMultiPart(imageUris: List<String>) =
-        imageUris.map { imageUri ->
-            val file = File(imageUri ?: "")
+    private fun generateMultiPartFromUrl(imageUris: List<String>) =
+        imageUris.filter { it.startsWith("http") }.map {
+            val requestBody = it.toRequestBody("text/plain".toMediaTypeOrNull())
+            MultipartBody.Part.createFormData("originalImages", null, requestBody)
+        }
+
+    private fun generateMultiPartFromUri(imageUris: List<String>) =
+        imageUris.filter { it.startsWith("http").not() }.map { imageUri ->
+            val file = File(imageUri)
             val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-            MultipartBody.Part.createFormData("images", file.name, requestFile)
+            MultipartBody.Part.createFormData("newImages", file.name, requestFile)
         }
 }
