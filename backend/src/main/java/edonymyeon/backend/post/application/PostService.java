@@ -206,6 +206,8 @@ public class PostService {
         final AllThumbsInPostResponse allThumbsInPost = thumbsService.findAllThumbsInPost(postId);
         final WriterDetailResponse writerDetailResponse = getWriterResponse(post.getMember());
 
+        post.updateView(member.orElse(null));
+
         if (member.isEmpty()) {
             return SpecificPostInfoResponse.of(
                     post,
