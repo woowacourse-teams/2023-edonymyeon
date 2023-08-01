@@ -4,24 +4,24 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.app.edonymyeon.mapper.toDomain
-import com.app.edonymyeon.presentation.uimodel.ConsumptionUiModel
-import com.app.edonymyeon.presentation.uimodel.ConsumptionsUiModel
+import com.app.edonymyeon.presentation.uimodel.ConsumptionAmountUiModel
+import com.app.edonymyeon.presentation.uimodel.ConsumptionStatisticsUiModel
 import java.time.YearMonth
 import kotlin.random.Random
 
 class MyPageViewModel : ViewModel() {
-    private val _consumptions = MutableLiveData<ConsumptionsUiModel>()
-    val consumptions: LiveData<ConsumptionsUiModel>
+    private val _consumptions = MutableLiveData<ConsumptionStatisticsUiModel>()
+    val consumptions: LiveData<ConsumptionStatisticsUiModel>
         get() = _consumptions
 
-    fun getMonthLists(): List<String> = _consumptions.value?.toDomain()?.yearMonthList ?: emptyList()
+    fun getMonthLists(): List<String> = _consumptions.value?.toDomain()?.monthRange?.yearMonthList ?: emptyList()
 
     fun setConsumptions() {
-        _consumptions.value = ConsumptionsUiModel(
+        _consumptions.value = ConsumptionStatisticsUiModel(
             startMonth = YearMonth.parse("2023-02"),
             endMonth = YearMonth.parse("2023-07"),
-            consumptions = List(6) {
-                ConsumptionUiModel(Random.nextInt(10000, 100000), Random.nextInt(10000, 100000))
+            consumptionAmounts = List(6) {
+                ConsumptionAmountUiModel(Random.nextInt(10000, 100000), Random.nextInt(10000, 100000))
             },
         )
     }

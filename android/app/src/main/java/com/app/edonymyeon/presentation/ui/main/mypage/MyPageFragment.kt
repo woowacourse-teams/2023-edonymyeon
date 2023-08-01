@@ -49,7 +49,7 @@ class MyPageFragment : Fragment() {
         viewModel.consumptions.observe(viewLifecycleOwner) {
             val savingLineDataSet =
                 chartManager.getLineDataSet(
-                    entries = it.consumptions.mapIndexed { index, consumption ->
+                    entries = it.consumptionAmounts.mapIndexed { index, consumption ->
                         Entry(index + 1F, consumption.saving.toFloat())
                     },
                     label = getString(R.string.my_page_graph_saving),
@@ -57,7 +57,7 @@ class MyPageFragment : Fragment() {
                 )
             val purchaseLineDataSet =
                 chartManager.getLineDataSet(
-                    entries = it.consumptions.mapIndexed { index, consumption ->
+                    entries = it.consumptionAmounts.mapIndexed { index, consumption ->
                         Entry(index + 1F, consumption.purchase.toFloat())
                     },
                     label = getString(R.string.my_page_graph_purchase),

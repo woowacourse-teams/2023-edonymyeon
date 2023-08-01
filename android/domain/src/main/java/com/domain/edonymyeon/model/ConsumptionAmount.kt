@@ -1,6 +1,6 @@
 package com.domain.edonymyeon.model
 
-data class Consumption(
+data class ConsumptionAmount(
     val saving: Int,
     val purchase: Int,
 )
