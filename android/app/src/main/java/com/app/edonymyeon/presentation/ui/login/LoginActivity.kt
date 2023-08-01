@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKey
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityLoginBinding
 import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
@@ -21,12 +23,24 @@ class LoginActivity : AppCompatActivity() {
         LoginViewModelFactory(
             AuthRepositoryImpl(
                 UserRemoteDataSource(),
-                AuthLocalDataSource.getInstance(this),
+                AuthLocalDataSource.getInstance(sharedPreferences),
             ),
         ).create(
             LoginViewModel::class.java,
         )
     }
+
+    private val masterKey = MasterKey.Builder(this)
+        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+        .build()
+
+    private val sharedPreferences = EncryptedSharedPreferences(
+        this,
+        AuthLocalDataSource.AUTH_INFO,
+        masterKey,
+        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

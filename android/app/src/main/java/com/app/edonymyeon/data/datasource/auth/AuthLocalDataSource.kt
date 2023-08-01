@@ -1,22 +1,9 @@
 package com.app.edonymyeon.data.datasource.auth
 
-import android.content.Context
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKey
+import android.content.SharedPreferences
 
-class AuthLocalDataSource private constructor(context: Context) : AuthDataSource() {
-
-    private val masterKey = MasterKey.Builder(context)
-        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-        .build()
-
-    private val sharedPreferences = EncryptedSharedPreferences(
-        context,
-        AUTH_INFO,
-        masterKey,
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
-    )
+class AuthLocalDataSource private constructor(private val sharedPreferences: SharedPreferences) :
+    AuthDataSource() {
 
     override fun getAuthToken(): String? {
         return sharedPreferences.getString(USER_ACCESS_TOKEN, "")
@@ -28,13 +15,13 @@ class AuthLocalDataSource private constructor(context: Context) : AuthDataSource
 
     companion object {
 
-        private const val AUTH_INFO = "AUTH_INFO"
+        const val AUTH_INFO = "AUTH_INFO"
         private const val USER_ACCESS_TOKEN = "USER_ACCESS_TOKEN"
 
         private val authDataSource: AuthLocalDataSource? = null
-        fun getInstance(context: Context): AuthLocalDataSource {
+        fun getInstance(sharedPreferences: SharedPreferences): AuthLocalDataSource {
             return authDataSource ?: synchronized(this) {
-                AuthLocalDataSource(context)
+                AuthLocalDataSource(sharedPreferences)
             }
         }
     }
