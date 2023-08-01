@@ -52,7 +52,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void removeConfirm(final MemberIdDto memberIdDto, final Long postId) {
-        consumptionConfirmService.removeConfirm(memberIdDto, postId);
+    public void removeConfirm(final MemberId memberId, final Long postId) {
+        consumptionConfirmService.removeConfirm(memberId, postId);
     }
 }
