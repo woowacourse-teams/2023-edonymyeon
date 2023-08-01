@@ -185,7 +185,7 @@ public class AuthIntegrationTest extends IntegrationTest {
         assertSoftly(
                 softly -> {
                     softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-                    softly.assertThat(response.cookie(HttpHeaders.AUTHORIZATION)).isEqualTo(expectedCookieValue);
+                    softly.assertThat(response.header(HttpHeaders.AUTHORIZATION)).isEqualTo("Basic " + expectedCookieValue);
                 });
     }
 }
