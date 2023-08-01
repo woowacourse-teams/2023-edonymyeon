@@ -92,7 +92,7 @@ class PostDetailViewModelTest() {
             recommendation = Recommendation(
                 upCount = Count(12),
                 downCount = Count(12),
-                isUp = false,
+                isUp = true,
                 isDown = false,
             ),
         )
