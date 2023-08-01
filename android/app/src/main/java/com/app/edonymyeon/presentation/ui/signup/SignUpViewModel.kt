@@ -80,8 +80,8 @@ class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() 
 
     fun verifyEmail(email: String) {
         viewModelScope.launch {
-            val result = authRepository.checkDuplicate(EMAIL, email.trim()).onSuccess {
-                _isEmailValid.value = it
+            authRepository.checkDuplicate(EMAIL, email.trim()).onSuccess {
+                _isEmailValid.value = it && Email.validate(email)
             }.onFailure {
                 _isEmailValid.value = false
             }
@@ -91,7 +91,7 @@ class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() 
     fun verifyNickname(nickname: String) {
         viewModelScope.launch {
             authRepository.checkDuplicate(NICKNAME, nickname.trim()).onSuccess {
-                _isNicknameValid.value = it
+                _isNicknameValid.value = it && Nickname.validate(nickname)
             }.onFailure {
                 _isNicknameValid.value = false
             }
