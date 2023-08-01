@@ -33,8 +33,8 @@ class LoginViewModel(private val repository: AuthRepository) :
         setLoginEnable()
         if (_isLoginEnabled.value == true) {
             login()
+            _loginInfo.value = LoginUiModel("", "")
         }
-        _loginInfo.value = LoginUiModel("", "")
     }
 
     private fun login() {
