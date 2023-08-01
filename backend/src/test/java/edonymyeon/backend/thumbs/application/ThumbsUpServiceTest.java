@@ -7,7 +7,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.PostService;
@@ -59,13 +59,13 @@ class ThumbsUpServiceTest {
                 null
         );
 
-        MemberIdDto memberId = new MemberIdDto(postWriter.getId());
+        MemberId memberId = new MemberId(postWriter.getId());
         postResponse = postService.createPost(memberId, postRequest);
     }
 
     @Test
     void 추천하려는_게시물이_없으면_예외가_발생한다() {
-        MemberIdDto loginMemberId = new MemberIdDto(postWriter.getId());
+        MemberId loginMemberId = new MemberId(postWriter.getId());
 
         assertThatThrownBy(
                 () -> thumbsService.thumbsUp(loginMemberId, 1000L))
@@ -75,7 +75,7 @@ class ThumbsUpServiceTest {
 
     @Test
     void 추천한_게시물이_로그인한_사람이_작성한_것이라면_예외가_발생한다() {
-        MemberIdDto loginMemberId = new MemberIdDto(postWriter.getId());
+        MemberId loginMemberId = new MemberId(postWriter.getId());
 
         assertThatThrownBy(
                 () -> thumbsService.thumbsUp(loginMemberId, postResponse.id()))
@@ -133,7 +133,7 @@ class ThumbsUpServiceTest {
         thumbsUp(otherMember, postResponse);
 
         // then
-        MemberIdDto otherMemberId = new MemberIdDto(otherMember.getId());
+        MemberId otherMemberId = new MemberId(otherMember.getId());
 
         assertThatThrownBy(
                 () -> thumbsService.thumbsUp(otherMemberId, postResponse.id()))
@@ -142,12 +142,12 @@ class ThumbsUpServiceTest {
     }
 
     private void thumbsUp(final Member member, final PostResponse post) {
-        MemberIdDto memberId = new MemberIdDto(member.getId());
+        MemberId memberId = new MemberId(member.getId());
         thumbsService.thumbsUp(memberId, post.id());
     }
 
     private void thumbsDown(final Member member, final PostResponse post) {
-        MemberIdDto memberId = new MemberIdDto(member.getId());
+        MemberId memberId = new MemberId(member.getId());
         thumbsService.thumbsDown(memberId, post.id());
     }
 

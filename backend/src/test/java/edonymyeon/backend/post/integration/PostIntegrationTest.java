@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.integration.steps.MemberConsumptionSteps;
@@ -316,7 +316,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .extract();
 
         final SpecificPostInfoResponse 게시글 = postService.findSpecificPost(게시글_id,
-                new MemberIdDto(0L));
+                new MemberId(0L));
 
         assertThat(게시글_상세_조회_응답.statusCode()).isEqualTo(200);
         assertAll(
@@ -367,7 +367,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .extract();
 
         final SpecificPostInfoResponse 게시글 = postService.findSpecificPost(게시글_id,
-                new MemberIdDto(작성자.getId()));
+                new MemberId(작성자.getId()));
 
         assertThat(게시글_상세_조회_응답.statusCode()).isEqualTo(200);
         assertSoftly(softAssertions -> {
@@ -421,7 +421,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .extract();
 
         final SpecificPostInfoResponse 게시글 = postService.findSpecificPost(게시글_id,
-                new MemberIdDto(작성자가_아닌_사람.getId()));
+                new MemberId(작성자가_아닌_사람.getId()));
 
         assertThat(게시글_상세_조회_결과.statusCode()).isEqualTo(200);
         SoftAssertions.assertSoftly(

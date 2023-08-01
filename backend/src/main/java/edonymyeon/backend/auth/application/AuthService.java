@@ -8,7 +8,7 @@ import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import java.util.Optional;
@@ -23,16 +23,16 @@ public class AuthService {
 
     private final MemberRepository memberRepository;
 
-    public MemberIdDto findMember(final LoginRequest loginRequest) {
+    public MemberId findMember(final LoginRequest loginRequest) {
         return findMember(loginRequest.email(), loginRequest.password());
     }
 
     //todo: 비밀번호까지 조회에 사용하나?
-    public MemberIdDto findMember(final String email, final String password) {
+    public MemberId findMember(final String email, final String password) {
         final Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_EMAIL_NOT_FOUND));
         member.checkPassword(password);
-        return new MemberIdDto(member.getId());
+        return new MemberId(member.getId());
     }
 
     public DuplicateCheckResponse checkDuplicate(final String target, final String value) {

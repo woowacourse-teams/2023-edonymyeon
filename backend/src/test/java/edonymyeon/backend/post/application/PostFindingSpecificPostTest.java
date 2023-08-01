@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.image.profileimage.repository.ProfileImageInfoRepository;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
@@ -37,8 +37,8 @@ public class PostFindingSpecificPostTest {
     private final ProfileImageInfoRepository profileImageInfoRepository;
     private final MemberTestSupport memberTestSupport;
     private final PostService postService;
-    private MemberIdDto memberId;
-    private MemberIdDto member2Id;
+    private MemberId memberId;
+    private MemberId member2Id;
     private Long postId;
 
     @BeforeEach
@@ -71,7 +71,7 @@ public class PostFindingSpecificPostTest {
 
     @Test
     void 로그인_되어있지_않으면_조회는_가능하되_추천여부와_스크랩여부와_작성자여부는_모두_false이다() {
-        final var postInfoResponse = postService.findSpecificPost(postId, new MemberIdDto(-1L));
+        final var postInfoResponse = postService.findSpecificPost(postId, new MemberId(-1L));
 
         assertThat(postInfoResponse.isUp()).isFalse();
         assertThat(postInfoResponse.isDown()).isFalse();
@@ -107,7 +107,7 @@ public class PostFindingSpecificPostTest {
         final Member member = memberTestSupport.builder()
                 .profileImageInfo(saveProfileImageInfo())
                 .build();
-        memberId = new MemberIdDto(member.getId());
+        memberId = new MemberId(member.getId());
         return member;
     }
 
@@ -115,7 +115,7 @@ public class PostFindingSpecificPostTest {
         final Member member = memberTestSupport.builder()
                 .profileImageInfo(saveProfileImageInfo2())
                 .build();
-        member2Id = new MemberIdDto(memberRepository.save(member).getId());
+        member2Id = new MemberId(memberRepository.save(member).getId());
         return member;
     }
 

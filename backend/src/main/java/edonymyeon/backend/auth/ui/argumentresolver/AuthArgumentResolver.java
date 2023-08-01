@@ -5,7 +5,8 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.AUTHORIZA
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
 import edonymyeon.backend.auth.application.AuthService;
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.AnonymousMemberId;
+import edonymyeon.backend.member.application.dto.MemberId;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -21,13 +22,11 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @Component
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
-    public static final long NON_EXISTING_MEMBER_ID = -999L;
-
     private final AuthService authService;
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
-        return parameter.getParameterType().equals(MemberIdDto.class)
+        return parameter.getParameterType().equals(MemberId.class)
                 && parameter.hasParameterAnnotation(AuthPrincipal.class);
     }
 
@@ -41,11 +40,23 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization == null) {
             if (!Objects.requireNonNull(parameter.getParameterAnnotation(AuthPrincipal.class)).required()) {
-                return new MemberIdDto(NON_EXISTING_MEMBER_ID);
+                return new AnonymousMemberId();
             }
             throw new EdonymyeonException(AUTHORIZATION_EMPTY);
         }
 
+        String[] credentials = getCredentials(authorization);
+        String email = credentials[0];
+        String password = credentials[1];
+
+        if (Objects.isNull(email) || Objects.isNull(password)) {
+            throw new EdonymyeonException(AUTHORIZATION_EMPTY);
+        }
+
+        return authService.findMember(email, password);
+    }
+
+    private static String[] getCredentials(final String authorization) {
         String[] authHeader = authorization.split(" ");
         if (!authHeader[0].equalsIgnoreCase("basic")) {
             throw new EdonymyeonException(AUTHORIZATION_EMPTY);
@@ -55,13 +66,6 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         String decodedString = new String(decodedBytes);
 
         String[] credentials = decodedString.split(":");
-        String email = credentials[0];
-        String password = credentials[1];
-
-        if (Objects.isNull(email) || Objects.isNull(password)) {
-            throw new EdonymyeonException(AUTHORIZATION_EMPTY);
-        }
-
-        return authService.findMember(email, password);
+        return credentials;
     }
 }
