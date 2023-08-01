@@ -2,7 +2,7 @@ package edonymyeon.backend.post.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_FORBIDDEN;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
@@ -120,7 +120,7 @@ public class PostService {
 
     private void checkWriter(final Member member, final Post post) {
         if (!post.isSameMember(member)) {
-            throw new EdonymyeonException(POST_MEMBER_FORBIDDEN);
+            throw new EdonymyeonException(POST_MEMBER_NOT_SAME);
         }
     }
 
@@ -166,7 +166,8 @@ public class PostService {
         postImageInfoRepository.saveAll(updatedPostImageInfos.getPostImageInfos());
     }
 
-    public List<GeneralPostInfoResponse> findPostsByPagingCondition(final GeneralFindingCondition generalFindingCondition) {
+    public List<GeneralPostInfoResponse> findPostsByPagingCondition(
+            final GeneralFindingCondition generalFindingCondition) {
         PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
         final Slice<Post> foundPosts = postRepository.findAllBy(pageRequest);
         return foundPosts
