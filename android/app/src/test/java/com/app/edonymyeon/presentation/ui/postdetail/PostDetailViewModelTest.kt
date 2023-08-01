@@ -33,31 +33,38 @@ class PostDetailViewModelTest() {
     private lateinit var recommendRepository: RecommendRepository
 
     private val postId = 1L
-    private val fakePost = Post(
-        id = postId,
-        title = "title",
-        price = 10000,
-        content = "asdf",
-        images = listOf(),
-        createdAt = LocalDateTime.now(),
-        writer = Writer(
+    private fun createPost(
+        id: Long = postId,
+        title: String = "title",
+        price: Int = 10000,
+        content: String = "asdf",
+        images: List<String> = listOf(),
+        createdAt: LocalDateTime = LocalDateTime.now(),
+        writer: Writer = Writer(
             id = 1,
             nickname = "Hattti",
             profileImage = null,
         ),
-        reactionCount = ReactionCount(
+        reactionCount: ReactionCount = ReactionCount(
             viewCount = Count(3),
             commentCount = Count(0),
             scrapCount = Count(0),
         ),
-        recommendation = Recommendation(
-            upCount = Count(12),
-            downCount = Count(12),
-            isUp = false,
-            isDown = false,
-        ),
-        isScrap = false,
-        isWriter = false,
+        recommendation: Recommendation,
+        isScrap: Boolean = false,
+        isWriter: Boolean = false,
+    ) = Post(
+        id,
+        title,
+        price,
+        content,
+        images,
+        createdAt,
+        writer,
+        reactionCount,
+        recommendation,
+        isScrap,
+        isWriter,
     )
 
     @get:Rule
@@ -81,19 +88,27 @@ class PostDetailViewModelTest() {
     @Test
     fun `post를 불러온다`() {
         // given
-        coEvery { postRepository.getPostDetail(postId) } returns Result.success(fakePost)
+        val post = createPost(
+            recommendation = Recommendation(
+                upCount = Count(12),
+                downCount = Count(12),
+                isUp = false,
+                isDown = false,
+            ),
+        )
+        coEvery { postRepository.getPostDetail(postId) } returns Result.success(post)
 
         // when
         viewModel.getPostDetail(postId)
 
         // then
-        assertEquals(fakePost.toUiModel(), viewModel.post.value)
+        assertEquals(post.toUiModel(), viewModel.post.value)
     }
 
     @Test
     fun `추천 비추천을 하지 않은 상태에서 추천을 누른다`() {
         // given
-        val post = fakePost.copy(
+        val post = createPost(
             recommendation = Recommendation(
                 upCount = Count(12),
                 downCount = Count(12),
@@ -121,7 +136,7 @@ class PostDetailViewModelTest() {
     @Test
     fun `추천 비추천을 하지 않은 상태에서 비추천을 누른다`() {
         // given
-        val post = fakePost.copy(
+        val post = createPost(
             recommendation = Recommendation(
                 upCount = Count(12),
                 downCount = Count(12),
@@ -149,7 +164,7 @@ class PostDetailViewModelTest() {
     @Test
     fun `추천한 상태에서 추천을 누른다`() {
         // given
-        val post = fakePost.copy(
+        val post = createPost(
             recommendation = Recommendation(
                 upCount = Count(12),
                 downCount = Count(12),
@@ -177,7 +192,7 @@ class PostDetailViewModelTest() {
     @Test
     fun `비추천한 상태에서 추천을 누른다`() {
         // given
-        val post = fakePost.copy(
+        val post = createPost(
             recommendation = Recommendation(
                 upCount = Count(12),
                 downCount = Count(12),
@@ -206,7 +221,7 @@ class PostDetailViewModelTest() {
     @Test
     fun `비추천한 상태에서 비추천을 누른다`() {
         // given
-        val post = fakePost.copy(
+        val post = createPost(
             recommendation = Recommendation(
                 upCount = Count(12),
                 downCount = Count(12),
@@ -234,7 +249,7 @@ class PostDetailViewModelTest() {
     @Test
     fun `추천한 상태에서 비추천을 누른다`() {
         // given
-        val post = fakePost.copy(
+        val post = createPost(
             recommendation = Recommendation(
                 upCount = Count(12),
                 downCount = Count(12),
@@ -264,7 +279,7 @@ class PostDetailViewModelTest() {
     @Test
     fun `추천을 한 뒤, 응답이 오기 전까지 추천 기능이 비활성화된다`() = runTest {
         // given
-        val post = fakePost.copy(
+        val post = createPost(
             recommendation = Recommendation(
                 upCount = Count(12),
                 downCount = Count(12),
