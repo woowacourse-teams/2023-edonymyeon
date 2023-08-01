@@ -64,7 +64,6 @@
                 android:id="@+id/tv_email"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:fontFamily="@font/dohyeon"
                 android:gravity="center_vertical"
                 android:text="@string/login_email"
                 android:textColor="@color/black_000000"
@@ -81,7 +80,6 @@
                 android:autofillHints="emailAddress"
                 android:background="@drawable/bg_stroke_576b9e_radius_10dp"
                 android:ellipsize="end"
-                android:fontFamily="@font/dohyeon"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:padding="10dp"
@@ -116,7 +114,6 @@
                 android:id="@+id/tv_password"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:fontFamily="@font/dohyeon"
                 android:gravity="center_vertical"
                 android:text="@string/login_password"
                 android:textColor="@color/black_000000"
@@ -132,11 +129,12 @@
                 android:afterTextChanged="@{viewModel.setPassword}"
                 android:autofillHints="password"
                 android:background="@drawable/bg_stroke_576b9e_radius_10dp"
-                android:fontFamily="@font/dohyeon"
                 android:inputType="textPassword"
+                android:fontFamily="sans-serif"
                 android:padding="10dp"
                 android:text="@{viewModel.loginInfo.password}"
                 android:textColor="@color/black_000000"
+                android:textColorHint="@color/black_000000"
                 android:textSize="13sp"
                 app:layout_constraintDimensionRatio="H,320:34"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -221,7 +219,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bt_join" />
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
