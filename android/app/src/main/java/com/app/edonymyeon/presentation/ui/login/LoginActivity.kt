@@ -32,40 +32,32 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initBinding()
-        observeLoginEnabled()
-        observeSuccess()
-        observeErrorMessage()
+        setObserver()
         setJoinClickListener()
     }
 
-    private fun observeErrorMessage() {
-        viewModel.errorMessage.observe(this) { errorMessage ->
-            errorMessage?.let {
-                binding.svLogin.makeSnackbar(it)
-            }
-        }
+    private fun initBinding() {
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
     }
 
-    private fun observeLoginEnabled() {
+    private fun setObserver() {
         viewModel.isLoginEnabled.observe(this) { isEnable ->
             if (!isEnable) {
                 binding.svLogin.makeSnackbar(getString(R.string.login_check_logininfo_input))
             }
         }
-    }
-
-    private fun observeSuccess() {
         viewModel.isSuccess.observe(this) {
             if (it) {
                 navigateToMain()
                 finish()
             }
         }
-    }
-
-    private fun initBinding() {
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
+        viewModel.errorMessage.observe(this) { errorMessage ->
+            errorMessage?.let {
+                binding.svLogin.makeSnackbar(it)
+            }
+        }
     }
 
     private fun setJoinClickListener() {

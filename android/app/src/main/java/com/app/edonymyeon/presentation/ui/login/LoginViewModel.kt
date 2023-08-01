@@ -1,6 +1,5 @@
 package com.app.edonymyeon.presentation.ui.login
 
-import android.text.Editable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -51,14 +50,14 @@ class LoginViewModel(private val repository: AuthRepository) :
         }
     }
 
-    fun setEmail(editEmail: Editable) {
+    fun setEmail(email: CharSequence) {
         val loginUiModel = _loginInfo.value ?: LoginUiModel("", "")
-        _loginInfo.value = loginUiModel.copy(email = editEmail.toString())
+        _loginInfo.value = loginUiModel.copy(email = email.toString())
     }
 
-    fun setPassword(editPassword: Editable) {
+    fun setPassword(password: CharSequence) {
         val loginUiModel = _loginInfo.value ?: LoginUiModel("", "")
-        _loginInfo.value = loginUiModel.copy(password = editPassword.toString())
+        _loginInfo.value = loginUiModel.copy(password = password.toString())
     }
 
     private fun setLoginEnable() {
