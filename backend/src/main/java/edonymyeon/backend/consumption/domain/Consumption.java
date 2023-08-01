@@ -76,11 +76,11 @@ public class Consumption {
 
     public static Consumption of(
             final Post post,
+            final ConsumptionType consumptionType,
             final Long purchasePrice,
             final Integer year,
             final Integer month
     ) {
-        ConsumptionType consumptionType = ConsumptionType.classifyConsumptionType(purchasePrice);
         Long price = purchasePrice;
         if (consumptionType == SAVING) {
             price = post.getPrice();

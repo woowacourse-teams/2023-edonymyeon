@@ -36,7 +36,8 @@ public class MemberService {
     ) {
         final YearMonthDto yearMonthDto = new YearMonthDto(purchaseConfirmRequest.year(),
                 purchaseConfirmRequest.month());
-        consumptionConfirmService.confirm(memberIdDto, postId, purchaseConfirmRequest.purchasePrice(), yearMonthDto);
+        consumptionConfirmService.confirmPurchase(memberIdDto, postId, purchaseConfirmRequest.purchasePrice(),
+                yearMonthDto);
     }
 
     public void confirmSaving(
@@ -45,7 +46,7 @@ public class MemberService {
             final SavingConfirmRequest savingConfirmRequest) {
         final YearMonthDto yearMonthDto = new YearMonthDto(savingConfirmRequest.year(),
                 savingConfirmRequest.month());
-        consumptionConfirmService.confirm(memberIdDto, postId, null, yearMonthDto);
+        consumptionConfirmService.confirmSaving(memberIdDto, postId, yearMonthDto);
     }
 
     public void removeConfirm(final MemberIdDto memberIdDto, final Long postId) {

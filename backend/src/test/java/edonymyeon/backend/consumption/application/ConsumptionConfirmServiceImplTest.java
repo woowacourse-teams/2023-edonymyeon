@@ -45,10 +45,9 @@ class ConsumptionConfirmServiceImplTest {
                 .member(글쓴이)
                 .build();
 
-        consumptionConfirmService.confirm(
+        consumptionConfirmService.confirmSaving(
                 new MemberIdDto(글쓴이.getId()),
                 게시글.getId(),
-                null,
                 new YearMonthDto(2023, 7)
         );
 
@@ -71,7 +70,7 @@ class ConsumptionConfirmServiceImplTest {
                 .member(글쓴이)
                 .build();
 
-        consumptionConfirmService.confirm(
+        consumptionConfirmService.confirmPurchase(
                 new MemberIdDto(글쓴이.getId()),
                 게시글.getId(),
                 10_000L,

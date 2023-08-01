@@ -1,5 +1,7 @@
 package edonymyeon.backend.consumption.application;
 
+import static edonymyeon.backend.consumption.domain.ConsumptionType.PURCHASE;
+import static edonymyeon.backend.consumption.domain.ConsumptionType.SAVING;
 import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_POST_ID_ALREADY_EXIST;
 import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_POST_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
@@ -27,10 +29,9 @@ public class ConsumptionConfirmServiceImpl implements ConsumptionConfirmService 
 
     @Override
     @Transactional
-    public void confirm(
+    public void confirmSaving(
             final MemberIdDto memberIdDto,
             final Long postId,
-            final Long purchasePrice,
             final YearMonthDto yearMonth
     ) {
         final Post post = findPostById(postId);
@@ -39,7 +40,8 @@ public class ConsumptionConfirmServiceImpl implements ConsumptionConfirmService 
 
         final Consumption consumption = Consumption.of(
                 post,
-                purchasePrice,
+                SAVING,
+                null,
                 yearMonth.year(),
                 yearMonth.month()
         );
@@ -55,6 +57,28 @@ public class ConsumptionConfirmServiceImpl implements ConsumptionConfirmService 
         if (consumptionRepository.existsByPostId(postId)) {
             throw new EdonymyeonException(CONSUMPTION_POST_ID_ALREADY_EXIST);
         }
+    }
+
+    @Override
+    @Transactional
+    public void confirmPurchase(
+            final MemberIdDto memberIdDto,
+            final Long postId,
+            final Long purchasePrice,
+            final YearMonthDto yearMonth
+    ) {
+        final Post post = findPostById(postId);
+        post.validateWriter(memberIdDto.id());
+        validateConsumptionExist(postId);
+
+        final Consumption consumption = Consumption.of(
+                post,
+                PURCHASE,
+                purchasePrice,
+                yearMonth.year(),
+                yearMonth.month()
+        );
+        consumptionRepository.save(consumption);
     }
 
     @Override

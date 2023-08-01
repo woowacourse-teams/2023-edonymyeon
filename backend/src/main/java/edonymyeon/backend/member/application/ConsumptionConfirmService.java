@@ -5,7 +5,13 @@ import edonymyeon.backend.member.application.dto.YearMonthDto;
 
 public interface ConsumptionConfirmService {
 
-    void confirm(
+    void confirmSaving(
+            final MemberIdDto memberIdDto,
+            final Long postId,
+            final YearMonthDto yearMonth
+    );
+
+    void confirmPurchase(
             final MemberIdDto memberIdDto,
             final Long postId,
             final Long purchasePrice,
