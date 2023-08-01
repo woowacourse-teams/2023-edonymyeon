@@ -159,7 +159,7 @@ class PostDetailActivity : AppCompatActivity() {
                 binding.cbUp.isChecked = false
                 return@setOnCheckedChangeListener
             }
-            viewModel.updateUpRecommendationUi(id, isChecked)
+            viewModel.updateRecommendationUi(id, isChecked, true)
         }
         binding.cbDown.setOnCheckedChangeListener { _, isChecked ->
             if (isMyPost) {
@@ -167,7 +167,7 @@ class PostDetailActivity : AppCompatActivity() {
                 binding.cbDown.isChecked = false
                 return@setOnCheckedChangeListener
             }
-            viewModel.updateDownRecommendationUi(id, isChecked)
+            viewModel.updateRecommendationUi(id, isChecked, false)
         }
     }
 
