@@ -47,7 +47,6 @@ public class LoggingInterceptor implements HandlerInterceptor {
     private void logResponseBody(final HttpServletResponse response) throws IOException {
         ContentCachingResponseWrapper responseWrapper = getResponseWrapper(response);
         log.info("body {} ", getResponseBody(responseWrapper));
-        responseWrapper.copyBodyToResponse();
     }
 
     private String getResponseBody(ContentCachingResponseWrapper responseWrapper) {
