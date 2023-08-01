@@ -29,6 +29,7 @@ public class MemberService {
         return new MyPageResponse(member.getId(), member.getNickname());
     }
 
+    @Transactional
     public void confirmPurchase(
             final MemberIdDto memberIdDto,
             final Long postId,
@@ -40,6 +41,7 @@ public class MemberService {
                 yearMonthDto);
     }
 
+    @Transactional
     public void confirmSaving(
             final MemberIdDto memberIdDto,
             final Long postId,
@@ -49,6 +51,7 @@ public class MemberService {
         consumptionConfirmService.confirmSaving(memberIdDto, postId, yearMonthDto);
     }
 
+    @Transactional
     public void removeConfirm(final MemberIdDto memberIdDto, final Long postId) {
         consumptionConfirmService.removeConfirm(memberIdDto, postId);
     }
