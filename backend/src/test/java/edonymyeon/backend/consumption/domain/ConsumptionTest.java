@@ -29,13 +29,13 @@ class ConsumptionTest {
     }
 
     @Test
-    void 년도는_0년_이상이어야_한다() {
-        assertDoesNotThrow(() -> Consumption.of(null, 1_000L, 0, 7));
+    void 년도는_2000년_이상이어야_한다() {
+        assertDoesNotThrow(() -> Consumption.of(null, 1_000L, 2000, 7));
     }
 
     @Test
-    void 년도가_0년_미만이면_예외가_발생한다() {
-        assertThatThrownBy(() -> Consumption.of(null, 1_000L, -1, 7))
+    void 년도가_2000년_미만이면_예외가_발생한다() {
+        assertThatThrownBy(() -> Consumption.of(null, 1_000L, 1999, 7))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(ExceptionInformation.CONSUMPTION_YEAR_ILLEGAL.getMessage());
     }

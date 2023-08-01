@@ -33,7 +33,7 @@ public class Consumption {
 
     private static final long MAX_PRICE = 10_000_000_000L;
     private static final int MIN_PRICE = 0;
-    private static final int MIN_YEAR = 0;
+    private static final int MIN_YEAR = 2000;
     private static final int MAX_MONTH = 12;
     private static final int MIN_MONTH = 1;
 
