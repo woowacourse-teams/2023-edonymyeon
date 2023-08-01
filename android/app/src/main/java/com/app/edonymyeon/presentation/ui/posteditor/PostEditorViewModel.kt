@@ -59,7 +59,7 @@ class PostEditorViewModel(
         viewModelScope.launch {
             repository.savePost(
                 _postTitle.value.toString(),
-                _postContent.value.toString(),
+                _postContent.value ?: "",
                 _postPrice.value?.toInt() ?: 0,
                 getImagesFilepath(
                     _galleryImages.value?.toList()?.map { Uri.parse(it) }
