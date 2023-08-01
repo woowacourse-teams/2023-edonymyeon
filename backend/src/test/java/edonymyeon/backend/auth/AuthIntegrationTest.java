@@ -6,11 +6,14 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
+import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.member.domain.Member;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.util.Base64;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -158,5 +161,31 @@ public class AuthIntegrationTest extends IntegrationTest {
                 .extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    public void 쿠키가_잘_등록되는지_확인() {
+        final Member member = memberTestSupport.builder()
+                .build();
+
+        final LoginRequest request = new LoginRequest(member.getEmail(), member.getPassword());
+        System.out.println("request = " + request);
+        final ExtractableResponse<Response> response = RestAssured
+                .given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(request)
+                .when()
+                .post("/login")
+                .then()
+                .extract();
+
+        String valueToEncode = request.email() + ":" + request.password();
+        final String expectedCookieValue = Base64.getEncoder().encodeToString(valueToEncode.getBytes());
+
+        assertSoftly(
+                softly -> {
+                    softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+                    softly.assertThat(response.header(HttpHeaders.AUTHORIZATION)).isEqualTo("Basic " + expectedCookieValue);
+                });
     }
 }

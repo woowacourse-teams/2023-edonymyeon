@@ -3,6 +3,7 @@ package edonymyeon.backend.member.domain;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_INVALID;
+import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_NOT_MATCH;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
@@ -58,6 +59,10 @@ public class Member {
         this.profileImageInfo = profileImageInfo;
     }
 
+    public Member(final Long id) {
+        this.id = id;
+    }
+
     private void validate(final String email, final String password, final String nickname) {
         validateEmail(email);
         validateNickName(nickname);
@@ -81,5 +86,12 @@ public class Member {
             return;
         }
         throw new EdonymyeonException(MEMBER_PASSWORD_INVALID);
+    }
+
+    public void checkPassword(final String password) {
+        if (this.password.equals(password)) {
+            return;
+        }
+        throw new EdonymyeonException(MEMBER_PASSWORD_NOT_MATCH);
     }
 }

@@ -1,6 +1,6 @@
 package edonymyeon.backend.post.ui;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_FORBIDDEN;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -163,8 +163,8 @@ class PostControllerTest implements ImageFileCleaner {
         ExceptionResponse 예외_응답 = extractResponseFromResult(게시글_삭제_요청_결과, ExceptionResponse.class);
 
         assertSoftly(softly -> {
-                    softly.assertThat(예외_응답.errorCode()).isEqualTo(POST_MEMBER_FORBIDDEN.getCode());
-                    softly.assertThat(예외_응답.errorCode()).isEqualTo(POST_MEMBER_FORBIDDEN.getCode());
+                    softly.assertThat(예외_응답.errorCode()).isEqualTo(POST_MEMBER_NOT_SAME.getCode());
+                    softly.assertThat(예외_응답.errorCode()).isEqualTo(POST_MEMBER_NOT_SAME.getCode());
                 }
         );
     }
