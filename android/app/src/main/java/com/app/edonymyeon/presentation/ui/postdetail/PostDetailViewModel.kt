@@ -1,6 +1,5 @@
 package com.app.edonymyeon.presentation.ui.postdetail
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,12 +11,12 @@ import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
 import com.app.edonymyeon.presentation.uimodel.RecommendationUiModel
 import com.domain.edonymyeon.model.Post
+import com.domain.edonymyeon.model.Recommendation
 import com.domain.edonymyeon.repository.PostRepository
 import com.domain.edonymyeon.repository.RecommendRepository
 import kotlinx.coroutines.launch
 
 class PostDetailViewModel(
-    private val postId: Long,
     private val postRepository: PostRepository,
     private val recommendRepository: RecommendRepository,
 ) : ViewModel() {
@@ -38,11 +37,11 @@ class PostDetailViewModel(
     val isScrap: LiveData<Boolean>
         get() = _isScrap
 
-    init {
-        getPostDetail(postId)
-    }
+    private val _isRecommendationRequestDone = MutableLiveData<Boolean>(true)
+    val isRecommendationRequestDone: LiveData<Boolean>
+        get() = _isRecommendationRequestDone
 
-    private fun getPostDetail(postId: Long) {
+    fun getPostDetail(postId: Long) {
         viewModelScope.launch {
             postRepository.getPostDetail(postId)
                 .onSuccess {
@@ -62,9 +61,7 @@ class PostDetailViewModel(
     fun deletePost(postId: Long) {
         viewModelScope.launch {
             postRepository.deletePost(postId)
-                .onSuccess {
-                    Log.d("PostDetailViewModel", "deletePost: success")
-                }
+                .onSuccess {}
                 .onFailure {
                     it as CustomThrowable
                     when (it.code) {
@@ -73,68 +70,83 @@ class PostDetailViewModel(
         }
     }
 
-    fun updateUpRecommendationUi(isChecked: Boolean) {
+    fun updateRecommendationUi(postId: Long, isChecked: Boolean, isUpRecommendation: Boolean) {
         val oldRecommendation = _recommendation.value?.toDomain() ?: return
-        if (oldRecommendation.isUp && isChecked) return
+        // 기존에 추천/비추천 되어 있으면 그대로 리턴
+        if (isRecommendationInitialSetting(isUpRecommendation, isChecked, oldRecommendation)) return
 
-        if (isChecked) {
-            if (oldRecommendation.isDown) {
-                _recommendation.value = oldRecommendation.copy(
+        _recommendation.value = when {
+            // 추천
+            isChecked && isUpRecommendation -> {
+                oldRecommendation.copy(
                     upCount = oldRecommendation.upCount.increase(),
                     isUp = true,
                     isDown = false,
-                ).toUiModel()
-            } else {
-                _recommendation.value = oldRecommendation.copy(
-                    upCount = oldRecommendation.upCount.increase(),
-                    isUp = true,
-                ).toUiModel()
+                )
             }
-        } else {
-            _recommendation.value = oldRecommendation.copy(
-                upCount = oldRecommendation.upCount.decrease(),
-                isUp = false,
-            ).toUiModel()
-        }
 
-        if (oldRecommendation.isUp == isChecked) return
-        if (isChecked) {
-            saveRecommendation(postId, RecommendRepository::saveRecommendUp)
-        } else {
-            saveRecommendation(postId, RecommendRepository::deleteRecommendUp)
-        }
-    }
-
-    fun updateDownRecommendationUi(isChecked: Boolean) {
-        val oldRecommendation = _recommendation.value?.toDomain() ?: return
-        if (oldRecommendation.isDown && isChecked) return
-
-        if (isChecked) {
-            if (oldRecommendation.isUp) {
-                _recommendation.value = oldRecommendation.copy(
+            // 비추천
+            isChecked && !isUpRecommendation -> {
+                oldRecommendation.copy(
                     downCount = oldRecommendation.downCount.increase(),
                     isUp = false,
                     isDown = true,
-                ).toUiModel()
-            } else {
-                _recommendation.value = oldRecommendation.copy(
-                    downCount = oldRecommendation.downCount.increase(),
-                    isDown = true,
-                ).toUiModel()
+                )
             }
-        } else {
-            _recommendation.value = oldRecommendation.copy(
-                downCount = oldRecommendation.downCount.decrease(),
-                isDown = false,
-            ).toUiModel()
-        }
 
-        if (oldRecommendation.isDown == isChecked) return
-        if (isChecked) {
-            saveRecommendation(postId, RecommendRepository::saveRecommendDown)
+            // 추천 취소
+            !isChecked && isUpRecommendation -> {
+                oldRecommendation.copy(
+                    upCount = oldRecommendation.upCount.decrease(),
+                    isUp = false,
+                )
+            }
+
+            // 비추천 취소
+            else -> {
+                oldRecommendation.copy(
+                    downCount = oldRecommendation.downCount.decrease(),
+                    isDown = false,
+                )
+            }
+        }.toUiModel()
+
+        // 간접적으로 바뀐 경우 (e.g. 추천할 때 기존 비추천이 취소되는 경우) API 호출 없이 리턴
+        if (isIndirectChange(isUpRecommendation, isChecked, oldRecommendation)) return
+
+        _isRecommendationRequestDone.value = false
+
+        if (isUpRecommendation) {
+            saveRecommendation(
+                postId,
+                if (isChecked) RecommendRepository::saveRecommendUp else RecommendRepository::deleteRecommendUp,
+            )
         } else {
-            saveRecommendation(postId, RecommendRepository::deleteRecommendDown)
+            saveRecommendation(
+                postId,
+                if (isChecked) RecommendRepository::saveRecommendDown else RecommendRepository::deleteRecommendDown,
+            )
         }
+    }
+
+    private fun isRecommendationInitialSetting(
+        isUpRecommendation: Boolean,
+        isChecked: Boolean,
+        oldRecommendation: Recommendation,
+    ): Boolean {
+        if (isUpRecommendation && isChecked && oldRecommendation.isUp) return true
+        if (!isUpRecommendation && isChecked && oldRecommendation.isDown) return true
+        return false
+    }
+
+    private fun isIndirectChange(
+        isUpRecommendation: Boolean,
+        isChecked: Boolean,
+        oldRecommendation: Recommendation,
+    ): Boolean {
+        if (isUpRecommendation && isChecked == oldRecommendation.isUp) return true
+        if (!isUpRecommendation && isChecked == oldRecommendation.isDown) return true
+        return false
     }
 
     private fun saveRecommendation(
@@ -143,7 +155,11 @@ class PostDetailViewModel(
     ) {
         viewModelScope.launch {
             recommendRepository.event(postId)
+                .onSuccess {
+                    _isRecommendationRequestDone.value = true
+                }
                 .onFailure {
+                    _isRecommendationRequestDone.value = true
                     it as CustomThrowable
                     when (it.code) {
                     }
