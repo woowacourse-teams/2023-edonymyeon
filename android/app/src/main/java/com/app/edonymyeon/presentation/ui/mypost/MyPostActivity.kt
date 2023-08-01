@@ -81,13 +81,21 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
     }
 
     override fun onCancelButtonClick(id: Long) {
+        viewModel.deleteConfirm(id)
     }
 
     private fun onConfirmButtonClicked(consumptionType: ConsumptionType, id: Long) {
-        dialog = ConsumptionDialog()
+        dialog = ConsumptionDialog(
+            consumptionType,
+            id,
+            viewModel,
+        )
         dialog.show(
             supportFragmentManager,
-            "",
+            when (consumptionType) {
+                ConsumptionType.PURCHASE -> "PurchaseConfirmDialog"
+                ConsumptionType.SAVING -> "SavingConfirmDialog"
+            },
         )
     }
 
