@@ -13,6 +13,7 @@ public enum ExceptionInformation {
     // 클래스이름_필드명_틀린내용
     // 1___: 인증 관련
     MEMBER_EMAIL_NOT_FOUND(1511, "회원의 이메일이 존재하지 않습니다."),
+    MEMBER_PASSWORD_NOT_MATCH(1512, "회원의 비밀번호가 일치하지 않습니다."),
     AUTHORIZATION_EMPTY(1523, "인증 정보가 없습니다."),
     ILLEGAL_ARGUMENT_TYPE(1524, "잘못된 타입의 요청입니다."),
 
