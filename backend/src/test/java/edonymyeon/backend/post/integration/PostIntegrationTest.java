@@ -19,11 +19,13 @@ import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
+import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.io.File;
+import java.util.Scanner;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -358,13 +360,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
         final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
 
-        final ExtractableResponse<Response> 게시글_상세_조회_응답 = RestAssured
-                .given()
-                .when()
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
-                .get("/posts/" + 게시글_id)
-                .then()
-                .extract();
+        final ExtractableResponse<Response> 게시글_상세_조회_응답 = 게시글_하나를_상세_조회한다(작성자, 게시글_id);
 
         final SpecificPostInfoResponse 게시글 = postService.findSpecificPost(게시글_id,
                 new MemberId(작성자.getId()));
@@ -412,13 +408,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
         final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
 
-        final ExtractableResponse<Response> 게시글_상세_조회_결과 = RestAssured
-                .given()
-                .when()
-                .auth().preemptive().basic(작성자가_아닌_사람.getEmail(), 작성자가_아닌_사람.getPassword())
-                .get("/posts/" + 게시글_id)
-                .then()
-                .extract();
+        final ExtractableResponse<Response> 게시글_상세_조회_결과 = 게시글_하나를_상세_조회한다(작성자가_아닌_사람, 게시글_id);
 
         final SpecificPostInfoResponse 게시글 = postService.findSpecificPost(게시글_id,
                 new MemberId(작성자가_아닌_사람.getId()));
@@ -476,13 +466,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         final Member 작성자 = 사용자를_하나_만든다();
         final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
         final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
-        final ExtractableResponse<Response> 게시글_상세_조회_응답 = RestAssured
-                .given()
-                .when()
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
-                .get("/posts/" + 게시글_id)
-                .then()
-                .extract();
+        final ExtractableResponse<Response> 게시글_상세_조회_응답 = 게시글_하나를_상세_조회한다(작성자, 게시글_id);
 
         final String 유지할_이미지의_url = 게시글_상세_조회_응답.body().jsonPath().getString("images[0]");
         final ExtractableResponse<Response> 게시글_수정_응답 = RestAssured.given()
@@ -507,13 +491,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
 
         final Member 작성자가_아닌_사람 = 사용자를_하나_만든다();
-        final ExtractableResponse<Response> 게시글_상세_조회_응답 = RestAssured
-                .given()
-                .when()
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
-                .get("/posts/" + 게시글_id)
-                .then()
-                .extract();
+        final ExtractableResponse<Response> 게시글_상세_조회_응답 = 게시글_하나를_상세_조회한다(작성자, 게시글_id);
 
         final String 유지할_이미지의_url = 게시글_상세_조회_응답.body().jsonPath().getString("images[0]");
         System.out.println("유지할_이미지의_url = " + 유지할_이미지의_url);
@@ -631,13 +609,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         final Member 작성자 = 사용자를_하나_만든다();
         final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
         final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
-        final ExtractableResponse<Response> 게시글_상세_조회_응답 = RestAssured
-                .given()
-                .when()
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
-                .get("/posts/" + 게시글_id)
-                .then()
-                .extract();
+        final ExtractableResponse<Response> 게시글_상세_조회_응답 = 게시글_하나를_상세_조회한다(작성자, 게시글_id);
 
         final String 유지할_이미지의_url = 게시글_상세_조회_응답.body().jsonPath().getString("images[0]");
 
@@ -669,5 +641,46 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                             .isEqualTo(POST_IMAGE_COUNT_INVALID.getMessage());
                 }
         );
+    }
+
+    @Test
+    void 게시글_조회수_시나리오() {
+        final Member 작성자 = this.사용자를_하나_만든다();
+        final Member 열람자 = this.사용자를_하나_만든다();
+        final Post 게시글 = this.postTestSupport.builder()
+                .member(작성자)
+                .build();
+
+        작성자가_자신의_글을_조회하면_조회수가_오르지_않는다(작성자, 게시글);
+        for (int count = 1; count <= 4; count++) {
+            다른사람이_글을_조회하면_조회수가_오른다(열람자, 게시글, count);
+        }
+    }
+
+    private void 다른사람이_글을_조회하면_조회수가_오른다(final Member 열람자, final Post 게시글, final int expected) {
+        final ExtractableResponse<Response> 다른사람이_게시글_조회한_결과 = this.게시글_하나를_상세_조회한다(열람자, 게시글.getId());
+        System.out.println(다른사람이_게시글_조회한_결과.body().asPrettyString());
+        assertThat(다른사람이_게시글_조회한_결과.body()
+                .jsonPath()
+                .getLong("reactionCount.viewCount"))
+                .isEqualTo(expected);
+    }
+
+    private void 작성자가_자신의_글을_조회하면_조회수가_오르지_않는다(final Member 작성자, final Post 게시글) {
+        다른사람이_글을_조회하면_조회수가_오른다(작성자, 게시글, 0);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new Scanner(System.in).nextLine().replaceAll(" ", "_"));
+    }
+
+    private ExtractableResponse<Response> 게시글_하나를_상세_조회한다(final Member 열람인, final long 게시글_id) {
+        return RestAssured
+                .given()
+                .when()
+                .auth().preemptive().basic(열람인.getEmail(), 열람인.getPassword())
+                .get("/posts/" + 게시글_id)
+                .then()
+                .extract();
     }
 }
