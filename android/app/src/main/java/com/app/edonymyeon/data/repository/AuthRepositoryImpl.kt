@@ -11,11 +11,11 @@ class AuthRepositoryImpl(
     private val userDataSource: UserDataSource,
     private val authDataSource: AuthDataSource,
 ) : AuthRepository {
-    override suspend fun login(email: String, password: String): Result<Any> {
+    override suspend fun login(email: String, password: String): Result<Unit> {
         val result = userDataSource.login(LoginDataModel(email, password))
         return if (result.isSuccessful) {
             authDataSource.setAuthToken(result.headers()["Authorization"] as String)
-            Result.success(result.body() as Unit)
+            Result.success(result.body() ?: Unit)
         } else {
             val errorResponse = result.errorBody()?.string()
             val json = errorResponse?.let { JSONObject(it) }
