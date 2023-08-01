@@ -9,7 +9,7 @@ import androidx.security.crypto.MasterKey
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityLoginBinding
 import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
-import com.app.edonymyeon.data.datasource.user.UserRemoteDataSource
+import com.app.edonymyeon.data.datasource.auth.AuthRemoteDataSource
 import com.app.edonymyeon.data.repository.AuthRepositoryImpl
 import com.app.edonymyeon.presentation.util.makeSnackbar
 
@@ -22,7 +22,7 @@ class LoginActivity : AppCompatActivity() {
     private val viewModel: LoginViewModel by lazy {
         LoginViewModelFactory(
             AuthRepositoryImpl(
-                UserRemoteDataSource(),
+                AuthRemoteDataSource(),
                 AuthLocalDataSource.getInstance(sharedPreferences),
             ),
         ).create(
