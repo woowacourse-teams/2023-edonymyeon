@@ -197,16 +197,16 @@ public class PostService {
                 .orElseThrow(() -> new EdonymyeonException(POST_ID_NOT_FOUND));
 
         final Optional<Member> member = memberRepository.findById(memberId.id());
+        post.updateView(member.orElse(null));
 
         final ReactionCountResponse reactionCountResponse = new ReactionCountResponse(
-                0, // TODO: 조회수 기능 구현 필요
+                post.getViewCount(),
                 0, // TODO: 댓글 수 기능 구현 필요
                 0 // TODO: 스크랩 기능 구현 필요
         );
         final AllThumbsInPostResponse allThumbsInPost = thumbsService.findAllThumbsInPost(postId);
         final WriterDetailResponse writerDetailResponse = getWriterResponse(post.getMember());
 
-        post.updateView(member.orElse(null));
 
         if (member.isEmpty()) {
             return SpecificPostInfoResponse.of(

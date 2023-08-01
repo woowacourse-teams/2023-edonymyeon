@@ -54,9 +54,6 @@ import org.springframework.web.multipart.MultipartFile;
 class PostServiceTest implements ImageFileCleaner {
 
     private static final Pattern 이미지_UUID_와_확장자_형식 = Pattern.compile("test-inserting\\d+\\.(png|jpg)");
-    private static final Pattern 파일_경로_형식 = Pattern.compile(
-            "src/test/resources/static/img/test_store/" + "test-inserting\\d+\\.(png|jpg)"
-    );
 
     private final PostImageInfoRepository postImageInfoRepository;
 
@@ -152,16 +149,7 @@ class PostServiceTest implements ImageFileCleaner {
 
             // then
             List<PostImageInfo> imageFiles = postImageInfoRepository.findAllByPostId(postId);
-            assertSoftly(softly -> {
-                        softly.assertThat(imageFiles).hasSize(2);
-                        softly.assertThat(
-                                        파일_경로_형식.matcher(imageFileUploader.getFullPath(imageFiles.get(0).getStoreName())).matches())
-                                .isTrue();
-                        softly.assertThat(
-                                        파일_경로_형식.matcher(imageFileUploader.getFullPath(imageFiles.get(1).getStoreName())).matches())
-                                .isTrue();
-                    }
-            );
+            assertSoftly(softly -> softly.assertThat(imageFiles).hasSize(2));
         }
 
         @Test

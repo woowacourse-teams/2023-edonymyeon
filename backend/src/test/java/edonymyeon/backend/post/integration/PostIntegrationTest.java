@@ -318,7 +318,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .extract();
 
         final SpecificPostInfoResponse 게시글 = postService.findSpecificPost(게시글_id,
-                new MemberId(0L));
+                new MemberId(작성자.getId()));
 
         assertThat(게시글_상세_조회_응답.statusCode()).isEqualTo(200);
         assertAll(
@@ -439,7 +439,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
 
                     softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getInt("reactionCount.viewCount"))
                             .isEqualTo(
-                                    게시글.reactionCount().viewCount());
+                                    게시글.reactionCount().viewCount() - 1);
                     softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getInt("reactionCount.commentCount"))
                             .isEqualTo(
                                     게시글.reactionCount().commentCount());

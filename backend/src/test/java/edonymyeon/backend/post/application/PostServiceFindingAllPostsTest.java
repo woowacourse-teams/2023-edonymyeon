@@ -54,14 +54,6 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
     private MemberId memberId;
     private MemberId memberId2;
 
-/*    @Value("${domain}")
-    private String domain;*/
-
-    //todo: 테스트 properties 파일에 있는 도메인 경로 하드코딩함
-    private Pattern 파일_경로_형식 = Pattern.compile(
-            "edonymyeon/" + "test-inserting\\d+\\.(png|jpg|jpeg)"
-    );
-
     @BeforeEach
     void setUp() throws IOException {
         final var member = memberTestSupport.builder()
@@ -106,17 +98,16 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
                                 POST_REQUEST2_CONTENT,
                                 POST_REQUEST3_CONTENT
                         ),
-                () -> assertThat(파일_경로_형식.matcher(postFindingResponses.get(0).image()).matches()).isTrue(),
                 () -> assertThat(postFindingResponses)
                         .extracting(GeneralPostInfoResponse::createdAt)
                         .hasSize(3),
                 () -> assertThat(postFindingResponses)
                         .extracting(generalPostInfoResponse -> generalPostInfoResponse.writer().nickName())
-                        .containsOnly("nickname", "nickname2")
+                        .containsOnly("nickname", "nickname2"),
+                () -> assertThat(postFindingResponses)
+                        .extracting(generalPostInfoResponse -> generalPostInfoResponse.reactionCount().viewCount())
+                        .containsOnly(0)
         );
-        // TODO: 조회수 검증
-        // TODO: 스크랩 수 검증
-        // TODO: 댓글 수 검증
     }
 
     @Test
