@@ -14,7 +14,7 @@ class AuthRepositoryImpl(
     override suspend fun login(email: String, password: String): Result<Any> {
         val result = userDataSource.login(LoginDataModel(email, password))
         return if (result.isSuccessful) {
-            authDataSource.setAuthToken(result.headers()["Set-Cookie"] as String)
+            authDataSource.setAuthToken(result.headers()["Authorization"] as String)
             Result.success(result.body() as Unit)
         } else {
             val errorResponse = result.errorBody()?.string()
