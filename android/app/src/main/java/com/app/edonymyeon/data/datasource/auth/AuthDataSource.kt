@@ -1,7 +1,18 @@
 package com.app.edonymyeon.data.datasource.auth
 
-abstract class AuthDataSource {
+import com.app.edonymyeon.data.dto.LoginDataModel
+import retrofit2.Response
 
-    abstract fun getAuthToken(): String?
-    abstract fun setAuthToken(token: String)
+interface AuthDataSource {
+
+    interface Local {
+        fun getAuthToken(): String?
+        fun setAuthToken(token: String)
+    }
+
+    interface Remote {
+        suspend fun login(
+            loginDataModel: LoginDataModel,
+        ): Response<Unit>
+    }
 }
