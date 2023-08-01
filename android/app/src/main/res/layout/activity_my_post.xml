@@ -19,8 +19,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|center_horizontal"
-                android:fontFamily="@font/dohyeon"
+                android:layout_gravity="center"
                 android:text="@string/my_post_page_title"
                 android:textColor="@color/white_ffffff"
                 android:textSize="20sp" />
