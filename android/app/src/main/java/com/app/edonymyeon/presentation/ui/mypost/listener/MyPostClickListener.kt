@@ -1,7 +1,7 @@
 package com.app.edonymyeon.presentation.ui.mypost.listener
 
 interface MyPostClickListener {
-    fun onPurchaseButtonClick()
-    fun onSavingButtonClick()
-    fun onCancelButtonClick()
+    fun onPurchaseButtonClick(id: Long)
+    fun onSavingButtonClick(id: Long)
+    fun onCancelButtonClick(id: Long)
 }

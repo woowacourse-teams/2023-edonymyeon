@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import app.edonymyeon.databinding.ActivityMyPostBinding
+import com.app.edonymyeon.data.datasource.profile.ProfileRemoteDataSource
+import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
 import com.app.edonymyeon.presentation.ui.mypost.adapter.MyPostAdapter
 import com.app.edonymyeon.presentation.ui.mypost.dialog.ConsumptionDialog
 import com.app.edonymyeon.presentation.ui.mypost.listener.MyPostClickListener
@@ -20,16 +22,21 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
         MyPostAdapter(this)
     }
 
-    private val dialog: ConsumptionDialog by lazy {
-        ConsumptionDialog()
+    private lateinit var dialog: ConsumptionDialog
+
+    private val viewModel: MyPostViewModel by lazy {
+        MyPostViewModelFactory(ProfileRepositoryImpl(ProfileRemoteDataSource())).create(
+            MyPostViewModel::class.java,
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
+        viewModel.getMyPosts(20, 0)
         initAppbar()
         setAdapter()
+        observeMyPosts()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -53,16 +60,35 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
         binding.rvMyPost.adapter = adapter
     }
 
-    override fun onPurchaseButtonClick() {
-        dialog.show(supportFragmentManager, "")
+    private fun observeMyPosts() {
+        viewModel.posts.observe(this) {
+            adapter.setMyPosts(it)
+        }
     }
 
-    override fun onSavingButtonClick() {
-        dialog.show(supportFragmentManager, "")
+    override fun onPurchaseButtonClick(id: Long) {
+        onConfirmButtonClicked(
+            ConsumptionType.PURCHASE,
+            id,
+        )
     }
 
-    override fun onCancelButtonClick() {
-        TODO("Not yet implemented")
+    override fun onSavingButtonClick(id: Long) {
+        onConfirmButtonClicked(
+            ConsumptionType.SAVING,
+            id,
+        )
+    }
+
+    override fun onCancelButtonClick(id: Long) {
+    }
+
+    private fun onConfirmButtonClicked(consumptionType: ConsumptionType, id: Long) {
+        dialog = ConsumptionDialog()
+        dialog.show(
+            supportFragmentManager,
+            "",
+        )
     }
 
     companion object {

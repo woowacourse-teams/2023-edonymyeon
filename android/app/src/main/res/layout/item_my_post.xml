@@ -6,6 +6,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="listener"
             type="com.app.edonymyeon.presentation.ui.mypost.listener.MyPostClickListener" />
@@ -17,7 +19,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_item"
@@ -36,8 +38,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:layout_marginEnd="10dp"
+                android:text="@{@string/my_post_consumption_date(post.consumption.year, post.consumption.month)}"
                 android:textColor="@color/gray_434343"
                 android:textSize="8sp"
+                android:visibility="@{post.consumption.type == `NONE` ? View.INVISIBLE: View.VISIBLE}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="SmallSp"
@@ -88,13 +92,13 @@
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/dohyeon"
                 android:lines="1"
+                android:text="@{@string/my_post_createdAt(post.createdAt)}"
                 android:textColor="@color/black_434343"
                 android:textSize="8sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@id/tv_my_post_title"
-                app:layout_constraintTop_toBottomOf="@id/tv_my_post_content"
                 tools:ignore="SmallSp"
-                tools:text="로피 | 1일전" />
+                tools:text="1일전" />
 
             <ImageView
                 android:id="@+id/iv_my_post_thumb_nail"
@@ -102,6 +106,7 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="10dp"
                 android:scaleType="centerCrop"
+                app:imgUrlFitCenter="@{post.image}"
                 app:layout_constraintDimensionRatio="H,50:39"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_my_post_content"
@@ -115,11 +120,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:visibility="visible"
+                android:visibility="@{post.consumption.type == `NONE` ? View.VISIBLE: View.INVISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_my_post_thumb_nail"
-                bind:listener="@{listener}" />
+                bind:listener="@{listener}"
+                bind:postId="@{post.id}" />
 
             <include
                 android:id="@+id/cv_my_post_consumption_cancel"
@@ -127,11 +133,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:visibility="invisible"
+                android:visibility="@{post.consumption.type == `NONE` ? View.INVISIBLE: View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_my_post_thumb_nail"
-                bind:listener="@{listener}" />
+                bind:consumption="@{post.consumption}"
+                bind:listener="@{listener}"
+                bind:postId="@{post.id}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Space

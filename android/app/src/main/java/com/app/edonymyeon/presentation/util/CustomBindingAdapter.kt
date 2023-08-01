@@ -4,8 +4,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import app.edonymyeon.R
+import com.app.edonymyeon.presentation.uimodel.ConsumptionUiModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 
@@ -59,6 +61,17 @@ object CustomBindingAdapter {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) = Unit
         })
+    }
+
+    @BindingAdapter("consumptionTextByType")
+    @JvmStatic
+    fun setConsumptionText(view: TextView, consumption: ConsumptionUiModel) {
+        when (consumption.type) {
+            "PURCHASE" ->
+                view.text =
+                    view.context.getString(R.string.my_post_purchase_text, consumption.purchasePrice)
+            "SAVING" -> view.text = view.context.getString(R.string.my_post_saving_text)
+        }
     }
 
     interface OnPasswordCheckTextChanged {
