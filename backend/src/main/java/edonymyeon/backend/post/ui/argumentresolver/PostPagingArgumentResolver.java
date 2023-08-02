@@ -27,8 +27,8 @@ public class PostPagingArgumentResolver implements HandlerMethodArgumentResolver
             throws Exception {
         final String page = webRequest.getParameter("page");
         final String size = webRequest.getParameter("size");
-        final String sortBy = webRequest.getParameter("sortBy");
-        final String sortDirection = webRequest.getParameter("sortDirection");
+        final String sortBy = webRequest.getParameter("sort-by");
+        final String sortDirection = webRequest.getParameter("sort-direction");
 
         return GeneralFindingCondition.of(
                 convertToNumber(page),
