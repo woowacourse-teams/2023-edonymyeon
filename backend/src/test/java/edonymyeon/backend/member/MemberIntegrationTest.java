@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import edonymyeon.backend.IntegrationTest;
-import edonymyeon.backend.member.application.dto.MyPageResponse;
+import edonymyeon.backend.member.application.dto.response.MyPageResponse;
 import edonymyeon.backend.member.domain.Member;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
