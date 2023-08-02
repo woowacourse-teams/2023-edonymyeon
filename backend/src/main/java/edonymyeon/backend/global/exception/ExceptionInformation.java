@@ -7,8 +7,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ExceptionInformation {
 
-    // ___: 서버 오류
+    // 0번: 서버 내부 예상치 못한 오류
+    // ___: 요청 오류
     REQUEST_PARAMETER_NOT_EXIST(1, "필수 쿼리 파라미터가 비었습니다."),
+    REQUEST_FILE_SIZE_TOO_LARGE(2, "첨부 파일의 용량이 제한을 초과하였습니다."),
 
     // 클래스이름_필드명_틀린내용
     // 1___: 인증 관련

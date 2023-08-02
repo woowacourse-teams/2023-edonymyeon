@@ -3,6 +3,7 @@ package edonymyeon.backend.global.controlleradvice;
 import static edonymyeon.backend.global.exception.ExceptionInformation.AUTHORIZATION_EMPTY;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
+import static edonymyeon.backend.global.exception.ExceptionInformation.REQUEST_FILE_SIZE_TOO_LARGE;
 import static edonymyeon.backend.global.exception.ExceptionInformation.REQUEST_PARAMETER_NOT_EXIST;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @Slf4j
 @RestControllerAdvice
@@ -52,9 +54,20 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<ExceptionResponse> handleMissingServletRequestParameterException(final MissingServletRequestParameterException e) {
+    public ResponseEntity<ExceptionResponse> handleMissingServletRequestParameterException(
+            final MissingServletRequestParameterException e) {
         final ExceptionResponse exceptionResponse = new ExceptionResponse(REQUEST_PARAMETER_NOT_EXIST.getCode(),
                 REQUEST_PARAMETER_NOT_EXIST.getMessage());
+
+        return ResponseEntity.status(BAD_REQUEST)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ExceptionResponse> handleMissingServletRequestParameterException(
+            final MaxUploadSizeExceededException e) {
+        final ExceptionResponse exceptionResponse = new ExceptionResponse(REQUEST_FILE_SIZE_TOO_LARGE.getCode(),
+                REQUEST_FILE_SIZE_TOO_LARGE.getMessage());
 
         return ResponseEntity.status(BAD_REQUEST)
                 .body(exceptionResponse);
