@@ -45,7 +45,7 @@
         </activity>
         <activity
             android:name="com.app.edonymyeon.presentation.ui.post.PostActivity"
-            android:exported="true" />
+            android:exported="true"></activity>
     </application>
 
 </manifest>

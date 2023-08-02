@@ -2,7 +2,7 @@ package edonymyeon.backend.post.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_FORBIDDEN;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
@@ -16,6 +16,7 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
+import edonymyeon.backend.post.application.dto.GeneralPostsResponse;
 import edonymyeon.backend.post.application.dto.PostModificationRequest;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
@@ -24,6 +25,7 @@ import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
 import edonymyeon.backend.post.application.dto.WriterDetailResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.post.repository.PostSpecification;
 import edonymyeon.backend.thumbs.application.ThumbsService;
 import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
 import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
@@ -35,6 +37,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -117,7 +120,7 @@ public class PostService {
 
     private void checkWriter(final Member member, final Post post) {
         if (!post.isSameMember(member)) {
-            throw new EdonymyeonException(POST_MEMBER_FORBIDDEN);
+            throw new EdonymyeonException(POST_MEMBER_NOT_SAME);
         }
     }
 
@@ -163,7 +166,8 @@ public class PostService {
         postImageInfoRepository.saveAll(updatedPostImageInfos.getPostImageInfos());
     }
 
-    public List<GeneralPostInfoResponse> findPostsByPagingCondition(final GeneralFindingCondition generalFindingCondition) {
+    public List<GeneralPostInfoResponse> findPostsByPagingCondition(
+            final GeneralFindingCondition generalFindingCondition) {
         PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
         final Slice<Post> foundPosts = postRepository.findAllBy(pageRequest);
         return foundPosts
@@ -237,5 +241,18 @@ public class PostService {
                 member.getNickname(),
                 domain.getDomain() + member.getProfileImageInfo().getStoreName()
         );
+    }
+
+    public GeneralPostsResponse searchPosts(final String searchWord, final GeneralFindingCondition generalFindingCondition) {
+        final Specification<Post> searchResults = PostSpecification.searchBy(searchWord);
+        final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
+
+        final Slice<Post> foundPosts = postRepository.findAll(searchResults, pageRequest);
+
+        List<GeneralPostInfoResponse> posts = foundPosts.stream()
+                .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()))
+                .toList();
+
+        return new GeneralPostsResponse(posts);
     }
 }

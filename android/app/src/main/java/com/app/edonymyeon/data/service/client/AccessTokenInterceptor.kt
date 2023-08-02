@@ -4,7 +4,7 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 
-class AccessTokenInterceptor() : Interceptor {
+class AccessTokenInterceptor : Interceptor {
     private var token: String? = null
 
     override fun intercept(chain: Interceptor.Chain): Response = with(chain) {

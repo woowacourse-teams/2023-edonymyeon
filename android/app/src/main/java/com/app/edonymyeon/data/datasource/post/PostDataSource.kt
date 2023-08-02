@@ -1,7 +1,7 @@
 package com.app.edonymyeon.data.datasource.post
 
-import com.app.edonymyeon.data.dto.request.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
+import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.Posts
 import retrofit2.Response
 
