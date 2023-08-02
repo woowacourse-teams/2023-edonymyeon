@@ -21,7 +21,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -40,12 +39,10 @@ public class PostReadService {
 
     private final Domain domain;
 
-    public List<GeneralPostInfoResponse> findPostsByPagingCondition(final GeneralFindingCondition generalFindingCondition) {
+    public Slice<GeneralPostInfoResponse> findPostsByPagingCondition(final GeneralFindingCondition generalFindingCondition) {
         PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
-        final Slice<Post> foundPosts = postRepository.findAllBy(pageRequest);
-        return foundPosts
-                .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()))
-                .toList();
+        return postRepository.findAllBy(pageRequest)
+                .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
     }
 
     private static PageRequest convertConditionToPageRequest(final GeneralFindingCondition generalFindingCondition) {
@@ -116,16 +113,11 @@ public class PostReadService {
         );
     }
 
-    public GeneralPostsResponse searchPosts(final String searchWord, final GeneralFindingCondition generalFindingCondition) {
+    public Slice<GeneralPostInfoResponse> searchPosts(final String searchWord, final GeneralFindingCondition generalFindingCondition) {
         final Specification<Post> searchResults = PostSpecification.searchBy(searchWord);
         final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
 
         final Slice<Post> foundPosts = postRepository.findAll(searchResults, pageRequest);
-
-        List<GeneralPostInfoResponse> posts = foundPosts.stream()
-                .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()))
-                .toList();
-
-        return new GeneralPostsResponse(posts);
+        return foundPosts.map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
     }
 }

@@ -183,16 +183,16 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         final var jsonPath = 게시글_전체_조회_응답.body().jsonPath();
 
         assertSoftly(softly -> {
-            softly.assertThat(jsonPath.getList("posts")).hasSize(20);
-            softly.assertThat(jsonPath.getLong("posts[0].id")).isNotNull();
-            softly.assertThat(jsonPath.getString("posts[0].title")).isNotNull();
-            softly.assertThat(jsonPath.getString("posts[0].image")).isNotNull();
-            softly.assertThat(jsonPath.getString("posts[0].content")).isNotNull();
-            softly.assertThat(jsonPath.getString("posts[0].writer.nickName")).isNotNull();
-            softly.assertThat(jsonPath.getString("posts[0].createdAt")).isNotNull();
-            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.viewCount")).isNotNull();
-            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.commentCount")).isNotNull();
-            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.scrapCount")).isNotNull();
+            softly.assertThat(jsonPath.getList("content")).hasSize(20);
+            softly.assertThat(jsonPath.getLong("content[0].id")).isNotNull();
+            softly.assertThat(jsonPath.getString("content[0].title")).isNotNull();
+            softly.assertThat(jsonPath.getString("content[0].image")).isNotNull();
+            softly.assertThat(jsonPath.getString("content[0].content")).isNotNull();
+            softly.assertThat(jsonPath.getString("content[0].writer.nickName")).isNotNull();
+            softly.assertThat(jsonPath.getString("content[0].createdAt")).isNotNull();
+            softly.assertThat(jsonPath.getInt("content[0].reactionCount.viewCount")).isNotNull();
+            softly.assertThat(jsonPath.getInt("content[0].reactionCount.commentCount")).isNotNull();
+            softly.assertThat(jsonPath.getInt("content[0].reactionCount.scrapCount")).isNotNull();
         });
     }
 
@@ -211,16 +211,16 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         final var jsonPath = 게시글_전체_조회_응답.body().jsonPath();
 
         assertSoftly(softly -> {
-            softly.assertThat(jsonPath.getList("posts")).hasSize(3);
-            softly.assertThat(jsonPath.getLong("posts[0].id")).isNotNull();
-            softly.assertThat(jsonPath.getString("posts[0].title")).isNotNull();
-            softly.assertThat(jsonPath.getString("posts[0].image")).isNotNull();
-            softly.assertThat(jsonPath.getString("posts[0].content")).isNotNull();
-            softly.assertThat(jsonPath.getString("posts[0].writer.nickName")).isNotNull();
-            softly.assertThat(jsonPath.getString("posts[0].createdAt")).isNotNull();
-            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.viewCount")).isNotNull();
-            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.commentCount")).isNotNull();
-            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.scrapCount")).isNotNull();
+            softly.assertThat(jsonPath.getList("content")).hasSize(3);
+            softly.assertThat(jsonPath.getLong("content[0].id")).isNotNull();
+            softly.assertThat(jsonPath.getString("content[0].title")).isNotNull();
+            softly.assertThat(jsonPath.getString("content[0].image")).isNotNull();
+            softly.assertThat(jsonPath.getString("content[0].content")).isNotNull();
+            softly.assertThat(jsonPath.getString("content[0].writer.nickName")).isNotNull();
+            softly.assertThat(jsonPath.getString("content[0].createdAt")).isNotNull();
+            softly.assertThat(jsonPath.getInt("content[0].reactionCount.viewCount")).isNotNull();
+            softly.assertThat(jsonPath.getInt("content[0].reactionCount.commentCount")).isNotNull();
+            softly.assertThat(jsonPath.getInt("content[0].reactionCount.scrapCount")).isNotNull();
         });
     }
 
@@ -235,6 +235,8 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .when()
                 .get("/posts")
                 .then()
+                .log()
+                .all()
                 .extract();
 
         final var jsonPath = 게시글_전체_조회_응답.body().jsonPath();
@@ -244,22 +246,22 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                                 .size(3)
                                 .page(1)
                                 .build())
-                .get(0);
+                .get().toList().get(0);
 
         assertSoftly(softly -> {
-            softly.assertThat(jsonPath.getList("posts")).hasSize(3);
-            softly.assertThat(jsonPath.getLong("posts[0].id")).isEqualTo(전체조회_4번째_게시글.id());
-            softly.assertThat(jsonPath.getString("posts[0].title")).isEqualTo(전체조회_4번째_게시글.title());
-            softly.assertThat(jsonPath.getString("posts[0].image")).isEqualTo(전체조회_4번째_게시글.image());
-            softly.assertThat(jsonPath.getString("posts[0].content")).isEqualTo(전체조회_4번째_게시글.content());
-            softly.assertThat(jsonPath.getString("posts[0].writer.nickName"))
+            softly.assertThat(jsonPath.getList("content")).hasSize(3);
+            softly.assertThat(jsonPath.getLong("content[0].id")).isEqualTo(전체조회_4번째_게시글.id());
+            softly.assertThat(jsonPath.getString("content[0].title")).isEqualTo(전체조회_4번째_게시글.title());
+            softly.assertThat(jsonPath.getString("content[0].image")).isEqualTo(전체조회_4번째_게시글.image());
+            softly.assertThat(jsonPath.getString("content[0].content")).isEqualTo(전체조회_4번째_게시글.content());
+            softly.assertThat(jsonPath.getString("content[0].writer.nickName"))
                     .isEqualTo(전체조회_4번째_게시글.writer().nickName());
-            softly.assertThat(jsonPath.getString("posts[0].createdAt")).isNotNull();
-            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.viewCount"))
+            softly.assertThat(jsonPath.getString("content[0].createdAt")).isNotNull();
+            softly.assertThat(jsonPath.getInt("content[0].reactionCount.viewCount"))
                     .isEqualTo(전체조회_4번째_게시글.reactionCount().viewCount());
-            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.commentCount"))
+            softly.assertThat(jsonPath.getInt("content[0].reactionCount.commentCount"))
                     .isEqualTo(전체조회_4번째_게시글.reactionCount().commentCount());
-            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.scrapCount"))
+            softly.assertThat(jsonPath.getInt("content[0].reactionCount.scrapCount"))
                     .isEqualTo(전체조회_4번째_게시글.reactionCount().scrapCount());
         });
     }

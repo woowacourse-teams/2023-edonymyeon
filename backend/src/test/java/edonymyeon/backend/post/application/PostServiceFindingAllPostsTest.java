@@ -92,7 +92,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
     @Test
     void 작성된_모든_게시글을_조회할_수_있다() {
         final var postFindingCondition = GeneralFindingCondition.builder().build();
-        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition);
+        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition).get().toList();
 
         assertAll(
                 () -> assertThat(postFindingResponses).hasSize(3),
@@ -126,7 +126,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
     @Test
     void 게시글은_기본으로_등록일_내림차순으로_정렬된다() {
         final var postFindingCondition = GeneralFindingCondition.builder().build();
-        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition);
+        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition).get().toList();
         final var createdAts = postFindingResponses.stream()
                 .map(GeneralPostInfoResponse::createdAt)
                 .toList();
@@ -145,7 +145,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
         final var postFindingCondition = GeneralFindingCondition.builder()
                 .size(10)
                 .build();
-        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition);
+        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition).get().toList();
 
         assertThat(postFindingResponses)
                 .hasSize(10);
@@ -159,7 +159,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
                 .build();
         final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition);
 
-        assertThat(postFindingResponses.get(0).title())
+        assertThat(postFindingResponses.get().toList().get(0).title())
                 .isEqualTo(POST_REQUEST2_TITLE);
     }
 
@@ -172,7 +172,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
         postRepository.deleteAll();
 
         final var postFindingCondition = GeneralFindingCondition.builder().build();
-        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition);
+        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition).get().toList();
 
         assertThat(postFindingResponses)
                 .isNotNull()
