@@ -10,6 +10,7 @@ import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
@@ -50,8 +51,8 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
     @Autowired
     private PostService postService;
 
-    private ActiveMemberId memberId;
-    private ActiveMemberId memberId2;
+    private MemberId memberId;
+    private MemberId memberId2;
 
     @BeforeEach
     void setUp() throws IOException {
@@ -177,7 +178,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
                 .hasMessage(ExceptionInformation.POST_INVALID_PAGINATION_CONDITION.getMessage());
     }
 
-    private PostResponse 게시글1_만들기(final ActiveMemberId memberId) throws IOException {
+    private PostResponse 게시글1_만들기(final MemberId memberId) throws IOException {
         final MockMultipartFile file1 = new MockMultipartFile("imageFiles", "test_image_1.jpg", "image/jpg",
                 getClass().getResourceAsStream(IMAGE1_RELATIVE_PATH));
 
@@ -194,7 +195,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
         return postService.createPost(memberId, POST_REQUEST1);
     }
 
-    private PostResponse 게시글2_만들기(final ActiveMemberId memberId) throws IOException {
+    private PostResponse 게시글2_만들기(final MemberId memberId) throws IOException {
         final MockMultipartFile file1 = new MockMultipartFile("imageFiles", "test_image_1.jpg", "image/jpg",
                 getClass().getResourceAsStream(IMAGE1_RELATIVE_PATH));
 
@@ -211,7 +212,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
         return postService.createPost(memberId, POST_REQUEST2);
     }
 
-    private PostResponse 게시글3_만들기(final ActiveMemberId memberId) throws IOException {
+    private PostResponse 게시글3_만들기(final MemberId memberId) throws IOException {
         final MockMultipartFile file1 = new MockMultipartFile("imageFiles", "test_image_1.jpg", "image/jpg",
                 getClass().getResourceAsStream(IMAGE1_RELATIVE_PATH));
 

@@ -7,6 +7,8 @@ import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.image.profileimage.repository.ProfileImageInfoRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.member.application.dto.AnonymousMemberId;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
@@ -37,8 +39,8 @@ public class PostFindingSpecificPostTest {
     private final ProfileImageInfoRepository profileImageInfoRepository;
     private final MemberTestSupport memberTestSupport;
     private final PostService postService;
-    private ActiveMemberId memberId;
-    private ActiveMemberId member2Id;
+    private MemberId memberId;
+    private MemberId member2Id;
     private Long postId;
 
     @BeforeEach
@@ -71,7 +73,7 @@ public class PostFindingSpecificPostTest {
 
     @Test
     void 로그인_되어있지_않으면_조회는_가능하되_추천여부와_스크랩여부와_작성자여부는_모두_false이다() {
-        final var postInfoResponse = postService.findSpecificPost(postId, new ActiveMemberId(-1L));
+        final var postInfoResponse = postService.findSpecificPost(postId, new AnonymousMemberId());
 
         assertThat(postInfoResponse.isUp()).isFalse();
         assertThat(postInfoResponse.isDown()).isFalse();

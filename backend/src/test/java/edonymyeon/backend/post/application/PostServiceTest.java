@@ -11,6 +11,7 @@ import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
@@ -67,7 +68,7 @@ class PostServiceTest implements ImageFileCleaner {
 
     private final ImageFileUploader imageFileUploader;
 
-    private ActiveMemberId memberId;
+    private MemberId memberId;
 
     @BeforeEach
     public void setUp() {

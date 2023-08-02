@@ -60,13 +60,13 @@ class ThumbsUpServiceTest {
                 null
         );
 
-        ActiveMemberId memberId = new ActiveMemberId(postWriter.getId());
+        MemberId memberId = new ActiveMemberId(postWriter.getId());
         postResponse = postService.createPost(memberId, postRequest);
     }
 
     @Test
     void 추천하려는_게시물이_없으면_예외가_발생한다() {
-        ActiveMemberId loginMemberId = new ActiveMemberId(postWriter.getId());
+        MemberId loginMemberId = new ActiveMemberId(postWriter.getId());
 
         assertThatThrownBy(
                 () -> thumbsService.thumbsUp(loginMemberId, 1000L))
@@ -76,7 +76,7 @@ class ThumbsUpServiceTest {
 
     @Test
     void 추천한_게시물이_로그인한_사람이_작성한_것이라면_예외가_발생한다() {
-        ActiveMemberId loginMemberId = new ActiveMemberId(postWriter.getId());
+        MemberId loginMemberId = new ActiveMemberId(postWriter.getId());
 
         assertThatThrownBy(
                 () -> thumbsService.thumbsUp(loginMemberId, postResponse.id()))
@@ -134,7 +134,7 @@ class ThumbsUpServiceTest {
         thumbsUp(otherMember, postResponse);
 
         // then
-        ActiveMemberId otherMemberId = new ActiveMemberId(otherMember.getId());
+        MemberId otherMemberId = new ActiveMemberId(otherMember.getId());
 
         assertThatThrownBy(
                 () -> thumbsService.thumbsUp(otherMemberId, postResponse.id()))
@@ -148,7 +148,7 @@ class ThumbsUpServiceTest {
     }
 
     private void thumbsDown(final Member member, final PostResponse post) {
-        ActiveMemberId memberId = new ActiveMemberId(member.getId());
+        MemberId memberId = new ActiveMemberId(member.getId());
         thumbsService.thumbsDown(memberId, post.id());
     }
 
