@@ -5,20 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
-import com.app.edonymyeon.presentation.uimodel.LoginUiModel
 import com.domain.edonymyeon.repository.AuthRepository
 import kotlinx.coroutines.launch
 
 class LoginViewModel(private val repository: AuthRepository) :
     ViewModel() {
-
-    private val _loginInfo = MutableLiveData<LoginUiModel>()
-    val loginInfo: LiveData<LoginUiModel>
-        get() = _loginInfo
-
-    private val _isLoginEnabled = MutableLiveData<Boolean>()
-    val isLoginEnabled: LiveData<Boolean>
-        get() = _isLoginEnabled
 
     private val _isSuccess = MutableLiveData<Boolean>()
     val isSuccess: LiveData<Boolean>
@@ -28,19 +19,19 @@ class LoginViewModel(private val repository: AuthRepository) :
     val errorMessage: LiveData<String>
         get() = _errorMessage
 
-    fun onLoginClick() {
-        setLoginEnable()
-        if (_isLoginEnabled.value == true) {
-            login()
-            _loginInfo.value = LoginUiModel("", "")
+    fun onLoginClick(email: String?, password: String?) {
+        if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
+            _errorMessage.value = LOGIN_ENABLE_ERROR_MESSAGE
+        } else {
+            login(email, password)
         }
     }
 
-    private fun login() {
+    private fun login(email: String, password: String) {
         viewModelScope.launch {
             repository.login(
-                _loginInfo.value?.email ?: "",
-                _loginInfo.value?.password ?: "",
+                email,
+                password,
             ).onSuccess {
                 _isSuccess.value = true
             }.onFailure {
@@ -50,18 +41,7 @@ class LoginViewModel(private val repository: AuthRepository) :
         }
     }
 
-    fun setEmail(email: CharSequence) {
-        val loginUiModel = _loginInfo.value ?: LoginUiModel("", "")
-        _loginInfo.value = loginUiModel.copy(email = email.toString())
-    }
-
-    fun setPassword(password: CharSequence) {
-        val loginUiModel = _loginInfo.value ?: LoginUiModel("", "")
-        _loginInfo.value = loginUiModel.copy(password = password.toString())
-    }
-
-    private fun setLoginEnable() {
-        _isLoginEnabled.value =
-            (_loginInfo.value?.email.isNullOrEmpty() || _loginInfo.value?.password.isNullOrEmpty()).not()
+    companion object {
+        private const val LOGIN_ENABLE_ERROR_MESSAGE = "이메일과 패스워드는 필수 입력항목입니다."
     }
 }

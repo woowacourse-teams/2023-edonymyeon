@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityLoginBinding
 import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.data.datasource.auth.AuthRemoteDataSource
@@ -30,17 +29,21 @@ class LoginActivity : AppCompatActivity() {
         )
     }
 
-    private val masterKey = MasterKey.Builder(this)
-        .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-        .build()
+    private val masterKey by lazy {
+        MasterKey.Builder(this)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
+    }
 
-    private val sharedPreferences = EncryptedSharedPreferences(
-        this,
-        AuthLocalDataSource.AUTH_INFO,
-        masterKey,
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
-    )
+    private val sharedPreferences by lazy {
+        EncryptedSharedPreferences(
+            this,
+            AuthLocalDataSource.AUTH_INFO,
+            masterKey,
+            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,12 +59,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setObserver() {
-        viewModel.isLoginEnabled.observe(this) { isEnable ->
-            if (!isEnable) {
-                binding.svLogin.makeSnackbar(getString(R.string.login_check_logininfo_input))
-            }
-        }
         viewModel.isSuccess.observe(this) {
+            binding.etEmail.setText("")
+            binding.etPassword.setText("")
             if (it) {
                 navigateToMain()
                 finish()
