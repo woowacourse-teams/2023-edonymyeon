@@ -14,7 +14,6 @@ import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
-import edonymyeon.backend.thumbs.application.ThumbsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +37,7 @@ public class PostService {
 
     private final MemberRepository memberRepository;
 
-    private final ThumbsService thumbsService;
+    private final PostThumbsService postThumbsService;
 
     private final Domain domain;
 
@@ -90,7 +89,7 @@ public class PostService {
         checkWriter(member, post);
 
         final List<PostImageInfo> postImageInfos = post.getPostImageInfos();
-        thumbsService.deleteAllThumbsInPost(postId);
+        postThumbsService.deleteAllThumbsInPost(postId);
         postImageInfoRepository.deleteAllByPostId(postId);
         postRepository.deleteById(postId);
         postImageInfos.forEach(imageFileUploader::removeFile);
