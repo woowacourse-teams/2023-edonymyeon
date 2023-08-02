@@ -33,9 +33,8 @@ class PostDetailActivity : AppCompatActivity() {
         ActivityPostDetailBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: PostDetailViewModel by viewModels {
+    private val viewModel: PostDetailViewModel by viewModels<PostDetailViewModel> {
         PostDetailViewModelFactory(
-            id,
             PostRepositoryImpl(PostRemoteDataSource()),
             RecommendRepositoryImpl(RecommendRemoteDataSource()),
         )
@@ -60,16 +59,9 @@ class PostDetailActivity : AppCompatActivity() {
 
         initBinding()
         initAppbar()
+        initPost()
+        initObserve()
         setRecommendationCheckedListener()
-
-        viewModel.post.observe(this) {
-            setImageSlider(it)
-            setImageIndicators()
-        }
-
-        viewModel.reactionCount.observe(this) {
-            binding.postReactionCtv.reactionCount = it
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -89,6 +81,7 @@ class PostDetailActivity : AppCompatActivity() {
                         PostEditorActivity.UPDATE_CODE,
                     ),
                 )
+                finish()
                 true
             }
 
@@ -139,6 +132,27 @@ class PostDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun initPost() {
+        viewModel.getPostDetail(id)
+    }
+
+    private fun initObserve() {
+        viewModel.post.observe(this) {
+            setImageSlider(it)
+            setImageIndicators()
+        }
+
+        viewModel.reactionCount.observe(this) {
+            binding.postReactionCtv.reactionCount = it
+        }
+
+        // 추천/비추천 체크박스 클릭 시 활성화/비활성화
+        viewModel.isRecommendationRequestDone.observe(this) {
+            binding.cbUp.isEnabled = it
+            binding.cbDown.isEnabled = it
+        }
+    }
+
     private fun setRecommendationCheckedListener() {
         binding.cbUp.setOnCheckedChangeListener { _, isChecked ->
             if (isMyPost) {
@@ -146,7 +160,7 @@ class PostDetailActivity : AppCompatActivity() {
                 binding.cbUp.isChecked = false
                 return@setOnCheckedChangeListener
             }
-            viewModel.updateUpRecommendationUi(isChecked)
+            viewModel.updateRecommendationUi(id, isChecked, true)
         }
         binding.cbDown.setOnCheckedChangeListener { _, isChecked ->
             if (isMyPost) {
@@ -154,7 +168,7 @@ class PostDetailActivity : AppCompatActivity() {
                 binding.cbDown.isChecked = false
                 return@setOnCheckedChangeListener
             }
-            viewModel.updateDownRecommendationUi(isChecked)
+            viewModel.updateRecommendationUi(id, isChecked, false)
         }
     }
 

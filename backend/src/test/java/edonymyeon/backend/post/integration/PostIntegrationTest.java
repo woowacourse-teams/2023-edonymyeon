@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.integration.steps.MemberConsumptionSteps;
@@ -19,11 +19,13 @@ import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
+import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.io.File;
+import java.util.Scanner;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class PostIntegrationTest extends IntegrationTest implements ImageFileCleaner {
+public class PostIntegrationTest extends IntegrationTest  implements ImageFileCleaner {
 
     private static File 이미지1 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
     private static File 이미지2 = new File("./src/test/resources/static/img/file/test_image_2.jpg");
@@ -82,6 +84,23 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @Test
+    void 게시글을_작성할_때_내용은_0자_이상_가능하다() {
+        final Member 작성자 = 사용자를_하나_만든다();
+        final var response = RestAssured.given()
+                .multiPart("title", "this is title")
+                .multiPart("content", "")
+                .multiPart("price", 1000)
+                .multiPart("images", 이미지1, MediaType.IMAGE_JPEG_VALUE)
+                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
+                .when()
+                .post("/posts")
+                .then()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     @Test
@@ -316,7 +335,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .extract();
 
         final SpecificPostInfoResponse 게시글 = postService.findSpecificPost(게시글_id,
-                new MemberIdDto(0L));
+                new ActiveMemberId(작성자.getId()));
 
         assertThat(게시글_상세_조회_응답.statusCode()).isEqualTo(200);
         assertAll(
@@ -358,16 +377,10 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
         final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
 
-        final ExtractableResponse<Response> 게시글_상세_조회_응답 = RestAssured
-                .given()
-                .when()
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
-                .get("/posts/" + 게시글_id)
-                .then()
-                .extract();
+        final ExtractableResponse<Response> 게시글_상세_조회_응답 = 게시글_하나를_상세_조회한다(작성자, 게시글_id);
 
         final SpecificPostInfoResponse 게시글 = postService.findSpecificPost(게시글_id,
-                new MemberIdDto(작성자.getId()));
+                new ActiveMemberId(작성자.getId()));
 
         assertThat(게시글_상세_조회_응답.statusCode()).isEqualTo(200);
         assertSoftly(softAssertions -> {
@@ -412,16 +425,10 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
         final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
 
-        final ExtractableResponse<Response> 게시글_상세_조회_결과 = RestAssured
-                .given()
-                .when()
-                .auth().preemptive().basic(작성자가_아닌_사람.getEmail(), 작성자가_아닌_사람.getPassword())
-                .get("/posts/" + 게시글_id)
-                .then()
-                .extract();
+        final ExtractableResponse<Response> 게시글_상세_조회_결과 = 게시글_하나를_상세_조회한다(작성자가_아닌_사람, 게시글_id);
 
         final SpecificPostInfoResponse 게시글 = postService.findSpecificPost(게시글_id,
-                new MemberIdDto(작성자가_아닌_사람.getId()));
+                new ActiveMemberId(작성자가_아닌_사람.getId()));
 
         assertThat(게시글_상세_조회_결과.statusCode()).isEqualTo(200);
         SoftAssertions.assertSoftly(
@@ -449,7 +456,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
 
                     softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getInt("reactionCount.viewCount"))
                             .isEqualTo(
-                                    게시글.reactionCount().viewCount());
+                                    게시글.reactionCount().viewCount() - 1);
                     softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getInt("reactionCount.commentCount"))
                             .isEqualTo(
                                     게시글.reactionCount().commentCount());
@@ -476,13 +483,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         final Member 작성자 = 사용자를_하나_만든다();
         final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
         final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
-        final ExtractableResponse<Response> 게시글_상세_조회_응답 = RestAssured
-                .given()
-                .when()
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
-                .get("/posts/" + 게시글_id)
-                .then()
-                .extract();
+        final ExtractableResponse<Response> 게시글_상세_조회_응답 = 게시글_하나를_상세_조회한다(작성자, 게시글_id);
 
         final String 유지할_이미지의_url = 게시글_상세_조회_응답.body().jsonPath().getString("images[0]");
         final ExtractableResponse<Response> 게시글_수정_응답 = RestAssured.given()
@@ -507,13 +508,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
 
         final Member 작성자가_아닌_사람 = 사용자를_하나_만든다();
-        final ExtractableResponse<Response> 게시글_상세_조회_응답 = RestAssured
-                .given()
-                .when()
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
-                .get("/posts/" + 게시글_id)
-                .then()
-                .extract();
+        final ExtractableResponse<Response> 게시글_상세_조회_응답 = 게시글_하나를_상세_조회한다(작성자, 게시글_id);
 
         final String 유지할_이미지의_url = 게시글_상세_조회_응답.body().jsonPath().getString("images[0]");
         System.out.println("유지할_이미지의_url = " + 유지할_이미지의_url);
@@ -631,13 +626,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         final Member 작성자 = 사용자를_하나_만든다();
         final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
         final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
-        final ExtractableResponse<Response> 게시글_상세_조회_응답 = RestAssured
-                .given()
-                .when()
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
-                .get("/posts/" + 게시글_id)
-                .then()
-                .extract();
+        final ExtractableResponse<Response> 게시글_상세_조회_응답 = 게시글_하나를_상세_조회한다(작성자, 게시글_id);
 
         final String 유지할_이미지의_url = 게시글_상세_조회_응답.body().jsonPath().getString("images[0]");
 
@@ -669,5 +658,15 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                             .isEqualTo(POST_IMAGE_COUNT_INVALID.getMessage());
                 }
         );
+    }
+
+    private ExtractableResponse<Response> 게시글_하나를_상세_조회한다(final Member 열람인, final long 게시글_id) {
+        return RestAssured
+                .given()
+                .when()
+                .auth().preemptive().basic(열람인.getEmail(), 열람인.getPassword())
+                .get("/posts/" + 게시글_id)
+                .then()
+                .extract();
     }
 }

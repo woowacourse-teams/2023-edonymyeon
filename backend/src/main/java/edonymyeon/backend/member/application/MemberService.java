@@ -3,7 +3,7 @@ package edonymyeon.backend.member.application;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.application.dto.MyPageResponse;
 import edonymyeon.backend.member.application.dto.YearMonthDto;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
@@ -29,27 +29,30 @@ public class MemberService {
         return new MyPageResponse(member.getId(), member.getNickname());
     }
 
+    @Transactional
     public void confirmPurchase(
-            final MemberIdDto memberIdDto,
+            final MemberId memberId,
             final Long postId,
             final PurchaseConfirmRequest purchaseConfirmRequest
     ) {
         final YearMonthDto yearMonthDto = new YearMonthDto(purchaseConfirmRequest.year(),
                 purchaseConfirmRequest.month());
-        consumptionConfirmService.confirmPurchase(memberIdDto, postId, purchaseConfirmRequest.purchasePrice(),
+        consumptionConfirmService.confirmPurchase(memberId, postId, purchaseConfirmRequest.purchasePrice(),
                 yearMonthDto);
     }
 
+    @Transactional
     public void confirmSaving(
-            final MemberIdDto memberIdDto,
+            final MemberId memberId,
             final Long postId,
             final SavingConfirmRequest savingConfirmRequest) {
         final YearMonthDto yearMonthDto = new YearMonthDto(savingConfirmRequest.year(),
                 savingConfirmRequest.month());
-        consumptionConfirmService.confirmSaving(memberIdDto, postId, yearMonthDto);
+        consumptionConfirmService.confirmSaving(memberId, postId, yearMonthDto);
     }
 
-    public void removeConfirm(final MemberIdDto memberIdDto, final Long postId) {
-        consumptionConfirmService.removeConfirm(memberIdDto, postId);
+    @Transactional
+    public void removeConfirm(final MemberId memberId, final Long postId) {
+        consumptionConfirmService.removeConfirm(memberId, postId);
     }
 }

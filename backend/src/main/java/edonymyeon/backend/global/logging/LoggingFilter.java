@@ -27,5 +27,6 @@ public class LoggingFilter implements Filter {
                 (HttpServletResponse) response);
 
         chain.doFilter(request, httpServletResponse);
+        httpServletResponse.copyBodyToResponse();
     }
 }
