@@ -10,10 +10,6 @@ class MyPostAdapter(
     private val clickListener: MyPostClickListener,
 ) : ListAdapter<MyPostUiModel, MyPostViewHolder>(MyPostDiffUtilCallback) {
 
-    init {
-        setHasStableIds(true)
-    }
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyPostViewHolder {
         return MyPostViewHolder(parent, clickListener)
     }

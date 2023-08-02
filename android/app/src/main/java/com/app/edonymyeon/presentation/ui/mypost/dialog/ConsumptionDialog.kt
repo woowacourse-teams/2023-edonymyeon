@@ -15,8 +15,7 @@ class ConsumptionDialog(
     private val type: ConsumptionType,
     private val id: Long,
     private val viewModel: MyPostViewModel,
-) :
-    DialogFragment() {
+) : DialogFragment() {
 
     private val binding by lazy {
         DialogInputConsumptionBinding.inflate(layoutInflater)
@@ -52,6 +51,7 @@ class ConsumptionDialog(
                     binding.npMonth.value,
                 )
             }
+            dismiss()
         }
     }
 }
