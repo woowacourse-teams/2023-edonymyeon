@@ -27,26 +27,28 @@
         <activity
             android:name="com.app.edonymyeon.presentation.ui.login.LoginActivity"
             android:exported="true" >
+        </activity>
+        <activity
+            android:name="com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity"
+            android:exported="true" />
+
+        <activity
+            android:name="com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity"
+            android:exported="true" />
+
+        <activity
+            android:name="com.app.edonymyeon.presentation.ui.main.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity"
-            android:exported="true" />
-        <activity
-            android:name="com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity"
-            android:exported="true" />
-        <activity
-            android:name="com.app.edonymyeon.presentation.ui.main.MainActivity"
-            android:exported="true">
 
-        </activity>
         <activity
             android:name="com.app.edonymyeon.presentation.ui.post.PostActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
     </application>
 
 </manifest>
