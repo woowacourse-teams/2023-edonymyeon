@@ -60,8 +60,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setObserver() {
         viewModel.isSuccess.observe(this) {
-            binding.etEmail.setText("")
-            binding.etPassword.setText("")
+            setEmailAndPasswordEmpty()
             if (it) {
                 navigateToMain()
                 finish()
@@ -72,6 +71,11 @@ class LoginActivity : AppCompatActivity() {
                 binding.svLogin.makeSnackbar(it)
             }
         }
+    }
+
+    private fun setEmailAndPasswordEmpty() {
+        binding.etEmail.setText("")
+        binding.etPassword.setText("")
     }
 
     private fun setJoinClickListener() {
