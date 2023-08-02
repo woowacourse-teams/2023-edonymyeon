@@ -68,7 +68,7 @@ public class Post {
     private LocalDateTime createdAt;
 
     @ColumnDefault("0")
-    private Integer viewCount = 0;
+    private int viewCount;
 
     public Post(
             final String title,
