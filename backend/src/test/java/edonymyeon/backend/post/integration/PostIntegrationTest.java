@@ -1,32 +1,29 @@
 package edonymyeon.backend.post.integration;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.AUTHORIZATION_EMPTY;
-import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_DOMAIN_INVALID;
-import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_STORE_NAME_INVALID;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_IMAGE_COUNT_INVALID;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_FORBIDDEN;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
-import edonymyeon.backend.post.application.PostService;
+import edonymyeon.backend.post.application.PostReadService;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.io.File;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import java.io.File;
+
+import static edonymyeon.backend.global.exception.ExceptionInformation.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class PostIntegrationTest extends IntegrationTest implements ImageFileCleaner {
@@ -228,7 +225,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
     }
 
     @Test
-    void 한_번에_3개씩_조회하는_조건으로_2페이지_전체게시글_조회(@Autowired PostService postService) {
+    void 한_번에_3개씩_조회하는_조건으로_2페이지_전체게시글_조회(@Autowired PostReadService postReadService) {
         한_사용자가_게시글을_서른개_작성한다();
 
         final var 게시글_전체_조회_응답 = RestAssured
@@ -242,7 +239,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
 
         final var jsonPath = 게시글_전체_조회_응답.body().jsonPath();
 
-        final var 전체조회_4번째_게시글 = postService.findPostsByPagingCondition(
+        final var 전체조회_4번째_게시글 = postReadService.findPostsByPagingCondition(
                         GeneralFindingCondition.builder()
                                 .size(3)
                                 .page(1)
@@ -275,7 +272,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
     }
 
     @Test
-    void 로그인하지_않은_사용자가_게시글_하나를_상세조회하는_경우(@Autowired PostService postService) {
+    void 로그인하지_않은_사용자가_게시글_하나를_상세조회하는_경우(@Autowired PostReadService postReadService) {
         final Member 작성자 = 사용자를_하나_만든다();
         final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
         final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
@@ -287,7 +284,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .then()
                 .extract();
 
-        final SpecificPostInfoResponse 게시글 = postService.findSpecificPost(게시글_id,
+        final SpecificPostInfoResponse 게시글 = postReadService.findSpecificPost(게시글_id,
                 new MemberIdDto(0L));
 
         assertThat(게시글_상세_조회_응답.statusCode()).isEqualTo(200);
@@ -325,7 +322,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
     }
 
     @Test
-    void 로그인한_사용자가_자신의_게시글_하나를_상세조회하는_경우(@Autowired PostService postService) {
+    void 로그인한_사용자가_자신의_게시글_하나를_상세조회하는_경우(@Autowired PostReadService postReadService) {
         final Member 작성자 = 사용자를_하나_만든다();
         final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
         final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
@@ -338,7 +335,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .then()
                 .extract();
 
-        final SpecificPostInfoResponse 게시글 = postService.findSpecificPost(게시글_id,
+        final SpecificPostInfoResponse 게시글 = postReadService.findSpecificPost(게시글_id,
                 new MemberIdDto(작성자.getId()));
 
         assertThat(게시글_상세_조회_응답.statusCode()).isEqualTo(200);
@@ -377,7 +374,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
     }
 
     @Test
-    void 로그인한_사용자가_타인의_게시글_하나를_상세조회하는_경우(@Autowired PostService postService) {
+    void 로그인한_사용자가_타인의_게시글_하나를_상세조회하는_경우(@Autowired PostReadService postReadService) {
         final Member 작성자 = 사용자를_하나_만든다();
         final Member 작성자가_아닌_사람 = 사용자를_하나_만든다();
 
@@ -392,7 +389,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .then()
                 .extract();
 
-        final SpecificPostInfoResponse 게시글 = postService.findSpecificPost(게시글_id,
+        final SpecificPostInfoResponse 게시글 = postReadService.findSpecificPost(게시글_id,
                 new MemberIdDto(작성자가_아닌_사람.getId()));
 
         assertThat(게시글_상세_조회_결과.statusCode()).isEqualTo(200);

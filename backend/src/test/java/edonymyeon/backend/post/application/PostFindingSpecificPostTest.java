@@ -1,8 +1,5 @@
 package edonymyeon.backend.post.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.image.profileimage.repository.ProfileImageInfoRepository;
@@ -23,6 +20,9 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
 @DisplayNameGeneration(ReplaceUnderscores.class)
@@ -36,7 +36,7 @@ public class PostFindingSpecificPostTest {
     private final MemberRepository memberRepository;
     private final ProfileImageInfoRepository profileImageInfoRepository;
     private final MemberTestSupport memberTestSupport;
-    private final PostService postService;
+    private final PostReadService postService;
     private MemberIdDto memberId;
     private MemberIdDto member2Id;
     private Long postId;

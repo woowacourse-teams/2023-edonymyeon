@@ -27,7 +27,7 @@ public class PostServiceSearchPostsTest {
 
     private static final GeneralFindingCondition emptyFindingCondition = GeneralFindingCondition.of(null, null, null, null);
 
-    private final PostService postService;
+    private final PostReadService postReadService;
     private final MemberTestSupport memberTestSupport;
     private final PostTestSupport postTestSupport;
 
@@ -58,7 +58,7 @@ public class PostServiceSearchPostsTest {
     @Test
     void 제목으로_검색이_제대로_되는지_확인한다() {
         // when
-        var 검색결과 = postService.searchPosts("사과", emptyFindingCondition).posts();
+        var 검색결과 = postReadService.searchPosts("사과", emptyFindingCondition).posts();
 
         // then
         assertSoftly(softly -> {
@@ -71,7 +71,7 @@ public class PostServiceSearchPostsTest {
     @Test
     void 내용으로_검색이_제대로_되는지_확인한다() {
         // when
-        var 검색결과 = postService.searchPosts("자취생", emptyFindingCondition).posts();
+        var 검색결과 = postReadService.searchPosts("자취생", emptyFindingCondition).posts();
 
         // then
         assertThat(검색결과.size()).isEqualTo(2);
@@ -80,7 +80,7 @@ public class PostServiceSearchPostsTest {
     @Test
     void 내용으로_검색시_최신순으로_조회가_된다() {
         // when
-        var 검색결과 = postService.searchPosts("자취생", emptyFindingCondition).posts();
+        var 검색결과 = postReadService.searchPosts("자취생", emptyFindingCondition).posts();
 
         // then
         assertSoftly(softly -> {
@@ -94,7 +94,7 @@ public class PostServiceSearchPostsTest {
     @Test
     void 검색어_결과가_없을때_결과값은_빈리스트_이다() {
         // when
-        var 검색결과 = postService.searchPosts("이리내", emptyFindingCondition).posts();
+        var 검색결과 = postReadService.searchPosts("이리내", emptyFindingCondition).posts();
 
         // then
         assertThat(검색결과.size()).isEqualTo(0);
@@ -103,7 +103,7 @@ public class PostServiceSearchPostsTest {
     @Test
     void 키워드로_검색했을때_내용이_제대로_검색되는지_확인한다() {
         // when
-        var 검색결과 = postService.searchPosts(" 사회   초년 자취   거지 ", emptyFindingCondition).posts();
+        var 검색결과 = postReadService.searchPosts(" 사회   초년 자취   거지 ", emptyFindingCondition).posts();
 
         // then
         assertSoftly(softly -> {
@@ -116,7 +116,7 @@ public class PostServiceSearchPostsTest {
     @Test
     void 키워드로_앞뒤_순서가_바뀌었을때_내용이_제대로_검색되는지_확인한다() {
         // when
-        var 검색결과 = postService.searchPosts(" 거지 자취 사회  초년", emptyFindingCondition).posts();
+        var 검색결과 = postReadService.searchPosts(" 거지 자취 사회  초년", emptyFindingCondition).posts();
 
         // then
         assertSoftly(softly -> {
@@ -129,7 +129,7 @@ public class PostServiceSearchPostsTest {
     @Test
     void 키워드로_동일한_키워드가_두개_포함되어도_내용이_제대로_검색되는지_확인한다() {
         // when
-        var 검색결과 = postService.searchPosts(" 거지 자취 사회 거지 초년", emptyFindingCondition).posts();
+        var 검색결과 = postReadService.searchPosts(" 거지 자취 사회 거지 초년", emptyFindingCondition).posts();
 
         // then
         assertSoftly(softly -> {

@@ -1,9 +1,5 @@
 package edonymyeon.backend.post.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.global.exception.EdonymyeonException;
@@ -16,9 +12,6 @@ import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.repository.PostRepository;
-import java.io.IOException;
-import java.util.List;
-import java.util.regex.Pattern;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +21,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SuppressWarnings("NonAsciiCharacters")
 @Transactional
@@ -47,6 +48,9 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
     public static final long POST_REQUEST3_PRICE = 25_000L;
     public static final String IMAGE1_RELATIVE_PATH = "/static/img/file/test_image_1.jpg";
     public static final String IMAGE2_RELATIVE_PATH = "/static/img/file/test_image_2.jpg";
+
+    @Autowired
+    private PostReadService postReadService;
 
     @Autowired
     private PostService postService;
@@ -88,7 +92,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
     @Test
     void 작성된_모든_게시글을_조회할_수_있다() {
         final var postFindingCondition = GeneralFindingCondition.builder().build();
-        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
+        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition);
 
         assertAll(
                 () -> assertThat(postFindingResponses).hasSize(3),
@@ -122,7 +126,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
     @Test
     void 게시글은_기본으로_등록일_내림차순으로_정렬된다() {
         final var postFindingCondition = GeneralFindingCondition.builder().build();
-        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
+        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition);
         final var createdAts = postFindingResponses.stream()
                 .map(GeneralPostInfoResponse::createdAt)
                 .toList();
@@ -141,7 +145,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
         final var postFindingCondition = GeneralFindingCondition.builder()
                 .size(10)
                 .build();
-        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
+        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition);
 
         assertThat(postFindingResponses)
                 .hasSize(10);
@@ -153,7 +157,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
                 .size(1)
                 .page(1)
                 .build();
-        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
+        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition);
 
         assertThat(postFindingResponses.get(0).title())
                 .isEqualTo(POST_REQUEST2_TITLE);
@@ -168,7 +172,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
         postRepository.deleteAll();
 
         final var postFindingCondition = GeneralFindingCondition.builder().build();
-        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
+        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition);
 
         assertThat(postFindingResponses)
                 .isNotNull()
@@ -182,7 +186,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
                 .page(1)
                 .build();
 
-        assertThatThrownBy(() -> postService.findPostsByPagingCondition(postFindingCondition))
+        assertThatThrownBy(() -> postReadService.findPostsByPagingCondition(postFindingCondition))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(ExceptionInformation.POST_INVALID_PAGINATION_CONDITION.getMessage());
     }
