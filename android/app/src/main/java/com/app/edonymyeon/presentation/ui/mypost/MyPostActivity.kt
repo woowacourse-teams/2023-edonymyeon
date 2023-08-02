@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import app.edonymyeon.databinding.ActivityMyPostBinding
 import com.app.edonymyeon.data.datasource.profile.ProfileRemoteDataSource
@@ -24,10 +25,8 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
 
     private lateinit var dialog: ConsumptionDialog
 
-    private val viewModel: MyPostViewModel by lazy {
-        MyPostViewModelFactory(ProfileRepositoryImpl(ProfileRemoteDataSource())).create(
-            MyPostViewModel::class.java,
-        )
+    private val viewModel: MyPostViewModel by viewModels {
+        MyPostViewModelFactory(ProfileRepositoryImpl(ProfileRemoteDataSource()))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
