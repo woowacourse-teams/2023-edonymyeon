@@ -14,15 +14,10 @@ import io.restassured.response.Response;
 import java.util.List;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class MemberIntegrationTest extends IntegrationTest {
-
-    @Autowired
-    private TestRestTemplate restTemplate;
 
     @Test
     void 회원_정보_조회시_OK를_응답한다() {
@@ -56,7 +51,7 @@ public class MemberIntegrationTest extends IntegrationTest {
         final Post post2 = postTestSupport.builder()
                 .member(member)
                 .build();
-        final Post post3 = postTestSupport.builder()
+        postTestSupport.builder()
                 .member(member)
                 .build();
 

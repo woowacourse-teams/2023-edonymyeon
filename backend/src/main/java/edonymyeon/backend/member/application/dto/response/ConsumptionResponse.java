@@ -9,13 +9,6 @@ public record ConsumptionResponse(
         Integer year,
         Integer month) {
 
-    public ConsumptionResponse(final String type, final Long purchasePrice, final Integer year, final Integer month) {
-        this.type = type;
-        this.purchasePrice = purchasePrice;
-        this.year = year;
-        this.month = month;
-    }
-
     public static ConsumptionResponse of(Consumption consumption) {
         return new ConsumptionResponse(
                 consumption.getConsumptionType().name(),
@@ -33,5 +26,4 @@ public record ConsumptionResponse(
                 0
         );
     }
-
 }
