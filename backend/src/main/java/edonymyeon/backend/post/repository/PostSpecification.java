@@ -26,8 +26,8 @@ public class PostSpecification {
         List<String> searchWords = splitKeyWordByBlank(searchWord);
         for (String word : searchWords) {
             predicates.add(criteriaBuilder.or(
-                    criteriaBuilder.like(root.get("title"), "%" + word + "%"),
-                    criteriaBuilder.like(root.get("content"), "%" + word + "%")
+                    criteriaBuilder.like(criteriaBuilder.upper(root.get("title")), "%" + word + "%"),
+                    criteriaBuilder.like(criteriaBuilder.upper(root.get("content")), "%" + word + "%")
             ));
         }
     }
@@ -35,6 +35,7 @@ public class PostSpecification {
     private static List<String> splitKeyWordByBlank(String searchWord) {
         return Arrays.stream(searchWord.strip().split(" "))
                 .filter(word -> !word.isBlank())
+                .map(String::toUpperCase)
                 .toList();
     }
 }
