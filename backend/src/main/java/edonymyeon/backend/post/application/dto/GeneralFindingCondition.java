@@ -1,9 +1,15 @@
 package edonymyeon.backend.post.application.dto;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_INVALID_PAGINATION_CONDITION;
+
+import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.post.domain.Post;
 import java.util.Objects;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 
 @Builder
 @Getter
@@ -38,5 +44,18 @@ public class GeneralFindingCondition {
                 .sortDirection(Objects.isNull(sortDirection) ? GeneralFindingCondition.DEFAULT_SORT_DIRECTION
                         : SortDirection.of(sortDirection))
                 .build();
+    }
+
+    public Pageable toPage() {
+        try {
+            return PageRequest.of(
+                    page,
+                    size,
+                    Direction.fromString(sortDirection.name()),
+                    sortBy.getName()
+            );
+        } catch (IllegalArgumentException e) {
+            throw new EdonymyeonException(POST_INVALID_PAGINATION_CONDITION);
+        }
     }
 }
