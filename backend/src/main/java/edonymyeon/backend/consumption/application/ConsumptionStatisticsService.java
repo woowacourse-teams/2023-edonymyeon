@@ -22,14 +22,14 @@ public class ConsumptionStatisticsService {
     private final ConsumptionRepository consumptionRepository;
 
     public RecentConsumptionsResponse findRecentConsumptions(final MemberIdDto memberId, final Integer periodMonth) {
-        List<ConsumptionPriceResponse> consumptionPriceResponses = new ArrayList<>();
-        LocalDate currentDate = LocalDate.now();
+        final LocalDate currentDate = LocalDate.now();
         final LocalDate startDate = currentDate.minusMonths(periodMonth - 1);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
-        String startMonth = startDate.format(formatter);
-        String endMonth = currentDate.format(formatter);
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+        final String startMonth = startDate.format(formatter);
+        final String endMonth = currentDate.format(formatter);
 
+        List<ConsumptionPriceResponse> consumptionPriceResponses = new ArrayList<>();
         for (int i = 0; i < periodMonth; i++) {
             long purchasePrice = 0;
             long savingPrice = 0;

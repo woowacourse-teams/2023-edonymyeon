@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class ConsumptionTestSupport {
+public class ConsumptionTestSupport2 {
 
     private static final ConsumptionType DEFAULT_CONSUMPTION_TYPE = PURCHASE;
 
@@ -25,8 +25,8 @@ public class ConsumptionTestSupport {
 
     private final ConsumptionRepository consumptionRepository;
 
-    public ConsumptionTestSupport.ConsumptionBuilder builder() {
-        return new ConsumptionTestSupport.ConsumptionBuilder();
+    public ConsumptionTestSupport2.ConsumptionBuilder builder() {
+        return new ConsumptionTestSupport2.ConsumptionBuilder();
     }
 
     public final class ConsumptionBuilder {
@@ -41,27 +41,27 @@ public class ConsumptionTestSupport {
 
         private Integer consumptionMonth;
 
-        public ConsumptionTestSupport.ConsumptionBuilder post(final Post post) {
+        public ConsumptionTestSupport2.ConsumptionBuilder post(final Post post) {
             this.post = post;
             return this;
         }
 
-        public ConsumptionTestSupport.ConsumptionBuilder consumptionType(final ConsumptionType consumptionType) {
+        public ConsumptionTestSupport2.ConsumptionBuilder consumptionType(final ConsumptionType consumptionType) {
             this.consumptionType = consumptionType;
             return this;
         }
 
-        public ConsumptionTestSupport.ConsumptionBuilder price(final Long price) {
+        public ConsumptionTestSupport2.ConsumptionBuilder price(final Long price) {
             this.price = price;
             return this;
         }
 
-        public ConsumptionTestSupport.ConsumptionBuilder consumptionYear(final Integer consumptionYear) {
+        public ConsumptionTestSupport2.ConsumptionBuilder consumptionYear(final Integer consumptionYear) {
             this.consumptionYear = consumptionYear;
             return this;
         }
 
-        public ConsumptionTestSupport.ConsumptionBuilder consumptionMonth(final Integer consumptionMonth) {
+        public ConsumptionTestSupport2.ConsumptionBuilder consumptionMonth(final Integer consumptionMonth) {
             this.consumptionMonth = consumptionMonth;
             return this;
         }
