@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="listener"
+            type="com.app.edonymyeon.presentation.ui.mypost.listener.MyPostClickListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_my_page_consumption_purchase"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_576b8e_radius_10dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:onClick="@{() -> listener.onPurchaseButtonClick()}"
+            android:padding="5dp"
+            android:text="@string/my_post_consumption_purchase"
+            android:textColor="@color/white_ffffff"
+            android:textSize="8sp"
+            app:layout_constraintDimensionRatio="W,37:17"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SmallSp" />
+
+        <Space
+            android:id="@+id/space_my_post_consumption_between"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="4:17"
+            app:layout_constraintStart_toEndOf="@id/tv_my_page_consumption_purchase"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_my_page_consumption_not_purchase"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_d9d9d9_radius_10dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:onClick="@{() -> listener.onSavingButtonClick()}"
+            android:padding="5dp"
+            android:text="@string/my_post_consumption_not_purchase"
+            android:textColor="@color/blue_576b9e"
+            android:textSize="8sp"
+            app:layout_constraintDimensionRatio="W,37:17"
+            app:layout_constraintStart_toEndOf="@id/space_my_post_consumption_between"
+            app:layout_constraintTop_toTopOf="@id/tv_my_page_consumption_purchase"
+            tools:ignore="SmallSp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
