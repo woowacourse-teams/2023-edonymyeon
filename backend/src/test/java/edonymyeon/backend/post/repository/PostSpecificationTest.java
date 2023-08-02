@@ -51,5 +51,18 @@ public class PostSpecificationTest {
 
         assertThat(all.size()).isEqualTo(1);
     }
+
+    @Test
+    void 게시글_검색시_제목과_내용에_키워드가_나눠져_있어도_검색이_되는지_확인한다() {
+         postTestSupport.builder()
+                        .title("ecec")
+                        .content("I use EnGlish and KoRean")
+                        .build();
+
+        Specification<Post> searchedBy = PostSpecification.searchBy("reA ce ");
+        List<Post> all = postRepository.findAll(searchedBy);
+
+        assertThat(all.size()).isEqualTo(1);
+    }
 }
 
