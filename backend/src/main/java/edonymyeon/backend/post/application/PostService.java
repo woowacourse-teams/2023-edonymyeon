@@ -246,7 +246,8 @@ public class PostService {
         );
     }
 
-    public GeneralPostsResponse searchPosts(final String searchWord, final GeneralFindingCondition generalFindingCondition) {
+    public GeneralPostsResponse searchPosts(final String searchWord,
+                                            final GeneralFindingCondition generalFindingCondition) {
         final Specification<Post> searchResults = PostSpecification.searchBy(searchWord);
         final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
 

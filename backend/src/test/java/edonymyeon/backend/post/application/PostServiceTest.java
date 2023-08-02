@@ -10,6 +10,7 @@ import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -74,7 +75,7 @@ class PostServiceTest implements ImageFileCleaner {
         Member member = memberTestSupport.builder()
                 .build();
         memberRepository.save(member);
-        memberId = new MemberId(member.getId());
+        memberId = new ActiveMemberId(member.getId());
     }
 
     private PostRequest getPostRequest() throws IOException {
@@ -96,7 +97,7 @@ class PostServiceTest implements ImageFileCleaner {
         final Member member = new Member("anonymous@gmail.com", "password123!", "엘렐레", null);
         memberRepository.save(member);
 
-        final MemberId memberId = new MemberId(member.getId());
+        final ActiveMemberId memberId = new ActiveMemberId(member.getId());
         final PostResponse postResponse = postService.createPost(memberId, getPostRequest());
 
         Assertions
@@ -208,7 +209,7 @@ class PostServiceTest implements ImageFileCleaner {
                     .password("password123!")
                     .build();
             memberRepository.save(다른_사람);
-            memberId = new MemberId(다른_사람.getId());
+            memberId = new ActiveMemberId(다른_사람.getId());
             final PostModificationRequest updatedPostRequest = new PostModificationRequest(
                     "I hate you",
                     "change!!",
@@ -217,7 +218,7 @@ class PostServiceTest implements ImageFileCleaner {
                     Collections.emptyList()
             );
             assertThatThrownBy(
-                    () -> postService.updatePost(new MemberId(다른_사람.getId()), post.id(), updatedPostRequest))
+                    () -> postService.updatePost(new ActiveMemberId(다른_사람.getId()), post.id(), updatedPostRequest))
                     .isInstanceOf(EdonymyeonException.class);
         }
 

@@ -21,6 +21,7 @@ import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
 import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,7 @@ public class ThumbsService {
     }
 
     public ThumbsStatusInPostResponse findThumbsStatusInPost(final MemberId memberId, final Long postId) {
-        if (memberId.id() == AnonymousMemberId.ANONYMOUS_MEMBER_ID) {
+        if (Objects.equals(memberId.id(), AnonymousMemberId.ANONYMOUS_MEMBER_ID)) {
             return new ThumbsStatusInPostResponse(false, false);
         }
 

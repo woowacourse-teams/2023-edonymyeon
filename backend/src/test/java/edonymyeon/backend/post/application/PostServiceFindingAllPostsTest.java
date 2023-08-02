@@ -9,6 +9,7 @@ import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
@@ -18,7 +19,6 @@ import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.repository.PostRepository;
 import java.io.IOException;
 import java.util.List;
-import java.util.regex.Pattern;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -60,13 +60,13 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
                 .email("email")
                 .nickname("nickname")
                 .build();
-        memberId = new MemberId(member.getId());
+        memberId = new ActiveMemberId(member.getId());
 
         final var member2 = memberTestSupport.builder()
                 .email("email2")
                 .nickname("nickname2")
                 .build();
-        memberId2 = new MemberId(member2.getId());
+        memberId2 = new ActiveMemberId(member2.getId());
 
         게시글들_등록하기();
     }

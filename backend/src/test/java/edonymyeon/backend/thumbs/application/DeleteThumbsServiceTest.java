@@ -7,6 +7,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -57,7 +58,7 @@ public class DeleteThumbsServiceTest {
                 null
         );
 
-        MemberId memberId = new MemberId(postWriter.getId());
+        MemberId memberId = new ActiveMemberId(postWriter.getId());
         postResponse = postService.createPost(memberId, postRequest);
     }
 
@@ -130,22 +131,22 @@ public class DeleteThumbsServiceTest {
     }
 
     private void thumbsUp(final Member member, final PostResponse post) {
-        MemberId memberId = new MemberId(member.getId());
+        MemberId memberId = new ActiveMemberId(member.getId());
         thumbsService.thumbsUp(memberId, post.id());
     }
 
     private void thumbsDown(final Member member, final PostResponse post) {
-        MemberId memberId = new MemberId(member.getId());
+        MemberId memberId = new ActiveMemberId(member.getId());
         thumbsService.thumbsDown(memberId, post.id());
     }
 
     private void deleteThumbsUp(final Member member, final PostResponse post) {
-        MemberId memberId = new MemberId(member.getId());
+        MemberId memberId = new ActiveMemberId(member.getId());
         thumbsService.deleteThumbsUp(memberId, post.id());
     }
 
     private void deleteThumbsDown(final Member member, final PostResponse post) {
-        MemberId memberId = new MemberId(member.getId());
+        MemberId memberId = new ActiveMemberId(member.getId());
         thumbsService.deleteThumbsDown(memberId, post.id());
     }
 

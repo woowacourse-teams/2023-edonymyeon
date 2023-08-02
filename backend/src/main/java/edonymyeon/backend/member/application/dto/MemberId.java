@@ -1,9 +1,9 @@
 package edonymyeon.backend.member.application.dto;
 
-public class MemberId {
+public abstract class MemberId {
     private final Long id;
 
-    public MemberId(final Long id) {
+    protected MemberId(final Long id) {
         this.id = id;
     }
 

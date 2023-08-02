@@ -6,7 +6,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.domain.ConsumptionType;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
-import edonymyeon.backend.member.application.dto.MemberId;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.YearMonthDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.domain.Post;
@@ -46,7 +46,7 @@ class ConsumptionConfirmServiceImplTest {
                 .build();
 
         consumptionConfirmService.confirmSaving(
-                new MemberId(글쓴이.getId()),
+                new ActiveMemberId(글쓴이.getId()),
                 게시글.getId(),
                 new YearMonthDto(2023, 7)
         );
@@ -71,7 +71,7 @@ class ConsumptionConfirmServiceImplTest {
                 .build();
 
         consumptionConfirmService.confirmPurchase(
-                new MemberId(글쓴이.getId()),
+                new ActiveMemberId(글쓴이.getId()),
                 게시글.getId(),
                 10_000L,
                 new YearMonthDto(2023, 7)

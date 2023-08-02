@@ -68,7 +68,7 @@ public class Post {
     private LocalDateTime createdAt;
 
     @ColumnDefault("0")
-    private Integer viewCount = 0;
+    private int viewCount;
 
     public Post(
             final String title,
@@ -103,7 +103,7 @@ public class Post {
     }
 
     private void validateContent(final String content) {
-        if (content.isBlank() || content.length() > MAX_CONTENT_LENGTH) {
+        if (Objects.isNull(content) || content.length() > MAX_CONTENT_LENGTH) {
             throw new EdonymyeonException(POST_CONTENT_ILLEGAL_LENGTH);
         }
     }
@@ -181,7 +181,7 @@ public class Post {
     }
 
     public void updateView(final Member member) {
-        if (Objects.nonNull(member) && this.member.equals(member)) {
+        if (this.member.equals(member)) {
             return;
         }
         this.viewCount++;

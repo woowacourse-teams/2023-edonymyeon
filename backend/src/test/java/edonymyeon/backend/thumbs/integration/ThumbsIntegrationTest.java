@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.IntegrationTest;
-import edonymyeon.backend.member.application.dto.MemberId;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.PostService;
@@ -54,7 +54,7 @@ class ThumbsIntegrationTest extends IntegrationTest {
         otherMember = registerMember();
 
         PostRequest postRequest = new PostRequest("title", "content", 1000L, null);
-        PostResponse postResponse = postService.createPost(new MemberId(postWriter.getId()), postRequest);
+        PostResponse postResponse = postService.createPost(new ActiveMemberId(postWriter.getId()), postRequest);
 
         postId = postResponse.id();
     }

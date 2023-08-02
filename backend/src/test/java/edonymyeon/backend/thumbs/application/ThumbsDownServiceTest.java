@@ -7,6 +7,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -59,13 +60,13 @@ public class ThumbsDownServiceTest {
                 null
         );
 
-        MemberId memberId = new MemberId(postWriter.getId());
+        MemberId memberId = new ActiveMemberId(postWriter.getId());
         postResponse = postService.createPost(memberId, postRequest);
     }
 
     @Test
     void 비추천하려는_게시물이_없으면_예외가_발생한다() {
-        MemberId loginMemberId = new MemberId(postWriter.getId());
+        MemberId loginMemberId = new ActiveMemberId(postWriter.getId());
 
         assertThatThrownBy(
                 () -> thumbsService.thumbsDown(loginMemberId, 1000L))
@@ -75,7 +76,7 @@ public class ThumbsDownServiceTest {
 
     @Test
     void 비추천한_게시물이_로그인한_사람이_작성한_것이라면_예외가_발생한다() {
-        MemberId loginMemberId = new MemberId(postWriter.getId());
+        MemberId loginMemberId = new ActiveMemberId(postWriter.getId());
 
         assertThatThrownBy(
                 () -> thumbsService.thumbsDown(loginMemberId, postResponse.id()))
@@ -131,7 +132,7 @@ public class ThumbsDownServiceTest {
         Member otherMember = registerMember();
 
         // when
-        MemberId otherMemberId = new MemberId(otherMember.getId());
+        MemberId otherMemberId = new ActiveMemberId(otherMember.getId());
         thumbsDown(otherMember, postResponse);
 
         assertThatThrownBy(
@@ -141,12 +142,12 @@ public class ThumbsDownServiceTest {
     }
 
     private void thumbsUp(final Member member, final PostResponse post) {
-        MemberId memberId = new MemberId(member.getId());
+        MemberId memberId = new ActiveMemberId(member.getId());
         thumbsService.thumbsUp(memberId, post.id());
     }
 
     private void thumbsDown(final Member member, final PostResponse post) {
-        MemberId memberId = new MemberId(member.getId());
+        MemberId memberId = new ActiveMemberId(member.getId());
         thumbsService.thumbsDown(memberId, post.id());
     }
 
