@@ -1,7 +1,7 @@
 package com.app.edonymyeon.data.service
 
-import com.app.edonymyeon.data.dto.request.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
+import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.Posts
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -33,7 +33,7 @@ interface PostService {
     @POST("/posts")
     suspend fun savePost(
         @PartMap postEditorRequest: HashMap<String, RequestBody>,
-        @Part images: List<MultipartBody.Part>,
+        @Part newImages: List<MultipartBody.Part>,
     ): Response<PostEditorResponse>
 
     @Multipart
@@ -41,6 +41,7 @@ interface PostService {
     suspend fun updatePost(
         @Path("postId") postId: Long,
         @PartMap postEditorRequest: HashMap<String, RequestBody>,
-        @Part images: List<MultipartBody.Part>,
+        @Part originalImages: List<MultipartBody.Part>,
+        @Part newImages: List<MultipartBody.Part>,
     ): Response<PostEditorResponse>
 }

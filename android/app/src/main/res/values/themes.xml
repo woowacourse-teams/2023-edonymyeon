@@ -20,4 +20,9 @@
         <item name="android:divider">@color/blue_576b9e</item>
         <item name="android:dividerHeight">1dp</item>
     </style>
+
+    <style name="NumberPickerStyle">
+        <item name="colorControlNormal">@color/blue_576b9e</item>
+        <item name="android:textSize">16sp</item>
+    </style>
 </resources>

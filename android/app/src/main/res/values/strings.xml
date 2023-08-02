@@ -73,4 +73,16 @@
     <string name="item_post_editor_image_delete_description">이미지 삭제 버튼</string>
     <string name="post_all_post">전체 게시물</string>
     <string name="post_filter_recent">최신순</string>
+
+    <!--my_post-->
+    <string name="my_post_page_title">내가 쓴 글</string>
+    <string name="my_post_consumption_purchase">샀어요</string>
+    <string name="my_post_consumption_not_purchase">안샀어요</string>
+    <string name="my_post_consumption_cancel">확정취소</string>
+
+    <!--my_post_dialog-->
+    <string name="dialog_consumption_title">소비/절약 내역을 입력하세요</string>
+    <string name="dialog_consumption_cancel">취소</string>
+    <string name="dialog_consumption_ok">확인</string>
+    <string name="dialog_input_price_hint">금액입력</string>
 </resources>

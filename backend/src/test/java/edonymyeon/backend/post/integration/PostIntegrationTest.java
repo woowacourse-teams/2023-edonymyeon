@@ -87,6 +87,23 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
     }
 
     @Test
+    void 게시글을_작성할_때_내용은_0자_이상_가능하다() {
+        final Member 작성자 = 사용자를_하나_만든다();
+        final var response = RestAssured.given()
+                .multiPart("title", "this is title")
+                .multiPart("content", "")
+                .multiPart("price", 1000)
+                .multiPart("images", 이미지1, MediaType.IMAGE_JPEG_VALUE)
+                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
+                .when()
+                .post("/posts")
+                .then()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    @Test
     void 게시글을_작성할때_이미지가_10개_이상이면_예외가_발생한다() {
         final Member 작성자 = 사용자를_하나_만든다();
         final ExtractableResponse<Response> 게시글_작성_응답 = RestAssured.given()
