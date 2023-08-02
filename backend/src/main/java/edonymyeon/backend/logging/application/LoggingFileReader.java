@@ -8,16 +8,13 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Scanner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
 public class LoggingFileReader {
-
-    public static final String LOGGING_FORMAT = "\\{[^{}]*\\}";
 
     private final ObjectMapper objectMapper;
 
@@ -48,12 +45,10 @@ public class LoggingFileReader {
     }
 
     private static List<String> splitByLoggingFormat(final String logContent) {
-        final Pattern pattern = Pattern.compile(LOGGING_FORMAT);
-        final Matcher matcher = pattern.matcher(logContent);
-
+        final Scanner scanner = new Scanner(logContent);
         final List<String> contents = new ArrayList<>();
-        while (matcher.find()) {
-            contents.add(matcher.group());
+        while (scanner.hasNextLine()) {
+            contents.add(scanner.nextLine());
         }
 
         return contents;
