@@ -55,7 +55,11 @@ public enum ExceptionInformation {
     CONSUMPTION_YEAR_ILLEGAL(6544, "소비한 년도가 유효하지 않습니다."),
     CONSUMPTION_MONTH_ILLEGAL(6545, "소비한 달이 유효하지 않습니다."),
     CONSUMPTION_POST_ID_NOT_FOUND(6546, "소비 확정 내역이 존재하지 않습니다."),
-    CONSUMPTION_YEAR_MONTH_ILLEGAL(6547, "소비 확정 년도, 달이 현재 시각보다 미래입니다.");
+    CONSUMPTION_YEAR_MONTH_ILLEGAL(6547, "소비 확정 년도, 달이 현재 시각보다 미래입니다."),
+    CONSUMPTION_PERIOD_MONTH_ILLEGAL(6548, "해당 기간의 소비 금액은 조회할 수 없습니다."),
+    SERVER_ERROR_CONSUMPTIONS_NULL(6997, "데이터 조회 결과 한달간 소비 내역들에 null 값이 들어왔습니다"),
+    SERVER_ERROR_CONSUMPTION_YEAR_NOT_SAME(6998, "데이터 조회 결과 한달간 소비 내역에 년도가 일치하지 않는 데이터가 포함되어 있습니다."),
+    SERVER_ERROR_CONSUMPTION_MONTH_NOT_SAME(6999, "데이터 조회 결과 한달간 소비 내역에 달이 일치하지 않는 데이터가 포함되어 있습니다.");
 
     private int code;
 

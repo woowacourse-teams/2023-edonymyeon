@@ -1,7 +1,7 @@
 package edonymyeon.backend.consumption.ui;
 
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
-import edonymyeon.backend.consumption.application.ConsumptionStatisticsService;
+import edonymyeon.backend.consumption.application.ConsumptionService;
 import edonymyeon.backend.consumption.application.dto.RecentConsumptionsResponse;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import lombok.RequiredArgsConstructor;
@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ConsumptionController {
 
-    private final ConsumptionStatisticsService consumptionStatisticsService;
+    private final ConsumptionService consumptionService;
 
     @GetMapping("/consumptions")
     public ResponseEntity<RecentConsumptionsResponse> findRecentConsumptions(@AuthPrincipal final MemberIdDto memberId,
                                                                              @RequestParam("period-month") final Integer periodMonth) {
-        final RecentConsumptionsResponse response = consumptionStatisticsService.findRecentConsumptions(
+        final RecentConsumptionsResponse response = consumptionService.findRecentConsumptions(
                 memberId, periodMonth);
         return ResponseEntity.ok()
                 .body(response);

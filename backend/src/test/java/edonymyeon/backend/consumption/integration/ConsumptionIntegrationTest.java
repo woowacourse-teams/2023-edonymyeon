@@ -6,6 +6,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.domain.ConsumptionType;
+import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
+import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.ConsumptionTestSupport2;
@@ -17,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
@@ -25,6 +29,25 @@ public class ConsumptionIntegrationTest extends IntegrationTest {
 
     @Autowired
     private ConsumptionTestSupport2 consumptionTestSupport2;
+
+    @ParameterizedTest
+    @ValueSource(ints = {-1, 0, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14})
+    void 조회_기간으로_한달_또는_여섯달이_아닌_값이_들어오면_실패한다(final int periodMonth) {
+        final Member 사용자 = memberTestSupport.builder().build();
+
+        final ExtractableResponse<Response> 조회_응답 = 특정_기간의_소비금액을_확인한다(periodMonth, 사용자);
+
+        final ExceptionResponse 예외_응답 = 조회_응답.as(ExceptionResponse.class);
+        SoftAssertions.assertSoftly(
+                softAssertions -> {
+                    assertThat(조회_응답.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                    assertThat(예외_응답.errorCode()).isEqualTo(
+                            ExceptionInformation.CONSUMPTION_PERIOD_MONTH_ILLEGAL.getCode());
+                    assertThat(예외_응답.errorMessage()).isEqualTo(
+                            ExceptionInformation.CONSUMPTION_PERIOD_MONTH_ILLEGAL.getMessage());
+                }
+        );
+    }
 
     @Test
     void 최근_한달간의_소비금액을_확인한다() {
@@ -162,6 +185,27 @@ public class ConsumptionIntegrationTest extends IntegrationTest {
                     assertThat(조회_응답.jsonPath().getLong("consumptions[4].purchasePrice")).isEqualTo(구매_금액_합_5);
                     assertThat(조회_응답.jsonPath().getLong("consumptions[5].savingPrice")).isEqualTo(절약_금액_합_6);
                     assertThat(조회_응답.jsonPath().getLong("consumptions[5].purchasePrice")).isEqualTo(구매_금액_합_6);
+                }
+        );
+    }
+
+    @Test
+    void 소비_내역이_존재하지_않으면_구매_금액과_절약_금액은_0이다() {
+        final Member 사용자 = memberTestSupport.builder().build();
+        LocalDate 최근_날짜 = java.time.LocalDate.now();
+
+        final ExtractableResponse<Response> 조회_응답 = 특정_기간의_소비금액을_확인한다(1, 사용자);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+        String 최근_년_달 = 최근_날짜.format(formatter);
+        SoftAssertions.assertSoftly(
+                SoftAssertions -> {
+                    assertThat(조회_응답.statusCode()).isEqualTo(HttpStatus.OK.value());
+                    assertThat(조회_응답.jsonPath().getString("startMonth")).isEqualTo(최근_년_달);
+                    assertThat(조회_응답.jsonPath().getString("endMonth")).isEqualTo(최근_년_달);
+                    assertThat(조회_응답.jsonPath().getList("consumptions")).hasSize(1);
+                    assertThat(조회_응답.jsonPath().getLong("consumptions[0].savingPrice")).isEqualTo(0);
+                    assertThat(조회_응답.jsonPath().getLong("consumptions[0].purchasePrice")).isEqualTo(0);
                 }
         );
     }
