@@ -9,15 +9,15 @@ on:
     branches:
       - "dev"
     paths: 'android/**'
-
-defaults:
-  run:
-    working-directory: android
  
 jobs:      
   build:
 
     runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: android
 
     steps:
     - uses: actions/checkout@v3
@@ -51,8 +51,10 @@ jobs:
       run: ./gradlew --info test
       
     - name: Publish Unit test results
-      uses: EnricoMi/publish-unit-test-result-action@v1
-      if: ${{ always() }}
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
+      with:
+          files: '**/build/test-results/test/TEST-*.xml'
       
     - name: Notify Slack
       uses: 8398a7/action-slack@v3

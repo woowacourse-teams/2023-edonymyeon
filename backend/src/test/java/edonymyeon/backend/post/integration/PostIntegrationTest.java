@@ -1,8 +1,11 @@
 package edonymyeon.backend.post.integration;
 
 import edonymyeon.backend.IntegrationTest;
+import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.integration.steps.MemberConsumptionSteps;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.PostReadService;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
@@ -76,6 +79,23 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .extract();
 
         assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
+    @Test
+    void 게시글을_작성할_때_내용은_0자_이상_가능하다() {
+        final Member 작성자 = 사용자를_하나_만든다();
+        final var response = RestAssured.given()
+                .multiPart("title", "this is title")
+                .multiPart("content", "")
+                .multiPart("price", 1000)
+                .multiPart("images", 이미지1, MediaType.IMAGE_JPEG_VALUE)
+                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
+                .when()
+                .post("/posts")
+                .then()
+                .extract();
+
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
     @Test
@@ -171,6 +191,31 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
     }
 
     @Test
+    void 게시글이_소비_확정_되어있다면_게시글_삭제시_소비_확정_내역도_삭제된다(@Autowired ConsumptionRepository consumptionRepository) {
+        //given
+        final Member 작성자 = 사용자를_하나_만든다();
+        final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
+        final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
+        final PurchaseConfirmRequest 구매_확정_요청 = new PurchaseConfirmRequest(10000L, 2023, 7);
+        MemberConsumptionSteps.구매_확정_요청을_보낸다(작성자, 게시글_id, 구매_확정_요청);
+
+        //when
+        final ExtractableResponse<Response> 게시글_삭제_응답 = RestAssured.given()
+                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
+                .when()
+                .delete("posts/" + 게시글_id)
+                .then()
+                .extract();
+
+        //then
+        assertSoftly(softly -> {
+                    softly.assertThat(consumptionRepository.findByPostId(게시글_id)).isEmpty();
+                    softly.assertThat(게시글_삭제_응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+                }
+        );
+    }
+
+    @Test
     void 기본조건으로_전체게시글_조회() {
         한_사용자가_게시글을_서른개_작성한다();
 
@@ -211,16 +256,16 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
         final var jsonPath = 게시글_전체_조회_응답.body().jsonPath();
 
         assertSoftly(softly -> {
-            softly.assertThat(jsonPath.getList("content")).hasSize(3);
-            softly.assertThat(jsonPath.getLong("content[0].id")).isNotNull();
-            softly.assertThat(jsonPath.getString("content[0].title")).isNotNull();
-            softly.assertThat(jsonPath.getString("content[0].image")).isNotNull();
-            softly.assertThat(jsonPath.getString("content[0].content")).isNotNull();
-            softly.assertThat(jsonPath.getString("content[0].writer.nickName")).isNotNull();
-            softly.assertThat(jsonPath.getString("content[0].createdAt")).isNotNull();
-            softly.assertThat(jsonPath.getInt("content[0].reactionCount.viewCount")).isNotNull();
-            softly.assertThat(jsonPath.getInt("content[0].reactionCount.commentCount")).isNotNull();
-            softly.assertThat(jsonPath.getInt("content[0].reactionCount.scrapCount")).isNotNull();
+            softly.assertThat(jsonPath.getList("posts")).hasSize(3);
+            softly.assertThat(jsonPath.getLong("posts[0].id")).isNotNull();
+            softly.assertThat(jsonPath.getString("posts[0].title")).isNotNull();
+            softly.assertThat(jsonPath.getString("posts[0].image")).isNotNull();
+            softly.assertThat(jsonPath.getString("posts[0].content")).isNotNull();
+            softly.assertThat(jsonPath.getString("posts[0].writer.nickName")).isNotNull();
+            softly.assertThat(jsonPath.getString("posts[0].createdAt")).isNotNull();
+            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.viewCount")).isNotNull();
+            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.commentCount")).isNotNull();
+            softly.assertThat(jsonPath.getInt("posts[0].reactionCount.scrapCount")).isNotNull();
         });
     }
 
@@ -235,8 +280,6 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .when()
                 .get("/posts")
                 .then()
-                .log()
-                .all()
                 .extract();
 
         final var jsonPath = 게시글_전체_조회_응답.body().jsonPath();
@@ -501,10 +544,10 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                 .extract();
 
         assertSoftly(softly -> {
-                    softly.assertThat(게시글_수정_응답.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
-                    softly.assertThat(게시글_수정_응답.jsonPath().getInt("errorCode")).isEqualTo(POST_MEMBER_FORBIDDEN.getCode());
-                    softly.assertThat(게시글_수정_응답.jsonPath().getString("errorMessage"))
-                            .isEqualTo(POST_MEMBER_FORBIDDEN.getMessage());
+            softly.assertThat(게시글_수정_응답.statusCode()).isEqualTo(HttpStatus.FORBIDDEN.value());
+            softly.assertThat(게시글_수정_응답.jsonPath().getInt("errorCode")).isEqualTo(POST_MEMBER_NOT_SAME.getCode());
+            softly.assertThat(게시글_수정_응답.jsonPath().getString("errorMessage"))
+                    .isEqualTo(POST_MEMBER_NOT_SAME.getMessage());
                 }
         );
     }
