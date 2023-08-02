@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.member.application.dto.AnonymousMemberId;
-import edonymyeon.backend.member.application.dto.MemberId;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.domain.Post;
@@ -55,7 +55,7 @@ public class PostViewTest implements ImageFileCleaner {
     @Test
     void 작성자_본인이_글을_조회하는_경우_조회수는_올라가지_않는다() {
         assertThat(post.getViewCount()).isEqualTo(0);
-        postService.findSpecificPost(post.getId(), new MemberId(writer.getId()));
+        postService.findSpecificPost(post.getId(), new ActiveMemberId(writer.getId()));
 
         assertThat(post.getViewCount()).isEqualTo(0);
     }
@@ -63,9 +63,9 @@ public class PostViewTest implements ImageFileCleaner {
     @Test
     void 타인이_조회하는_경우_공백_기간_없이_조회수가_증가한다() {
         assertThat(post.getViewCount()).isEqualTo(0);
-        postService.findSpecificPost(post.getId(), new MemberId(viewer.getId()));
-        postService.findSpecificPost(post.getId(), new MemberId(viewer.getId()));
-        postService.findSpecificPost(post.getId(), new MemberId(viewer.getId()));
+        postService.findSpecificPost(post.getId(), new ActiveMemberId(viewer.getId()));
+        postService.findSpecificPost(post.getId(), new ActiveMemberId(viewer.getId()));
+        postService.findSpecificPost(post.getId(), new ActiveMemberId(viewer.getId()));
 
         assertThat(post.getViewCount()).isEqualTo(3);
     }

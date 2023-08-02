@@ -55,7 +55,8 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<GeneralPostsResponse> findAllPosts(
-            @PostPaging GeneralFindingCondition generalFindingCondition) {
+            @PostPaging GeneralFindingCondition generalFindingCondition
+    ) {
         final List<GeneralPostInfoResponse> posts = postService.findPostsByPagingCondition(generalFindingCondition);
         return ResponseEntity
                 .ok()
@@ -64,7 +65,8 @@ public class PostController {
 
     @GetMapping("/{postId}")
     public ResponseEntity<SpecificPostInfoResponse> findSpecificPost(
-            @AuthPrincipal(required = false) MemberId memberId, @PathVariable Long postId) {
+            @AuthPrincipal(required = false) MemberId memberId, @PathVariable Long postId
+    ) {
         return ResponseEntity.ok()
                 .body(postService.findSpecificPost(postId, memberId));
     }
