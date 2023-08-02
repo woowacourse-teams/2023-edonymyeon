@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_ffffff_radius_20dp">
+
+        <Space
+            android:id="@+id/space_title_top"
+            android:layout_width="250dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="h,250:16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_consumption_title"
+            android:textColor="@color/blue_576b9e"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/space_title_top" />
+
+        <NumberPicker
+            android:id="@+id/np_year"
+            android:layout_width="63dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:theme="@style/NumberPickerStyle"
+            app:layout_constraintDimensionRatio="h, 63:124"
+            app:layout_constraintEnd_toStartOf="@id/np_month"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_dialog_title" />
+
+        <NumberPicker
+            android:id="@+id/np_month"
+            android:layout_width="63dp"
+            android:layout_height="0dp"
+            android:theme="@style/NumberPickerStyle"
+            app:layout_constraintDimensionRatio="h, 63:124"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/np_year"
+            app:layout_constraintTop_toTopOf="@id/np_year" />
+
+        <Space
+            android:id="@+id/space_price_top"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="360: 20"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/np_year" />
+
+
+        <EditText
+            android:id="@+id/et_consumption_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:hint="@string/dialog_input_price_hint"
+            android:inputType="number"
+            android:textColor="@color/gray_434343"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/space_price_bottom"
+            app:layout_constraintEnd_toStartOf="@id/tv_price_unit"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/space_price_top"
+            app:layout_constraintWidth_percent="0.7054" />
+
+        <TextView
+            android:id="@+id/tv_price_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/post_editor_price_unit"
+            android:textColor="@color/gray_434343"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@id/et_consumption_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/et_consumption_price"
+            app:layout_constraintTop_toTopOf="@id/et_consumption_price" />
+
+        <Space
+            android:id="@+id/space_price_bottom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="360: 20"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_consumption_price" />
+
+        <TextView
+            android:id="@+id/btn_dialog_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="@string/dialog_consumption_cancel"
+            android:textColor="@color/gray_434343"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/btn_dialog_ok"
+            app:layout_constraintEnd_toStartOf="@id/btn_dialog_ok"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/space_price_bottom" />
+
+        <TextView
+            android:id="@+id/btn_dialog_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_consumption_ok"
+            android:textColor="@color/gray_434343"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@id/space_dialog_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btn_dialog_cancel"
+            app:layout_constraintTop_toBottomOf="@+id/space_price_bottom" />
+
+        <Space
+            android:id="@+id/space_dialog_bottom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="360: 20"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_dialog_ok" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

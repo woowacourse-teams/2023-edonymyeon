@@ -104,7 +104,7 @@ public class Post {
     }
 
     private void validateContent(final String content) {
-        if (content.isBlank() || content.length() > MAX_CONTENT_LENGTH) {
+        if (Objects.isNull(content) || content.length() > MAX_CONTENT_LENGTH) {
             throw new EdonymyeonException(POST_CONTENT_ILLEGAL_LENGTH);
         }
     }

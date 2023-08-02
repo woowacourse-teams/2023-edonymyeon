@@ -2,8 +2,8 @@ package com.app.edonymyeon.data.repository
 
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.datasource.post.PostDataSource
-import com.app.edonymyeon.data.dto.request.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
+import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.Posts
 import com.app.edonymyeon.mapper.toDomain
 import com.domain.edonymyeon.model.PostItem
