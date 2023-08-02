@@ -207,7 +207,6 @@ public class PostService {
         final AllThumbsInPostResponse allThumbsInPost = thumbsService.findAllThumbsInPost(postId);
         final WriterDetailResponse writerDetailResponse = getWriterResponse(post.getMember());
 
-
         if (member.isEmpty()) {
             return SpecificPostInfoResponse.of(
                     post,
@@ -246,7 +245,8 @@ public class PostService {
         );
     }
 
-    public GeneralPostsResponse searchPosts(final String searchWord, final GeneralFindingCondition generalFindingCondition) {
+    public GeneralPostsResponse searchPosts(final String searchWord,
+                                            final GeneralFindingCondition generalFindingCondition) {
         final Specification<Post> searchResults = PostSpecification.searchBy(searchWord);
         final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
 

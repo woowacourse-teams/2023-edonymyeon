@@ -181,7 +181,7 @@ public class Post {
     }
 
     public void updateView(final Member member) {
-        if (Objects.nonNull(member) && this.member.equals(member)) {
+        if (this.member.equals(member)) {
             return;
         }
         this.viewCount++;
