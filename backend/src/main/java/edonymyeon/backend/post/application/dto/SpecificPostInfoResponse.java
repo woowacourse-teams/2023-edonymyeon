@@ -2,8 +2,7 @@ package edonymyeon.backend.post.application.dto;
 
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.domain.Post;
-import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
-import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
+
 import java.time.LocalDateTime;
 import java.util.List;
 

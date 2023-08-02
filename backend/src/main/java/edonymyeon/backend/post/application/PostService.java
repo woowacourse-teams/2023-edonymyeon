@@ -1,9 +1,5 @@
 package edonymyeon.backend.post.application;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
-
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.ImageFileUploader;
@@ -14,25 +10,12 @@ import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
-import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
-import edonymyeon.backend.post.application.dto.GeneralPostsResponse;
-import edonymyeon.backend.post.application.dto.PostModificationRequest;
-import edonymyeon.backend.post.application.dto.PostRequest;
-import edonymyeon.backend.post.application.dto.PostResponse;
-import edonymyeon.backend.post.application.dto.ReactionCountResponse;
-import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
-import edonymyeon.backend.post.application.dto.WriterDetailResponse;
+import edonymyeon.backend.post.application.dto.*;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.post.repository.PostSpecification;
-import edonymyeon.backend.thumbs.application.ThumbsService;
-import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
-import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import edonymyeon.backend.post.application.dto.AllThumbsInPostResponse;
+import edonymyeon.backend.post.application.dto.ThumbsStatusInPostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -41,6 +24,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import static edonymyeon.backend.global.exception.ExceptionInformation.*;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -55,7 +45,7 @@ public class PostService {
 
     private final MemberRepository memberRepository;
 
-    private final ThumbsService thumbsService;
+    private final PostThumbsService postThumbsService;
 
     private final Domain domain;
 
@@ -107,7 +97,7 @@ public class PostService {
         checkWriter(member, post);
 
         final List<PostImageInfo> postImageInfos = post.getPostImageInfos();
-        thumbsService.deleteAllThumbsInPost(postId);
+        postThumbsService.deleteAllThumbsInPost(postId);
         postImageInfoRepository.deleteAllByPostId(postId);
         postRepository.deleteById(postId);
         postImageInfos.forEach(imageFileUploader::removeFile);
@@ -202,7 +192,7 @@ public class PostService {
                 0, // TODO: 댓글 수 기능 구현 필요
                 0 // TODO: 스크랩 기능 구현 필요
         );
-        final AllThumbsInPostResponse allThumbsInPost = thumbsService.findAllThumbsInPost(postId);
+        final AllThumbsInPostResponse allThumbsInPost = postThumbsService.findAllThumbsInPost(postId);
         final WriterDetailResponse writerDetailResponse = getWriterResponse(post.getMember());
 
         if (member.isEmpty()) {
@@ -215,7 +205,7 @@ public class PostService {
             );
         }
 
-        final ThumbsStatusInPostResponse thumbsStatusInPost = thumbsService.findThumbsStatusInPost(memberIdDto, postId);
+        final ThumbsStatusInPostResponse thumbsStatusInPost = postThumbsService.findThumbsStatusInPost(memberIdDto, postId);
 
         return SpecificPostInfoResponse.of(
                 post,
