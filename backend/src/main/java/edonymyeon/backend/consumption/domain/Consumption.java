@@ -121,4 +121,8 @@ public class Consumption {
             throw new EdonymyeonException(CONSUMPTION_YEAR_MONTH_ILLEGAL);
         }
     }
+
+    boolean isType(final ConsumptionType consumptionType) {
+        return this.consumptionType == consumptionType;
+    }
 }

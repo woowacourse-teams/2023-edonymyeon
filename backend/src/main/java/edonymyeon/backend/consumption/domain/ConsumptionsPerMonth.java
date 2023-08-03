@@ -47,22 +47,16 @@ public class ConsumptionsPerMonth {
     }
 
     public Long calculateTotalPurchasePrice() {
-        long purchasePrice = 0;
-        for (Consumption consumption : consumptions) {
-            if (consumption.getConsumptionType() == PURCHASE) {
-                purchasePrice += consumption.getPrice();
-            }
-        }
-        return purchasePrice;
+        return this.consumptions
+                .stream().filter(consumption -> consumption.isType(PURCHASE))
+                .mapToLong(Consumption::getPrice)
+                .sum();
     }
 
     public Long calculateTotalSavingPrice() {
-        long savingPrice = 0;
-        for (Consumption consumption : consumptions) {
-            if (consumption.getConsumptionType() == SAVING) {
-                savingPrice += consumption.getPrice();
-            }
-        }
-        return savingPrice;
+        return this.consumptions
+                .stream().filter(consumption -> consumption.isType(SAVING))
+                .mapToLong(Consumption::getPrice)
+                .sum();
     }
 }
