@@ -11,7 +11,7 @@ import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
@@ -60,8 +60,8 @@ public class PostService {
     private final Domain domain;
 
     @Transactional
-    public PostResponse createPost(final MemberIdDto memberIdDto, final PostRequest postRequest) {
-        final Member member = findMemberById(memberIdDto);
+    public PostResponse createPost(final MemberId memberId, final PostRequest postRequest) {
+        final Member member = findMemberById(memberId);
 
         final Post post = new Post(
                 postRequest.title(),
@@ -84,8 +84,8 @@ public class PostService {
         return new PostResponse(post.getId());
     }
 
-    private Member findMemberById(final MemberIdDto memberIdDto) {
-        return memberRepository.findById(memberIdDto.id())
+    private Member findMemberById(final MemberId memberId) {
+        return memberRepository.findById(memberId.id())
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
     }
 
@@ -101,8 +101,8 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePost(final MemberIdDto memberIdDto, final Long postId) {
-        final Member member = findMemberById(memberIdDto);
+    public void deletePost(final MemberId memberId, final Long postId) {
+        final Member member = findMemberById(memberId);
         final Post post = findPostById(postId);
         checkWriter(member, post);
 
@@ -126,7 +126,7 @@ public class PostService {
 
     @Transactional
     public PostResponse updatePost(
-            final MemberIdDto memberId,
+            final MemberId memberId,
             final Long postId,
             final PostModificationRequest request
     ) {
@@ -191,14 +191,16 @@ public class PostService {
         }
     }
 
-    public SpecificPostInfoResponse findSpecificPost(final Long postId, final MemberIdDto memberIdDto) {
+    @Transactional
+    public SpecificPostInfoResponse findSpecificPost(final Long postId, final MemberId memberId) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EdonymyeonException(POST_ID_NOT_FOUND));
 
-        final Optional<Member> member = memberRepository.findById(memberIdDto.id());
+        final Optional<Member> member = memberRepository.findById(memberId.id());
+        post.updateView(member.orElse(null));
 
         final ReactionCountResponse reactionCountResponse = new ReactionCountResponse(
-                0, // TODO: 조회수 기능 구현 필요
+                post.getViewCount(),
                 0, // TODO: 댓글 수 기능 구현 필요
                 0 // TODO: 스크랩 기능 구현 필요
         );
@@ -215,7 +217,7 @@ public class PostService {
             );
         }
 
-        final ThumbsStatusInPostResponse thumbsStatusInPost = thumbsService.findThumbsStatusInPost(memberIdDto, postId);
+        final ThumbsStatusInPostResponse thumbsStatusInPost = thumbsService.findThumbsStatusInPost(memberId, postId);
 
         return SpecificPostInfoResponse.of(
                 post,
@@ -243,7 +245,8 @@ public class PostService {
         );
     }
 
-    public GeneralPostsResponse searchPosts(final String searchWord, final GeneralFindingCondition generalFindingCondition) {
+    public GeneralPostsResponse searchPosts(final String searchWord,
+                                            final GeneralFindingCondition generalFindingCondition) {
         final Specification<Post> searchResults = PostSpecification.searchBy(searchWord);
         final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
 

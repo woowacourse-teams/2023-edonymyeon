@@ -67,9 +67,8 @@ public class Post {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    // todo: 테스트 코드에서 자꾸 null 값으로 조회되서 일단 하드코딩
     @ColumnDefault("0")
-    private Long viewCount = 0L;
+    private int viewCount;
 
     public Post(
             final String title,
@@ -179,5 +178,12 @@ public class Post {
         if (!isSameMember(other)) {
             throw new EdonymyeonException(POST_MEMBER_NOT_SAME);
         }
+    }
+
+    public void updateView(final Member member) {
+        if (this.member.equals(member)) {
+            return;
+        }
+        this.viewCount++;
     }
 }
