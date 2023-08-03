@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.app.edonymyeon.mapper.toUiModel
 import com.domain.edonymyeon.model.Consumption
 import com.domain.edonymyeon.model.MyPost
+import com.domain.edonymyeon.model.MyPosts
 import com.domain.edonymyeon.repository.ProfileRepository
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -23,13 +24,13 @@ class MyPostViewModelTest {
     private lateinit var viewModel: MyPostViewModel
     private lateinit var profileRepository: ProfileRepository
 
-    private val fakeMyPosts = listOf(
+    private val fakeMyPost = listOf(
         MyPost(
             id = 1L,
             title = "가나다라",
             image = "",
             content = "아야하언ㅇㄹㄴㅇㄹ",
-            createdAt = "1일전",
+            createdAt = "2023-08-01T22:12:06.051634",
             consumption = Consumption(
                 type = "NONE",
                 purchasePrice = 0,
@@ -65,6 +66,11 @@ class MyPostViewModelTest {
         ),
     )
 
+    private val fakeMyPosts = MyPosts(
+        fakeMyPost,
+        true,
+    )
+
     @get:Rule
     val instantExecutorRule = InstantTaskExecutorRule()
 
@@ -85,15 +91,14 @@ class MyPostViewModelTest {
     @Test
     fun `내가 쓴 글을 불러온다`() {
         // given
-        val size = 20
         val page = 0
-        coEvery { profileRepository.getMyPosts(size, page) } returns Result.success(fakeMyPosts)
+        coEvery { profileRepository.getMyPosts(page) } returns Result.success(fakeMyPosts)
 
         // when
-        viewModel.getMyPosts(size, page)
+        viewModel.getMyPosts()
 
         // then
-        assertEquals(fakeMyPosts.map { it.toUiModel() }, viewModel.posts.value)
+        assertEquals(fakeMyPost.map { it.toUiModel() }, viewModel.posts.value)
     }
 
     @Test
@@ -107,7 +112,7 @@ class MyPostViewModelTest {
             month = 7,
         )
 
-        coEvery { profileRepository.getMyPosts(20, 0) } returns Result.success(fakeMyPosts)
+        coEvery { profileRepository.getMyPosts(0) } returns Result.success(fakeMyPosts)
         coEvery {
             profileRepository.postPurchaseConfirm(
                 postId,
@@ -118,7 +123,7 @@ class MyPostViewModelTest {
         } returns Result.success(Unit)
 
         // when
-        viewModel.getMyPosts(20, 0)
+        viewModel.getMyPosts()
         viewModel.postPurchaseConfirm(
             postId,
             consumption.purchasePrice,
@@ -144,7 +149,7 @@ class MyPostViewModelTest {
             month = 7,
         )
 
-        coEvery { profileRepository.getMyPosts(20, 0) } returns Result.success(fakeMyPosts)
+        coEvery { profileRepository.getMyPosts(0) } returns Result.success(fakeMyPosts)
         coEvery {
             profileRepository.postSavingConfirm(
                 postId,
@@ -154,7 +159,7 @@ class MyPostViewModelTest {
         } returns Result.success(Unit)
 
         // when
-        viewModel.getMyPosts(20, 0)
+        viewModel.getMyPosts()
         viewModel.postSavingConfirm(
             postId,
             consumption.year,
@@ -179,7 +184,7 @@ class MyPostViewModelTest {
             month = 0,
         )
 
-        coEvery { profileRepository.getMyPosts(20, 0) } returns Result.success(fakeMyPosts)
+        coEvery { profileRepository.getMyPosts(0) } returns Result.success(fakeMyPosts)
         coEvery {
             profileRepository.deleteConfirm(
                 postId,
@@ -187,7 +192,7 @@ class MyPostViewModelTest {
         } returns Result.success(Unit)
 
         // when
-        viewModel.getMyPosts(20, 0)
+        viewModel.getMyPosts()
         viewModel.deleteConfirm(
             postId,
         )
@@ -197,21 +202,6 @@ class MyPostViewModelTest {
             viewModel.posts.value?.find { it.id == postId }?.consumption,
             consumption.toUiModel(),
         )
-    }
-
-    @Test
-    fun `넘버 피커에 들어갈 년도와 달을 받는다`() {
-        // given
-        val postId = 1L
-        val yearMonth = hashMapOf<Int, List<Int>>()
-        yearMonth[2023] = listOf(8)
-        coEvery { profileRepository.getMyPosts(20, 0) } returns Result.success(fakeMyPosts)
-
-        // when
-        viewModel.getYearMonth(postId)
-
-        // then
-        assertEquals(viewModel.yearMonth.value, yearMonth)
     }
 
     @Test

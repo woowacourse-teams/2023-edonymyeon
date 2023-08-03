@@ -17,8 +17,8 @@ class ProfileRemoteDataSource : ProfileDataSource {
             .updateAccessToken("Basic YmVhdXRpZnVsbmVvQG5hdmVyLmNvbTpuZW8xMjM=")
     }
 
-    override suspend fun getMyPosts(size: Int, page: Int): Response<MyPostsResponse> {
-        return profileService.getMyPost(size, page)
+    override suspend fun getMyPosts(page: Int): Response<MyPostsResponse> {
+        return profileService.getMyPost(20, page)
     }
 
     override suspend fun postPurchaseConfirm(

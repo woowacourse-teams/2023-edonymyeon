@@ -6,14 +6,19 @@ import com.app.edonymyeon.data.dto.request.PurchaseConfirmRequest
 import com.app.edonymyeon.data.dto.request.SavingConfirmRequest
 import com.app.edonymyeon.data.dto.response.MyPostsResponse
 import com.app.edonymyeon.mapper.toDomain
-import com.domain.edonymyeon.model.MyPost
+import com.domain.edonymyeon.model.MyPosts
 import com.domain.edonymyeon.repository.ProfileRepository
 
 class ProfileRepositoryImpl(private val profileDataSource: ProfileDataSource) : ProfileRepository {
-    override suspend fun getMyPosts(size: Int, page: Int): Result<List<MyPost>> {
-        val result = profileDataSource.getMyPosts(size, page)
+    override suspend fun getMyPosts(page: Int): Result<MyPosts> {
+        val result = profileDataSource.getMyPosts(page)
         return if (result.isSuccessful) {
-            Result.success((result.body() as MyPostsResponse).posts.map { it.toDomain() })
+            Result.success(
+                MyPosts(
+                    (result.body() as MyPostsResponse).posts.map { it.toDomain() },
+                    result.body()!!.isLast,
+                ),
+            )
         } else {
             Result.failure(CustomThrowable(result.code(), result.message()))
         }

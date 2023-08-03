@@ -13,26 +13,26 @@ import retrofit2.http.Query
 
 interface ProfileService {
 
-    @GET("/profile/myPosts")
-    fun getMyPost(
+    @GET("/profile/my-posts")
+    suspend fun getMyPost(
         @Query("size") size: Int,
         @Query("page") page: Int,
     ): Response<MyPostsResponse>
 
-    @POST("/profile/myPosts/{postId}/purchase-confirm")
-    fun postPurchaseConfirm(
+    @POST("/profile/my-posts/{postId}/purchase-confirm")
+    suspend fun postPurchaseConfirm(
         @Path("postId") postId: Long,
         @Body purchaseConfirmRequest: PurchaseConfirmRequest,
     ): Response<Unit>
 
-    @POST("/profile/myPosts/{postId}/saving-confirm")
-    fun postSavingConfirm(
+    @POST("/profile/my-posts/{postId}/saving-confirm")
+    suspend fun postSavingConfirm(
         @Path("postId") postId: Long,
         @Body savingConfirmRequest: SavingConfirmRequest,
     ): Response<Unit>
 
-    @DELETE("/profile/myPosts/{postId}/confirm-remove")
-    fun deleteConfirm(
+    @DELETE("/profile/my-posts/{postId}/confirm-remove")
+    suspend fun deleteConfirm(
         @Path("postId") postId: Long,
     ): Response<Unit>
 }

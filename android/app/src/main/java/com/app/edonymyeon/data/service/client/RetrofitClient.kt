@@ -11,7 +11,7 @@ class RetrofitClient private constructor(private val baseUrl: String) {
 
     private fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("https://edonymyeon.site")
+            .baseUrl("http://edonymyeon.site")
             .addConverterFactory(Json.asConverterFactory(contentType))
             .client(OkHttpClient.provideOkHttpClient(accessTokenInterceptor))
             .build()

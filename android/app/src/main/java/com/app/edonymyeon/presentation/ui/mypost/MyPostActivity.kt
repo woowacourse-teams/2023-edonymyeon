@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import app.edonymyeon.databinding.ActivityMyPostBinding
 import com.app.edonymyeon.data.datasource.profile.ProfileRemoteDataSource
 import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
@@ -33,8 +34,9 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        viewModel.getMyPosts(20, 0)
         initAppbar()
+        viewModel.getMyPosts()
+        setResultScrollListener()
         setAdapter()
         observeMyPosts()
     }
@@ -64,6 +66,19 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
         viewModel.posts.observe(this) {
             adapter.setMyPosts(it)
         }
+    }
+
+    private fun setResultScrollListener() {
+        binding.rvMyPost.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (viewModel.hasNextPage()) {
+                    return
+                }
+                if (!binding.rvMyPost.canScrollVertically(1)) {
+                    viewModel.getMyPosts()
+                }
+            }
+        })
     }
 
     override fun onMyPostClick(id: Long) {
