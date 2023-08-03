@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">edonymyeon</string>
+    <string name="app_name">이돈이면</string>
 
     <!-- common -->
     <string name="all_price">가격: %,d원</string>
