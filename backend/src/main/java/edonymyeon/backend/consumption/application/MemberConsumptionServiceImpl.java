@@ -14,7 +14,6 @@ import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.application.dto.YearMonthDto;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -94,10 +93,5 @@ public class MemberConsumptionServiceImpl implements MemberConsumptionService {
     private Consumption findConsumptionByPostID(final Long postId) {
         return consumptionRepository.findByPostId(postId)
                 .orElseThrow(() -> new EdonymyeonException(CONSUMPTION_POST_ID_NOT_FOUND));
-    }
-
-    @Override
-    public List<Consumption> findAllByPostIds(final List<Long> postIds) {
-        return consumptionRepository.findAllByPostIds(postIds);
     }
 }

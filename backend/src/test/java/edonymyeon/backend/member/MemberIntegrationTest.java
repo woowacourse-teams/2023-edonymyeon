@@ -5,8 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.member.application.dto.response.MyPageResponse;
-import edonymyeon.backend.member.application.dto.response.MyPostResponse;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.domain.Post;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;

@@ -6,11 +6,7 @@ import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.application.dto.response.MyPageResponse;
-import edonymyeon.backend.member.application.dto.response.MyPostResponse;
-import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
-import edonymyeon.backend.post.ui.annotation.PostPaging;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,13 +27,6 @@ public class MemberController {
     public ResponseEntity<MyPageResponse> findMemberInfo(@AuthPrincipal final MemberIdDto memberIdDto) {
         final MyPageResponse memberInfo = memberService.findMemberInfoById(memberIdDto.id());
         return ResponseEntity.ok(memberInfo);
-    }
-
-    @GetMapping("/my-posts")
-    public ResponseEntity<Slice<MyPostResponse>> findMyPosts(@AuthPrincipal final MemberIdDto memberIdDto,
-                                                             @PostPaging GeneralFindingCondition generalFindingCondition) {
-        Slice<MyPostResponse> response = memberService.findMyPosts(memberIdDto, generalFindingCondition);
-        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/my-posts/{postId}/purchase-confirm")
