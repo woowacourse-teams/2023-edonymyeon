@@ -138,11 +138,11 @@ public class Consumption {
         return this.consumptionDate.getMonth() == consumption.consumptionDate.getMonth();
     }
 
-    public long getConsumptionYear() {
+    public int getConsumptionYear() {
         return consumptionDate.getYear();
     }
 
-    public long getConsumptionMonth() {
+    public int getConsumptionMonth() {
         return consumptionDate.getMonth().getValue();
     }
 }

@@ -10,7 +10,7 @@ import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.domain.Post;
-import edonymyeon.backend.support.ConsumptionTestSupport2;
+import edonymyeon.backend.support.ConsumptionTestSupport;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.time.LocalDate;
@@ -28,7 +28,7 @@ import org.springframework.http.HttpStatus;
 public class ConsumptionIntegrationTest extends IntegrationTest {
 
     @Autowired
-    private ConsumptionTestSupport2 consumptionTestSupport2;
+    private ConsumptionTestSupport consumptionTestSupport;
 
     @ParameterizedTest(name = "조회 기간 = {0} 개월")
     @ValueSource(ints = {-1, 0, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14})
@@ -89,7 +89,7 @@ public class ConsumptionIntegrationTest extends IntegrationTest {
 
     private Consumption 절약_내역을_생성한다(final Member 사용자, final Integer 년, final Integer 월) {
         final Post 게시글 = postTestSupport.builder().member(사용자).build();
-        return consumptionTestSupport2.builder()
+        return consumptionTestSupport.builder()
                 .post(게시글)
                 .consumptionType(ConsumptionType.SAVING)
                 .consumptionYear(년)
@@ -112,7 +112,7 @@ public class ConsumptionIntegrationTest extends IntegrationTest {
 
     private Consumption 구매_내역을_생성한다(final Member 사용자, final Integer 년, final Integer 월) {
         final Post 게시글 = postTestSupport.builder().member(사용자).build();
-        return consumptionTestSupport2.builder()
+        return consumptionTestSupport.builder()
                 .post(게시글)
                 .consumptionType(ConsumptionType.PURCHASE)
                 .price(10_000L)

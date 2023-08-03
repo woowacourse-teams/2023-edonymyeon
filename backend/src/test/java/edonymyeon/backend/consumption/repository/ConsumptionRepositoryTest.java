@@ -18,6 +18,7 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestConstructor;
@@ -32,12 +33,16 @@ import org.springframework.test.context.TestConstructor.AutowireMode;
 @DataJpaTest
 class ConsumptionRepositoryTest {
 
+    @Autowired
     private final ConsumptionRepository consumptionRepository;
 
+    @Autowired
     private final MemberTestSupport memberTestSupport;
 
+    @Autowired
     private ConsumptionTestSupport consumptionTestSupport;
 
+    @Autowired
     private final PostTestSupport postTestSupport;
 
     @Test
@@ -121,3 +126,4 @@ class ConsumptionRepositoryTest {
         final int 마지막_일 = LocalDate.of(년도, 달, 1).lengthOfMonth();
         return LocalDate.of(년도, 달, 마지막_일);
     }
+}
