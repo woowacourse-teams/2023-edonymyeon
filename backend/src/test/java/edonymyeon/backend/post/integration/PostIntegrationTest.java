@@ -17,7 +17,7 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.integration.steps.MemberConsumptionSteps;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.PostService;
-import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
+import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;

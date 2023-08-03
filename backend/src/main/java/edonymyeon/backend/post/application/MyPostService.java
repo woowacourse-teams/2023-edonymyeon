@@ -2,7 +2,6 @@ package edonymyeon.backend.post.application;
 
 import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
-import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.application.dto.response.PostConsumptionResponse;
 import edonymyeon.backend.post.domain.Post;

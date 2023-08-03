@@ -14,7 +14,6 @@ import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.GeneralPostsResponse;
 import edonymyeon.backend.post.application.dto.PostModificationRequest;

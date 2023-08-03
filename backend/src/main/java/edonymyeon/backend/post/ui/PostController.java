@@ -3,7 +3,7 @@ package edonymyeon.backend.post.ui;
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
 import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.post.application.PostService;
-import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
+import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.GeneralPostsResponse;
 import edonymyeon.backend.post.application.dto.PostModificationRequest;

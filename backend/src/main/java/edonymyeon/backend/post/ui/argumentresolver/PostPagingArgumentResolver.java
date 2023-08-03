@@ -2,7 +2,7 @@ package edonymyeon.backend.post.ui.argumentresolver;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
-import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
+import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.ui.annotation.PostPaging;
 import java.util.Objects;
 import org.springframework.core.MethodParameter;

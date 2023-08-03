@@ -1,7 +1,7 @@
 package edonymyeon.backend.post.ui;
 
 import edonymyeon.backend.post.application.PostService;
-import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
+import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.GeneralPostsResponse;
 import edonymyeon.backend.post.ui.annotation.PostPaging;
 import lombok.RequiredArgsConstructor;

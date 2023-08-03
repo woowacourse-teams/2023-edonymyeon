@@ -11,7 +11,7 @@ import edonymyeon.backend.member.application.dto.MemberIdDto;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.application.MyPostService;
 import edonymyeon.backend.post.application.PostConsumptionService;
-import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
+import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.application.dto.response.PostConsumptionResponse;
 import edonymyeon.backend.post.domain.Post;

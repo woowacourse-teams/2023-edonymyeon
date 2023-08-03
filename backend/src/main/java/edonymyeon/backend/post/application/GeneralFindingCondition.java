@@ -1,8 +1,10 @@
-package edonymyeon.backend.post.application.dto;
+package edonymyeon.backend.post.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_INVALID_PAGINATION_CONDITION;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.post.application.dto.SortBy;
+import edonymyeon.backend.post.application.dto.SortDirection;
 import edonymyeon.backend.post.domain.Post;
 import java.util.Objects;
 import lombok.Builder;

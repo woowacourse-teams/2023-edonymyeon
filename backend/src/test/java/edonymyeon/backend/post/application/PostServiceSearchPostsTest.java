@@ -4,7 +4,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.PostTestSupport;
 import lombok.RequiredArgsConstructor;

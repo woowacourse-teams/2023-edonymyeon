@@ -51,6 +51,7 @@ public class MemberIntegrationTest extends IntegrationTest {
         final Post post2 = postTestSupport.builder()
                 .member(member)
                 .build();
+
         postTestSupport.builder()
                 .member(member)
                 .build();
