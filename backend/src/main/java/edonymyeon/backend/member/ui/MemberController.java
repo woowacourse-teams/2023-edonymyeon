@@ -2,7 +2,7 @@ package edonymyeon.backend.member.ui;
 
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
 import edonymyeon.backend.member.application.MemberService;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.application.dto.response.MyPageResponse;
@@ -24,31 +24,31 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping
-    public ResponseEntity<MyPageResponse> findMemberInfo(@AuthPrincipal final MemberIdDto memberIdDto) {
-        final MyPageResponse memberInfo = memberService.findMemberInfoById(memberIdDto.id());
+    public ResponseEntity<MyPageResponse> findMemberInfo(@AuthPrincipal MemberId memberId) {
+        final MyPageResponse memberInfo = memberService.findMemberInfoById(memberId.id());
         return ResponseEntity.ok(memberInfo);
     }
 
     @PostMapping("/my-posts/{postId}/purchase-confirm")
-    public ResponseEntity<Void> confirmPurchase(@AuthPrincipal final MemberIdDto memberIdDto,
+    public ResponseEntity<Void> confirmPurchase(@AuthPrincipal final MemberId memberId,
                                                 @PathVariable final Long postId,
                                                 @RequestBody final PurchaseConfirmRequest purchaseConfirmRequest) {
-        memberService.confirmPurchase(memberIdDto, postId, purchaseConfirmRequest);
+        memberService.confirmPurchase(memberId, postId, purchaseConfirmRequest);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/my-posts/{postId}/saving-confirm")
-    public ResponseEntity<Void> confirmSaving(@AuthPrincipal final MemberIdDto memberIdDto,
+    public ResponseEntity<Void> confirmSaving(@AuthPrincipal final MemberId memberId,
                                               @PathVariable final Long postId,
                                               @RequestBody final SavingConfirmRequest savingConfirmRequest) {
-        memberService.confirmSaving(memberIdDto, postId, savingConfirmRequest);
+        memberService.confirmSaving(memberId, postId, savingConfirmRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/my-posts/{postId}/confirm-remove")
-    public ResponseEntity<Void> removeConfirm(@AuthPrincipal final MemberIdDto memberIdDto,
+    public ResponseEntity<Void> removeConfirm(@AuthPrincipal final MemberId memberId,
                                               @PathVariable final Long postId) {
-        memberService.removeConfirm(memberIdDto, postId);
+        memberService.removeConfirm(memberId, postId);
         return ResponseEntity.ok().build();
     }
 }

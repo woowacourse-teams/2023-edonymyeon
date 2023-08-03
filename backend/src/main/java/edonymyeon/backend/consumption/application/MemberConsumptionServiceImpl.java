@@ -10,7 +10,7 @@ import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.MemberConsumptionService;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.application.dto.YearMonthDto;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
@@ -30,12 +30,12 @@ public class MemberConsumptionServiceImpl implements MemberConsumptionService {
     @Override
     @Transactional
     public void confirmSaving(
-            final MemberIdDto memberIdDto,
+            final MemberId memberId,
             final Long postId,
             final YearMonthDto yearMonth
     ) {
         final Post post = findPostById(postId);
-        post.validateWriter(memberIdDto.id());
+        post.validateWriter(memberId.id());
         validateConsumptionExist(postId);
 
         final Consumption consumption = Consumption.of(
@@ -62,13 +62,13 @@ public class MemberConsumptionServiceImpl implements MemberConsumptionService {
     @Override
     @Transactional
     public void confirmPurchase(
-            final MemberIdDto memberIdDto,
+            final MemberId memberId,
             final Long postId,
             final Long purchasePrice,
             final YearMonthDto yearMonth
     ) {
         final Post post = findPostById(postId);
-        post.validateWriter(memberIdDto.id());
+        post.validateWriter(memberId.id());
         validateConsumptionExist(postId);
 
         final Consumption consumption = Consumption.of(
@@ -83,9 +83,9 @@ public class MemberConsumptionServiceImpl implements MemberConsumptionService {
 
     @Override
     @Transactional
-    public void removeConfirm(final MemberIdDto memberIdDto, final Long postId) {
+    public void removeConfirm(final MemberId memberId, final Long postId) {
         final Post post = findPostById(postId);
-        post.validateWriter(memberIdDto.id());
+        post.validateWriter(memberId.id());
         final Consumption consumption = findConsumptionByPostID(postId);
         consumptionRepository.delete(consumption);
     }

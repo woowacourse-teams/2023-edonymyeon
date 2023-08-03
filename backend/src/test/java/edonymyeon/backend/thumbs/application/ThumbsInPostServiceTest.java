@@ -1,17 +1,19 @@
 package edonymyeon.backend.thumbs.application;
 
-import static edonymyeon.backend.auth.ui.argumentresolver.AuthArgumentResolver.NON_EXISTING_MEMBER_ID;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.member.application.dto.AnonymousMemberId;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.PostService;
+import edonymyeon.backend.post.application.PostThumbsService;
+import edonymyeon.backend.post.application.dto.AllThumbsInPostResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.post.application.dto.ThumbsStatusInPostResponse;
 import edonymyeon.backend.support.MemberTestSupport;
-import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
-import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -29,6 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @SpringBootTest
 public class ThumbsInPostServiceTest {
+
+    private final PostThumbsService postThumbsService;
 
     private final ThumbsService thumbsService;
 
@@ -53,13 +57,13 @@ public class ThumbsInPostServiceTest {
                 1000L,
                 null
         );
-        MemberIdDto memberId = new MemberIdDto(postWriter.getId());
+        MemberId memberId = new ActiveMemberId(postWriter.getId());
         postResponse = postService.createPost(memberId, postRequest);
     }
 
     @Test
     void 해당_게시글에_추천이_없을시에도_정상_동작한다() {
-        AllThumbsInPostResponse allThumbsInPostResponse = thumbsService.findAllThumbsInPost(postResponse.id());
+        AllThumbsInPostResponse allThumbsInPostResponse = postThumbsService.findAllThumbsInPost(postResponse.id());
 
         assertSoftly(softly -> {
                     softly.assertThat(allThumbsInPostResponse.thumbsUpCount()).isEqualTo(0);
@@ -76,7 +80,7 @@ public class ThumbsInPostServiceTest {
         thumbsUp(otherMember2, postResponse);
 
         // when
-        AllThumbsInPostResponse allThumbsInPostResponse = thumbsService.findAllThumbsInPost(postResponse.id());
+        AllThumbsInPostResponse allThumbsInPostResponse = postThumbsService.findAllThumbsInPost(postResponse.id());
 
         // then
         assertSoftly(softly -> {
@@ -97,7 +101,7 @@ public class ThumbsInPostServiceTest {
         thumbsDown(otherMember3, postResponse);
 
         // when
-        AllThumbsInPostResponse allThumbsInPostResponse = thumbsService.findAllThumbsInPost(postResponse.id());
+        AllThumbsInPostResponse allThumbsInPostResponse = postThumbsService.findAllThumbsInPost(postResponse.id());
 
         // then
         assertSoftly(softly -> {
@@ -113,8 +117,8 @@ public class ThumbsInPostServiceTest {
         thumbsUp(otherMember, postResponse);
 
         // when
-        MemberIdDto emptyId = new MemberIdDto(NON_EXISTING_MEMBER_ID);
-        ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.findThumbsStatusInPost(emptyId,
+        MemberId emptyId = new ActiveMemberId(AnonymousMemberId.ANONYMOUS_MEMBER_ID);
+        ThumbsStatusInPostResponse thumbsStatusInPostResponse = postThumbsService.findThumbsStatusInPost(emptyId,
                 postResponse.id());
 
         // then
@@ -131,8 +135,8 @@ public class ThumbsInPostServiceTest {
         thumbsUp(otherMember, postResponse);
 
         // when
-        MemberIdDto otherMemberId = new MemberIdDto(otherMember.getId());
-        ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.findThumbsStatusInPost(otherMemberId,
+        MemberId otherMemberId = new ActiveMemberId(otherMember.getId());
+        ThumbsStatusInPostResponse thumbsStatusInPostResponse = postThumbsService.findThumbsStatusInPost(otherMemberId,
                 postResponse.id());
 
         // then
@@ -146,10 +150,10 @@ public class ThumbsInPostServiceTest {
     @Test
     void 해당_게시글을_추천하지_않았을때_모두_False_이다() {
         // given
-        MemberIdDto otherMemberId = new MemberIdDto(otherMember.getId());
+        MemberId otherMemberId = new ActiveMemberId(otherMember.getId());
 
         // when
-        ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.findThumbsStatusInPost(otherMemberId,
+        ThumbsStatusInPostResponse thumbsStatusInPostResponse = postThumbsService.findThumbsStatusInPost(otherMemberId,
                 postResponse.id());
 
         // then
@@ -166,8 +170,8 @@ public class ThumbsInPostServiceTest {
         thumbsDown(otherMember, postResponse);
 
         // when
-        MemberIdDto otherMemberId = new MemberIdDto(otherMember.getId());
-        ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.findThumbsStatusInPost(otherMemberId,
+        MemberId otherMemberId = new ActiveMemberId(otherMember.getId());
+        ThumbsStatusInPostResponse thumbsStatusInPostResponse = postThumbsService.findThumbsStatusInPost(otherMemberId,
                 postResponse.id());
 
         // then
@@ -179,12 +183,12 @@ public class ThumbsInPostServiceTest {
     }
 
     private void thumbsUp(final Member member, final PostResponse post) {
-        MemberIdDto memberId = new MemberIdDto(member.getId());
+        MemberId memberId = new ActiveMemberId(member.getId());
         thumbsService.thumbsUp(memberId, post.id());
     }
 
     private void thumbsDown(final Member member, final PostResponse post) {
-        MemberIdDto memberId = new MemberIdDto(member.getId());
+        MemberId memberId = new ActiveMemberId(member.getId());
         thumbsService.thumbsDown(memberId, post.id());
     }
 

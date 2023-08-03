@@ -1,7 +1,7 @@
 package edonymyeon.backend.post.application;
 
 import edonymyeon.backend.image.domain.Domain;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.application.dto.response.PostConsumptionResponse;
 import edonymyeon.backend.post.domain.Post;
@@ -24,7 +24,7 @@ public class MyPostService {
 
     private final Domain domain;
 
-    public Slice<MyPostResponse> findMyPosts(final MemberIdDto memberIdDto,
+    public Slice<MyPostResponse> findMyPosts(final MemberId memberIdDto,
                                              final GeneralFindingCondition findingCondition) {
         final Slice<Post> posts = postRepository.findAllByMemberId(memberIdDto.id(), findingCondition.toPage());
         final List<Long> postIds = posts.map(Post::getId).toList();

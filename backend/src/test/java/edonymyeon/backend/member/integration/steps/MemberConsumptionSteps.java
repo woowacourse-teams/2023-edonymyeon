@@ -51,6 +51,7 @@ public class MemberConsumptionSteps {
                 .when()
                 .delete("/profile/my-posts/{postId}/confirm-remove", 게시글_id)
                 .then()
+                .log().all()
                 .extract();
     }
 }

@@ -1,6 +1,5 @@
 package edonymyeon.backend.thumbs.application;
 
-import static edonymyeon.backend.auth.ui.argumentresolver.AuthArgumentResolver.NON_EXISTING_MEMBER_ID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_DOWN_DELETE_FAIL_WHEN_THUMBS_UP;
@@ -10,16 +9,13 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP
 import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP_IS_NOT_EXIST;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
-import edonymyeon.backend.thumbs.domain.AllThumbsInPost;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
-import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
-import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -37,29 +33,8 @@ public class ThumbsService {
 
     private final PostRepository postRepository;
 
-    public AllThumbsInPostResponse findAllThumbsInPost(final Long postId) {
-        AllThumbsInPost allThumbsInPost = AllThumbsInPost.from(thumbsRepository.findByPostId(postId));
-
-        return new AllThumbsInPostResponse(allThumbsInPost.getUpCount(),
-                allThumbsInPost.getDownCount());
-    }
-
-    public ThumbsStatusInPostResponse findThumbsStatusInPost(final MemberIdDto memberId, final Long postId) {
-        if (memberId.id() == NON_EXISTING_MEMBER_ID) {
-            return new ThumbsStatusInPostResponse(false, false);
-        }
-
-        Optional<Thumbs> thumbsInPost = thumbsRepository.findByPostIdAndMemberId(postId, memberId.id());
-        if (thumbsInPost.isEmpty()) {
-            return new ThumbsStatusInPostResponse(false, false);
-        }
-
-        Thumbs thumbs = thumbsInPost.get();
-        return new ThumbsStatusInPostResponse(thumbs.isUp(), thumbs.isDown());
-    }
-
     @Transactional
-    public void thumbsUp(final MemberIdDto memberId, final Long postId) {
+    public void thumbsUp(final MemberId memberId, final Long postId) {
         Member loginMember = findMemberById(memberId);
         Post post = findPostById(postId);
         checkPostWriter(post, loginMember);
@@ -75,7 +50,7 @@ public class ThumbsService {
         thumbs.up();
     }
 
-    private Member findMemberById(final MemberIdDto memberId) {
+    private Member findMemberById(final MemberId memberId) {
         return memberRepository.findById(memberId.id())
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
     }
@@ -92,7 +67,7 @@ public class ThumbsService {
     }
 
     @Transactional
-    public void thumbsDown(final MemberIdDto memberId, final Long postId) {
+    public void thumbsDown(final MemberId memberId, final Long postId) {
         Member loginMember = findMemberById(memberId);
         Post post = findPostById(postId);
         checkPostWriter(post, loginMember);
@@ -109,12 +84,7 @@ public class ThumbsService {
     }
 
     @Transactional
-    public void deleteAllThumbsInPost(final Long postId) {
-        thumbsRepository.deleteAllByPostId(postId);
-    }
-
-    @Transactional
-    public void deleteThumbsUp(final MemberIdDto memberId, final Long postId) {
+    public void deleteThumbsUp(final MemberId memberId, final Long postId) {
         Member loginMember = findMemberById(memberId);
         Post post = findPostById(postId);
         checkPostWriter(post, loginMember);
@@ -132,7 +102,7 @@ public class ThumbsService {
     }
 
     @Transactional
-    public void deleteThumbsDown(final MemberIdDto memberId, final Long postId) {
+    public void deleteThumbsDown(final MemberId memberId, final Long postId) {
         Member loginMember = findMemberById(memberId);
         Post post = findPostById(postId);
         checkPostWriter(post, loginMember);

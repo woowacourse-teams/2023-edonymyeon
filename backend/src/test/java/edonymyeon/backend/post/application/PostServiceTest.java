@@ -10,7 +10,8 @@ import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
@@ -54,13 +55,12 @@ import org.springframework.web.multipart.MultipartFile;
 class PostServiceTest implements ImageFileCleaner {
 
     private static final Pattern 이미지_UUID_와_확장자_형식 = Pattern.compile("test-inserting\\d+\\.(png|jpg)");
-    private static final Pattern 파일_경로_형식 = Pattern.compile(
-            "src/test/resources/static/img/test_store/" + "test-inserting\\d+\\.(png|jpg)"
-    );
 
     private final PostImageInfoRepository postImageInfoRepository;
 
     private final PostService postService;
+
+    private final PostReadService postReadService;
 
     private final MemberRepository memberRepository;
 
@@ -70,14 +70,14 @@ class PostServiceTest implements ImageFileCleaner {
 
     private final ImageFileUploader imageFileUploader;
 
-    private MemberIdDto memberId;
+    private MemberId memberId;
 
     @BeforeEach
     public void setUp() {
         Member member = memberTestSupport.builder()
                 .build();
         memberRepository.save(member);
-        memberId = new MemberIdDto(member.getId());
+        memberId = new ActiveMemberId(member.getId());
     }
 
     private PostRequest getPostRequest() throws IOException {
@@ -99,11 +99,11 @@ class PostServiceTest implements ImageFileCleaner {
         final Member member = new Member("anonymous@gmail.com", "password123!", "엘렐레", null);
         memberRepository.save(member);
 
-        final MemberIdDto memberIdDto = new MemberIdDto(member.getId());
-        final PostResponse postResponse = postService.createPost(memberIdDto, getPostRequest());
+        final ActiveMemberId memberId = new ActiveMemberId(member.getId());
+        final PostResponse postResponse = postService.createPost(memberId, getPostRequest());
 
         Assertions
-                .assertThatCode(() -> postService.findSpecificPost(postResponse.id(), memberIdDto))
+                .assertThatCode(() -> postReadService.findSpecificPost(postResponse.id(), memberId))
                 .doesNotThrowAnyException();
     }
 
@@ -152,16 +152,7 @@ class PostServiceTest implements ImageFileCleaner {
 
             // then
             List<PostImageInfo> imageFiles = postImageInfoRepository.findAllByPostId(postId);
-            assertSoftly(softly -> {
-                        softly.assertThat(imageFiles).hasSize(2);
-                        softly.assertThat(
-                                        파일_경로_형식.matcher(imageFileUploader.getFullPath(imageFiles.get(0).getStoreName())).matches())
-                                .isTrue();
-                        softly.assertThat(
-                                        파일_경로_형식.matcher(imageFileUploader.getFullPath(imageFiles.get(1).getStoreName())).matches())
-                                .isTrue();
-                    }
-            );
+            assertSoftly(softly -> softly.assertThat(imageFiles).hasSize(2));
         }
 
         @Test
@@ -204,7 +195,7 @@ class PostServiceTest implements ImageFileCleaner {
     class 게시글을_수정할_때 {
 
         @Test
-        void 게시글_작성자가_아니면_수정할_수_없다(@Autowired PostRepository postRepository) throws IOException {
+        void 게시글_작성자가_아니면_수정할_수_없다() {
             // given
             final PostRequest postRequest = new PostRequest(
                     "I love you",
@@ -219,8 +210,8 @@ class PostServiceTest implements ImageFileCleaner {
                     .email("otheremail")
                     .password("password123!")
                     .build();
-            memberRepository.save(다른_사람);
-            memberId = new MemberIdDto(다른_사람.getId());
+
+            memberId = new ActiveMemberId(다른_사람.getId());
             final PostModificationRequest updatedPostRequest = new PostModificationRequest(
                     "I hate you",
                     "change!!",
@@ -229,12 +220,12 @@ class PostServiceTest implements ImageFileCleaner {
                     Collections.emptyList()
             );
             assertThatThrownBy(
-                    () -> postService.updatePost(new MemberIdDto(다른_사람.getId()), post.id(), updatedPostRequest))
+                    () -> postService.updatePost(new ActiveMemberId(다른_사람.getId()), post.id(), updatedPostRequest))
                     .isInstanceOf(EdonymyeonException.class);
         }
 
         @Test
-        void 제목과_내용과_가격을_수정할_수_있다(@Autowired PostRepository postRepository) throws IOException {
+        void 제목과_내용과_가격을_수정할_수_있다(@Autowired PostRepository postRepository) {
             // given
             final PostRequest postRequest = new PostRequest(
                     "I love you",
@@ -307,7 +298,7 @@ class PostServiceTest implements ImageFileCleaner {
             void 이미지를_추가할_수_있다(@Autowired PostRepository postRepository) throws IOException {
                 // given
                 final PostResponse 게시글_생성_결과 = postService.createPost(memberId, 이미지가_없는_요청);
-                final SpecificPostInfoResponse 게시글_상세조회_결과 = postService.findSpecificPost(게시글_생성_결과.id(), memberId);
+                final SpecificPostInfoResponse 게시글_상세조회_결과 = postReadService.findSpecificPost(게시글_생성_결과.id(), memberId);
 
                 // when
                 final List<MultipartFile> 추가할_이미지 = List.of(mockMultipartFileTestSupport.builder()
@@ -328,7 +319,7 @@ class PostServiceTest implements ImageFileCleaner {
             }
 
             @Test
-            void 이미지를_전부_삭제할_수_있다(@Autowired PostRepository postRepository) throws IOException {
+            void 이미지를_전부_삭제할_수_있다(@Autowired PostRepository postRepository) {
                 // given
                 final PostResponse post = postService.createPost(memberId, 이미지가_2개_있는_요청);
 

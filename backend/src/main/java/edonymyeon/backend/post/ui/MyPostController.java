@@ -1,9 +1,9 @@
 package edonymyeon.backend.post.ui;
 
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
-import edonymyeon.backend.post.application.MyPostService;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
+import edonymyeon.backend.post.application.MyPostService;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.ui.annotation.PostPaging;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +21,9 @@ public class MyPostController {
     private final MyPostService myPostService;
 
     @GetMapping("/my-posts")
-    public ResponseEntity<Slice<MyPostResponse>> findMyPosts(@AuthPrincipal final MemberIdDto memberIdDto,
+    public ResponseEntity<Slice<MyPostResponse>> findMyPosts(@AuthPrincipal final MemberId memberId,
                                                              @PostPaging GeneralFindingCondition generalFindingCondition) {
-        Slice<MyPostResponse> response = myPostService.findMyPosts(memberIdDto, generalFindingCondition);
+        Slice<MyPostResponse> response = myPostService.findMyPosts(memberId, generalFindingCondition);
         return ResponseEntity.ok(response);
     }
 }

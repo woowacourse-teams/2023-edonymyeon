@@ -1,4 +1,4 @@
-package edonymyeon.backend.member.application;
+package edonymyeon.backend.post.application;
 
 import static edonymyeon.backend.consumption.domain.ConsumptionType.PURCHASE;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
@@ -7,11 +7,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 import edonymyeon.backend.consumption.domain.Consumption;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.application.MyPostService;
-import edonymyeon.backend.post.application.PostConsumptionService;
-import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.application.dto.response.PostConsumptionResponse;
 import edonymyeon.backend.post.domain.Post;
@@ -32,7 +29,7 @@ import org.springframework.data.domain.SliceImpl;
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
 @ExtendWith(MockitoExtension.class)
-class MemberServiceTest {
+class MyPostServiceTest {
 
     @Mock
     private PostRepository postRepository;
@@ -60,7 +57,7 @@ class MemberServiceTest {
 
         when(postConsumptionService.findConsumptionsByPostIds(any())).thenReturn(소비확정_목록);
 
-        final List<MyPostResponse> 반환결과 = myPostService.findMyPosts(new MemberIdDto(작성자.getId()), findingCondition)
+        final List<MyPostResponse> 반환결과 = myPostService.findMyPosts(new ActiveMemberId(작성자.getId()), findingCondition)
                 .getContent();
 
         assertSoftly(
