@@ -1,6 +1,5 @@
 package com.domain.edonymyeon.repository
 
-import com.domain.edonymyeon.model.PostItem
 import com.domain.edonymyeon.model.PostItems
 
 interface PostRepository {
