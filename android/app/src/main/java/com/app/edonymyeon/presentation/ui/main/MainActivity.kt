@@ -69,6 +69,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun refreshActivity() {
+        finish()
+        overridePendingTransition(0, 0)
+        startActivity(intent)
+        overridePendingTransition(0, 0)
+    }
+
     private fun getTag(itemId: Int): String = when (itemId) {
         R.id.bottom_menu_search -> FRAGMENT_SEARCH
         R.id.bottom_menu_home -> FRAGMENT_HOME

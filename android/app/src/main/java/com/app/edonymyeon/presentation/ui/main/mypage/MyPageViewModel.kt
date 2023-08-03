@@ -32,6 +32,11 @@ class MyPageViewModel(
     val consumptionOnThisMonth: LiveData<ConsumptionAmountUiModel>
         get() = _consumptionOnThisMonth
 
+    init {
+        _profile.value = WriterUiModel(0L, "로그인해주세요", null)
+        _consumptionOnThisMonth.value = ConsumptionAmountUiModel(0, 0)
+    }
+
     fun getMonthLists(): List<String> =
         _consumptions.value?.toDomain()?.monthRange?.yearMonthList ?: emptyList()
 

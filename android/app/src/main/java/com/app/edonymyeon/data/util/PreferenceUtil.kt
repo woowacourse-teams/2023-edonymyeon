@@ -23,8 +23,8 @@ object PreferenceUtil {
             .build()
     }
 
-    fun getValue(key: String) {
-        sharedPreferences.getString(key, "")
+    fun getValue(key: String): String? {
+        return sharedPreferences.getString(key, "")
     }
 
     fun setValue(key: String, value: String) {

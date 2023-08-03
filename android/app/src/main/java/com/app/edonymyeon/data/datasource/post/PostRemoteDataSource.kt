@@ -17,11 +17,6 @@ class PostRemoteDataSource : PostDataSource {
     private val postService: PostService =
         RetrofitClient.getInstance().create(PostService::class.java)
 
-    init {
-        RetrofitClient.getInstance()
-            .updateAccessToken("Basic YmVhdXRpZnVsbmVvQG5hdmVyLmNvbTpuZW8xMjM=")
-    }
-
     override suspend fun getPostDetail(postId: Long): Response<PostDetailResponse> {
         return postService.getPost(postId)
     }

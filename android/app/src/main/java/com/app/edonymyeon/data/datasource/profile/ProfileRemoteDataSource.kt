@@ -13,11 +13,6 @@ class ProfileRemoteDataSource : ProfileDataSource {
     private val profileService: ProfileService =
         RetrofitClient.getInstance().create(ProfileService::class.java)
 
-    init {
-        RetrofitClient.getInstance()
-            .updateAccessToken("Basic YmVhdXRpZnVsbmVvQG5hdmVyLmNvbTpuZW8xMjM=")
-    }
-
     override suspend fun getMyPosts(page: Int): Response<MyPostsResponse> {
         return profileService.getMyPost(20, page)
     }

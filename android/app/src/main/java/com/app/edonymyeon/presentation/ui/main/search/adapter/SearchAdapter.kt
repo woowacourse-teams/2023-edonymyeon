@@ -8,7 +8,9 @@ import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
 class SearchAdapter(private val onClick: (Long) -> Unit) :
     ListAdapter<PostItemUiModel, SearchViewHolder>(SearchDiffUtilCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
-        return SearchViewHolder(parent)
+        return SearchViewHolder(parent) {
+            onClick(currentList[it].id)
+        }
     }
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
