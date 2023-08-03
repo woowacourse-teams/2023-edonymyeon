@@ -1,6 +1,7 @@
 package com.app.edonymyeon.presentation.ui.main.mypage
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import app.edonymyeon.R
 import app.edonymyeon.databinding.FragmentMyPageBinding
+import com.app.edonymyeon.data.datasource.consumptions.ConsumptionsRemoteDataSource
+import com.app.edonymyeon.data.datasource.profile.ProfileRemoteDataSource
+import com.app.edonymyeon.data.repository.ConsumptionsRepositoryImpl
+import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
 import com.app.edonymyeon.presentation.ui.main.mypage.chart.LineChartManager
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -18,7 +23,12 @@ class MyPageFragment : Fragment() {
         FragmentMyPageBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: MyPageViewModel by viewModels()
+    private val viewModel: MyPageViewModel by viewModels {
+        MyPageViewModelFactory(
+            ProfileRepositoryImpl(ProfileRemoteDataSource()),
+            ConsumptionsRepositoryImpl(ConsumptionsRemoteDataSource()),
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -26,6 +36,7 @@ class MyPageFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         binding.lifecycleOwner = this
+        binding.viewModel = viewModel
         return binding.root
     }
 
@@ -34,8 +45,13 @@ class MyPageFragment : Fragment() {
 
         // 로그인이 되어있다면
         binding.tvRequiredLogin.isVisible = false
+        viewModel.getUserProfile()
 
-        viewModel.setConsumptions()
+        viewModel.profile.observe(viewLifecycleOwner) {
+            Log.d("MyPageFragment", "profile: $it")
+        }
+
+        viewModel.setConsumptions(PERIOD_MONTH)
 
         setConsumptionChart(
             LineChartManager(
@@ -72,5 +88,9 @@ class MyPageFragment : Fragment() {
                 setMarkerView()
             }
         }
+    }
+
+    companion object {
+        private const val PERIOD_MONTH = 6
     }
 }

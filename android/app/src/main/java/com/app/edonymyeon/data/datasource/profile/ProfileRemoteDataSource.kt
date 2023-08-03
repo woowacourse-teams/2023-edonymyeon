@@ -3,6 +3,7 @@ package com.app.edonymyeon.data.datasource.profile
 import com.app.edonymyeon.data.dto.request.PurchaseConfirmRequest
 import com.app.edonymyeon.data.dto.request.SavingConfirmRequest
 import com.app.edonymyeon.data.dto.response.MyPostsResponse
+import com.app.edonymyeon.data.dto.response.ProfileResponse
 import com.app.edonymyeon.data.service.ProfileService
 import com.app.edonymyeon.data.service.client.RetrofitClient
 import retrofit2.Response
@@ -37,5 +38,8 @@ class ProfileRemoteDataSource : ProfileDataSource {
 
     override suspend fun deleteConfirm(id: Long): Response<Unit> {
         return profileService.deleteConfirm(id)
+        
+    override suspend fun getProfile(): Response<ProfileResponse> {
+        return profileService.getProfile()
     }
 }
