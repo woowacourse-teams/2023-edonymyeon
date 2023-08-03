@@ -3,6 +3,7 @@ package com.app.edonymyeon.presentation.ui.posteditor
 import android.app.Application
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import android.text.Editable
 import androidx.core.net.toUri
@@ -10,6 +11,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.loader.content.CursorLoader
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
@@ -132,7 +134,11 @@ class PostEditorViewModel(
 
     private fun getAbsolutePathFromContentUri(context: Context, uri: Uri): String? {
         val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = context.contentResolver.query(uri, projection, null, null, null)
+        val cursor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            context.contentResolver.query(uri, projection, null, null, null)
+        } else {
+            CursorLoader(context, uri, projection, null, null, null).loadInBackground()
+        }
         cursor?.use {
             if (it.moveToFirst()) {
                 val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
