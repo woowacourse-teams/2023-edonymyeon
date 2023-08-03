@@ -27,9 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 @TestConstructor(autowireMode = AutowireMode.ALL)
 @Transactional
 @SpringBootTest
-class ConsumptionConfirmServiceImplTest {
+class MemberConsumptionServiceImplTest {
 
-    private final ConsumptionConfirmServiceImpl consumptionConfirmService;
+    private final MemberConsumptionServiceImpl consumptionConfirmService;
 
     private final ConsumptionRepository consumptionRepository;
 

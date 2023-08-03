@@ -20,4 +20,7 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
     @EntityGraph(attributePaths = "member")
     Page<Post> findAll(@NonNull Specification<Post> specification,
                        @NonNull Pageable pageable);
+
+    @EntityGraph(attributePaths = "member")
+    Slice<Post> findAllByMemberId(Long memberId, Pageable pageable);
 }

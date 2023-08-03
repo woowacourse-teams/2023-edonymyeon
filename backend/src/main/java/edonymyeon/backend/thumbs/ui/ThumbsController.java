@@ -18,7 +18,7 @@ public class ThumbsController {
 
     @PutMapping("posts/{postId}/up")
     public ResponseEntity<Void> thumbsUp(@AuthPrincipal final MemberId memberId,
-                                         @PathVariable final Long postId){
+                                         @PathVariable final Long postId) {
         thumbsService.thumbsUp(memberId, postId);
         return ResponseEntity.ok()
                 .build();

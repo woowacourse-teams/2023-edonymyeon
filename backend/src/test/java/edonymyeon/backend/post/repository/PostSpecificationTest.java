@@ -1,7 +1,11 @@
 package edonymyeon.backend.post.repository;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.PostTestSupport;
+import java.util.Arrays;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -12,11 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -54,10 +53,10 @@ public class PostSpecificationTest {
 
     @Test
     void 게시글_검색시_제목과_내용에_키워드가_나눠져_있어도_검색이_되는지_확인한다() {
-         postTestSupport.builder()
-                        .title("ecec")
-                        .content("I use EnGlish and KoRean")
-                        .build();
+        postTestSupport.builder()
+                .title("ecec")
+                .content("I use EnGlish and KoRean")
+                .build();
 
         Specification<Post> searchedBy = PostSpecification.searchBy("reA ce ");
         List<Post> all = postRepository.findAll(searchedBy);

@@ -1,4 +1,4 @@
-package edonymyeon.backend.global.logging;
+package edonymyeon.backend.logging;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;

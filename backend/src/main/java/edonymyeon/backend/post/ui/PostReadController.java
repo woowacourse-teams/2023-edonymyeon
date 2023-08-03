@@ -2,8 +2,8 @@ package edonymyeon.backend.post.ui;
 
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
 import edonymyeon.backend.member.application.dto.MemberId;
+import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.PostReadService;
-import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
 import edonymyeon.backend.post.ui.annotation.PostPaging;
@@ -22,7 +22,8 @@ public class PostReadController {
     private final PostReadService postReadService;
 
     @GetMapping("/posts")
-    public ResponseEntity<Slice<GeneralPostInfoResponse>> findAllPosts(@PostPaging GeneralFindingCondition generalFindingCondition) {
+    public ResponseEntity<Slice<GeneralPostInfoResponse>> findAllPosts(
+            @PostPaging GeneralFindingCondition generalFindingCondition) {
         Slice<GeneralPostInfoResponse> posts = postReadService.findPostsByPagingCondition(generalFindingCondition);
         return ResponseEntity.ok()
                 .body(posts);

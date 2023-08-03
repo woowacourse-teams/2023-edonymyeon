@@ -3,7 +3,7 @@ package edonymyeon.backend.member.application;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.application.dto.YearMonthDto;
 
-public interface ConsumptionConfirmService {
+public interface MemberConsumptionService {
 
     void confirmSaving(
             final MemberId memberId,

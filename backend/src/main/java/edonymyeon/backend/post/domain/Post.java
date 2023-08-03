@@ -71,6 +71,17 @@ public class Post {
     private int viewCount;
 
     public Post(
+            final Long id,
+            final String title,
+            final String content,
+            final Long price,
+            final Member member
+    ) {
+        this(title, content, price, member);
+        this.id = id;
+    }
+
+    public Post(
             final String title,
             final String content,
             final Long price,

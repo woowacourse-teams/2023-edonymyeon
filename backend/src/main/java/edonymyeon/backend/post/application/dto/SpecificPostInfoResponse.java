@@ -2,7 +2,6 @@ package edonymyeon.backend.post.application.dto;
 
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.domain.Post;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
