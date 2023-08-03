@@ -10,7 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import app.edonymyeon.R
 import app.edonymyeon.databinding.FragmentMyPageBinding
+import com.app.edonymyeon.data.datasource.consumptions.ConsumptionsRemoteDataSource
 import com.app.edonymyeon.data.datasource.profile.ProfileRemoteDataSource
+import com.app.edonymyeon.data.repository.ConsumptionsRepositoryImpl
 import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
 import com.app.edonymyeon.presentation.ui.main.mypage.chart.LineChartManager
 import com.github.mikephil.charting.data.Entry
@@ -24,6 +26,7 @@ class MyPageFragment : Fragment() {
     private val viewModel: MyPageViewModel by viewModels {
         MyPageViewModelFactory(
             ProfileRepositoryImpl(ProfileRemoteDataSource()),
+            ConsumptionsRepositoryImpl(ConsumptionsRemoteDataSource()),
         )
     }
 
