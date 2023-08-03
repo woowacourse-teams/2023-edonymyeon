@@ -1,12 +1,9 @@
 package edonymyeon.backend.consumption.application;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_PERIOD_MONTH_ILLEGAL;
-
 import edonymyeon.backend.consumption.application.dto.ConsumptionPriceResponse;
 import edonymyeon.backend.consumption.application.dto.RecentConsumptionsResponse;
 import edonymyeon.backend.consumption.domain.ConsumptionsPerMonth;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
-import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.MemberId;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,9 +20,8 @@ public class ConsumptionService {
     private final ConsumptionRepository consumptionRepository;
 
     public RecentConsumptionsResponse findRecentConsumptions(final MemberId memberId, final Integer periodMonth) {
-        if (isIllegalPeriodMonth(periodMonth)) {
-            throw new EdonymyeonException(CONSUMPTION_PERIOD_MONTH_ILLEGAL);
-        }
+        PeriodMonth.checkIllegalPeriodMonth(periodMonth);
+
         final LocalDate currentDate = LocalDate.now();
         final LocalDate startDate = currentDate.minusMonths(periodMonth - 1);
 
@@ -44,9 +40,5 @@ public class ConsumptionService {
             ));
         }
         return RecentConsumptionsResponse.of(startDate, currentDate, consumptionPriceResponses);
-    }
-
-    private boolean isIllegalPeriodMonth(final Integer periodMonth) {
-        return periodMonth != 1 && periodMonth != 6;
     }
 }
