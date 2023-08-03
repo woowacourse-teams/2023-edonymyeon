@@ -1,10 +1,8 @@
 package edonymyeon.backend.post.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import edonymyeon.backend.TestConfig;
-import edonymyeon.backend.member.application.dto.AnonymousMemberId;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.member.application.dto.AnonymousMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.domain.Post;
@@ -21,6 +19,8 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Transactional
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -30,7 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 public class PostViewTest implements ImageFileCleaner {
 
-    private final PostService postService;
+    private final PostReadService postReadService;
     private final PostTestSupport postTestSupport;
     private final MemberTestSupport memberTestSupport;
 
@@ -55,7 +55,7 @@ public class PostViewTest implements ImageFileCleaner {
     @Test
     void 작성자_본인이_글을_조회하는_경우_조회수는_올라가지_않는다() {
         assertThat(post.getViewCount()).isEqualTo(0);
-        postService.findSpecificPost(post.getId(), new ActiveMemberId(writer.getId()));
+        postReadService.findSpecificPost(post.getId(), new ActiveMemberId(writer.getId()));
 
         assertThat(post.getViewCount()).isEqualTo(0);
     }
@@ -63,9 +63,9 @@ public class PostViewTest implements ImageFileCleaner {
     @Test
     void 타인이_조회하는_경우_공백_기간_없이_조회수가_증가한다() {
         assertThat(post.getViewCount()).isEqualTo(0);
-        postService.findSpecificPost(post.getId(), new ActiveMemberId(viewer.getId()));
-        postService.findSpecificPost(post.getId(), new ActiveMemberId(viewer.getId()));
-        postService.findSpecificPost(post.getId(), new ActiveMemberId(viewer.getId()));
+        postReadService.findSpecificPost(post.getId(), new ActiveMemberId(viewer.getId()));
+        postReadService.findSpecificPost(post.getId(), new ActiveMemberId(viewer.getId()));
+        postReadService.findSpecificPost(post.getId(), new ActiveMemberId(viewer.getId()));
 
         assertThat(post.getViewCount()).isEqualTo(3);
     }
@@ -73,9 +73,9 @@ public class PostViewTest implements ImageFileCleaner {
     @Test
     void 로그인하지_않은_사용자가_조회하는_경우에도_조회수는_증가한다() {
         assertThat(post.getViewCount()).isEqualTo(0);
-        postService.findSpecificPost(post.getId(), new AnonymousMemberId());
-        postService.findSpecificPost(post.getId(), new AnonymousMemberId());
-        postService.findSpecificPost(post.getId(), new AnonymousMemberId());
+        postReadService.findSpecificPost(post.getId(), new AnonymousMemberId());
+        postReadService.findSpecificPost(post.getId(), new AnonymousMemberId());
+        postReadService.findSpecificPost(post.getId(), new AnonymousMemberId());
 
         assertThat(post.getViewCount()).isEqualTo(3);
     }

@@ -1,4 +1,4 @@
-package edonymyeon.backend.thumbs.dto;
+package edonymyeon.backend.post.application.dto;
 
 public record AllThumbsInPostResponse(int thumbsUpCount, int thumbsDownCount) {
 
