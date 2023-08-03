@@ -27,7 +27,6 @@ import java.util.Objects;
 import static edonymyeon.backend.global.exception.ExceptionInformation.*;
 
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 @Service
 public class PostService {
 
