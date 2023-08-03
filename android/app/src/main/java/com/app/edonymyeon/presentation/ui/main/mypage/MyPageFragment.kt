@@ -1,7 +1,6 @@
 package com.app.edonymyeon.presentation.ui.main.mypage
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +9,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import app.edonymyeon.R
 import app.edonymyeon.databinding.FragmentMyPageBinding
+import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.data.datasource.consumptions.ConsumptionsRemoteDataSource
 import com.app.edonymyeon.data.datasource.profile.ProfileRemoteDataSource
 import com.app.edonymyeon.data.repository.ConsumptionsRepositoryImpl
 import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
+import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.presentation.ui.main.mypage.chart.LineChartManager
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -43,14 +44,25 @@ class MyPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 로그인이 되어있다면
-        binding.tvRequiredLogin.isVisible = false
-        viewModel.getUserProfile()
+        PreferenceUtil.setValue(AuthLocalDataSource.USER_ACCESS_TOKEN, "")
+//        PreferenceUtil.setValue(AuthLocalDataSource.USER_ACCESS_TOKEN, "Basic YmVhdXRpZnVsbmVvQG5hdmVyLmNvbTpuZW8xMjM=")
+        setViewByLogin()
+    }
 
-        viewModel.profile.observe(viewLifecycleOwner) {
-            Log.d("MyPageFragment", "profile: $it")
+    private fun setViewByLogin() {
+        val token = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN)
+        if (token != null && token != "") {
+            setViewForLogin()
+        } else {
+            setViewForNotLogin()
         }
+    }
 
+    private fun setViewForLogin() {
+        binding.tvRequiredLogin.isVisible = false
+        binding.btnLogin.isVisible = false
+
+        viewModel.getUserProfile()
         viewModel.setConsumptions(PERIOD_MONTH)
 
         setConsumptionChart(
@@ -59,6 +71,10 @@ class MyPageFragment : Fragment() {
                 resources.getColor(R.color.gray_615f5f, null),
             ),
         )
+    }
+
+    private fun setViewForNotLogin() {
+        binding.chartMyPayment.isVisible = false
     }
 
     private fun setConsumptionChart(chartManager: LineChartManager) {
