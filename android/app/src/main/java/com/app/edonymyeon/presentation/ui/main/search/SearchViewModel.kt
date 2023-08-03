@@ -11,23 +11,30 @@ import com.domain.edonymyeon.repository.SearchRepository
 import kotlinx.coroutines.launch
 
 class SearchViewModel(private val searchRepository: SearchRepository) : ViewModel() {
-    private var page = Page()
+    private var currentPage = Page()
+    private var isLastPage = false
+
     private val _searchResult = MutableLiveData<List<PostItemUiModel>>()
     val searchResult: LiveData<List<PostItemUiModel>> get() = _searchResult
     fun getSearchResult(query: String) {
         viewModelScope.launch {
-            searchRepository.getSearchResult(query, page.value)
+            searchRepository.getSearchResult(query, currentPage.value)
                 .onSuccess { result ->
-                    _searchResult.value = searchResult.value.orEmpty() + result.map {
+                    _searchResult.value = searchResult.value.orEmpty() + result.posts.map {
                         it.toUiModel()
                     }
-                    page = page.increasePage()
+                    currentPage = currentPage.increasePage()
+                    isLastPage = result.isLast
                 }
         }
     }
 
     fun clearResult() {
-        page.initPage()
+        currentPage.initPage()
         _searchResult.value = emptyList()
+    }
+
+    fun hasNextPage(): Boolean {
+        return !isLastPage
     }
 }

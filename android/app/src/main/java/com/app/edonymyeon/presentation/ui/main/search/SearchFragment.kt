@@ -12,6 +12,7 @@ import app.edonymyeon.databinding.FragmentSearchBinding
 import com.app.edonymyeon.data.datasource.search.SearchRemoteDataSource
 import com.app.edonymyeon.data.repository.SearchRepositoryImpl
 import com.app.edonymyeon.presentation.ui.main.search.adapter.SearchAdapter
+import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 
 class SearchFragment : Fragment() {
     private val binding: FragmentSearchBinding by lazy {
@@ -34,8 +35,15 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setSearchAdapter()
         setQuerySearchListener()
+        setResultScrollListener()
+    }
+
+    private fun setResultScrollListener() {
         binding.rvSearchResult.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (viewModel.hasNextPage()) {
+                    return
+                }
                 if (!binding.rvSearchResult.canScrollVertically(1)) {
                     viewModel.getSearchResult(binding.searchView.query.toString())
                 }
@@ -44,7 +52,10 @@ class SearchFragment : Fragment() {
     }
 
     private fun setSearchAdapter() {
-        val searchAdapter = SearchAdapter(onClick = {})
+        val searchAdapter = SearchAdapter(onClick = {
+            startActivity(PostDetailActivity.newIntent(requireContext(), it))
+        })
+
         binding.rvSearchResult.adapter = searchAdapter
         viewModel.searchResult.observe(viewLifecycleOwner) {
             searchAdapter.setPosts(it)
