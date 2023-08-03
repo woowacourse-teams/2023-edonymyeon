@@ -38,6 +38,7 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
                 finish()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
