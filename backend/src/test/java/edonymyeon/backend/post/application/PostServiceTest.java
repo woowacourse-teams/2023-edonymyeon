@@ -1,9 +1,5 @@
 package edonymyeon.backend.post.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
@@ -23,12 +19,6 @@ import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.MockMultipartFileTestSupport;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,6 +35,17 @@ import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 @Transactional
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -59,6 +60,8 @@ class PostServiceTest implements ImageFileCleaner {
     private final PostImageInfoRepository postImageInfoRepository;
 
     private final PostService postService;
+
+    private final PostReadService postReadService;
 
     private final MemberRepository memberRepository;
 
@@ -101,7 +104,7 @@ class PostServiceTest implements ImageFileCleaner {
         final PostResponse postResponse = postService.createPost(memberId, getPostRequest());
 
         Assertions
-                .assertThatCode(() -> postService.findSpecificPost(postResponse.id(), memberId))
+                .assertThatCode(() -> postReadService.findSpecificPost(postResponse.id(), memberId))
                 .doesNotThrowAnyException();
     }
 
@@ -193,7 +196,7 @@ class PostServiceTest implements ImageFileCleaner {
     class 게시글을_수정할_때 {
 
         @Test
-        void 게시글_작성자가_아니면_수정할_수_없다(@Autowired PostRepository postRepository) throws IOException {
+        void 게시글_작성자가_아니면_수정할_수_없다() {
             // given
             final PostRequest postRequest = new PostRequest(
                     "I love you",
@@ -208,7 +211,7 @@ class PostServiceTest implements ImageFileCleaner {
                     .email("otheremail")
                     .password("password123!")
                     .build();
-            memberRepository.save(다른_사람);
+
             memberId = new ActiveMemberId(다른_사람.getId());
             final PostModificationRequest updatedPostRequest = new PostModificationRequest(
                     "I hate you",
@@ -223,7 +226,7 @@ class PostServiceTest implements ImageFileCleaner {
         }
 
         @Test
-        void 제목과_내용과_가격을_수정할_수_있다(@Autowired PostRepository postRepository) throws IOException {
+        void 제목과_내용과_가격을_수정할_수_있다(@Autowired PostRepository postRepository) {
             // given
             final PostRequest postRequest = new PostRequest(
                     "I love you",
@@ -296,7 +299,7 @@ class PostServiceTest implements ImageFileCleaner {
             void 이미지를_추가할_수_있다(@Autowired PostRepository postRepository) throws IOException {
                 // given
                 final PostResponse 게시글_생성_결과 = postService.createPost(memberId, 이미지가_없는_요청);
-                final SpecificPostInfoResponse 게시글_상세조회_결과 = postService.findSpecificPost(게시글_생성_결과.id(), memberId);
+                final SpecificPostInfoResponse 게시글_상세조회_결과 = postReadService.findSpecificPost(게시글_생성_결과.id(), memberId);
 
                 // when
                 final List<MultipartFile> 추가할_이미지 = List.of(mockMultipartFileTestSupport.builder()
@@ -317,7 +320,7 @@ class PostServiceTest implements ImageFileCleaner {
             }
 
             @Test
-            void 이미지를_전부_삭제할_수_있다(@Autowired PostRepository postRepository) throws IOException {
+            void 이미지를_전부_삭제할_수_있다(@Autowired PostRepository postRepository) {
                 // given
                 final PostResponse post = postService.createPost(memberId, 이미지가_2개_있는_요청);
 

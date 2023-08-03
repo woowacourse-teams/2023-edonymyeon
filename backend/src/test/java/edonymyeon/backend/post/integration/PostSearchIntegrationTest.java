@@ -1,8 +1,5 @@
 package edonymyeon.backend.post.integration;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.domain.Member;
@@ -12,6 +9,9 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class PostSearchIntegrationTest extends IntegrationTest {
@@ -61,8 +61,8 @@ public class PostSearchIntegrationTest extends IntegrationTest {
         final var jsonPath = 검색된_게시글_조회_결과.body().jsonPath();
 
         assertSoftly(softly -> {
-            softly.assertThat(jsonPath.getList("posts")).hasSize(1);
-            softly.assertThat(jsonPath.getString("posts[0].title")).contains("사과");
+            softly.assertThat(jsonPath.getList("content")).hasSize(1);
+            softly.assertThat(jsonPath.getString("content[0].title")).contains("사과");
         });
     }
 
@@ -79,9 +79,9 @@ public class PostSearchIntegrationTest extends IntegrationTest {
         final var jsonPath = 검색된_게시글_조회_결과.body().jsonPath();
 
         assertSoftly(softly -> {
-            softly.assertThat(jsonPath.getList("posts")).hasSize(2);
-            softly.assertThat(jsonPath.getString("posts[0].content")).contains("자취");
-            softly.assertThat(jsonPath.getString("posts[1].content")).contains("자취");
+            softly.assertThat(jsonPath.getList("content")).hasSize(2);
+            softly.assertThat(jsonPath.getString("content[0].content")).contains("자취");
+            softly.assertThat(jsonPath.getString("content[1].content")).contains("자취");
         });
     }
 
@@ -97,6 +97,6 @@ public class PostSearchIntegrationTest extends IntegrationTest {
 
         final var jsonPath = 검색된_게시글_조회_결과.body().jsonPath();
 
-        assertThat(jsonPath.getList("posts").size()).isEqualTo(0);
+        assertThat(jsonPath.getList("content").size()).isEqualTo(0);
     }
 }
