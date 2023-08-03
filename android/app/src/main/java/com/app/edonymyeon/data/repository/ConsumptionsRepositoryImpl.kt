@@ -5,17 +5,21 @@ import com.app.edonymyeon.data.datasource.consumptions.ConsumptionsDataSource
 import com.app.edonymyeon.data.dto.response.ConsumptionsResponse
 import com.app.edonymyeon.mapper.toDomain
 import com.domain.edonymyeon.repository.ConsumptionsRepository
+import org.json.JSONObject
 
 class ConsumptionsRepositoryImpl(
     private val consumptionsDataSource: ConsumptionsDataSource,
 ) : ConsumptionsRepository {
-    override suspend fun getConsumptions(): Result<Any> {
-        val result = consumptionsDataSource.getConsumptions()
+    override suspend fun getConsumptions(period: Int): Result<Any> {
+        val result = consumptionsDataSource.getConsumptions(period)
 
         return if (result.isSuccessful) {
             Result.success((result.body() as ConsumptionsResponse).toDomain())
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val errorResponse = result.errorBody()?.string()
+            val json = errorResponse?.let { JSONObject(it) }
+            val errorMessage = json?.getString("errorMessage") ?: ""
+            Result.failure(CustomThrowable(result.code(), errorMessage))
         }
     }
 }

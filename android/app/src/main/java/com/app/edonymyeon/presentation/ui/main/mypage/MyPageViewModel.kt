@@ -50,9 +50,9 @@ class MyPageViewModel(
         }
     }
 
-    fun setConsumptions() {
+    fun setConsumptions(period: Int) {
         viewModelScope.launch {
-            consumptionsRepository.getConsumptions()
+            consumptionsRepository.getConsumptions(period)
                 .onSuccess {
                     it as ConsumptionStatistics
                     _consumptions.value = it.toUiModel()

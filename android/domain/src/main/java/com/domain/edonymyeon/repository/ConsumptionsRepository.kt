@@ -1,5 +1,5 @@
 package com.domain.edonymyeon.repository
 
 interface ConsumptionsRepository {
-    suspend fun getConsumptions(): Result<Any>
+    suspend fun getConsumptions(period: Int): Result<Any>
 }

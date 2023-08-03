@@ -14,7 +14,7 @@ class ConsumptionsRemoteDataSource : ConsumptionsDataSource {
             .updateAccessToken("Basic YmVhdXRpZnVsbmVvQG5hdmVyLmNvbTpuZW8xMjM=")
     }
 
-    override suspend fun getConsumptions(): Response<ConsumptionsResponse> {
-        return consumptionsService.getConsumptions()
+    override suspend fun getConsumptions(period: Int): Response<ConsumptionsResponse> {
+        return consumptionsService.getConsumptions(period)
     }
 }

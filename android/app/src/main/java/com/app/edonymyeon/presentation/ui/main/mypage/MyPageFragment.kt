@@ -51,7 +51,7 @@ class MyPageFragment : Fragment() {
             Log.d("MyPageFragment", "profile: $it")
         }
 
-        viewModel.setConsumptions()
+        viewModel.setConsumptions(PERIOD_MONTH)
 
         setConsumptionChart(
             LineChartManager(
@@ -88,5 +88,9 @@ class MyPageFragment : Fragment() {
                 setMarkerView()
             }
         }
+    }
+
+    companion object {
+        private const val PERIOD_MONTH = 6
     }
 }
