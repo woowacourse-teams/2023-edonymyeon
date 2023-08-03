@@ -102,4 +102,7 @@ dependencies {
 
     // by viewModels() 종속성
     implementation("androidx.activity:activity-ktx:1.7.2")
+
+    // android chart
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }
