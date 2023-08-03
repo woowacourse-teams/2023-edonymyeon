@@ -8,7 +8,7 @@
     <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
     <root level="INFO">
-        <springProfile name="dev">
+        <springProfile name="!prod">
             <appender-ref ref="CONSOLE" />
         </springProfile>
     </root>

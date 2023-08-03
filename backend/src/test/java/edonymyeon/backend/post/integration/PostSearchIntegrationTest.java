@@ -34,7 +34,7 @@ public class PostSearchIntegrationTest extends IntegrationTest {
     }
 
     @Test
-    void 검색어가_포함되어있지_않으면_오류가_발생한다_400_BasRequest(){
+    void 검색어가_포함되어있지_않으면_오류가_발생한다_400_BasRequest() {
         ExtractableResponse<Response> response = RestAssured
                 .given()
                 .when()
@@ -43,7 +43,8 @@ public class PostSearchIntegrationTest extends IntegrationTest {
                 .extract();
 
         assertSoftly(softly -> {
-            softly.assertThat(response.body().jsonPath().getInt("errorCode")).isEqualTo(ExceptionInformation.REQUEST_PARAMETER_NOT_EXIST.getCode());
+            softly.assertThat(response.body().jsonPath().getInt("errorCode"))
+                    .isEqualTo(ExceptionInformation.REQUEST_PARAMETER_NOT_EXIST.getCode());
             softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
         });
     }
@@ -61,8 +62,8 @@ public class PostSearchIntegrationTest extends IntegrationTest {
         final var jsonPath = 검색된_게시글_조회_결과.body().jsonPath();
 
         assertSoftly(softly -> {
-            softly.assertThat(jsonPath.getList("posts")).hasSize(1);
-            softly.assertThat(jsonPath.getString("posts[0].title")).contains("사과");
+            softly.assertThat(jsonPath.getList("content")).hasSize(1);
+            softly.assertThat(jsonPath.getString("content[0].title")).contains("사과");
         });
     }
 
@@ -79,9 +80,9 @@ public class PostSearchIntegrationTest extends IntegrationTest {
         final var jsonPath = 검색된_게시글_조회_결과.body().jsonPath();
 
         assertSoftly(softly -> {
-            softly.assertThat(jsonPath.getList("posts")).hasSize(2);
-            softly.assertThat(jsonPath.getString("posts[0].content")).contains("자취");
-            softly.assertThat(jsonPath.getString("posts[1].content")).contains("자취");
+            softly.assertThat(jsonPath.getList("content")).hasSize(2);
+            softly.assertThat(jsonPath.getString("content[0].content")).contains("자취");
+            softly.assertThat(jsonPath.getString("content[1].content")).contains("자취");
         });
     }
 
@@ -97,6 +98,6 @@ public class PostSearchIntegrationTest extends IntegrationTest {
 
         final var jsonPath = 검색된_게시글_조회_결과.body().jsonPath();
 
-        assertThat(jsonPath.getList("posts").size()).isEqualTo(0);
+        assertThat(jsonPath.getList("content").size()).isEqualTo(0);
     }
 }

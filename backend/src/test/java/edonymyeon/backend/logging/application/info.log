@@ -1,0 +1,4 @@
+{"timestamp" : "20230802 004234.259000", "message" : "HikariPool-1 - Starting..."}
+{"timestamp" : "20230802 004234.266000", "message" : "Stopping service [Tomcat]"}
+{"statuscode" : "404", "request-identifier" : "24fb1e2d-b644-4dae-a62f-9f352cbe344e", "uri" : "/error", "timestamp" : "20230802 002226.756000", "message" : "body  "}
+{"statuscode" : "404", "request-identifier" : "2707a1f1-df48-4e3e-9c92-c61b8c3e9da6", "uri" : "/", "timestamp" : "20230802 003953.265000", "message" : "body  "}

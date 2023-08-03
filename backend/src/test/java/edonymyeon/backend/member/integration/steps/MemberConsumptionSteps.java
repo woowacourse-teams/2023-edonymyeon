@@ -22,7 +22,7 @@ public class MemberConsumptionSteps {
                 .body(구매_확정_요청)
                 .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
                 .when()
-                .post("/profile/myPosts/{postId}/purchase-confirm", 게시글_id)
+                .post("/profile/my-posts/{postId}/purchase-confirm", 게시글_id)
                 .then()
                 .extract();
     }
@@ -38,7 +38,7 @@ public class MemberConsumptionSteps {
                 .body(절약_확정_요청)
                 .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
                 .when()
-                .post("/profile/myPosts/{postId}/saving-confirm", 게시글_id)
+                .post("/profile/my-posts/{postId}/saving-confirm", 게시글_id)
                 .then()
                 .extract();
     }
@@ -49,8 +49,9 @@ public class MemberConsumptionSteps {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
                 .when()
-                .delete("/profile/myPosts/{postId}/confirm-remove", 게시글_id)
+                .delete("/profile/my-posts/{postId}/confirm-remove", 게시글_id)
                 .then()
+                .log().all()
                 .extract();
     }
 }

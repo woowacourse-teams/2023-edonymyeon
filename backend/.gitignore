@@ -41,3 +41,6 @@ out/
 
 ### 로그 파일 ###
 /logs/
+
+### proprties 설정 ###
+/src/main/resources/application.properties

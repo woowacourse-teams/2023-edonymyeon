@@ -60,6 +60,8 @@ class PostServiceTest implements ImageFileCleaner {
 
     private final PostService postService;
 
+    private final PostReadService postReadService;
+
     private final MemberRepository memberRepository;
 
     private final MemberTestSupport memberTestSupport;
@@ -101,7 +103,7 @@ class PostServiceTest implements ImageFileCleaner {
         final PostResponse postResponse = postService.createPost(memberId, getPostRequest());
 
         Assertions
-                .assertThatCode(() -> postService.findSpecificPost(postResponse.id(), memberId))
+                .assertThatCode(() -> postReadService.findSpecificPost(postResponse.id(), memberId))
                 .doesNotThrowAnyException();
     }
 
@@ -193,7 +195,7 @@ class PostServiceTest implements ImageFileCleaner {
     class 게시글을_수정할_때 {
 
         @Test
-        void 게시글_작성자가_아니면_수정할_수_없다(@Autowired PostRepository postRepository) throws IOException {
+        void 게시글_작성자가_아니면_수정할_수_없다() {
             // given
             final PostRequest postRequest = new PostRequest(
                     "I love you",
@@ -208,7 +210,7 @@ class PostServiceTest implements ImageFileCleaner {
                     .email("otheremail")
                     .password("password123!")
                     .build();
-            memberRepository.save(다른_사람);
+
             memberId = new ActiveMemberId(다른_사람.getId());
             final PostModificationRequest updatedPostRequest = new PostModificationRequest(
                     "I hate you",
@@ -223,7 +225,7 @@ class PostServiceTest implements ImageFileCleaner {
         }
 
         @Test
-        void 제목과_내용과_가격을_수정할_수_있다(@Autowired PostRepository postRepository) throws IOException {
+        void 제목과_내용과_가격을_수정할_수_있다(@Autowired PostRepository postRepository) {
             // given
             final PostRequest postRequest = new PostRequest(
                     "I love you",
@@ -296,7 +298,7 @@ class PostServiceTest implements ImageFileCleaner {
             void 이미지를_추가할_수_있다(@Autowired PostRepository postRepository) throws IOException {
                 // given
                 final PostResponse 게시글_생성_결과 = postService.createPost(memberId, 이미지가_없는_요청);
-                final SpecificPostInfoResponse 게시글_상세조회_결과 = postService.findSpecificPost(게시글_생성_결과.id(), memberId);
+                final SpecificPostInfoResponse 게시글_상세조회_결과 = postReadService.findSpecificPost(게시글_생성_결과.id(), memberId);
 
                 // when
                 final List<MultipartFile> 추가할_이미지 = List.of(mockMultipartFileTestSupport.builder()
@@ -317,7 +319,7 @@ class PostServiceTest implements ImageFileCleaner {
             }
 
             @Test
-            void 이미지를_전부_삭제할_수_있다(@Autowired PostRepository postRepository) throws IOException {
+            void 이미지를_전부_삭제할_수_있다(@Autowired PostRepository postRepository) {
                 // given
                 final PostResponse post = postService.createPost(memberId, 이미지가_2개_있는_요청);
 

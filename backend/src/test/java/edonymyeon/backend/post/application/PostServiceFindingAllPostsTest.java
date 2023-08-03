@@ -12,7 +12,6 @@ import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.post.ImageFileCleaner;
-import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
@@ -49,6 +48,9 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
     public static final String IMAGE2_RELATIVE_PATH = "/static/img/file/test_image_2.jpg";
 
     @Autowired
+    private PostReadService postReadService;
+
+    @Autowired
     private PostService postService;
 
     private MemberId memberId;
@@ -80,7 +82,8 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
     @Test
     void 작성된_모든_게시글을_조회할_수_있다() {
         final var postFindingCondition = GeneralFindingCondition.builder().build();
-        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
+        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition).get()
+                .toList();
 
         assertAll(
                 () -> assertThat(postFindingResponses).hasSize(3),
@@ -113,7 +116,8 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
     @Test
     void 게시글은_기본으로_등록일_내림차순으로_정렬된다() {
         final var postFindingCondition = GeneralFindingCondition.builder().build();
-        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
+        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition).get()
+                .toList();
         final var createdAts = postFindingResponses.stream()
                 .map(GeneralPostInfoResponse::createdAt)
                 .toList();
@@ -132,7 +136,8 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
         final var postFindingCondition = GeneralFindingCondition.builder()
                 .size(10)
                 .build();
-        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
+        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition).get()
+                .toList();
 
         assertThat(postFindingResponses)
                 .hasSize(10);
@@ -144,9 +149,9 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
                 .size(1)
                 .page(1)
                 .build();
-        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
+        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition);
 
-        assertThat(postFindingResponses.get(0).title())
+        assertThat(postFindingResponses.get().toList().get(0).title())
                 .isEqualTo(POST_REQUEST2_TITLE);
     }
 
@@ -159,7 +164,8 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
         postRepository.deleteAll();
 
         final var postFindingCondition = GeneralFindingCondition.builder().build();
-        final var postFindingResponses = postService.findPostsByPagingCondition(postFindingCondition);
+        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition).get()
+                .toList();
 
         assertThat(postFindingResponses)
                 .isNotNull()
@@ -173,7 +179,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
                 .page(1)
                 .build();
 
-        assertThatThrownBy(() -> postService.findPostsByPagingCondition(postFindingCondition))
+        assertThatThrownBy(() -> postReadService.findPostsByPagingCondition(postFindingCondition))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(ExceptionInformation.POST_INVALID_PAGINATION_CONDITION.getMessage());
     }

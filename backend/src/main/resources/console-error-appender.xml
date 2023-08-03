@@ -21,9 +21,6 @@
                     </pattern>
                 </pattern>
             </providers>
-            <jsonGeneratorDecorator class="net.logstash.logback.decorate.CompositeJsonGeneratorDecorator">
-                <decorator class="net.logstash.logback.decorate.PrettyPrintingJsonGeneratorDecorator"/>
-            </jsonGeneratorDecorator>
             <timestampPattern>yyyyMMddHHmmss.SSSSSS</timestampPattern>
         </encoder>
 

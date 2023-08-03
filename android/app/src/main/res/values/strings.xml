@@ -11,6 +11,8 @@
     <string name="login_login">로그인</string>
     <string name="login_suggest">아이디가 없나요?</string>
     <string name="login_join">회원가입</string>
+    <string name="login_logo_description">로그인 로고</string>
+    <string name="login_check_logininfo_input">이메일과 비밀번호는 필수 입력사항입니다.</string>
 
     <!-- bottom navigation title    -->
     <string name="bottom_navigation_home_title">홈</string>
