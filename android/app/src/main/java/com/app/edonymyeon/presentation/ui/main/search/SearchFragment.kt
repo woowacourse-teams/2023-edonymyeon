@@ -36,6 +36,8 @@ class SearchFragment : Fragment() {
         setSearchAdapter()
         setQuerySearchListener()
         setResultScrollListener()
+        binding.searchView.setOnClickListener {
+        }
     }
 
     private fun setResultScrollListener() {
