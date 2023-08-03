@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_ffffff_radius_10dp"
             android:elevation="4dp"
+            android:onClick="@{() -> listener.onMyPostClick(post.id)}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

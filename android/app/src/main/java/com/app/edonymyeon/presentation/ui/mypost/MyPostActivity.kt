@@ -12,6 +12,7 @@ import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
 import com.app.edonymyeon.presentation.ui.mypost.adapter.MyPostAdapter
 import com.app.edonymyeon.presentation.ui.mypost.dialog.ConsumptionDialog
 import com.app.edonymyeon.presentation.ui.mypost.listener.MyPostClickListener
+import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 
 class MyPostActivity : AppCompatActivity(), MyPostClickListener {
 
@@ -63,6 +64,10 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
         viewModel.posts.observe(this) {
             adapter.setMyPosts(it)
         }
+    }
+
+    override fun onMyPostClick(id: Long) {
+        startActivity(PostDetailActivity.newIntent(this, id))
     }
 
     override fun onPurchaseButtonClick(id: Long) {
