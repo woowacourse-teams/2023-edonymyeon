@@ -32,7 +32,7 @@ public class PostReadService {
 
     private final MemberRepository memberRepository;
 
-    private final PostThumbsService postThumbsService;
+    private final PostThumbsService thumbsService;
 
     private final Domain domain;
 
@@ -71,7 +71,7 @@ public class PostReadService {
                 0, // TODO: 댓글 수 기능 구현 필요
                 0 // TODO: 스크랩 기능 구현 필요
         );
-        final AllThumbsInPostResponse allThumbsInPost = postThumbsService.findAllThumbsInPost(postId);
+        final AllThumbsInPostResponse allThumbsInPost = thumbsService.findAllThumbsInPost(postId);
         final WriterDetailResponse writerDetailResponse = getWriterResponse(post.getMember());
 
         if (member.isEmpty()) {
@@ -84,7 +84,7 @@ public class PostReadService {
             );
         }
 
-        final ThumbsStatusInPostResponse thumbsStatusInPost = postThumbsService.findThumbsStatusInPost(memberId, postId);
+        final ThumbsStatusInPostResponse thumbsStatusInPost = thumbsService.findThumbsStatusInPost(memberId, postId);
 
         return SpecificPostInfoResponse.of(
                 post,

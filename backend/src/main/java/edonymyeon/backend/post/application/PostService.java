@@ -37,7 +37,7 @@ public class PostService {
 
     private final MemberRepository memberRepository;
 
-    private final PostThumbsService postThumbsService;
+    private final PostThumbsService thumbsService;
 
     private final Domain domain;
 
@@ -89,7 +89,7 @@ public class PostService {
         checkWriter(member, post);
 
         final List<PostImageInfo> postImageInfos = post.getPostImageInfos();
-        postThumbsService.deleteAllThumbsInPost(postId);
+        thumbsService.deleteAllThumbsInPost(postId);
         postImageInfoRepository.deleteAllByPostId(postId);
         postRepository.deleteById(postId);
         postImageInfos.forEach(imageFileUploader::removeFile);

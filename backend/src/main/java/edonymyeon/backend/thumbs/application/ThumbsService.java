@@ -1,15 +1,6 @@
 package edonymyeon.backend.thumbs.application;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_DOWN_DELETE_FAIL_WHEN_THUMBS_UP;
-import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_DOWN_IS_NOT_EXIST;
-import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_IS_SELF_UP_DOWN;
-import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP_DELETE_FAIL_WHEN_THUMBS_DOWN;
-import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP_IS_NOT_EXIST;
-
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.member.application.dto.AnonymousMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -18,8 +9,6 @@ import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
-import java.util.Objects;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,7 +27,6 @@ public class ThumbsService {
     private final MemberRepository memberRepository;
 
     private final PostRepository postRepository;
-
 
     @Transactional
     public void thumbsUp(final MemberId memberId, final Long postId) {
