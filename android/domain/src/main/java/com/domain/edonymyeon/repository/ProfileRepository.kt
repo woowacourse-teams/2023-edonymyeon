@@ -3,7 +3,6 @@ package com.domain.edonymyeon.repository
 import com.domain.edonymyeon.model.MyPosts
 
 interface ProfileRepository {
-
     suspend fun getMyPosts(page: Int): Result<MyPosts>
     suspend fun postPurchaseConfirm(
         id: Long,
