@@ -1,7 +1,7 @@
 package edonymyeon.backend.global.config;
 
 import edonymyeon.backend.auth.ui.argumentresolver.AuthArgumentResolver;
-import edonymyeon.backend.global.logging.LoggingInterceptor;
+import edonymyeon.backend.logging.LoggingInterceptor;
 import edonymyeon.backend.post.ui.argumentresolver.PostPagingArgumentResolver;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
