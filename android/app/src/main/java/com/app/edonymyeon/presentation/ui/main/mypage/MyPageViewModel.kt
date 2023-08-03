@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
+import com.app.edonymyeon.presentation.uimodel.ConsumptionAmountUiModel
 import com.app.edonymyeon.presentation.uimodel.ConsumptionStatisticsUiModel
 import com.app.edonymyeon.presentation.uimodel.WriterUiModel
 import com.domain.edonymyeon.model.ConsumptionStatistics
@@ -26,6 +27,10 @@ class MyPageViewModel(
     private val _consumptions = MutableLiveData<ConsumptionStatisticsUiModel>()
     val consumptions: LiveData<ConsumptionStatisticsUiModel>
         get() = _consumptions
+
+    private val _consumptionOnThisMonth = MutableLiveData<ConsumptionAmountUiModel>()
+    val consumptionOnThisMonth: LiveData<ConsumptionAmountUiModel>
+        get() = _consumptionOnThisMonth
 
     fun getMonthLists(): List<String> =
         _consumptions.value?.toDomain()?.monthRange?.yearMonthList ?: emptyList()
@@ -51,6 +56,7 @@ class MyPageViewModel(
                 .onSuccess {
                     it as ConsumptionStatistics
                     _consumptions.value = it.toUiModel()
+                    _consumptionOnThisMonth.value = it.consumptionAmounts.last().toUiModel()
                 }
                 .onFailure {
                     it as CustomThrowable
