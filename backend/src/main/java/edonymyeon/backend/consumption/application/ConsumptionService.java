@@ -33,27 +33,27 @@ public class ConsumptionService {
         final List<ConsumptionPriceResponse> consumptionPriceResponses = new ArrayList<>();
         for (int i = 0; i < periodMonth; i++) {
             final LocalDate thisMonth = startDate.plusMonths(i);
-
-            final ConsumptionsPerMonth consumptionsPerMonth = new ConsumptionsPerMonth(
-                    consumptionRepository.findByMemberIdAndConsumptionDateBetween(
-                            memberId.id(),
-                            getFirstDateOfMonth(thisMonth),
-                            getLastDateOfMonth(thisMonth)
-                    ));
-            consumptionPriceResponses.add(new ConsumptionPriceResponse(
-                    consumptionsPerMonth.calculateTotalPurchasePrice(),
-                    consumptionsPerMonth.calculateTotalSavingPrice()
-            ));
+            final ConsumptionsPerMonth consumptionsPerMonth = findConsumptionsPerMonthByMemberId(memberId, thisMonth);
+            consumptionPriceResponses.add(ConsumptionPriceResponse.from(consumptionsPerMonth));
         }
         return RecentConsumptionsResponse.of(startDate, currentDate, consumptionPriceResponses);
+    }
+
+    private ConsumptionsPerMonth findConsumptionsPerMonthByMemberId(final MemberId memberId,
+                                                                    final LocalDate thisMonth) {
+        return new ConsumptionsPerMonth(consumptionRepository.findByMemberIdAndConsumptionDateBetween(
+                memberId.id(),
+                getFirstDateOfMonth(thisMonth),
+                getLastDateOfMonth(thisMonth)
+        ));
+    }
+
+    private LocalDate getFirstDateOfMonth(final LocalDate thisMonth) {
+        return thisMonth.withDayOfMonth(FIRST_DAY_OF_MONTH);
     }
 
     private LocalDate getLastDateOfMonth(final LocalDate thisMonth) {
         final int lastDayOfThisMonth = thisMonth.lengthOfMonth();
         return thisMonth.withDayOfMonth(lastDayOfThisMonth);
-    }
-
-    private LocalDate getFirstDateOfMonth(final LocalDate thisMonth) {
-        return thisMonth.withDayOfMonth(FIRST_DAY_OF_MONTH);
     }
 }
