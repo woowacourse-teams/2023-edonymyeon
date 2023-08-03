@@ -271,13 +271,14 @@
                 app:layout_constraintWidth_percent="0.88">
 
                 <EditText
+                    android:fontFamily="sans-serif"
                     android:id="@+id/et_password"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:autofillHints="emailAddress"
                     android:background="@null"
                     android:ellipsize="end"
-                    android:fontFamily="@font/dohyeon"
+                    android:inputType="textPassword"
                     android:maxLines="1"
                     android:onTextChanged="@{viewModel.onPasswordTextChanged}"
                     android:paddingStart="10dp"
@@ -350,6 +351,7 @@
                 app:layout_constraintWidth_percent="0.88">
 
                 <EditText
+                    android:fontFamily="sans-serif"
                     android:id="@+id/et_password_verify"
                     onPasswordCheckTextChanged="@{(text) -> viewModel.onPasswordCheckTextChanged(text, etPassword.getText().toString())}"
                     android:layout_width="0dp"
@@ -357,7 +359,7 @@
                     android:autofillHints="emailAddress"
                     android:background="@null"
                     android:ellipsize="end"
-                    android:fontFamily="@font/dohyeon"
+                    android:inputType="textPassword"
                     android:maxLines="1"
                     android:paddingStart="10dp"
                     android:paddingEnd="4dp"

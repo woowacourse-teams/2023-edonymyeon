@@ -2,14 +2,19 @@ package com.app.edonymyeon.data.repository
 
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.datasource.auth.AuthDataSource
+import com.app.edonymyeon.data.dto.LoginDataModel
 import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
 import com.app.edonymyeon.mapper.toDataModel
 import com.domain.edonymyeon.model.UserRegistration
 import com.domain.edonymyeon.repository.AuthRepository
+import org.json.JSONObject
 
-class AuthRepositoryImpl(private val authDataSource: AuthDataSource) : AuthRepository {
+class AuthRepositoryImpl(
+    private val authLocalDataSource: AuthDataSource.Local,
+    private val authRemoteDataSource: AuthDataSource.Remote,
+) : AuthRepository {
     override suspend fun signUp(userRegistration: UserRegistration): Result<Unit> {
-        val result = authDataSource.signUp(
+        val result = authRemoteDataSource.signUp(
             userRegistration.toDataModel(),
         )
         return if (result.isSuccessful) {
@@ -23,7 +28,7 @@ class AuthRepositoryImpl(private val authDataSource: AuthDataSource) : AuthRepos
         target: String,
         value: String,
     ): Result<Boolean> {
-        val result = authDataSource.checkDuplicate(target, value)
+        val result = authRemoteDataSource.checkDuplicate(target, value)
         return if (result.isSuccessful) {
             Result.success((result.body() ?: AuthDuplicateResponse(false)).isUnique)
         } else {

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import app.edonymyeon.databinding.ActivitySignUpBinding
+import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.data.datasource.auth.AuthRemoteDataSource
 import com.app.edonymyeon.data.repository.AuthRepositoryImpl
 
@@ -12,7 +13,17 @@ class SignUpActivity : AppCompatActivity() {
         ActivitySignUpBinding.inflate(layoutInflater)
     }
     private val viewModel: SignUpViewModel by viewModels {
-        SignUpViewModelFactory(AuthRepositoryImpl(AuthRemoteDataSource()))
+        SignUpViewModelFactory(
+            AuthRepositoryImpl(
+                AuthLocalDataSource.getInstance(
+                    getSharedPreferences(
+                        AuthLocalDataSource.AUTH_INFO,
+                        MODE_PRIVATE,
+                    ),
+                ),
+                AuthRemoteDataSource(),
+            ),
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

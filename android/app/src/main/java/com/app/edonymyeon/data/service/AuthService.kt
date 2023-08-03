@@ -1,7 +1,7 @@
 package com.app.edonymyeon.data.service
 
 import com.app.edonymyeon.data.dto.LoginDataModel
-import com.app.edonymyeon.data.dto.request.UserRegistrationRequestBody
+import com.app.edonymyeon.data.dto.request.UserRegistrationRequest
 import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
 import retrofit2.Response
 import retrofit2.http.Body
@@ -11,7 +11,7 @@ import retrofit2.http.Query
 
 interface AuthService {
     @POST("/join")
-    suspend fun signUp(@Body userRegistrationRequestBody: UserRegistrationRequestBody): Response<Unit>
+    suspend fun signUp(@Body userRegistrationRequest: UserRegistrationRequest): Response<Unit>
 
     @GET("/join")
     suspend fun checkDuplicate(

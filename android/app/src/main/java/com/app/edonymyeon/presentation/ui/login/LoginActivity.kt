@@ -23,8 +23,8 @@ class LoginActivity : AppCompatActivity() {
     private val viewModel: LoginViewModel by lazy {
         LoginViewModelFactory(
             AuthRepositoryImpl(
-                AuthRemoteDataSource(),
                 AuthLocalDataSource.getInstance(sharedPreferences),
+                AuthRemoteDataSource(),
             ),
         ).create(
             LoginViewModel::class.java,
