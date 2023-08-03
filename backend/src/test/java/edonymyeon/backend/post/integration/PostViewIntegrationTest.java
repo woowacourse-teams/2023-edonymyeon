@@ -1,7 +1,5 @@
 package edonymyeon.backend.post.integration;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
@@ -10,6 +8,8 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class PostViewIntegrationTest extends IntegrationTest implements ImageFileCleaner {
