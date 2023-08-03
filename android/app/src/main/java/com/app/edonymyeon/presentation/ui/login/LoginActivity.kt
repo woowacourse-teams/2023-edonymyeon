@@ -12,6 +12,7 @@ import com.app.edonymyeon.data.datasource.auth.AuthRemoteDataSource
 import com.app.edonymyeon.data.repository.AuthRepositoryImpl
 import com.app.edonymyeon.data.service.client.RetrofitClient
 import com.app.edonymyeon.presentation.ui.main.MainActivity
+import com.app.edonymyeon.presentation.ui.signup.SignUpActivity
 import com.app.edonymyeon.presentation.util.makeSnackbar
 
 class LoginActivity : AppCompatActivity() {
@@ -93,6 +94,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun navigateToJoin() {
+        startActivity(SignUpActivity.newIntent(this))
     }
 
     private fun setJoinClickListener() {
