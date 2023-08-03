@@ -58,8 +58,8 @@ public enum ExceptionInformation {
     CONSUMPTION_YEAR_MONTH_ILLEGAL(6547, "소비 확정 년도, 달이 현재 시각보다 미래입니다."),
     CONSUMPTION_PERIOD_MONTH_ILLEGAL(6548, "해당 기간의 소비 금액은 조회할 수 없습니다."),
     BUSINESS_LOGIC_ERROR_CONSUMPTIONS_NULL(6997, "ConsumptionsPerMonth의 생성자 파라미터로 null 값이 들어올 수 없습니다"),
-    BUSINESS_LOGIC_ERROR_CONSUMPTION_YEAR_NOT_SAME(6998, "ConsumptionsPerMonth에 년도가 일치하지 않는 Consumption이 포함되어 있습니다."),
-    BUSINESS_LOGIC_ERROR_CONSUMPTION_MONTH_NOT_SAME(6999, "ConsumptionsPerMonth에 달이 일치하지 않는 Consumption이 포함되어 있습니다.");
+    BUSINESS_LOGIC_ERROR_CONSUMPTIONS_PERIOD_NOT_SAME(6999,
+            "ConsumptionsPerMonth에 소비 달이 일치하지 않는 Consumption이 포함되어 있습니다.");
 
     private int code;
 

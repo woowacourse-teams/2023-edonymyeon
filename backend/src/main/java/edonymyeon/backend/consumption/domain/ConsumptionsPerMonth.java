@@ -3,12 +3,10 @@ package edonymyeon.backend.consumption.domain;
 import static edonymyeon.backend.consumption.domain.ConsumptionType.PURCHASE;
 import static edonymyeon.backend.consumption.domain.ConsumptionType.SAVING;
 import static edonymyeon.backend.global.exception.ExceptionInformation.BUSINESS_LOGIC_ERROR_CONSUMPTIONS_NULL;
-import static edonymyeon.backend.global.exception.ExceptionInformation.BUSINESS_LOGIC_ERROR_CONSUMPTION_MONTH_NOT_SAME;
-import static edonymyeon.backend.global.exception.ExceptionInformation.BUSINESS_LOGIC_ERROR_CONSUMPTION_YEAR_NOT_SAME;
+import static edonymyeon.backend.global.exception.ExceptionInformation.BUSINESS_LOGIC_ERROR_CONSUMPTIONS_PERIOD_NOT_SAME;
 
 import edonymyeon.backend.global.exception.BusinessLogicException;
 import java.util.List;
-import java.util.Objects;
 import lombok.Getter;
 
 @Getter
@@ -29,21 +27,16 @@ public class ConsumptionsPerMonth {
     }
 
     private void validateSameYearMonth(final List<Consumption> consumptions) {
-        if (consumptions.isEmpty()) {
+        if (consumptions.isEmpty() || isSamePeriod(consumptions)) {
             return;
         }
-        final Consumption referenceConsumption = consumptions.get(0);
-        final Integer referenceYear = referenceConsumption.getConsumptionYear();
-        final Integer referenceMonth = referenceConsumption.getConsumptionMonth();
+        throw new BusinessLogicException(BUSINESS_LOGIC_ERROR_CONSUMPTIONS_PERIOD_NOT_SAME);
+    }
 
-        for (Consumption consumption : consumptions) {
-            if (!Objects.equals(consumption.getConsumptionYear(), referenceYear)) {
-                throw new BusinessLogicException(BUSINESS_LOGIC_ERROR_CONSUMPTION_YEAR_NOT_SAME);
-            }
-            if (!Objects.equals(consumption.getConsumptionMonth(), referenceMonth)) {
-                throw new BusinessLogicException(BUSINESS_LOGIC_ERROR_CONSUMPTION_MONTH_NOT_SAME);
-            }
-        }
+    public boolean isSamePeriod(final List<Consumption> consumptions) {
+        final Consumption firstConsumption = consumptions.get(0);
+        return consumptions.stream()
+                .allMatch(consumption -> consumption.isSameYearMonth(firstConsumption));
     }
 
     public Long calculateTotalPurchasePrice() {

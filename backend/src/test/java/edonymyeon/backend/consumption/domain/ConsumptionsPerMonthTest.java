@@ -35,7 +35,7 @@ class ConsumptionsPerMonthTest {
 
         assertThatThrownBy(() -> new ConsumptionsPerMonth(consumptions))
                 .isInstanceOf(BusinessLogicException.class)
-                .hasMessage(ExceptionInformation.BUSINESS_LOGIC_ERROR_CONSUMPTION_YEAR_NOT_SAME.getMessage());
+                .hasMessage(ExceptionInformation.BUSINESS_LOGIC_ERROR_CONSUMPTIONS_PERIOD_NOT_SAME.getMessage());
     }
 
     @Test
@@ -50,6 +50,6 @@ class ConsumptionsPerMonthTest {
 
         assertThatThrownBy(() -> new ConsumptionsPerMonth(consumptions))
                 .isInstanceOf(BusinessLogicException.class)
-                .hasMessage(ExceptionInformation.BUSINESS_LOGIC_ERROR_CONSUMPTION_MONTH_NOT_SAME.getMessage());
+                .hasMessage(ExceptionInformation.BUSINESS_LOGIC_ERROR_CONSUMPTIONS_PERIOD_NOT_SAME.getMessage());
     }
 }

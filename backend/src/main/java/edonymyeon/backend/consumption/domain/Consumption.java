@@ -125,4 +125,16 @@ public class Consumption {
     boolean isType(final ConsumptionType consumptionType) {
         return this.consumptionType == consumptionType;
     }
+
+    public boolean isSameYearMonth(final Consumption consumption) {
+        return isSameYear(consumption) && isSameMonth(consumption);
+    }
+
+    private boolean isSameYear(final Consumption consumption) {
+        return this.consumptionYear.equals(consumption.consumptionYear);
+    }
+
+    private boolean isSameMonth(final Consumption consumption) {
+        return this.consumptionMonth.equals(consumption.consumptionMonth);
+    }
 }
