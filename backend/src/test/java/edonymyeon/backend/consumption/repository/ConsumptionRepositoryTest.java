@@ -9,6 +9,7 @@ import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.PostTestSupport;
 import edonymyeon.backend.support.ProfileImageInfoTestSupport;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -42,9 +43,21 @@ class ConsumptionRepositoryTest {
         final List<Consumption> 칠월_소비들 = 소비내역을_10개_생성한다(2023, 7, 회원);
         final List<Consumption> 팔월_소비들 = 소비내역을_10개_생성한다(2023, 8, 회원);
 
-        final List<Consumption> 유월_소비들_조회 = consumptionRepository.findByMemberIdAndYearAndMonth(회원.getId(), 2023, 6);
-        final List<Consumption> 칠월_소비들_조회 = consumptionRepository.findByMemberIdAndYearAndMonth(회원.getId(), 2023, 7);
-        final List<Consumption> 팔월_소비들_조회 = consumptionRepository.findByMemberIdAndYearAndMonth(회원.getId(), 2023, 8);
+        final List<Consumption> 유월_소비들_조회 = consumptionRepository.findByMemberIdAndConsumptionDateBetween(
+                회원.getId(),
+                특정_달의_첫번째_날짜(2023, 6),
+                특정_달의_마지막_날짜(2023, 6)
+        );
+        final List<Consumption> 칠월_소비들_조회 = consumptionRepository.findByMemberIdAndConsumptionDateBetween(
+                회원.getId(),
+                특정_달의_첫번째_날짜(2023, 7),
+                특정_달의_마지막_날짜(2023, 7)
+        );
+        final List<Consumption> 팔월_소비들_조회 = consumptionRepository.findByMemberIdAndConsumptionDateBetween(
+                회원.getId(),
+                특정_달의_첫번째_날짜(2023, 8),
+                특정_달의_마지막_날짜(2023, 8)
+        );
 
         SoftAssertions.assertSoftly(
                 SoftAssertions -> {
@@ -69,5 +82,14 @@ class ConsumptionRepositoryTest {
             소비_내역_목록.add(소비_내역);
         }
         return 소비_내역_목록;
+    }
+
+    private LocalDate 특정_달의_첫번째_날짜(final int 년도, final int 달) {
+        return LocalDate.of(년도, 달, 1);
+    }
+
+    private LocalDate 특정_달의_마지막_날짜(final int 년도, final int 달) {
+        final int 마지막_일 = LocalDate.of(년도, 달, 1).lengthOfMonth();
+        return LocalDate.of(년도, 달, 마지막_일);
     }
 }

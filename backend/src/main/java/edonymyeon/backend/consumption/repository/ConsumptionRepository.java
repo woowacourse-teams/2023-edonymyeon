@@ -1,6 +1,7 @@
 package edonymyeon.backend.consumption.repository;
 
 import edonymyeon.backend.consumption.domain.Consumption;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -17,11 +18,10 @@ public interface ConsumptionRepository extends JpaRepository<Consumption, Long> 
     @EntityGraph(attributePaths = {"post"})
     @Query("SELECT c FROM Consumption c "
             + "WHERE c.post.member.id = :memberId "
-            + "AND c.consumptionYear =:consumptionYear "
-            + "AND c.consumptionMonth =:consumptionMonth")
-    List<Consumption> findByMemberIdAndYearAndMonth(
+            + "AND c.consumptionDate BETWEEN :startDate AND :endDate")
+    List<Consumption> findByMemberIdAndConsumptionDateBetween(
             @Param("memberId") final Long memberId,
-            @Param("consumptionYear") final Integer consumptionYear,
-            @Param("consumptionMonth") final Integer consumptionMonth
+            @Param("startDate") final LocalDate startDate,
+            @Param("endDate") final LocalDate endDate
     );
 }

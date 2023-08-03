@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ConsumptionService {
 
+    public static final int FIRST_DAY_OF_MONTH = 1;
+
     private final ConsumptionRepository consumptionRepository;
 
     /**
@@ -30,12 +32,13 @@ public class ConsumptionService {
 
         final List<ConsumptionPriceResponse> consumptionPriceResponses = new ArrayList<>();
         for (int i = 0; i < periodMonth; i++) {
-            final LocalDate nowDate = startDate.plusMonths(i);
+            final LocalDate thisMonth = startDate.plusMonths(i);
+
             final ConsumptionsPerMonth consumptionsPerMonth = new ConsumptionsPerMonth(
-                    consumptionRepository.findByMemberIdAndYearAndMonth(
+                    consumptionRepository.findByMemberIdAndConsumptionDateBetween(
                             memberId.id(),
-                            nowDate.getYear(),
-                            nowDate.getMonth().getValue()
+                            getFirstDateOfMonth(thisMonth),
+                            getLastDateOfMonth(thisMonth)
                     ));
             consumptionPriceResponses.add(new ConsumptionPriceResponse(
                     consumptionsPerMonth.calculateTotalPurchasePrice(),
@@ -43,5 +46,14 @@ public class ConsumptionService {
             ));
         }
         return RecentConsumptionsResponse.of(startDate, currentDate, consumptionPriceResponses);
+    }
+
+    private LocalDate getLastDateOfMonth(final LocalDate thisMonth) {
+        final int lastDayOfThisMonth = thisMonth.lengthOfMonth();
+        return thisMonth.withDayOfMonth(lastDayOfThisMonth);
+    }
+
+    private LocalDate getFirstDateOfMonth(final LocalDate thisMonth) {
+        return thisMonth.withDayOfMonth(FIRST_DAY_OF_MONTH);
     }
 }
