@@ -30,7 +30,7 @@ public class ConsumptionIntegrationTest extends IntegrationTest {
     @Autowired
     private ConsumptionTestSupport2 consumptionTestSupport2;
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "조회 기간 = {0} 개월")
     @ValueSource(ints = {-1, 0, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14})
     void 조회_기간으로_한달_또는_여섯달이_아닌_값이_들어오면_실패한다(final int periodMonth) {
         final Member 사용자 = memberTestSupport.builder().build();
