@@ -2,7 +2,7 @@ package edonymyeon.backend.consumption.domain;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.domain.Post;
@@ -16,7 +16,7 @@ class ConsumptionsPerMonthTest {
     @Test
     void 생성자에_null이_들어오면_예외가_발생한다() {
         assertThatThrownBy(() -> new ConsumptionsPerMonth(null))
-                .isInstanceOf(EdonymyeonException.class)
+                .isInstanceOf(BusinessLogicException.class)
                 .hasMessage(ExceptionInformation.BUSINESS_LOGIC_ERROR_CONSUMPTIONS_NULL.getMessage());
     }
 
@@ -31,7 +31,7 @@ class ConsumptionsPerMonthTest {
         List<Consumption> consumptions = new ArrayList<>(List.of(소비내역1, 소비내역2));
 
         assertThatThrownBy(() -> new ConsumptionsPerMonth(consumptions))
-                .isInstanceOf(EdonymyeonException.class)
+                .isInstanceOf(BusinessLogicException.class)
                 .hasMessage(ExceptionInformation.BUSINESS_LOGIC_ERROR_CONSUMPTION_YEAR_NOT_SAME.getMessage());
     }
 
@@ -46,7 +46,7 @@ class ConsumptionsPerMonthTest {
         List<Consumption> consumptions = new ArrayList<>(List.of(소비내역1, 소비내역2));
 
         assertThatThrownBy(() -> new ConsumptionsPerMonth(consumptions))
-                .isInstanceOf(EdonymyeonException.class)
+                .isInstanceOf(BusinessLogicException.class)
                 .hasMessage(ExceptionInformation.BUSINESS_LOGIC_ERROR_CONSUMPTION_MONTH_NOT_SAME.getMessage());
     }
 }
