@@ -101,7 +101,7 @@ class MyPostServiceTest {
                 consumption.getConsumptionType().name(),
                 consumption.getPrice(),
                 consumption.getConsumptionYear(),
-                consumption.getConsumptionYear()
+                consumption.getConsumptionMonth()
         );
     }
 }
