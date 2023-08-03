@@ -43,7 +43,7 @@ class SearchFragment : Fragment() {
     private fun setResultScrollListener() {
         binding.rvSearchResult.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                if (viewModel.hasNextPage()) {
+                if (!viewModel.hasNextPage()) {
                     return
                 }
                 if (!binding.rvSearchResult.canScrollVertically(1)) {
