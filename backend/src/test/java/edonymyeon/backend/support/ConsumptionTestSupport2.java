@@ -71,7 +71,7 @@ public class ConsumptionTestSupport2 {
                     Consumption.of(
                             post == null ? postTestSupport.builder().build() : post,
                             consumptionType == null ? DEFAULT_CONSUMPTION_TYPE : consumptionType,
-                            price == null ? DEFAULT_CONSUMPTION_MONTH : price,
+                            price == null ? DEFAULT_CONSUMPTION_PRICE : price,
                             consumptionYear == null ? DEFAULT_CONSUMPTION_YEAR : consumptionYear,
                             consumptionMonth == null ? DEFAULT_CONSUMPTION_MONTH : consumptionMonth
                     )
