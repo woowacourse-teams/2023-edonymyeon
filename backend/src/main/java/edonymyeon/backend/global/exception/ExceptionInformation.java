@@ -58,6 +58,7 @@ public enum ExceptionInformation {
     CONSUMPTION_MONTH_ILLEGAL(6545, "소비한 달이 유효하지 않습니다."),
     CONSUMPTION_POST_ID_NOT_FOUND(6546, "소비 확정 내역이 존재하지 않습니다."),
     CONSUMPTION_YEAR_MONTH_ILLEGAL(6547, "소비 확정 년도, 달이 현재 시각보다 미래입니다."),
+    CONSUMPTION_PERIOD_MONTH_ILLEGAL(6548, "해당 기간의 소비 금액은 조회할 수 없습니다."),
 
     // 9___: 어드민 페이지 관련
     LOGGING_TYPE_NOT_EXISTS(9001,"존재하지 않는 로그 타입입니다.");

@@ -10,6 +10,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
+import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import java.util.EnumMap;
@@ -28,6 +29,9 @@ public class GlobalExceptionHandler {
     private final EnumMap<ExceptionInformation, HttpStatus> exceptionInfoToHttpStatus = new EnumMap<>(
             ExceptionInformation.class);
 
+    /**
+     * exceptionInfoToHttpStatus는 EdonymyeonException(4xx대 에러)에 대한 정보만 담고 있습니다
+     **/
     public GlobalExceptionHandler() {
         exceptionInfoToHttpStatus.put(MEMBER_EMAIL_NOT_FOUND, UNAUTHORIZED);
         exceptionInfoToHttpStatus.put(AUTHORIZATION_EMPTY, UNAUTHORIZED);
@@ -38,6 +42,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleException(final Exception e) {
         final ExceptionResponse exceptionResponse = new ExceptionResponse(0, "알지 못하는 예외 발생");
         log.error("알지 못하는 예외 발생", e);
+
+        return ResponseEntity.internalServerError()
+                .body(exceptionResponse);
+    }
+
+    /**
+     * 서버 내부에서 잘못된 비즈니스 로직으로 인해 발생하는 예외는 아래 핸들러가 잡아 500에러로 처리합니다
+     **/
+    @ExceptionHandler(BusinessLogicException.class)
+    public ResponseEntity<ExceptionResponse> handleBusinessLogicException(final BusinessLogicException e) {
+        final ExceptionResponse exceptionResponse = new ExceptionResponse(e.getCode(), "서버 내부의 잘못된 로직에 의한 예외 발생");
+        log.error(e.getMessage(), e);
 
         return ResponseEntity.internalServerError()
                 .body(exceptionResponse);
@@ -59,7 +75,7 @@ public class GlobalExceptionHandler {
         final ExceptionResponse exceptionResponse = new ExceptionResponse(REQUEST_PARAMETER_NOT_EXIST.getCode(),
                 REQUEST_PARAMETER_NOT_EXIST.getMessage());
 
-        return ResponseEntity.status(BAD_REQUEST)
+        return ResponseEntity.badRequest()
                 .body(exceptionResponse);
     }
 
