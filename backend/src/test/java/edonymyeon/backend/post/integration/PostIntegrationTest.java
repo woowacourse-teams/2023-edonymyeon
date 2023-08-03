@@ -351,7 +351,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                         게시글.writer().profileImage()),
 
                 () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.viewCount")).isEqualTo(
-                        게시글.reactionCount().viewCount() + 1),
+                        게시글.reactionCount().viewCount()),
                 () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.commentCount")).isEqualTo(
                         게시글.reactionCount().commentCount()),
                 () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.scrapCount")).isEqualTo(
@@ -451,7 +451,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
 
                     softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getInt("reactionCount.viewCount"))
                             .isEqualTo(
-                                    게시글.reactionCount().viewCount());
+                                    게시글.reactionCount().viewCount() - 1);
                     softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getInt("reactionCount.commentCount"))
                             .isEqualTo(
                                     게시글.reactionCount().commentCount());
