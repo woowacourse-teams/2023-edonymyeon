@@ -8,12 +8,11 @@ import edonymyeon.backend.post.application.dto.ThumbsStatusInPostResponse;
 import edonymyeon.backend.thumbs.domain.AllThumbsInPost;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
+import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Objects;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

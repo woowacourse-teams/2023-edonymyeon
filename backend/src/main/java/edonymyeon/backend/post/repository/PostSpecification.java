@@ -4,12 +4,11 @@ import edonymyeon.backend.post.domain.Post;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import org.springframework.data.jpa.domain.Specification;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import org.springframework.data.jpa.domain.Specification;
 
 public class PostSpecification {
 
@@ -23,7 +22,8 @@ public class PostSpecification {
         });
     }
 
-    private static void appendSearchCondition(String searchWord, Root<Post> root, CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
+    private static void appendSearchCondition(String searchWord, Root<Post> root, CriteriaBuilder criteriaBuilder,
+                                              List<Predicate> predicates) {
         List<String> searchWords = splitKeyWordByBlank(searchWord);
         for (String word : searchWords) {
             predicates.add(criteriaBuilder.or(

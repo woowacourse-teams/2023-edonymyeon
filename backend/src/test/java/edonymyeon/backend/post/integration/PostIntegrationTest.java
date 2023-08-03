@@ -1,5 +1,14 @@
 package edonymyeon.backend.post.integration;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.AUTHORIZATION_EMPTY;
+import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_DOMAIN_INVALID;
+import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_STORE_NAME_INVALID;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_IMAGE_COUNT_INVALID;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
@@ -7,13 +16,14 @@ import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.integration.steps.MemberConsumptionSteps;
 import edonymyeon.backend.post.ImageFileCleaner;
+import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.PostReadService;
-import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.io.File;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +31,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import java.io.File;
-
-import static edonymyeon.backend.global.exception.ExceptionInformation.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 @SuppressWarnings("NonAsciiCharacters")
 public class PostIntegrationTest extends IntegrationTest implements ImageFileCleaner {
 
-    private static File 이미지1 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
-    private static File 이미지2 = new File("./src/test/resources/static/img/file/test_image_2.jpg");
+    private static final File 이미지1 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
+    private static final File 이미지2 = new File("./src/test/resources/static/img/file/test_image_2.jpg");
 
     @Value("${domain}")
     private String domain;

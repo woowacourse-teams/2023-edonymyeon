@@ -1,7 +1,9 @@
 package edonymyeon.backend.post.application;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.PostTestSupport;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +16,6 @@ import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
 @DisplayNameGeneration(ReplaceUnderscores.class)
@@ -25,7 +24,8 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 @SpringBootTest
 public class PostServiceSearchPostsTest {
 
-    private static final GeneralFindingCondition emptyFindingCondition = GeneralFindingCondition.of(null, null, null, null);
+    private static final GeneralFindingCondition emptyFindingCondition = GeneralFindingCondition.of(null, null, null,
+            null);
 
     private final PostReadService postReadService;
     private final MemberTestSupport memberTestSupport;
@@ -33,7 +33,6 @@ public class PostServiceSearchPostsTest {
 
     private Long postId1;
     private Long postId2;
-
 
     @BeforeEach
     void setUp() {
