@@ -9,11 +9,6 @@ class ProfileRemoteDataSource : ProfileDataSource {
     private val profileService: ProfileService =
         RetrofitClient.getInstance().create(ProfileService::class.java)
 
-    init {
-        RetrofitClient.getInstance()
-            .updateAccessToken("Basic YmVhdXRpZnVsbmVvQG5hdmVyLmNvbTpuZW8xMjM=")
-    }
-
     override suspend fun getProfile(): Response<ProfileResponse> {
         return profileService.getProfile()
     }
