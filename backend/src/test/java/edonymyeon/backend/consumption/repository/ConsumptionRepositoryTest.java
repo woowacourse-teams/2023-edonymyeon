@@ -38,18 +38,18 @@ class ConsumptionRepositoryTest {
     @Test
     void 특정_월의_소비_내역_리스트_조회가_잘_되는지_테스트() {
         final Member 회원 = memberTestSupport.builder().build();
-        final List<Consumption> 육월_소비들 = 소비내역을_10개_생성한다(2023, 6, 회원);
+        final List<Consumption> 유월_소비들 = 소비내역을_10개_생성한다(2023, 6, 회원);
         final List<Consumption> 칠월_소비들 = 소비내역을_10개_생성한다(2023, 7, 회원);
         final List<Consumption> 팔월_소비들 = 소비내역을_10개_생성한다(2023, 8, 회원);
 
-        final List<Consumption> 육월_소비들_조회 = consumptionRepository.findByMemberIdAndYearAndMonth(회원.getId(), 2023, 6);
+        final List<Consumption> 유월_소비들_조회 = consumptionRepository.findByMemberIdAndYearAndMonth(회원.getId(), 2023, 6);
         final List<Consumption> 칠월_소비들_조회 = consumptionRepository.findByMemberIdAndYearAndMonth(회원.getId(), 2023, 7);
         final List<Consumption> 팔월_소비들_조회 = consumptionRepository.findByMemberIdAndYearAndMonth(회원.getId(), 2023, 8);
 
         SoftAssertions.assertSoftly(
                 SoftAssertions -> {
-                    assertThat(육월_소비들_조회.size()).isEqualTo(10);
-                    assertThat(육월_소비들_조회).containsAll(육월_소비들);
+                    assertThat(유월_소비들_조회.size()).isEqualTo(10);
+                    assertThat(유월_소비들_조회).containsAll(유월_소비들);
 
                     assertThat(칠월_소비들_조회.size()).isEqualTo(10);
                     assertThat(칠월_소비들_조회).containsAll(칠월_소비들);
