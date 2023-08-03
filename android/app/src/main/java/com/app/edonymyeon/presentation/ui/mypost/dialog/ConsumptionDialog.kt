@@ -55,7 +55,10 @@ class ConsumptionDialog(
     }
 
     private fun initListener() {
-        binding.btnDialogCancel.setOnClickListener { dismiss() }
+        binding.btnDialogCancel.setOnClickListener {
+            viewModel.setPurchasePrice(BLANK)
+            dismiss()
+        }
         binding.btnDialogOk.setOnClickListener {
             when (type) {
                 ConsumptionType.PURCHASE -> viewModel.postPurchaseConfirm(
