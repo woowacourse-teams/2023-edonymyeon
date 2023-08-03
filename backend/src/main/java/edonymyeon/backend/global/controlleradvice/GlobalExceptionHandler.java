@@ -64,7 +64,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
-    public ResponseEntity<ExceptionResponse> handleMissingServletRequestParameterException(
+    public ResponseEntity<ExceptionResponse> handleMaxUploadSizeExceededException(
             final MaxUploadSizeExceededException e) {
         final ExceptionResponse exceptionResponse = new ExceptionResponse(REQUEST_FILE_SIZE_TOO_LARGE.getCode(),
                 REQUEST_FILE_SIZE_TOO_LARGE.getMessage());
