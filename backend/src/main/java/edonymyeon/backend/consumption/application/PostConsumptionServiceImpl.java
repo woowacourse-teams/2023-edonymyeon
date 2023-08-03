@@ -50,7 +50,7 @@ public class PostConsumptionServiceImpl implements PostConsumptionService {
                 consumption.getConsumptionType().name(),
                 consumption.getPrice(),
                 consumption.getConsumptionYear(),
-                consumption.getConsumptionYear()
+                consumption.getConsumptionMonth()
         );
     }
 }

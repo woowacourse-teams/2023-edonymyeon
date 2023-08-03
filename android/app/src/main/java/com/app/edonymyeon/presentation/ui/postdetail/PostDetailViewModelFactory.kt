@@ -8,8 +8,7 @@ import com.domain.edonymyeon.repository.RecommendRepository
 class PostDetailViewModelFactory(
     private val postRepository: PostRepository,
     private val recommendRepository: RecommendRepository,
-) :
-    ViewModelProvider.Factory {
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return PostDetailViewModel(postRepository, recommendRepository) as T
     }

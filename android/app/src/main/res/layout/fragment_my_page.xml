@@ -2,6 +2,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.app.edonymyeon.presentation.ui.main.mypage.MyPageViewModel" />
+    </data>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -70,6 +77,7 @@
 
                 <ImageView
                     android:id="@+id/iv_profile"
+                    imgUrlCircleCrop="@{viewModel.profile.profileImage}"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:background="@drawable/bg_stroke_576b9e_oval"
@@ -86,6 +94,7 @@
                     android:layout_marginStart="18dp"
                     android:layout_marginBottom="10dp"
                     android:fontFamily="@font/dohyeon"
+                    android:text="@{viewModel.profile.nickname}"
                     android:textColor="@color/gray_434343"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toTopOf="@id/tv_saving_title"
@@ -123,6 +132,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:fontFamily="@font/dohyeon"
+                    android:text="@{@string/my_page_price(viewModel.consumptionOnThisMonth.saving)}"
                     android:textColor="@color/gray_434343"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_saving_title"
@@ -136,6 +146,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:fontFamily="@font/dohyeon"
+                    android:text="@{@string/my_page_price(viewModel.consumptionOnThisMonth.purchase)}"
                     android:textColor="@color/gray_434343"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_purchase_title"
