@@ -62,11 +62,12 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setObserver() {
         viewModel.isSuccess.observe(this) {
-            setEmailAndPasswordEmpty()
             if (it) {
                 setRetrofitToken()
                 navigateToMain()
                 finish()
+            } else {
+                setEmailAndPasswordEmpty()
             }
         }
         viewModel.errorMessage.observe(this) { errorMessage ->
