@@ -13,6 +13,7 @@ object CustomBindingAdapter {
     fun setCenterCropImageResource(view: ImageView, url: String?) {
         Glide.with(view.context)
             .load(url)
+            .error(R.drawable.ic_default)
             .centerCrop()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(view)
@@ -23,7 +24,7 @@ object CustomBindingAdapter {
     fun setFitCenterImageResource(view: ImageView, url: String?) {
         Glide.with(view.context)
             .load(url)
-            .error(R.drawable.ic_launcher_foreground)
+            .error(R.drawable.ic_default)
             .fitCenter()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(view)
@@ -34,7 +35,7 @@ object CustomBindingAdapter {
     fun setCircleCropImageResource(view: ImageView, url: String?) {
         Glide.with(view.context)
             .load(url)
-            .error(R.drawable.ic_launcher_foreground)
+            .error(R.drawable.ic_default)
             .circleCrop()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(view)
