@@ -126,16 +126,16 @@ public class Consumption {
         return this.consumptionType == consumptionType;
     }
 
-    public boolean isSameYearMonth(final Consumption consumption) {
-        return isSameYear(consumption) && isSameMonth(consumption);
+    private boolean isSameYear(final LocalDate consumptionDate) {
+        return this.consumptionDate.getYear() == consumptionDate.getYear();
     }
 
-    private boolean isSameYear(final Consumption consumption) {
-        return this.consumptionDate.getYear() == consumption.consumptionDate.getYear();
+    private boolean isSameMonth(final LocalDate consumptionDate) {
+        return this.consumptionDate.getMonth() == consumptionDate.getMonth();
     }
 
-    private boolean isSameMonth(final Consumption consumption) {
-        return this.consumptionDate.getMonth() == consumption.consumptionDate.getMonth();
+    public boolean isSameYearMonth(final LocalDate consumptionDate) {
+        return isSameYear(consumptionDate) && isSameMonth(consumptionDate);
     }
 
     public int getConsumptionYear() {

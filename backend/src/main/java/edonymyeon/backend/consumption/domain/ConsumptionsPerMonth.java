@@ -2,10 +2,9 @@ package edonymyeon.backend.consumption.domain;
 
 import static edonymyeon.backend.consumption.domain.ConsumptionType.PURCHASE;
 import static edonymyeon.backend.consumption.domain.ConsumptionType.SAVING;
-import static edonymyeon.backend.global.exception.ExceptionInformation.BUSINESS_LOGIC_ERROR_CONSUMPTIONS_NULL;
-import static edonymyeon.backend.global.exception.ExceptionInformation.BUSINESS_LOGIC_ERROR_CONSUMPTIONS_PERIOD_NOT_SAME;
 
-import edonymyeon.backend.global.exception.BusinessLogicException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 
@@ -14,29 +13,33 @@ public class ConsumptionsPerMonth {
 
     private final List<Consumption> consumptions;
 
-    public ConsumptionsPerMonth(final List<Consumption> consumptions) {
-        validateNull(consumptions);
-        validateSameYearMonth(consumptions);
+    private ConsumptionsPerMonth(final List<Consumption> consumptions) {
         this.consumptions = consumptions;
     }
 
-    private void validateNull(final List<Consumption> consumptions) {
-        if (consumptions == null) {
-            throw new BusinessLogicException(BUSINESS_LOGIC_ERROR_CONSUMPTIONS_NULL);
+    public static List<ConsumptionsPerMonth> of(
+            final List<Consumption> consumptions,
+            final LocalDate startMonth,
+            final LocalDate lastMonth
+    ) {
+        List<ConsumptionsPerMonth> consumptionsOfPeriod = new ArrayList<>();
+
+        //startMonth -> lastMonth 로 가면서 각 달의 구매/절약 금액을 저장한다.
+        LocalDate orderMonth = startMonth;
+        while (orderMonth.isBefore(lastMonth) || orderMonth.isEqual(lastMonth)) {
+            final LocalDate compareMonth = orderMonth;
+            final List<Consumption> consumptionsPerMonth = findConsumptionsOfSameMonth(consumptions, compareMonth);
+            consumptionsOfPeriod.add(new ConsumptionsPerMonth(consumptionsPerMonth));
+            orderMonth = orderMonth.plusMonths(1);
         }
+        return consumptionsOfPeriod;
     }
 
-    private void validateSameYearMonth(final List<Consumption> consumptions) {
-        if (consumptions.isEmpty() || isSamePeriod(consumptions)) {
-            return;
-        }
-        throw new BusinessLogicException(BUSINESS_LOGIC_ERROR_CONSUMPTIONS_PERIOD_NOT_SAME);
-    }
-
-    public boolean isSamePeriod(final List<Consumption> consumptions) {
-        final Consumption firstConsumption = consumptions.get(0);
+    private static List<Consumption> findConsumptionsOfSameMonth(final List<Consumption> consumptions,
+                                                                 final LocalDate compareMonth) {
         return consumptions.stream()
-                .allMatch(consumption -> consumption.isSameYearMonth(firstConsumption));
+                .filter(consumption -> consumption.isSameYearMonth(compareMonth))
+                .toList();
     }
 
     public Long calculateTotalPurchasePrice() {

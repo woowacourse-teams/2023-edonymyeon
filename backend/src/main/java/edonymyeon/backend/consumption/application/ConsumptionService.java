@@ -2,6 +2,7 @@ package edonymyeon.backend.consumption.application;
 
 import edonymyeon.backend.consumption.application.dto.ConsumptionPriceResponse;
 import edonymyeon.backend.consumption.application.dto.RecentConsumptionsResponse;
+import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.domain.ConsumptionsPerMonth;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.member.application.dto.MemberId;
@@ -27,25 +28,42 @@ public class ConsumptionService {
     public RecentConsumptionsResponse findRecentConsumptions(final MemberId memberId, final Integer periodMonth) {
         PeriodMonth.checkIllegalPeriodMonth(periodMonth);
 
-        final LocalDate currentDate = LocalDate.now();
-        final LocalDate startDate = currentDate.minusMonths(periodMonth - 1);
+        final LocalDate currentMonth = LocalDate.now();
+        final LocalDate startMonth = currentMonth.minusMonths(periodMonth - 1);
+
+        final LocalDate firstDateOfStartMonth = getFirstDateOfMonth(startMonth);
+        final LocalDate lastDateOfCurrentMonth = getLastDateOfMonth(currentMonth);
+
+        final List<ConsumptionsPerMonth> consumptionsOfPeriodMonth = findConsumptionsPerMonthByMemberIdAndPeriod(
+                memberId,
+                firstDateOfStartMonth,
+                lastDateOfCurrentMonth
+        );
 
         final List<ConsumptionPriceResponse> consumptionPriceResponses = new ArrayList<>();
-        for (int i = 0; i < periodMonth; i++) {
-            final LocalDate thisMonth = startDate.plusMonths(i);
-            final ConsumptionsPerMonth consumptionsPerMonth = findConsumptionsPerMonthByMemberId(memberId, thisMonth);
+        for (ConsumptionsPerMonth consumptionsPerMonth : consumptionsOfPeriodMonth) {
             consumptionPriceResponses.add(ConsumptionPriceResponse.from(consumptionsPerMonth));
         }
-        return RecentConsumptionsResponse.of(startDate, currentDate, consumptionPriceResponses);
+
+        return RecentConsumptionsResponse.of(firstDateOfStartMonth, currentMonth, consumptionPriceResponses);
     }
 
-    private ConsumptionsPerMonth findConsumptionsPerMonthByMemberId(final MemberId memberId,
-                                                                    final LocalDate thisMonth) {
-        return new ConsumptionsPerMonth(consumptionRepository.findByMemberIdAndConsumptionDateBetween(
+    private List<ConsumptionsPerMonth> findConsumptionsPerMonthByMemberIdAndPeriod(
+            final MemberId memberId,
+            final LocalDate start,
+            final LocalDate end
+    ) {
+        final List<Consumption> consumptions = consumptionRepository.findByMemberIdAndConsumptionDateBetween(
                 memberId.id(),
-                getFirstDateOfMonth(thisMonth),
-                getLastDateOfMonth(thisMonth)
-        ));
+                start,
+                end
+        );
+
+        return ConsumptionsPerMonth.of(
+                consumptions,
+                start,
+                end
+        );
     }
 
     private LocalDate getFirstDateOfMonth(final LocalDate thisMonth) {
