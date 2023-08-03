@@ -1,7 +1,7 @@
 package edonymyeon.backend.post.ui;
 
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.post.application.PostReadService;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
@@ -30,8 +30,8 @@ public class PostReadController {
 
     @GetMapping("/posts/{postId}")
     public ResponseEntity<SpecificPostInfoResponse> findSpecificPost(
-            @AuthPrincipal(required = false) MemberIdDto memberIdDto, @PathVariable Long postId) {
-        SpecificPostInfoResponse specificPost = postReadService.findSpecificPost(postId, memberIdDto);
+            @AuthPrincipal(required = false) MemberId memberId, @PathVariable Long postId) {
+        SpecificPostInfoResponse specificPost = postReadService.findSpecificPost(postId, memberId);
         return ResponseEntity.ok()
                 .body(specificPost);
     }

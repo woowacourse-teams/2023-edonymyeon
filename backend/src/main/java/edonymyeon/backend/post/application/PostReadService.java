@@ -3,7 +3,7 @@ package edonymyeon.backend.post.application;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.domain.Domain;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.dto.*;
@@ -16,7 +16,6 @@ import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
+import static org.springframework.data.domain.Sort.Direction;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -51,8 +51,8 @@ public class PostReadService {
                     generalFindingCondition.getPage(),
                     generalFindingCondition.getSize(),
                     switch (generalFindingCondition.getSortDirection()) {
-                        case ASC -> Sort.Direction.ASC;
-                        case DESC -> Sort.Direction.DESC;
+                        case ASC -> Direction.ASC;
+                        case DESC -> Direction.DESC;
                     },
                     generalFindingCondition.getSortBy().getName()
             );
@@ -61,14 +61,16 @@ public class PostReadService {
         }
     }
 
-    public SpecificPostInfoResponse findSpecificPost(final Long postId, final MemberIdDto memberIdDto) {
+    @Transactional
+    public SpecificPostInfoResponse findSpecificPost(final Long postId, final MemberId memberId) {
         final Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new EdonymyeonException(POST_ID_NOT_FOUND));
 
-        final Optional<Member> member = memberRepository.findById(memberIdDto.id());
+        final Optional<Member> member = memberRepository.findById(memberId.id());
+        post.updateView(member.orElse(null));
 
         final ReactionCountResponse reactionCountResponse = new ReactionCountResponse(
-                0, // TODO: 조회수 기능 구현 필요
+                post.getViewCount(),
                 0, // TODO: 댓글 수 기능 구현 필요
                 0 // TODO: 스크랩 기능 구현 필요
         );
@@ -85,7 +87,7 @@ public class PostReadService {
             );
         }
 
-        final ThumbsStatusInPostResponse thumbsStatusInPost = thumbsService.findThumbsStatusInPost(memberIdDto, postId);
+        final ThumbsStatusInPostResponse thumbsStatusInPost = thumbsService.findThumbsStatusInPost(memberId, postId);
 
         return SpecificPostInfoResponse.of(
                 post,

@@ -7,16 +7,13 @@ import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.integration.steps.MemberConsumptionSteps;
 import edonymyeon.backend.post.ImageFileCleaner;
-import edonymyeon.backend.post.application.PostService;
+import edonymyeon.backend.post.application.PostReadService;
 import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
-import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.io.File;
-import java.util.Scanner;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -354,7 +351,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                         게시글.writer().profileImage()),
 
                 () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.viewCount")).isEqualTo(
-                        게시글.reactionCount().viewCount()),
+                        게시글.reactionCount().viewCount() + 1),
                 () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.commentCount")).isEqualTo(
                         게시글.reactionCount().commentCount()),
                 () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.scrapCount")).isEqualTo(
@@ -454,7 +451,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
 
                     softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getInt("reactionCount.viewCount"))
                             .isEqualTo(
-                                    게시글.reactionCount().viewCount() - 1);
+                                    게시글.reactionCount().viewCount());
                     softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getInt("reactionCount.commentCount"))
                             .isEqualTo(
                                     게시글.reactionCount().commentCount());
