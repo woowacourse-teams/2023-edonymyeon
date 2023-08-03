@@ -39,7 +39,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Space
-                    android:id="@+id/space_my_page_title_left"
+                    android:id="@+id/space_my_page_title_start"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintDimensionRatio=""
@@ -51,11 +51,10 @@
                     android:id="@+id/tv_my_page_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/dohyeon"
                     android:text="@string/my_page_title"
                     android:textColor="@color/black_000000"
                     android:textSize="28sp"
-                    app:layout_constraintStart_toEndOf="@id/space_my_page_title_left"
+                    app:layout_constraintStart_toEndOf="@id/space_my_page_title_start"
                     app:layout_constraintTop_toBottomOf="@id/space_my_page_title_top" />
 
                 <Space
@@ -68,12 +67,20 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_my_page_title" />
 
                 <Space
-                    android:id="@+id/space_my_page_profile_left"
+                    android:id="@+id/space_my_page_profile_start"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/space_my_page_title_bottom"
                     app:layout_constraintWidth_percent="0.08" />
+
+                <Space
+                    android:id="@+id/space_my_page_profile_end"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/space_my_page_title_bottom"
+                    app:layout_constraintWidth_percent="0.05" />
 
                 <ImageView
                     android:id="@+id/iv_profile"
@@ -82,7 +89,7 @@
                     android:layout_height="0dp"
                     android:background="@drawable/bg_stroke_576b9e_oval"
                     app:layout_constraintDimensionRatio="H,1:1"
-                    app:layout_constraintStart_toEndOf="@id/space_my_page_profile_left"
+                    app:layout_constraintStart_toEndOf="@id/space_my_page_profile_start"
                     app:layout_constraintTop_toBottomOf="@id/space_my_page_title_bottom"
                     app:layout_constraintWidth_percent="0.2"
                     tools:src="@drawable/ic_launcher_background" />
@@ -93,7 +100,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="18dp"
                     android:layout_marginBottom="10dp"
-                    android:fontFamily="@font/dohyeon"
                     android:text="@{viewModel.profile.nickname}"
                     android:textColor="@color/gray_434343"
                     android:textSize="18sp"
@@ -106,7 +112,6 @@
                     android:id="@+id/tv_saving_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/dohyeon"
                     android:text="@string/my_page_saving_title"
                     android:textColor="@color/blue_576b9e"
                     android:textSize="14sp"
@@ -118,7 +123,6 @@
                     android:id="@+id/tv_purchase_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/dohyeon"
                     android:text="@string/my_page_purchase_title"
                     android:textColor="@color/blue_576b9e"
                     android:textSize="14sp"
@@ -131,7 +135,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:fontFamily="@font/dohyeon"
                     android:text="@{@string/my_page_price(viewModel.consumptionOnThisMonth.saving)}"
                     android:textColor="@color/gray_434343"
                     android:textSize="14sp"
@@ -145,7 +148,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:fontFamily="@font/dohyeon"
                     android:text="@{@string/my_page_price(viewModel.consumptionOnThisMonth.purchase)}"
                     android:textColor="@color/gray_434343"
                     android:textSize="14sp"
@@ -155,6 +157,7 @@
                     tools:text="15,000원" />
 
                 <Button
+                    android:id="@+id/btn_login"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:background="@drawable/bg_576b9e_radius_15dp"
@@ -163,8 +166,7 @@
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@id/iv_profile"
                     app:layout_constraintDimensionRatio="H, 3:2"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/tv_my_purchase"
+                    app:layout_constraintEnd_toStartOf="@id/space_my_page_profile_end"
                     app:layout_constraintTop_toTopOf="@id/iv_profile"
                     app:layout_constraintWidth_percent="0.2" />
 
@@ -200,6 +202,15 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <Space
+                    android:id="@+id/space_graph_start"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/space_payment_title_bottom"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.05" />
+
                 <TextView
                     android:id="@+id/tv_my_payment_title"
                     android:layout_width="wrap_content"
@@ -207,7 +218,7 @@
                     android:text="@string/my_page_payment_title"
                     android:textColor="@color/black_000000"
                     android:textSize="18sp"
-                    app:layout_constraintStart_toStartOf="@id/chart_my_payment"
+                    app:layout_constraintStart_toEndOf="@id/space_graph_start"
                     app:layout_constraintTop_toBottomOf="@id/space_payment_title_top" />
 
                 <Space

@@ -9,11 +9,6 @@ class ConsumptionsRemoteDataSource : ConsumptionsDataSource {
     private val consumptionsService: ConsumptionsService =
         RetrofitClient.getInstance().create(ConsumptionsService::class.java)
 
-    init {
-        RetrofitClient.getInstance()
-            .updateAccessToken("Basic YmVhdXRpZnVsbmVvQG5hdmVyLmNvbTpuZW8xMjM=")
-    }
-
     override suspend fun getConsumptions(period: Int): Response<ConsumptionsResponse> {
         return consumptionsService.getConsumptions(period)
     }

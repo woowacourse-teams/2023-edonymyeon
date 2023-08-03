@@ -14,9 +14,8 @@ class AuthLocalDataSource private constructor(private val sharedPreferences: Sha
     }
 
     companion object {
-
         const val AUTH_INFO = "AUTH_INFO"
-        private const val USER_ACCESS_TOKEN = "USER_ACCESS_TOKEN"
+        const val USER_ACCESS_TOKEN = "USER_ACCESS_TOKEN"
 
         private val authDataSource: AuthLocalDataSource? = null
         fun getInstance(sharedPreferences: SharedPreferences): AuthLocalDataSource {
