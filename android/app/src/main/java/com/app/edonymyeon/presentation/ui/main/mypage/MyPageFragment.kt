@@ -14,8 +14,10 @@ import com.app.edonymyeon.data.datasource.consumptions.ConsumptionsRemoteDataSou
 import com.app.edonymyeon.data.datasource.profile.ProfileRemoteDataSource
 import com.app.edonymyeon.data.repository.ConsumptionsRepositoryImpl
 import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
+import com.app.edonymyeon.data.service.client.RetrofitClient
 import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
+import com.app.edonymyeon.presentation.ui.main.MainActivity
 import com.app.edonymyeon.presentation.ui.main.mypage.chart.LineChartManager
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -44,8 +46,6 @@ class MyPageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-//        PreferenceUtil.setValue(AuthLocalDataSource.USER_ACCESS_TOKEN, "") // 로그아웃 대용
         setViewByLogin()
     }
 
@@ -62,6 +62,7 @@ class MyPageFragment : Fragment() {
     private fun setViewForLogin() {
         binding.tvRequiredLogin.isVisible = false
         binding.btnLogin.isVisible = false
+        binding.tvLogout.setOnClickListener { logout() }
 
         viewModel.getUserProfile()
         viewModel.setConsumptions(PERIOD_MONTH)
@@ -106,6 +107,12 @@ class MyPageFragment : Fragment() {
                 setMarkerView()
             }
         }
+    }
+
+    private fun logout() {
+        PreferenceUtil.setValue(AuthLocalDataSource.USER_ACCESS_TOKEN, "")
+        RetrofitClient.getInstance().clearAccessToken()
+        (activity as MainActivity).refreshActivity()
     }
 
     private fun navigateToLogin() {
