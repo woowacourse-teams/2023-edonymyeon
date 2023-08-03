@@ -6,6 +6,7 @@ import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.domain.ConsumptionType;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.support.ConsumptionTestSupport;
 import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.PostTestSupport;
 import edonymyeon.backend.support.ProfileImageInfoTestSupport;
@@ -26,7 +27,8 @@ import org.springframework.test.context.TestConstructor.AutowireMode;
 @RequiredArgsConstructor
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @TestConstructor(autowireMode = AutowireMode.ALL)
-@Import({MemberTestSupport.class, PostTestSupport.class, ProfileImageInfoTestSupport.class})
+@Import({MemberTestSupport.class, PostTestSupport.class, ProfileImageInfoTestSupport.class,
+        ConsumptionTestSupport.class})
 @DataJpaTest
 class ConsumptionRepositoryTest {
 
@@ -34,7 +36,34 @@ class ConsumptionRepositoryTest {
 
     private final MemberTestSupport memberTestSupport;
 
+    private ConsumptionTestSupport consumptionTestSupport;
+
     private final PostTestSupport postTestSupport;
+
+    @Test
+    void 게시글_id로_소비내역이_잘_불러와지는지() {
+        final Member member = memberTestSupport.builder().build();
+
+        final Post post1 = postTestSupport.builder().member(member).build();
+        final Post post2 = postTestSupport.builder().member(member).build();
+        final Post post3 = postTestSupport.builder().member(member).build();
+        final Post post4 = postTestSupport.builder().member(member).build();
+
+        final Consumption consumption1 = consumptionTestSupport.builder().post(post1).build();
+        final Consumption consumption2 = consumptionTestSupport.builder().post(post2).build();
+        final Consumption consumption3 = consumptionTestSupport.builder().post(post3).build();
+        final Consumption consumption4 = consumptionTestSupport.builder().post(post4).build();
+
+        final List<Long> postIds = List.of(post1.getId(), post2.getId(), post3.getId(), post4.getId(), 5L, 6L);
+        final List<Consumption> consumptions = consumptionRepository.findAllByPostIds(postIds);
+
+        SoftAssertions.assertSoftly(
+                softly -> {
+                    softly.assertThat(consumptions).contains(consumption1, consumption2, consumption3, consumption4);
+                    softly.assertThat(consumptions.size()).isEqualTo(4);
+                }
+        );
+    }
 
     @Test
     void 특정_월의_소비_내역_리스트_조회가_잘_되는지_테스트() {
@@ -92,4 +121,3 @@ class ConsumptionRepositoryTest {
         final int 마지막_일 = LocalDate.of(년도, 달, 1).lengthOfMonth();
         return LocalDate.of(년도, 달, 마지막_일);
     }
-}

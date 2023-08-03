@@ -1,5 +1,9 @@
 package edonymyeon.backend.post.application;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
+
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.domain.Domain;
@@ -14,17 +18,13 @@ import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
-import edonymyeon.backend.thumbs.application.ThumbsService;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-
-import static edonymyeon.backend.global.exception.ExceptionInformation.*;
 
 @RequiredArgsConstructor
 @Service
@@ -38,7 +38,7 @@ public class PostService {
 
     private final MemberRepository memberRepository;
 
-    private final ThumbsService thumbsService;
+    private final PostThumbsService thumbsService;
 
     private final Domain domain;
 

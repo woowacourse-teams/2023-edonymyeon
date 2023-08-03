@@ -4,10 +4,10 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.MemberId;
-import edonymyeon.backend.member.application.dto.MyPageResponse;
 import edonymyeon.backend.member.application.dto.YearMonthDto;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
+import edonymyeon.backend.member.application.dto.response.MyPageResponse;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    private final ConsumptionConfirmService consumptionConfirmService;
+    private final MemberConsumptionService memberConsumptionService;
 
     public MyPageResponse findMemberInfoById(final Long id) {
         final Member member = memberRepository.findById(id)
@@ -37,7 +37,7 @@ public class MemberService {
     ) {
         final YearMonthDto yearMonthDto = new YearMonthDto(purchaseConfirmRequest.year(),
                 purchaseConfirmRequest.month());
-        consumptionConfirmService.confirmPurchase(memberId, postId, purchaseConfirmRequest.purchasePrice(),
+        memberConsumptionService.confirmPurchase(memberId, postId, purchaseConfirmRequest.purchasePrice(),
                 yearMonthDto);
     }
 
@@ -48,11 +48,11 @@ public class MemberService {
             final SavingConfirmRequest savingConfirmRequest) {
         final YearMonthDto yearMonthDto = new YearMonthDto(savingConfirmRequest.year(),
                 savingConfirmRequest.month());
-        consumptionConfirmService.confirmSaving(memberId, postId, yearMonthDto);
+        memberConsumptionService.confirmSaving(memberId, postId, yearMonthDto);
     }
 
     @Transactional
     public void removeConfirm(final MemberId memberId, final Long postId) {
-        consumptionConfirmService.removeConfirm(memberId, postId);
+        memberConsumptionService.removeConfirm(memberId, postId);
     }
 }

@@ -1,5 +1,6 @@
 package edonymyeon.backend;
 
+import edonymyeon.backend.support.ConsumptionTestSupport;
 import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.PostImageInfoTestSupport;
 import edonymyeon.backend.support.PostIntegrationTestSupport;
@@ -33,6 +34,9 @@ public class IntegrationTest {
 
     @Autowired
     protected PostIntegrationTestSupport postIntegrationTestSupport;
+
+    @Autowired
+    protected ConsumptionTestSupport consumptionTestSupport;
 
     @LocalServerPort
     private int port;

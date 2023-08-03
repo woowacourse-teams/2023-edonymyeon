@@ -1,30 +1,31 @@
 package edonymyeon.backend.post.application;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
+import static org.springframework.data.domain.Sort.Direction;
+
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.post.application.dto.*;
+import edonymyeon.backend.post.application.dto.AllThumbsInPostResponse;
+import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
+import edonymyeon.backend.post.application.dto.ReactionCountResponse;
+import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
+import edonymyeon.backend.post.application.dto.ThumbsStatusInPostResponse;
+import edonymyeon.backend.post.application.dto.WriterDetailResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.post.repository.PostSpecification;
-import edonymyeon.backend.thumbs.application.ThumbsService;
-import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
-import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
+import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Objects;
-import java.util.Optional;
-
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
-import static org.springframework.data.domain.Sort.Direction;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -35,11 +36,12 @@ public class PostReadService {
 
     private final MemberRepository memberRepository;
 
-    private final ThumbsService thumbsService;
+    private final PostThumbsService thumbsService;
 
     private final Domain domain;
 
-    public Slice<GeneralPostInfoResponse> findPostsByPagingCondition(final GeneralFindingCondition generalFindingCondition) {
+    public Slice<GeneralPostInfoResponse> findPostsByPagingCondition(
+            final GeneralFindingCondition generalFindingCondition) {
         PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
         return postRepository.findAllBy(pageRequest)
                 .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
@@ -115,7 +117,8 @@ public class PostReadService {
         );
     }
 
-    public Slice<GeneralPostInfoResponse> searchPosts(final String searchWord, final GeneralFindingCondition generalFindingCondition) {
+    public Slice<GeneralPostInfoResponse> searchPosts(final String searchWord,
+                                                      final GeneralFindingCondition generalFindingCondition) {
         final Specification<Post> searchResults = PostSpecification.searchBy(searchWord);
         final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
 

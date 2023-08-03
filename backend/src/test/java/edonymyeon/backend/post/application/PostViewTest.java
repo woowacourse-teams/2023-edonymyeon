@@ -1,5 +1,7 @@
 package edonymyeon.backend.post.application;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.AnonymousMemberId;
@@ -18,8 +20,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
 @SuppressWarnings("NonAsciiCharacters")

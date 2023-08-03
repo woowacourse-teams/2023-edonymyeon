@@ -2,7 +2,7 @@ package edonymyeon.backend.post.ui.argumentresolver;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
-import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
+import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.ui.annotation.PostPaging;
 import java.util.Objects;
 import org.springframework.core.MethodParameter;
@@ -23,12 +23,11 @@ public class PostPagingArgumentResolver implements HandlerMethodArgumentResolver
 
     @Override
     public Object resolveArgument(final MethodParameter parameter, final ModelAndViewContainer mavContainer,
-                                  final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory)
-            throws Exception {
+                                  final NativeWebRequest webRequest, final WebDataBinderFactory binderFactory) {
         final String page = webRequest.getParameter("page");
         final String size = webRequest.getParameter("size");
-        final String sortBy = webRequest.getParameter("sortBy");
-        final String sortDirection = webRequest.getParameter("sortDirection");
+        final String sortBy = webRequest.getParameter("sort-by");
+        final String sortDirection = webRequest.getParameter("sort-direction");
 
         return GeneralFindingCondition.of(
                 convertToNumber(page),

@@ -3,9 +3,9 @@ package edonymyeon.backend.member.ui;
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
 import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.MemberId;
-import edonymyeon.backend.member.application.dto.MyPageResponse;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
+import edonymyeon.backend.member.application.dto.response.MyPageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,7 +29,7 @@ public class MemberController {
         return ResponseEntity.ok(memberInfo);
     }
 
-    @PostMapping("/myPosts/{postId}/purchase-confirm")
+    @PostMapping("/my-posts/{postId}/purchase-confirm")
     public ResponseEntity<Void> confirmPurchase(@AuthPrincipal final MemberId memberId,
                                                 @PathVariable final Long postId,
                                                 @RequestBody final PurchaseConfirmRequest purchaseConfirmRequest) {
@@ -37,7 +37,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/myPosts/{postId}/saving-confirm")
+    @PostMapping("/my-posts/{postId}/saving-confirm")
     public ResponseEntity<Void> confirmSaving(@AuthPrincipal final MemberId memberId,
                                               @PathVariable final Long postId,
                                               @RequestBody final SavingConfirmRequest savingConfirmRequest) {
@@ -45,7 +45,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/myPosts/{postId}/confirm-remove")
+    @DeleteMapping("/my-posts/{postId}/confirm-remove")
     public ResponseEntity<Void> removeConfirm(@AuthPrincipal final MemberId memberId,
                                               @PathVariable final Long postId) {
         memberService.removeConfirm(memberId, postId);

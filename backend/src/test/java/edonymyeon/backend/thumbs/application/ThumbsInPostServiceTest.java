@@ -2,17 +2,18 @@ package edonymyeon.backend.thumbs.application;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.member.application.dto.AnonymousMemberId;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.member.application.dto.AnonymousMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.PostService;
+import edonymyeon.backend.post.application.PostThumbsService;
+import edonymyeon.backend.post.application.dto.AllThumbsInPostResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.post.application.dto.ThumbsStatusInPostResponse;
 import edonymyeon.backend.support.MemberTestSupport;
-import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
-import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -30,6 +31,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @SpringBootTest
 public class ThumbsInPostServiceTest {
+
+    private final PostThumbsService postThumbsService;
 
     private final ThumbsService thumbsService;
 
@@ -60,7 +63,7 @@ public class ThumbsInPostServiceTest {
 
     @Test
     void 해당_게시글에_추천이_없을시에도_정상_동작한다() {
-        AllThumbsInPostResponse allThumbsInPostResponse = thumbsService.findAllThumbsInPost(postResponse.id());
+        AllThumbsInPostResponse allThumbsInPostResponse = postThumbsService.findAllThumbsInPost(postResponse.id());
 
         assertSoftly(softly -> {
                     softly.assertThat(allThumbsInPostResponse.thumbsUpCount()).isEqualTo(0);
@@ -77,7 +80,7 @@ public class ThumbsInPostServiceTest {
         thumbsUp(otherMember2, postResponse);
 
         // when
-        AllThumbsInPostResponse allThumbsInPostResponse = thumbsService.findAllThumbsInPost(postResponse.id());
+        AllThumbsInPostResponse allThumbsInPostResponse = postThumbsService.findAllThumbsInPost(postResponse.id());
 
         // then
         assertSoftly(softly -> {
@@ -98,7 +101,7 @@ public class ThumbsInPostServiceTest {
         thumbsDown(otherMember3, postResponse);
 
         // when
-        AllThumbsInPostResponse allThumbsInPostResponse = thumbsService.findAllThumbsInPost(postResponse.id());
+        AllThumbsInPostResponse allThumbsInPostResponse = postThumbsService.findAllThumbsInPost(postResponse.id());
 
         // then
         assertSoftly(softly -> {
@@ -115,7 +118,7 @@ public class ThumbsInPostServiceTest {
 
         // when
         MemberId emptyId = new ActiveMemberId(AnonymousMemberId.ANONYMOUS_MEMBER_ID);
-        ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.findThumbsStatusInPost(emptyId,
+        ThumbsStatusInPostResponse thumbsStatusInPostResponse = postThumbsService.findThumbsStatusInPost(emptyId,
                 postResponse.id());
 
         // then
@@ -133,7 +136,7 @@ public class ThumbsInPostServiceTest {
 
         // when
         MemberId otherMemberId = new ActiveMemberId(otherMember.getId());
-        ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.findThumbsStatusInPost(otherMemberId,
+        ThumbsStatusInPostResponse thumbsStatusInPostResponse = postThumbsService.findThumbsStatusInPost(otherMemberId,
                 postResponse.id());
 
         // then
@@ -150,7 +153,7 @@ public class ThumbsInPostServiceTest {
         MemberId otherMemberId = new ActiveMemberId(otherMember.getId());
 
         // when
-        ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.findThumbsStatusInPost(otherMemberId,
+        ThumbsStatusInPostResponse thumbsStatusInPostResponse = postThumbsService.findThumbsStatusInPost(otherMemberId,
                 postResponse.id());
 
         // then
@@ -168,7 +171,7 @@ public class ThumbsInPostServiceTest {
 
         // when
         MemberId otherMemberId = new ActiveMemberId(otherMember.getId());
-        ThumbsStatusInPostResponse thumbsStatusInPostResponse = thumbsService.findThumbsStatusInPost(otherMemberId,
+        ThumbsStatusInPostResponse thumbsStatusInPostResponse = postThumbsService.findThumbsStatusInPost(otherMemberId,
                 postResponse.id());
 
         // then
