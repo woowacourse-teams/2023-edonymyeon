@@ -102,4 +102,10 @@ dependencies {
 
     // by viewModels() 종속성
     implementation("androidx.activity:activity-ktx:1.7.2")
+
+    // EncryptedSharedPreferences
+    implementation("androidx.security:security-crypto-ktx:1.1.0-alpha06")
+
+    // android chart
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }
