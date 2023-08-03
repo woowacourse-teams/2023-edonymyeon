@@ -31,6 +31,8 @@ import org.springframework.data.domain.SliceImpl;
 @ExtendWith(MockitoExtension.class)
 class MyPostServiceTest {
 
+    private static final int 소비확정_연 = 2020;
+    private static final int 소비확정_달 = 1;
     @Mock
     private PostRepository postRepository;
 
@@ -65,6 +67,8 @@ class MyPostServiceTest {
                     softly.assertThat(반환결과.size()).isEqualTo(게시글_목록.size());
                     softly.assertThat(반환결과.get(0).consumption().type()).isEqualTo(PURCHASE.name());
                     softly.assertThat(반환결과.get(1).consumption().type()).isEqualTo(PURCHASE.name());
+                    softly.assertThat(반환결과.get(0).consumption().year()).isEqualTo(소비확정_연);
+                    softly.assertThat(반환결과.get(0).consumption().month()).isEqualTo(소비확정_달);
                     softly.assertThat(반환결과.get(2).consumption().type()).isEqualTo("NONE");
                 }
         );
@@ -84,8 +88,8 @@ class MyPostServiceTest {
         final Post 게시글2 = 게시글_목록.get(1);
         final Post 게시글3 = 게시글_목록.get(2);
 
-        final Consumption 소비확정1 = Consumption.of(게시글1, PURCHASE, 1_000L, 2020, 1);
-        final Consumption 소비확정2 = Consumption.of(게시글2, PURCHASE, 1_000L, 2020, 1);
+        final Consumption 소비확정1 = Consumption.of(게시글1, PURCHASE, 1_000L, 소비확정_연, 소비확정_달);
+        final Consumption 소비확정2 = Consumption.of(게시글2, PURCHASE, 1_000L, 소비확정_연, 소비확정_달);
 
         final PostConsumptionResponse none = PostConsumptionResponse.none();
 
