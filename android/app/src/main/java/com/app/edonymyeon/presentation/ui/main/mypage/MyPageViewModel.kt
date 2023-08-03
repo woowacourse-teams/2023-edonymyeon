@@ -14,14 +14,18 @@ class MyPageViewModel : ViewModel() {
     val consumptions: LiveData<ConsumptionStatisticsUiModel>
         get() = _consumptions
 
-    fun getMonthLists(): List<String> = _consumptions.value?.toDomain()?.monthRange?.yearMonthList ?: emptyList()
+    fun getMonthLists(): List<String> =
+        _consumptions.value?.toDomain()?.monthRange?.yearMonthList ?: emptyList()
 
     fun setConsumptions() {
         _consumptions.value = ConsumptionStatisticsUiModel(
             startMonth = YearMonth.parse("2023-02"),
             endMonth = YearMonth.parse("2023-07"),
             consumptionAmounts = List(6) {
-                ConsumptionAmountUiModel(Random.nextInt(10000, 100000), Random.nextInt(10000, 100000))
+                ConsumptionAmountUiModel(
+                    Random.nextInt(10000, 100000),
+                    Random.nextInt(10000, 100000),
+                )
             },
         )
     }
