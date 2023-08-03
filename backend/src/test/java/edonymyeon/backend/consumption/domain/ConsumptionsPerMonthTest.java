@@ -17,7 +17,7 @@ class ConsumptionsPerMonthTest {
     void 생성자에_null이_들어오면_예외가_발생한다() {
         assertThatThrownBy(() -> new ConsumptionsPerMonth(null))
                 .isInstanceOf(EdonymyeonException.class)
-                .hasMessage(ExceptionInformation.SERVER_ERROR_CONSUMPTIONS_NULL.getMessage());
+                .hasMessage(ExceptionInformation.BUSINESS_LOGIC_ERROR_CONSUMPTIONS_NULL.getMessage());
     }
 
     @Test
@@ -32,7 +32,7 @@ class ConsumptionsPerMonthTest {
 
         assertThatThrownBy(() -> new ConsumptionsPerMonth(consumptions))
                 .isInstanceOf(EdonymyeonException.class)
-                .hasMessage(ExceptionInformation.SERVER_ERROR_CONSUMPTION_YEAR_NOT_SAME.getMessage());
+                .hasMessage(ExceptionInformation.BUSINESS_LOGIC_ERROR_CONSUMPTION_YEAR_NOT_SAME.getMessage());
     }
 
     @Test
@@ -47,6 +47,6 @@ class ConsumptionsPerMonthTest {
 
         assertThatThrownBy(() -> new ConsumptionsPerMonth(consumptions))
                 .isInstanceOf(EdonymyeonException.class)
-                .hasMessage(ExceptionInformation.SERVER_ERROR_CONSUMPTION_MONTH_NOT_SAME.getMessage());
+                .hasMessage(ExceptionInformation.BUSINESS_LOGIC_ERROR_CONSUMPTION_MONTH_NOT_SAME.getMessage());
     }
 }
