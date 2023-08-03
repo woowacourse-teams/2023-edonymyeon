@@ -9,16 +9,17 @@ import org.springframework.data.jpa.domain.Specification;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class PostSpecification {
 
     public static Specification<Post> searchBy(String searchWord) {
         return ((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
-            if (searchWord != null && !searchWord.isBlank()) {
+            if (Objects.nonNull(searchWord) && !searchWord.isBlank()) {
                 appendSearchCondition(searchWord, root, criteriaBuilder, predicates);
             }
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
         });
     }
 
@@ -33,7 +34,7 @@ public class PostSpecification {
     }
 
     private static List<String> splitKeyWordByBlank(String searchWord) {
-        return Arrays.stream(searchWord.strip().split(" "))
+        return Arrays.stream(searchWord.split(" "))
                 .filter(word -> !word.isBlank())
                 .map(String::toUpperCase)
                 .toList();

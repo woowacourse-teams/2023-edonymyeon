@@ -32,7 +32,7 @@ public class PostSpecificationTest {
     @ParameterizedTest
     @ValueSource(strings = {" 가 나 다  라 마  바", " ", "", "가 나 다"})
     void 빈칸을_기준으로_제대로_나뉘는지_확인한다(String searchWord) {
-        List<String> listSplitByBlank = Arrays.stream(searchWord.strip().split(" "))
+        List<String> listSplitByBlank = Arrays.stream(searchWord.split(" "))
                 .filter(word -> !word.isBlank())
                 .toList();
 
