@@ -96,6 +96,7 @@
     <string name="dialog_consumption_cancel">취소</string>
     <string name="dialog_consumption_ok">확인</string>
     <string name="dialog_input_price_hint">금액입력</string>
+    <string name="dialog_input_price_error_message">입력될 수 있는 금액 초과</string>
 
     <!--sign_up-->
     <string name="sign_up_nickname">닉네임</string>
