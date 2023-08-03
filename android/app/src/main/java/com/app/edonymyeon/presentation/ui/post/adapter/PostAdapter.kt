@@ -1,25 +1,23 @@
 package com.app.edonymyeon.presentation.ui.post.adapter
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import com.app.edonymyeon.presentation.ui.post.viewholder.PostViewHolder
 import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
 
-class PostAdapter(private val posts: List<PostItemUiModel>, private val onClick: (Long) -> Unit) :
-    RecyclerView.Adapter<PostViewHolder>() {
+class PostAdapter(private val onClick: (Long) -> Unit) :
+    ListAdapter<PostItemUiModel, PostViewHolder>(PostDiffUtilCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        return PostViewHolder(
-            parent,
-            onClick =
-            {
-                onClick(posts[it].id)
-            },
-        )
+        return PostViewHolder(parent) {
+            onClick(currentList[it].id)
+        }
     }
 
-    override fun getItemCount(): Int = posts.size
-
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        holder.bind(posts[position])
+        holder.bind(this.currentList[position])
+    }
+
+    fun setPosts(posts: List<PostItemUiModel>) {
+        submitList(posts)
     }
 }

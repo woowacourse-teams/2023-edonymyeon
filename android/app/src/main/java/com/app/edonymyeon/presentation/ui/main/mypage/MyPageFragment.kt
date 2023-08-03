@@ -1,7 +1,6 @@
 package com.app.edonymyeon.presentation.ui.main.mypage
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +9,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import app.edonymyeon.R
 import app.edonymyeon.databinding.FragmentMyPageBinding
+import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.data.datasource.consumptions.ConsumptionsRemoteDataSource
 import com.app.edonymyeon.data.datasource.profile.ProfileRemoteDataSource
 import com.app.edonymyeon.data.repository.ConsumptionsRepositoryImpl
 import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
+import com.app.edonymyeon.data.service.client.RetrofitClient
+import com.app.edonymyeon.data.util.PreferenceUtil
+import com.app.edonymyeon.presentation.ui.login.LoginActivity
+import com.app.edonymyeon.presentation.ui.main.MainActivity
 import com.app.edonymyeon.presentation.ui.main.mypage.chart.LineChartManager
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -42,15 +46,25 @@ class MyPageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setViewByLogin()
+    }
 
-        // 로그인이 되어있다면
-        binding.tvRequiredLogin.isVisible = false
-        viewModel.getUserProfile()
+    private fun setViewByLogin() {
+        val token = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN)
 
-        viewModel.profile.observe(viewLifecycleOwner) {
-            Log.d("MyPageFragment", "profile: $it")
+        if (token != null && token != "") {
+            setViewForLogin()
+        } else {
+            setViewForNotLogin()
         }
+    }
 
+    private fun setViewForLogin() {
+        binding.tvRequiredLogin.isVisible = false
+        binding.btnLogin.isVisible = false
+        binding.tvLogout.setOnClickListener { logout() }
+
+        viewModel.getUserProfile()
         viewModel.setConsumptions(PERIOD_MONTH)
 
         setConsumptionChart(
@@ -59,6 +73,11 @@ class MyPageFragment : Fragment() {
                 resources.getColor(R.color.gray_615f5f, null),
             ),
         )
+    }
+
+    private fun setViewForNotLogin() {
+        binding.chartMyPayment.isVisible = false
+        binding.btnLogin.setOnClickListener { navigateToLogin() }
     }
 
     private fun setConsumptionChart(chartManager: LineChartManager) {
@@ -88,6 +107,16 @@ class MyPageFragment : Fragment() {
                 setMarkerView()
             }
         }
+    }
+
+    private fun logout() {
+        PreferenceUtil.setValue(AuthLocalDataSource.USER_ACCESS_TOKEN, "")
+        RetrofitClient.getInstance().clearAccessToken()
+        (activity as MainActivity).refreshActivity()
+    }
+
+    private fun navigateToLogin() {
+        startActivity(LoginActivity.newIntent(requireContext()))
     }
 
     companion object {
