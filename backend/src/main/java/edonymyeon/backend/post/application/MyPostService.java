@@ -26,7 +26,7 @@ public class MyPostService {
     private final Domain domain;
 
     public Slice<MyPostResponse> findMyPosts(final MemberIdDto memberIdDto,
-                                             GeneralFindingCondition findingCondition) {
+                                             final GeneralFindingCondition findingCondition) {
         final Slice<Post> posts = postRepository.findAllByMemberId(memberIdDto.id(), findingCondition.toPage());
         final List<Long> postIds = posts.map(Post::getId).toList();
         final Map<Long, PostConsumptionResponse> consumptionsByPostId = postConsumptionService.findConsumptionsByPostIds(
