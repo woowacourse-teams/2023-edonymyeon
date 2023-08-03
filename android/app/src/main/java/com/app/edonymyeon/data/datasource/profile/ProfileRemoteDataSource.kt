@@ -34,7 +34,7 @@ class ProfileRemoteDataSource : ProfileDataSource {
     override suspend fun deleteConfirm(id: Long): Response<Unit> {
         return profileService.deleteConfirm(id)
     }
-    
+
     override suspend fun getProfile(): Response<ProfileResponse> {
         return profileService.getProfile()
     }
