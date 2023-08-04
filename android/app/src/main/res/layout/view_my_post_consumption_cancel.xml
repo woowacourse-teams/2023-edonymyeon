@@ -6,6 +6,14 @@
     <data>
 
         <variable
+            name="consumption"
+            type="com.app.edonymyeon.presentation.uimodel.ConsumptionUiModel" />
+
+        <variable
+            name="postId"
+            type="Long" />
+
+        <variable
             name="listener"
             type="com.app.edonymyeon.presentation.ui.mypost.listener.MyPostClickListener" />
     </data>
@@ -16,6 +24,7 @@
 
         <TextView
             android:id="@+id/tv_my_post_consumption_result"
+            consumptionTextByType="@{consumption}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/blue_576b9e"
@@ -40,7 +49,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_434343_radius_10dp"
             android:gravity="center_horizontal|center_vertical"
-            android:onClick="@{() -> listener.onCancelButtonClick()}"
+            android:onClick="@{() -> listener.onCancelButtonClick(postId)}"
             android:padding="5dp"
             android:text="@string/my_post_consumption_cancel"
             android:textColor="@color/white_ffffff"

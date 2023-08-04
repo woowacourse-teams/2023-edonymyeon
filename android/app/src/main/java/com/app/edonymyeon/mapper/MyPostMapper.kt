@@ -1,0 +1,38 @@
+package com.app.edonymyeon.mapper
+
+import com.app.edonymyeon.data.dto.response.MyPostResponse
+import com.app.edonymyeon.presentation.uimodel.MyPostUiModel
+import com.domain.edonymyeon.model.MyPost
+
+fun MyPostResponse.toUiModel(): MyPostUiModel {
+    return MyPostUiModel(
+        id = id,
+        title = title,
+        image = image,
+        content = content,
+        createdAt = createdAt,
+        consumption = consumption.toUiModel(),
+    )
+}
+
+fun MyPostResponse.toDomain(): MyPost {
+    return MyPost(
+        id = id,
+        title = title,
+        image = image,
+        content = content,
+        createdAt = createdAt,
+        consumption = consumption.toDomain(),
+    )
+}
+
+fun MyPost.toUiModel(): MyPostUiModel {
+    return MyPostUiModel(
+        id = id,
+        title = title,
+        image = image,
+        content = content,
+        createdAt = createdAt,
+        consumption = consumption.toUiModel(),
+    )
+}

@@ -6,6 +6,10 @@
     <data>
 
         <variable
+            name="postId"
+            type="Long" />
+
+        <variable
             name="listener"
             type="com.app.edonymyeon.presentation.ui.mypost.listener.MyPostClickListener" />
     </data>
@@ -20,7 +24,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_576b8e_radius_10dp"
             android:gravity="center_horizontal|center_vertical"
-            android:onClick="@{() -> listener.onPurchaseButtonClick()}"
+            android:onClick="@{() -> listener.onPurchaseButtonClick(postId)}"
             android:padding="5dp"
             android:text="@string/my_post_consumption_purchase"
             android:textColor="@color/white_ffffff"
@@ -45,7 +49,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_d9d9d9_radius_10dp"
             android:gravity="center_horizontal|center_vertical"
-            android:onClick="@{() -> listener.onSavingButtonClick()}"
+            android:onClick="@{() -> listener.onSavingButtonClick(postId)}"
             android:padding="5dp"
             android:text="@string/my_post_consumption_not_purchase"
             android:textColor="@color/blue_576b9e"

@@ -13,6 +13,7 @@ import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostEditorBinding
@@ -30,10 +31,8 @@ import kotlinx.coroutines.launch
 
 class PostEditorActivity : AppCompatActivity() {
 
-    private val viewModel: PostEditorViewModel by lazy {
-        PostEditorViewModelFactory(application, PostRepositoryImpl(PostRemoteDataSource())).create(
-            PostEditorViewModel::class.java,
-        )
+    private val viewModel: PostEditorViewModel by viewModels {
+        PostEditorViewModelFactory(application, PostRepositoryImpl(PostRemoteDataSource()))
     }
     private val adapter: PostEditorImagesAdapter by lazy {
         PostEditorImagesAdapter(::deleteImages)
@@ -277,7 +276,7 @@ class PostEditorActivity : AppCompatActivity() {
             ?.let { imageUri ->
                 val outputStream = resolver.openOutputStream(imageUri)
                 outputStream?.use { stream ->
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream)
                 }
                 return imageUri
             }

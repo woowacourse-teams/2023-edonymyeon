@@ -1,6 +1,6 @@
 package com.domain.edonymyeon.repository
 
-import com.domain.edonymyeon.model.PostItem
+import com.domain.edonymyeon.model.PostItems
 
 interface PostRepository {
     suspend fun getPostDetail(postId: Long): Result<Any>
@@ -16,7 +16,7 @@ interface PostRepository {
     suspend fun getPosts(
         size: Int,
         page: Int,
-    ): Result<List<PostItem>>
+    ): Result<PostItems>
 
     suspend fun updatePost(
         id: Long,

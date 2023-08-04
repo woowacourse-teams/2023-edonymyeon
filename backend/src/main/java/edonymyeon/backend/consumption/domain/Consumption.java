@@ -38,6 +38,7 @@ public class Consumption {
     private static final int MIN_YEAR = 2000;
     private static final int MAX_MONTH = 12;
     private static final int MIN_MONTH = 1;
+    private static final int DEFAULT_DAY = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,25 +56,23 @@ public class Consumption {
     @Column(nullable = false)
     private Long price;
 
+    /**
+     * 현재 정책상으로는 yyyy-MM-dd에서 dd는 01로 고정되어 저장됩니다.
+     **/
     @Column(nullable = false)
-    private Integer consumptionYear;
-
-    @Column(nullable = false)
-    private Integer consumptionMonth;
+    private LocalDate consumptionDate;
 
     private Consumption(
             final Post post,
             final ConsumptionType consumptionType,
             final Long price,
-            final int consumptionYear,
-            final int consumptionMonth
+            final LocalDate consumptionDate
     ) {
-        validate(price, consumptionYear, consumptionMonth);
+        validate(price, consumptionDate);
         this.post = post;
         this.consumptionType = consumptionType;
         this.price = price;
-        this.consumptionYear = consumptionYear;
-        this.consumptionMonth = consumptionMonth;
+        this.consumptionDate = consumptionDate;
     }
 
     public static Consumption of(
@@ -83,18 +82,19 @@ public class Consumption {
             final Integer year,
             final Integer month
     ) {
+        validateConsumptionYear(year);
+        validateConsumptionMonth(month);
+        LocalDate consumptionDate = LocalDate.of(year, month, DEFAULT_DAY);
         Long price = purchasePrice;
         if (consumptionType == SAVING) {
             price = post.getPrice();
         }
-        return new Consumption(post, consumptionType, price, year, month);
+        return new Consumption(post, consumptionType, price, consumptionDate);
     }
 
-    private void validate(final Long price, final Integer consumptionYear, final Integer consumptionMonth) {
+    private void validate(final Long price, final LocalDate consumptionDate) {
         validatePrice(price);
-        validateConsumptionYear(consumptionYear);
-        validateConsumptionMonth(consumptionMonth);
-        validateConsumptionYearMonth(consumptionYear, consumptionMonth);
+        validateConsumptionYearMonth(consumptionDate);
     }
 
     private void validatePrice(final Long price) {
@@ -103,24 +103,46 @@ public class Consumption {
         }
     }
 
-    private void validateConsumptionYear(final Integer consumptionYear) {
+    private static void validateConsumptionYear(final Integer consumptionYear) {
         if (Objects.isNull(consumptionYear) || consumptionYear < MIN_YEAR) {
             throw new EdonymyeonException(CONSUMPTION_YEAR_ILLEGAL);
         }
     }
 
-    private void validateConsumptionMonth(final Integer consumptionMonth) {
+    private static void validateConsumptionMonth(final Integer consumptionMonth) {
         if (Objects.isNull(consumptionMonth) || consumptionMonth < MIN_MONTH || consumptionMonth > MAX_MONTH) {
             throw new EdonymyeonException(CONSUMPTION_MONTH_ILLEGAL);
         }
     }
 
-    private void validateConsumptionYearMonth(final Integer consumptionYear, final Integer consumptionMonth) {
+    private void validateConsumptionYearMonth(final LocalDate consumptionDate) {
         LocalDate currentDate = LocalDate.now();
-        LocalDate inputDate = LocalDate.of(consumptionYear, consumptionMonth, 1);
-
-        if (inputDate.isAfter(currentDate)) {
+        if (consumptionDate.isAfter(currentDate)) {
             throw new EdonymyeonException(CONSUMPTION_YEAR_MONTH_ILLEGAL);
         }
+    }
+
+    boolean isType(final ConsumptionType consumptionType) {
+        return this.consumptionType == consumptionType;
+    }
+
+    private boolean isSameYear(final LocalDate consumptionDate) {
+        return this.consumptionDate.getYear() == consumptionDate.getYear();
+    }
+
+    private boolean isSameMonth(final LocalDate consumptionDate) {
+        return this.consumptionDate.getMonth() == consumptionDate.getMonth();
+    }
+
+    public boolean isSameYearMonth(final LocalDate consumptionDate) {
+        return isSameYear(consumptionDate) && isSameMonth(consumptionDate);
+    }
+
+    public int getConsumptionYear() {
+        return consumptionDate.getYear();
+    }
+
+    public int getConsumptionMonth() {
+        return consumptionDate.getMonth().getValue();
     }
 }

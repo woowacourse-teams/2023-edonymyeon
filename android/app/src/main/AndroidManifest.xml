@@ -9,25 +9,27 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name="com.app.edonymyeon.application.EdonymyeonApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_edonymyeon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_edonymyeon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Edonymyeon"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-        <activity
-            android:name="com.app.edonymyeon.presentation.ui.mypost.MyPostActivity"
-            android:exported="false" />
+
         <activity
             android:name="com.app.edonymyeon.presentation.ui.login.LoginActivity"
-            android:exported="true" >
+            android:exported="true">
         </activity>
+        <activity android:name="com.app.edonymyeon.presentation.ui.signup.SignUpActivity"
+            android:exported="true"/>
         <activity
             android:name="com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity"
             android:exported="true" />
@@ -41,14 +43,17 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.app.edonymyeon.presentation.ui.mypost.MyPostActivity"
+            android:exported="true">
         </activity>
 
         <activity
             android:name="com.app.edonymyeon.presentation.ui.post.PostActivity"
             android:exported="true" />
     </application>
-
 </manifest>

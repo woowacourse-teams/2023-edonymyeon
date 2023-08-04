@@ -102,7 +102,7 @@ class LineChartManager(
 
                 override fun refreshContent(e: Entry, highlight: Highlight?) {
                     chartContentText.text =
-                        resources.getString(R.string.my_page_graph_price, e.y.toInt())
+                        resources.getString(R.string.my_page_price, e.y.toInt())
                     super.refreshContent(e, highlight)
                 }
 
