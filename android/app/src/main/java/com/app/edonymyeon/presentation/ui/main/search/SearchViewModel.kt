@@ -30,7 +30,7 @@ class SearchViewModel(private val searchRepository: SearchRepository) : ViewMode
     }
 
     fun clearResult() {
-        currentPage.initPage()
+        currentPage = currentPage.initPage()
         _searchResult.value = emptyList()
     }
 
