@@ -41,11 +41,11 @@ public class LoggingInterceptor implements HandlerInterceptor {
                                 final Object handler, final Exception ex)
             throws Exception {
         MDC.put("statuscode", String.valueOf(response.getStatus()));
-        if (
-                Objects.equals(request.getContentType(), MediaType.TEXT_HTML_VALUE) ||
-                        Objects.equals(request.getContentType(), MediaType.IMAGE_GIF_VALUE) ||
-                        Objects.equals(request.getContentType(), MediaType.IMAGE_JPEG_VALUE) ||
-                        Objects.equals(request.getContentType(), MediaType.IMAGE_PNG_VALUE)
+        if (Objects.nonNull(response.getContentType()) &&
+                Objects.equals(response.getContentType(), MediaType.TEXT_HTML_VALUE) ||
+                Objects.equals(response.getContentType(), MediaType.IMAGE_GIF_VALUE) ||
+                Objects.equals(response.getContentType(), MediaType.IMAGE_JPEG_VALUE) ||
+                Objects.equals(response.getContentType(), MediaType.IMAGE_PNG_VALUE)
         ) {
             MDC.clear();
             return;
