@@ -31,7 +31,7 @@ class PostViewModel(private val repository: PostRepository) : ViewModel() {
     }
 
     fun clearResult() {
-        currentPage.initPage()
+        currentPage = currentPage.initPage()
         _posts.value = emptyList()
     }
 

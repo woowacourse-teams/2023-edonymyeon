@@ -64,6 +64,7 @@ class PostActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        viewModel.clearResult()
         viewModel.getPosts()
     }
 
