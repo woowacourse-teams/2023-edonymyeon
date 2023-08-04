@@ -41,6 +41,8 @@ public class LoggingInterceptor implements HandlerInterceptor {
                                 final Object handler, final Exception ex)
             throws Exception {
         MDC.put("statuscode", String.valueOf(response.getStatus()));
+        MDC.put("request-contentType", request.getContentType());
+        MDC.put("response-contentType", response.getContentType());
         if (Objects.nonNull(response.getContentType()) &&
                 Objects.equals(response.getContentType(), MediaType.TEXT_HTML_VALUE) ||
                 Objects.equals(response.getContentType(), MediaType.IMAGE_GIF_VALUE) ||
