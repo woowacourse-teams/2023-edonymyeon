@@ -2,6 +2,21 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <import type="com.app.edonymyeon.presentation.ui.mypost.ConsumptionType" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="type"
+            type="com.app.edonymyeon.presentation.ui.mypost.ConsumptionType" />
+
+        <variable
+            name="viewModel"
+            type="com.app.edonymyeon.presentation.ui.mypost.MyPostViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -64,17 +79,21 @@
             android:id="@+id/et_consumption_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="end"
+            android:gravity="center"
             android:hint="@string/dialog_input_price_hint"
             android:inputType="number"
             android:textColor="@color/gray_434343"
             android:textSize="16sp"
+            android:text="@{viewModel.price}"
+            android:onTextChanged="@{viewModel.setPurchasePriceTextChanged}"
+            android:visibility="@{type == ConsumptionType.PURCHASE ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toTopOf="@id/space_price_bottom"
             app:layout_constraintEnd_toStartOf="@id/tv_price_unit"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/space_price_top"
-            app:layout_constraintWidth_percent="0.7054" />
+            app:layout_constraintWidth_percent="0.55"
+            android:importantForAutofill="no" />
 
         <TextView
             android:id="@+id/tv_price_unit"
@@ -83,6 +102,7 @@
             android:text="@string/post_editor_price_unit"
             android:textColor="@color/gray_434343"
             android:textSize="16sp"
+            android:visibility="@{type == ConsumptionType.PURCHASE ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@id/et_consumption_price"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/et_consumption_price"
@@ -92,7 +112,7 @@
             android:id="@+id/space_price_bottom"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="360: 20"
+            app:layout_constraintDimensionRatio="360: 40"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/et_consumption_price" />

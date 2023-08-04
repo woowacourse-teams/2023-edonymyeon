@@ -25,5 +25,6 @@ class MyPostViewHolder(
     }
 
     fun bind(myPost: MyPostUiModel) {
+        binding.post = myPost
     }
 }

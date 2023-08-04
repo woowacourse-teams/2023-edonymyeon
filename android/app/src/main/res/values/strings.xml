@@ -27,10 +27,6 @@
     <string name="home_hot_post">HOT 게시물</string>
     <string name="home_all_post">전체 게시글</string>
 
-    <!-- post -->
-    <string name="post_all_post">전체 게시물</string>
-    <string name="post_filter_recent">최신순</string>
-
     <!-- post detail -->
     <string name="post_detail_toolbar_menu_update">수정</string>
     <string name="post_detail_toolbar_menu_delete">삭제</string>
@@ -81,17 +77,26 @@
     <string name="item_post_editor_image_description">갤러리에서 가져온 이미지</string>
     <string name="item_post_editor_image_delete_description">이미지 삭제 버튼</string>
 
+    <!--all_post-->
+    <string name="post_all_post">전체 게시물</string>
+    <string name="post_filter_recent">최신순</string>
+
     <!--my_post-->
     <string name="my_post_page_title">내가 쓴 글</string>
     <string name="my_post_consumption_purchase">샀어요</string>
     <string name="my_post_consumption_not_purchase">안샀어요</string>
     <string name="my_post_consumption_cancel">확정취소</string>
+    <string name="my_post_consumption_date">확정일자: %d년 %d월</string>
+    <string name="my_post_createdAt">%s</string>
+    <string name="my_post_purchase_text">%,d원 구매확정</string>
+    <string name="my_post_saving_text">절약확정</string>
 
     <!--my_post_dialog-->
     <string name="dialog_consumption_title">소비/절약 내역을 입력하세요</string>
     <string name="dialog_consumption_cancel">취소</string>
     <string name="dialog_consumption_ok">확인</string>
     <string name="dialog_input_price_hint">금액입력</string>
+    <string name="dialog_input_price_error_message">입력될 수 있는 금액 초과</string>
 
     <!--sign_up-->
     <string name="sign_up_nickname">닉네임</string>

@@ -19,6 +19,7 @@ import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
 import com.app.edonymyeon.presentation.ui.main.MainActivity
 import com.app.edonymyeon.presentation.ui.main.mypage.chart.LineChartManager
+import com.app.edonymyeon.presentation.ui.mypost.MyPostActivity
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 
@@ -47,6 +48,22 @@ class MyPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setViewByLogin()
+        initListener()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setViewByLogin()
+    }
+
+    private fun initListener() {
+        binding.tvMyPost.setOnClickListener {
+            navigateToMyPost()
+        }
+    }
+
+    private fun navigateToMyPost() {
+        startActivity(MyPostActivity.newIntent(requireContext()))
     }
 
     private fun setViewByLogin() {
