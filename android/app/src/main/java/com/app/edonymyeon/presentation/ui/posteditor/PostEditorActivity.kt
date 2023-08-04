@@ -277,7 +277,7 @@ class PostEditorActivity : AppCompatActivity() {
             ?.let { imageUri ->
                 val outputStream = resolver.openOutputStream(imageUri)
                 outputStream?.use { stream ->
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream)
                 }
                 return imageUri
             }
