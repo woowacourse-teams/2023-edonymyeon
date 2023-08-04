@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
+import org.springframework.http.MediaType;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
@@ -40,8 +41,16 @@ public class LoggingInterceptor implements HandlerInterceptor {
                                 final Object handler, final Exception ex)
             throws Exception {
         MDC.put("statuscode", String.valueOf(response.getStatus()));
+        if (
+                response.getContentType().equals(MediaType.TEXT_HTML_VALUE) ||
+                        response.getContentType().equals(MediaType.IMAGE_JPEG_VALUE) ||
+                        response.getContentType().equals(MediaType.IMAGE_PNG_VALUE) ||
+                        response.getContentType().equals(MediaType.IMAGE_GIF_VALUE)
+        ) {
+            MDC.clear();
+            return;
+        }
         logResponseBody(response);
-        MDC.clear();
     }
 
     private void logResponseBody(final HttpServletResponse response) throws IOException {
@@ -59,7 +68,7 @@ public class LoggingInterceptor implements HandlerInterceptor {
      */
     private ContentCachingResponseWrapper getResponseWrapper(HttpServletResponse response) {
         if (response instanceof ContentCachingResponseWrapper) {
-            return (ContentCachingResponseWrapper)response;
+            return (ContentCachingResponseWrapper) response;
         }
         return new ContentCachingResponseWrapper(response);
     }
