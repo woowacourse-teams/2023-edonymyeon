@@ -86,13 +86,17 @@ class MyPageFragment : Fragment() {
 
     private fun setViewForNotLogin() {
         binding.chartMyPayment.isVisible = false
+        binding.tvLogout.isVisible = false
         binding.btnLogin.setOnClickListener { navigateToLogin() }
-        binding.tvMyPost.setOnClickListener {
-            binding.root.makeSnackbarWithEvent(
-                message = getString(R.string.all_required_login),
-                eventTitle = getString(R.string.login_title),
-            ) { navigateToLogin() }
-        }
+        binding.tvMyPost.setOnClickListener { makeLoginSnackbar() }
+        binding.tvUpdateUserInfo.setOnClickListener { makeLoginSnackbar() }
+    }
+
+    private fun makeLoginSnackbar() {
+        binding.root.makeSnackbarWithEvent(
+            message = getString(R.string.all_required_login),
+            eventTitle = getString(R.string.login_title),
+        ) { navigateToLogin() }
     }
 
     private fun setConsumptionChart(chartManager: LineChartManager) {
