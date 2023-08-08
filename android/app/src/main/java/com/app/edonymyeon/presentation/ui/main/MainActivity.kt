@@ -1,5 +1,7 @@
 package com.app.edonymyeon.presentation.ui.main
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -67,6 +69,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun refreshActivity() {
+        finish()
+        overridePendingTransition(0, 0)
+        startActivity(intent)
+        overridePendingTransition(0, 0)
+    }
+
     private fun getTag(itemId: Int): String = when (itemId) {
         R.id.bottom_menu_search -> FRAGMENT_SEARCH
         R.id.bottom_menu_home -> FRAGMENT_HOME
@@ -80,5 +89,9 @@ class MainActivity : AppCompatActivity() {
         private const val FRAGMENT_HOME = "home"
         private const val FRAGMENT_ALARM = "alarm"
         private const val FRAGMENT_MY_PAGE = "myPage"
+
+        fun newIntent(context: Context): Intent {
+            return Intent(context, MainActivity::class.java)
+        }
     }
 }

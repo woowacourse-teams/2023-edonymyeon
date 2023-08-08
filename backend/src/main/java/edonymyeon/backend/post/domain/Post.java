@@ -2,6 +2,7 @@ package edonymyeon.backend.post.domain;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_CONTENT_ILLEGAL_LENGTH;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_EMPTY;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_PRICE_ILLEGAL_SIZE;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_TITLE_ILLEGAL_LENGTH;
 
@@ -68,9 +69,19 @@ public class Post {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    // todo: 테스트 코드에서 자꾸 null 값으로 조회되서 일단 하드코딩
     @ColumnDefault("0")
-    private Long viewCount = 0L;
+    private int viewCount;
+
+    public Post(
+            final Long id,
+            final String title,
+            final String content,
+            final Long price,
+            final Member member
+    ) {
+        this(title, content, price, member);
+        this.id = id;
+    }
 
     public Post(
             final String title,
@@ -105,7 +116,7 @@ public class Post {
     }
 
     private void validateContent(final String content) {
-        if (content.isBlank() || content.length() > MAX_CONTENT_LENGTH) {
+        if (Objects.isNull(content) || content.length() > MAX_CONTENT_LENGTH) {
             throw new EdonymyeonException(POST_CONTENT_ILLEGAL_LENGTH);
         }
     }
@@ -173,5 +184,19 @@ public class Post {
 
     public void removePostImageInfos(final List<PostImageInfo> deletedPostImageInfos) {
         this.postImageInfos.remove(deletedPostImageInfos);
+    }
+
+    public void validateWriter(final Long memberId) {
+        final Member other = new Member(memberId);
+        if (!isSameMember(other)) {
+            throw new EdonymyeonException(POST_MEMBER_NOT_SAME);
+        }
+    }
+
+    public void updateView(final Member member) {
+        if (this.member.equals(member)) {
+            return;
+        }
+        this.viewCount++;
     }
 }

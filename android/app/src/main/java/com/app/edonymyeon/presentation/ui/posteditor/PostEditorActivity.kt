@@ -10,10 +10,10 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostEditorBinding
@@ -31,10 +31,8 @@ import kotlinx.coroutines.launch
 
 class PostEditorActivity : AppCompatActivity() {
 
-    private val viewModel: PostEditorViewModel by lazy {
-        PostEditorViewModelFactory(application, PostRepositoryImpl(PostRemoteDataSource())).create(
-            PostEditorViewModel::class.java,
-        )
+    private val viewModel: PostEditorViewModel by viewModels {
+        PostEditorViewModelFactory(application, PostRepositoryImpl(PostRemoteDataSource()))
     }
     private val adapter: PostEditorImagesAdapter by lazy {
         PostEditorImagesAdapter(::deleteImages)
@@ -130,6 +128,7 @@ class PostEditorActivity : AppCompatActivity() {
 
     private fun navigateToDetail() {
         startActivity(PostDetailActivity.newIntent(this, viewModel.postId.value ?: -1))
+        finish()
     }
 
     private fun savePost() {
@@ -187,7 +186,6 @@ class PostEditorActivity : AppCompatActivity() {
     }
 
     private fun setAdapter() {
-        Log.d("post", "setAdapter")
         binding.rvPostEditorImages.adapter = adapter
     }
 
@@ -251,7 +249,6 @@ class PostEditorActivity : AppCompatActivity() {
     private fun addSelectedImagesFromClipData(count: Int, clipData: ClipData) {
         for (i in 0 until count) {
             val imageUri = clipData.getItemAt(i).uri
-            Log.d("dfsdfs", imageUri.toString())
             viewModel.addSelectedImages(imageUri.toString())
         }
     }
@@ -279,7 +276,7 @@ class PostEditorActivity : AppCompatActivity() {
             ?.let { imageUri ->
                 val outputStream = resolver.openOutputStream(imageUri)
                 outputStream?.use { stream ->
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream)
                 }
                 return imageUri
             }

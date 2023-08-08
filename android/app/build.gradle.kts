@@ -61,6 +61,9 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     testImplementation("androidx.arch.core:core-testing:2.2.0")
 
+    // mock
+    testImplementation("io.mockk:mockk-android:1.13.5")
+
     // constraint layout
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
 
@@ -99,4 +102,10 @@ dependencies {
 
     // by viewModels() 종속성
     implementation("androidx.activity:activity-ktx:1.7.2")
+
+    // EncryptedSharedPreferences
+    implementation("androidx.security:security-crypto-ktx:1.1.0-alpha06")
+
+    // android chart
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }

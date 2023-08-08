@@ -6,7 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.image.profileimage.repository.ProfileImageInfoRepository;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.member.application.dto.AnonymousMemberId;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
@@ -36,9 +38,10 @@ public class PostFindingSpecificPostTest {
     private final MemberRepository memberRepository;
     private final ProfileImageInfoRepository profileImageInfoRepository;
     private final MemberTestSupport memberTestSupport;
-    private final PostService postService;
-    private MemberIdDto memberId;
-    private MemberIdDto member2Id;
+    private final PostReadService postReadService;
+
+    private MemberId memberId;
+    private MemberId member2Id;
     private Long postId;
 
     @BeforeEach
@@ -50,7 +53,7 @@ public class PostFindingSpecificPostTest {
 
     @Test
     void 게시글아이디가_주어지면_게시글의_상세정보를_알려준다() {
-        final var postInfoResponse = postService.findSpecificPost(postId, memberId);
+        final var postInfoResponse = postReadService.findSpecificPost(postId, memberId);
 
         assertAll(
                 () -> assertThat(postInfoResponse.title()).isEqualTo("Summer Breeze"),
@@ -71,7 +74,7 @@ public class PostFindingSpecificPostTest {
 
     @Test
     void 로그인_되어있지_않으면_조회는_가능하되_추천여부와_스크랩여부와_작성자여부는_모두_false이다() {
-        final var postInfoResponse = postService.findSpecificPost(postId, new MemberIdDto(-1L));
+        final var postInfoResponse = postReadService.findSpecificPost(postId, new AnonymousMemberId());
 
         assertThat(postInfoResponse.isUp()).isFalse();
         assertThat(postInfoResponse.isDown()).isFalse();
@@ -81,14 +84,14 @@ public class PostFindingSpecificPostTest {
 
     @Test
     void 작성자_본인이_본인_게시글을_보는경우_isWriter값이_true이다() {
-        final var postInfoResponse = postService.findSpecificPost(postId, memberId);
+        final var postInfoResponse = postReadService.findSpecificPost(postId, memberId);
 
         assertThat(postInfoResponse.isWriter()).isTrue();
     }
 
     @Test
     void 타인의_게시글을_보는경우_isWriter값이_false이다() {
-        final var postInfoResponse = postService.findSpecificPost(postId, member2Id);
+        final var postInfoResponse = postReadService.findSpecificPost(postId, member2Id);
 
         assertThat(postInfoResponse.isWriter()).isFalse();
     }
@@ -107,7 +110,7 @@ public class PostFindingSpecificPostTest {
         final Member member = memberTestSupport.builder()
                 .profileImageInfo(saveProfileImageInfo())
                 .build();
-        memberId = new MemberIdDto(member.getId());
+        memberId = new ActiveMemberId(member.getId());
         return member;
     }
 
@@ -115,7 +118,7 @@ public class PostFindingSpecificPostTest {
         final Member member = memberTestSupport.builder()
                 .profileImageInfo(saveProfileImageInfo2())
                 .build();
-        member2Id = new MemberIdDto(memberRepository.save(member).getId());
+        member2Id = new ActiveMemberId(memberRepository.save(member).getId());
         return member;
     }
 

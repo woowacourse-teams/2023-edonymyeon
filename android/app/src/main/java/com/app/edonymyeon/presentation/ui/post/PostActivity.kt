@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostBinding
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
@@ -26,20 +27,45 @@ class PostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initAppbar()
-        viewModel.posts.observe(this) { it ->
-            binding.rvPost.adapter = PostAdapter(it, onClick = { postId ->
-                startActivity(PostDetailActivity.newIntent(this, postId))
-            })
-        }
+        setPostAdapter()
 
         binding.ivPostNew.setOnClickListener {
             startPostEditorActivity()
         }
     }
 
+    private fun setPostAdapter() {
+        val postAdapter = PostAdapter(onClick = { postId ->
+            startActivity(PostDetailActivity.newIntent(this, postId))
+        })
+        binding.rvPost.adapter = postAdapter
+        setObserver(postAdapter)
+        setScrollListener()
+    }
+
+    private fun setObserver(postAdapter: PostAdapter) {
+        viewModel.posts.observe(this) { it ->
+            postAdapter.setPosts(it)
+        }
+    }
+
+    private fun setScrollListener() {
+        binding.rvPost.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (!viewModel.hasNextPage()) {
+                    return
+                }
+                if (!binding.rvPost.canScrollVertically(1)) {
+                    viewModel.getPosts()
+                }
+            }
+        })
+    }
+
     override fun onResume() {
         super.onResume()
-        viewModel.getPosts(20, 0)
+        viewModel.clearResult()
+        viewModel.getPosts()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -2,45 +2,31 @@ package edonymyeon.backend.post.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_FORBIDDEN;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
-import edonymyeon.backend.member.application.dto.MemberIdDto;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.post.application.dto.GeneralFindingCondition;
-import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.PostModificationRequest;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
-import edonymyeon.backend.post.application.dto.ReactionCountResponse;
-import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
-import edonymyeon.backend.post.application.dto.WriterDetailResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
-import edonymyeon.backend.thumbs.application.ThumbsService;
-import edonymyeon.backend.thumbs.dto.AllThumbsInPostResponse;
-import edonymyeon.backend.thumbs.dto.ThumbsStatusInPostResponse;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 @Service
 public class PostService {
 
@@ -52,13 +38,13 @@ public class PostService {
 
     private final MemberRepository memberRepository;
 
-    private final ThumbsService thumbsService;
+    private final PostThumbsService thumbsService;
 
     private final Domain domain;
 
     @Transactional
-    public PostResponse createPost(final MemberIdDto memberIdDto, final PostRequest postRequest) {
-        final Member member = findMemberById(memberIdDto);
+    public PostResponse createPost(final MemberId memberId, final PostRequest postRequest) {
+        final Member member = findMemberById(memberId);
 
         final Post post = new Post(
                 postRequest.title(),
@@ -81,8 +67,8 @@ public class PostService {
         return new PostResponse(post.getId());
     }
 
-    private Member findMemberById(final MemberIdDto memberIdDto) {
-        return memberRepository.findById(memberIdDto.id())
+    private Member findMemberById(final MemberId memberId) {
+        return memberRepository.findById(memberId.id())
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
     }
 
@@ -98,8 +84,8 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePost(final MemberIdDto memberIdDto, final Long postId) {
-        final Member member = findMemberById(memberIdDto);
+    public void deletePost(final MemberId memberId, final Long postId) {
+        final Member member = findMemberById(memberId);
         final Post post = findPostById(postId);
         checkWriter(member, post);
 
@@ -117,13 +103,13 @@ public class PostService {
 
     private void checkWriter(final Member member, final Post post) {
         if (!post.isSameMember(member)) {
-            throw new EdonymyeonException(POST_MEMBER_FORBIDDEN);
+            throw new EdonymyeonException(POST_MEMBER_NOT_SAME);
         }
     }
 
     @Transactional
     public PostResponse updatePost(
-            final MemberIdDto memberId,
+            final MemberId memberId,
             final Long postId,
             final PostModificationRequest request
     ) {
@@ -161,81 +147,5 @@ public class PostService {
                 imageFileUploader.uploadFiles(request.newImages()));
         post.updateImages(updatedPostImageInfos);
         postImageInfoRepository.saveAll(updatedPostImageInfos.getPostImageInfos());
-    }
-
-    public List<GeneralPostInfoResponse> findPostsByPagingCondition(final GeneralFindingCondition generalFindingCondition) {
-        PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
-        final Slice<Post> foundPosts = postRepository.findAllBy(pageRequest);
-        return foundPosts
-                .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()))
-                .toList();
-    }
-
-    private static PageRequest convertConditionToPageRequest(final GeneralFindingCondition generalFindingCondition) {
-        try {
-            return PageRequest.of(
-                    generalFindingCondition.getPage(),
-                    generalFindingCondition.getSize(),
-                    switch (generalFindingCondition.getSortDirection()) {
-                        case ASC -> Direction.ASC;
-                        case DESC -> Direction.DESC;
-                    },
-                    generalFindingCondition.getSortBy().getName()
-            );
-        } catch (IllegalArgumentException e) {
-            throw new EdonymyeonException(ExceptionInformation.POST_INVALID_PAGINATION_CONDITION);
-        }
-    }
-
-    public SpecificPostInfoResponse findSpecificPost(final Long postId, final MemberIdDto memberIdDto) {
-        final Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EdonymyeonException(POST_ID_NOT_FOUND));
-
-        final Optional<Member> member = memberRepository.findById(memberIdDto.id());
-
-        final ReactionCountResponse reactionCountResponse = new ReactionCountResponse(
-                0, // TODO: 조회수 기능 구현 필요
-                0, // TODO: 댓글 수 기능 구현 필요
-                0 // TODO: 스크랩 기능 구현 필요
-        );
-        final AllThumbsInPostResponse allThumbsInPost = thumbsService.findAllThumbsInPost(postId);
-        final WriterDetailResponse writerDetailResponse = getWriterResponse(post.getMember());
-
-        if (member.isEmpty()) {
-            return SpecificPostInfoResponse.of(
-                    post,
-                    allThumbsInPost,
-                    writerDetailResponse,
-                    reactionCountResponse,
-                    domain.getDomain()
-            );
-        }
-
-        final ThumbsStatusInPostResponse thumbsStatusInPost = thumbsService.findThumbsStatusInPost(memberIdDto, postId);
-
-        return SpecificPostInfoResponse.of(
-                post,
-                allThumbsInPost,
-                writerDetailResponse,
-                reactionCountResponse,
-                thumbsStatusInPost,
-                member.get(),
-                domain.getDomain()
-        );
-    }
-
-    private WriterDetailResponse getWriterResponse(final Member member) {
-        if (Objects.isNull(member.getProfileImageInfo())) {
-            return new WriterDetailResponse(
-                    member.getId(),
-                    member.getNickname(),
-                    null
-            );
-        }
-        return new WriterDetailResponse(
-                member.getId(),
-                member.getNickname(),
-                domain.getDomain() + member.getProfileImageInfo().getStoreName()
-        );
     }
 }

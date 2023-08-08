@@ -2,11 +2,10 @@ package com.app.edonymyeon.data.repository
 
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.datasource.post.PostDataSource
-import com.app.edonymyeon.data.dto.request.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
-import com.app.edonymyeon.data.dto.response.Posts
+import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.mapper.toDomain
-import com.domain.edonymyeon.model.PostItem
+import com.domain.edonymyeon.model.PostItems
 import com.domain.edonymyeon.repository.PostRepository
 
 class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepository {
@@ -28,10 +27,17 @@ class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepos
         }
     }
 
-    override suspend fun getPosts(size: Int, page: Int): Result<List<PostItem>> {
+    override suspend fun getPosts(size: Int, page: Int): Result<PostItems> {
         val result = postDataSource.getPosts(size, page)
-        return if (result.isSuccessful) {
-            Result.success((result.body() as Posts).post.map { it.toDomain() })
+        return if (result.isSuccessful && result.body() != null) {
+            Result.success(
+                PostItems(
+                    result.body()!!.post.map {
+                        it.toDomain()
+                    },
+                    result.body()!!.isLast,
+                ),
+            )
         } else {
             Result.failure(CustomThrowable(result.code(), result.message()))
         }
