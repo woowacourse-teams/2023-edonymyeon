@@ -21,6 +21,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Create file
+      run: cat /android/app/google-services.json | base64
+
+    - name: Putting data
+      env:
+        DATA: ${{ secrets.ANDROID_GOOGLE_SERVICE }}
+      run: echo $DATA > /android/app/google-services.json
     
     - name: set up Java JDK 17
       uses: actions/setup-java@v3
