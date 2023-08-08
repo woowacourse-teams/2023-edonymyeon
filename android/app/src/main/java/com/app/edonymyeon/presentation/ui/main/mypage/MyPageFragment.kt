@@ -20,6 +20,7 @@ import com.app.edonymyeon.presentation.ui.login.LoginActivity
 import com.app.edonymyeon.presentation.ui.main.MainActivity
 import com.app.edonymyeon.presentation.ui.main.mypage.chart.LineChartManager
 import com.app.edonymyeon.presentation.ui.mypost.MyPostActivity
+import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 
@@ -48,7 +49,6 @@ class MyPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setViewByLogin()
-        initListener()
     }
 
     override fun onResume() {
@@ -56,20 +56,10 @@ class MyPageFragment : Fragment() {
         setViewByLogin()
     }
 
-    private fun initListener() {
-        binding.tvMyPost.setOnClickListener {
-            navigateToMyPost()
-        }
-    }
-
-    private fun navigateToMyPost() {
-        startActivity(MyPostActivity.newIntent(requireContext()))
-    }
-
     private fun setViewByLogin() {
-        val token = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN)
+        val token = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) ?: ""
 
-        if (token != null && token != "") {
+        if (token != "") {
             setViewForLogin()
         } else {
             setViewForNotLogin()
@@ -80,6 +70,7 @@ class MyPageFragment : Fragment() {
         binding.tvRequiredLogin.isVisible = false
         binding.btnLogin.isVisible = false
         binding.tvLogout.setOnClickListener { logout() }
+        binding.tvMyPost.setOnClickListener { navigateToMyPost() }
 
         viewModel.getUserProfile()
         viewModel.setConsumptions(PERIOD_MONTH)
@@ -95,6 +86,12 @@ class MyPageFragment : Fragment() {
     private fun setViewForNotLogin() {
         binding.chartMyPayment.isVisible = false
         binding.btnLogin.setOnClickListener { navigateToLogin() }
+        binding.tvMyPost.setOnClickListener {
+            binding.root.makeSnackbarWithEvent(
+                message = getString(R.string.all_required_login),
+                eventTitle = getString(R.string.login_title),
+            ) { navigateToLogin() }
+        }
     }
 
     private fun setConsumptionChart(chartManager: LineChartManager) {
@@ -130,6 +127,10 @@ class MyPageFragment : Fragment() {
         PreferenceUtil.setValue(AuthLocalDataSource.USER_ACCESS_TOKEN, "")
         RetrofitClient.getInstance().clearAccessToken()
         (activity as MainActivity).refreshActivity()
+    }
+
+    private fun navigateToMyPost() {
+        startActivity(MyPostActivity.newIntent(requireContext()))
     }
 
     private fun navigateToLogin() {

@@ -49,8 +49,6 @@ class MyPageViewModel(
                 }
                 .onFailure {
                     it as CustomThrowable
-                    when (it.code) {
-                    }
                 }
         }
     }
@@ -65,8 +63,6 @@ class MyPageViewModel(
                 }
                 .onFailure {
                     it as CustomThrowable
-                    when (it.code) {
-                    }
                 }
         }
     }
