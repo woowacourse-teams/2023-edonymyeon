@@ -38,6 +38,31 @@ class PostActivity : AppCompatActivity() {
         setListener()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.clearResult()
+        viewModel.getPosts()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+
+            else -> {
+                false
+            }
+        }
+    }
+
+    private fun initAppbar() {
+        setSupportActionBar(binding.tbPost)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.title = getString(R.string.post_all_post)
+    }
+
     private fun setPostAdapter() {
         val postAdapter = PostAdapter(onClick = { postId ->
             startActivity(PostDetailActivity.newIntent(this, postId))
@@ -66,19 +91,6 @@ class PostActivity : AppCompatActivity() {
         })
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.clearResult()
-        viewModel.getPosts()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            android.R.id.home -> {
-                finish()
-                true
-            }
-
     private fun setListener() {
         binding.ivPostNew.setOnClickListener {
             if (isLogin) {
@@ -92,7 +104,7 @@ class PostActivity : AppCompatActivity() {
         }
     }
 
-    private fun startPostEditorActivity() {
+    private fun navigateToPostEditor() {
         startActivity(PostEditorActivity.newIntent(this, PostEditorActivity.POST_CODE))
     }
 
