@@ -57,7 +57,7 @@ jobs:
       run: ./gradlew ktlintCheck
       
     - name: Run Unit test
-      run: ./gradlew --info test
+      run: ./gradlew test
       
     - name: Publish Unit test results
       uses: EnricoMi/publish-unit-test-result-action@v2
@@ -74,11 +74,3 @@ jobs:
       env:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ANDROID_CI_WEBHOOK_URL }} # required
       if: failure() 
-
-    # Gradle 캐시 제거
-    - name: Cleanup Gradle Cache
-      if: always()
-      run: |
-        rm -f ~/.gradle/caches/modules-2/modules-2.lock
-        rm -f ~/.gradle/caches/modules-2/gc.properties
-    
