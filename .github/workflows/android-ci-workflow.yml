@@ -43,6 +43,17 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/buildSrc/**/*.kt') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
+
+    - name: google-services json 생성
+      run: touch google-services.json
+      working-directory: ${{ run.working-directory }}/app
+      
+    - name: google-services json 세팅
+      env:
+        GOOGLE: ${{ secrets.GOOGLE }}
+      run: echo "$GOOGLE" >> google-services.json
+      working-directory: ${{ run.working-directory }}/app
+      
           
     - name: Run ktlint
       run: ./gradlew ktlintCheck
