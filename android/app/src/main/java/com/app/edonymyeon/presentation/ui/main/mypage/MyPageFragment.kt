@@ -36,6 +36,9 @@ class MyPageFragment : Fragment() {
         )
     }
 
+    private val isLogin: Boolean
+        get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != ""
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -57,9 +60,7 @@ class MyPageFragment : Fragment() {
     }
 
     private fun setViewByLogin() {
-        val token = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) ?: ""
-
-        if (token != "") {
+        if (isLogin) {
             setViewForLogin()
         } else {
             setViewForNotLogin()
