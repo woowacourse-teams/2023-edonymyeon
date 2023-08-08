@@ -5,8 +5,7 @@ import retrofit2.Response
 
 fun Response<Any>.toResult() {
     if (isSuccessful) {
-        val result = Result.success(Unit)
-        result
+        Result.success(Unit)
     } else {
         Result.failure(CustomThrowable(code(), message()))
     }
