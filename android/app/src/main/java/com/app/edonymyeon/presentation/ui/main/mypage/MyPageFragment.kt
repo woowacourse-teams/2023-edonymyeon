@@ -69,8 +69,10 @@ class MyPageFragment : Fragment() {
     private fun setViewForLogin() {
         binding.tvRequiredLogin.isVisible = false
         binding.btnLogin.isVisible = false
+        binding.tvLogout.isVisible = true
         binding.tvLogout.setOnClickListener { logout() }
         binding.tvMyPost.setOnClickListener { navigateToMyPost() }
+        binding.tvUpdateUserInfo.setOnClickListener { }
 
         viewModel.getUserProfile()
         viewModel.setConsumptions(PERIOD_MONTH)
