@@ -1,16 +1,17 @@
 package com.app.edonymyeon.data.datasource.auth
 
 import android.content.SharedPreferences
+import com.app.edonymyeon.data.util.PreferenceUtil
 
 class AuthLocalDataSource private constructor(private val sharedPreferences: SharedPreferences) :
     AuthDataSource.Local {
 
     override fun getAuthToken(): String? {
-        return sharedPreferences.getString(USER_ACCESS_TOKEN, "")
+        return PreferenceUtil.getValue(USER_ACCESS_TOKEN)
     }
 
     override fun setAuthToken(token: String) {
-        sharedPreferences.edit().putString(USER_ACCESS_TOKEN, token).apply()
+        PreferenceUtil.setValue(USER_ACCESS_TOKEN, token)
     }
 
     companion object {

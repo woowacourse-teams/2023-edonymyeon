@@ -65,7 +65,6 @@ class LoginActivity : AppCompatActivity() {
         viewModel.isSuccess.observe(this) {
             if (it) {
                 setRetrofitToken()
-                navigateToMain()
                 finish()
             } else {
                 setEmailAndPasswordEmpty()
