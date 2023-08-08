@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import app.edonymyeon.databinding.FragmentHomeBinding
+import com.app.edonymyeon.databinding.FragmentHomeBinding
 import com.app.edonymyeon.presentation.ui.main.home.adapter.AllPostAdapter
 import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity

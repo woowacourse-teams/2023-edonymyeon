@@ -11,12 +11,12 @@ import android.widget.LinearLayout
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
-import app.edonymyeon.R
-import app.edonymyeon.databinding.ActivityPostDetailBinding
+import com.app.edonymyeon.R
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.datasource.recommend.RecommendRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.data.repository.RecommendRepositoryImpl
+import com.app.edonymyeon.databinding.ActivityPostDetailBinding
 import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog

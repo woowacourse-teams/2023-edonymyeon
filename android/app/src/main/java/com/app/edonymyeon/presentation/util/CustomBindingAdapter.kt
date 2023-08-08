@@ -6,7 +6,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import app.edonymyeon.R
+import com.app.edonymyeon.R
 import com.app.edonymyeon.presentation.uimodel.ConsumptionUiModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy

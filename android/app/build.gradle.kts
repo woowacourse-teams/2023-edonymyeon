@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-    namespace = "app.edonymyeon"
+    namespace = "com.app.edonymyeon"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "app.edonymyeon"
+        applicationId = "com.app.edonymyeon"
         minSdk = 28
         targetSdk = 33
         versionCode = 1

@@ -2,7 +2,7 @@ package com.app.edonymyeon.presentation.ui.main.mypage.chart
 
 import android.widget.TextView
 import androidx.annotation.ColorInt
-import app.edonymyeon.R
+import com.app.edonymyeon.R
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.MarkerView

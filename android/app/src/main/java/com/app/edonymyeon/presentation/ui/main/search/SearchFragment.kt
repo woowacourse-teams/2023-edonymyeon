@@ -8,9 +8,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
-import app.edonymyeon.databinding.FragmentSearchBinding
 import com.app.edonymyeon.data.datasource.search.SearchRemoteDataSource
 import com.app.edonymyeon.data.repository.SearchRepositoryImpl
+import com.app.edonymyeon.databinding.FragmentSearchBinding
 import com.app.edonymyeon.presentation.ui.main.search.adapter.SearchAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 

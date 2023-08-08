@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
-import app.edonymyeon.databinding.ViewPostReactionBinding
+import com.app.edonymyeon.databinding.ViewPostReactionBinding
 import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
 
 class PostReactionView @JvmOverloads constructor(

@@ -15,10 +15,10 @@ import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import app.edonymyeon.R
-import app.edonymyeon.databinding.ActivityPostEditorBinding
+import com.app.edonymyeon.R
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
+import com.app.edonymyeon.databinding.ActivityPostEditorBinding
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import com.app.edonymyeon.presentation.ui.posteditor.adapter.PostEditorImagesAdapter
 import com.app.edonymyeon.presentation.uimodel.PostUiModel

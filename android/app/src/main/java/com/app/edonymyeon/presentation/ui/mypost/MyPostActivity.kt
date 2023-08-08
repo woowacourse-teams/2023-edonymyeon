@@ -7,9 +7,9 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import app.edonymyeon.databinding.ActivityMyPostBinding
 import com.app.edonymyeon.data.datasource.profile.ProfileRemoteDataSource
 import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
+import com.app.edonymyeon.databinding.ActivityMyPostBinding
 import com.app.edonymyeon.presentation.ui.mypost.adapter.MyPostAdapter
 import com.app.edonymyeon.presentation.ui.mypost.dialog.ConsumptionDialog
 import com.app.edonymyeon.presentation.ui.mypost.listener.MyPostClickListener

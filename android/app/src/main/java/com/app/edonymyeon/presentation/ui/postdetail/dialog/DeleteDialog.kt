@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import app.edonymyeon.databinding.DialogConfirmDeletePostBinding
+import com.app.edonymyeon.databinding.DialogConfirmDeletePostBinding
 
 class DeleteDialog(
     private val onPositiveButtonClick: () -> Unit,

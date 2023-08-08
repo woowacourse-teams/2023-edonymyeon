@@ -3,8 +3,8 @@ package com.app.edonymyeon.presentation.ui.mypost.viewholder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import app.edonymyeon.R
-import app.edonymyeon.databinding.ItemMyPostBinding
+import com.app.edonymyeon.R
+import com.app.edonymyeon.databinding.ItemMyPostBinding
 import com.app.edonymyeon.presentation.ui.mypost.listener.MyPostClickListener
 import com.app.edonymyeon.presentation.uimodel.MyPostUiModel
 

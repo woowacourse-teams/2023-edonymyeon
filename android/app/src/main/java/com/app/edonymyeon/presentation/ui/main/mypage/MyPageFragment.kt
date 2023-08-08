@@ -7,8 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import app.edonymyeon.R
-import app.edonymyeon.databinding.FragmentMyPageBinding
+import com.app.edonymyeon.R
 import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.data.datasource.consumptions.ConsumptionsRemoteDataSource
 import com.app.edonymyeon.data.datasource.profile.ProfileRemoteDataSource
@@ -16,6 +15,7 @@ import com.app.edonymyeon.data.repository.ConsumptionsRepositoryImpl
 import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
 import com.app.edonymyeon.data.service.client.RetrofitClient
 import com.app.edonymyeon.data.util.PreferenceUtil
+import com.app.edonymyeon.databinding.FragmentMyPageBinding
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
 import com.app.edonymyeon.presentation.ui.main.MainActivity
 import com.app.edonymyeon.presentation.ui.main.mypage.chart.LineChartManager

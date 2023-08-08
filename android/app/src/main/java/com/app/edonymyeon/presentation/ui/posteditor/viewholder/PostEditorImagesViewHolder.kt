@@ -3,8 +3,8 @@ package com.app.edonymyeon.presentation.ui.posteditor.viewholder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import app.edonymyeon.R
-import app.edonymyeon.databinding.ItemPostEditorImageBinding
+import com.app.edonymyeon.R
+import com.app.edonymyeon.databinding.ItemPostEditorImageBinding
 
 class PostEditorImagesViewHolder(
     parent: ViewGroup,

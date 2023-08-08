@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import app.edonymyeon.R
+import com.app.edonymyeon.R
 
 class AlarmFragment : Fragment() {
 

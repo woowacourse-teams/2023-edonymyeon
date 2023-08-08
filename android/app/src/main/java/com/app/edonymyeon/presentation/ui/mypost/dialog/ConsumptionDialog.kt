@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import app.edonymyeon.R
-import app.edonymyeon.databinding.DialogInputConsumptionBinding
+import com.app.edonymyeon.R
+import com.app.edonymyeon.databinding.DialogInputConsumptionBinding
 import com.app.edonymyeon.presentation.ui.mypost.ConsumptionType
 import com.app.edonymyeon.presentation.ui.mypost.MyPostViewModel
 import com.app.edonymyeon.presentation.util.makeSnackbar

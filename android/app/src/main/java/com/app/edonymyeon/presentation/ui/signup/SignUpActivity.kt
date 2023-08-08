@@ -5,10 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import app.edonymyeon.databinding.ActivitySignUpBinding
 import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.data.datasource.auth.AuthRemoteDataSource
 import com.app.edonymyeon.data.repository.AuthRepositoryImpl
+import com.app.edonymyeon.databinding.ActivitySignUpBinding
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
 
 class SignUpActivity : AppCompatActivity() {

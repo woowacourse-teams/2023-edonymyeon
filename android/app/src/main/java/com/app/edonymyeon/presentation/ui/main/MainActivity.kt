@@ -6,8 +6,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
-import app.edonymyeon.R
-import app.edonymyeon.databinding.ActivityMainBinding
+import com.app.edonymyeon.R
+import com.app.edonymyeon.databinding.ActivityMainBinding
 import com.app.edonymyeon.presentation.ui.main.alarm.AlarmFragment
 import com.app.edonymyeon.presentation.ui.main.home.HomeFragment
 import com.app.edonymyeon.presentation.ui.main.mypage.MyPageFragment

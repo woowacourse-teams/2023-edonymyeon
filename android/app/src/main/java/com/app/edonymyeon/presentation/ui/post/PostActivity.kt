@@ -6,10 +6,10 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import app.edonymyeon.R
-import app.edonymyeon.databinding.ActivityPostBinding
+import com.app.edonymyeon.R
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
+import com.app.edonymyeon.databinding.ActivityPostBinding
 import com.app.edonymyeon.presentation.ui.post.adapter.PostAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity
