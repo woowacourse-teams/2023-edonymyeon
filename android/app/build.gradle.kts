@@ -3,6 +3,8 @@ plugins {
     id("kotlin-kapt")
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
     kotlin("plugin.serialization") version "1.8.21"
 }
 
@@ -108,4 +110,11 @@ dependencies {
 
     // android chart
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    // firebase 연동
+    implementation(platform("com.google.firebase:firebase-bom:32.2.2"))
+
+    // firebase crashlytics & analytics
+    implementation("com.google.firebase:firebase-crashlytics-ktx")
+    implementation("com.google.firebase:firebase-analytics-ktx")
 }
