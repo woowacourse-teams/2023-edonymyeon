@@ -51,7 +51,6 @@ class MyPageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setViewByLogin()
     }
 
     override fun onResume() {
@@ -90,6 +89,8 @@ class MyPageFragment : Fragment() {
         binding.btnLogin.setOnClickListener { navigateToLogin() }
         binding.tvMyPost.setOnClickListener { makeLoginSnackbar() }
         binding.tvUpdateUserInfo.setOnClickListener { makeLoginSnackbar() }
+
+        viewModel.setNoUserState(getString(R.string.my_page_required_login))
     }
 
     private fun makeLoginSnackbar() {
