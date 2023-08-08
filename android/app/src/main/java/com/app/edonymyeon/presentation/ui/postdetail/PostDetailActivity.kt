@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.viewModels
@@ -13,12 +14,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostDetailBinding
+import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.datasource.recommend.RecommendRemoteDataSource
 import com.app.edonymyeon.data.datasource.report.ReportRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.data.repository.RecommendRepositoryImpl
 import com.app.edonymyeon.data.repository.ReportRepositoryImpl
+import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
@@ -51,7 +54,6 @@ class PostDetailActivity : AppCompatActivity() {
     private val deleteDialog: DeleteDialog by lazy {
         DeleteDialog {
             viewModel.deletePost(id)
-            binding.root.makeSnackbar("delete")
             deleteDialog.dismiss()
             startActivity(PostActivity.newIntent(this))
             finish()
@@ -60,6 +62,9 @@ class PostDetailActivity : AppCompatActivity() {
 
     private val isMyPost: Boolean
         get() = viewModel.post.value?.isWriter == true
+
+    private val isLogin: Boolean
+        get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -177,21 +182,27 @@ class PostDetailActivity : AppCompatActivity() {
 
     private fun setRecommendationCheckedListener() {
         binding.cbUp.setOnCheckedChangeListener { _, isChecked ->
-            if (isMyPost) {
-                binding.root.makeSnackbar(getString(R.string.post_detail_writer_cant_recommend))
-                binding.cbUp.isChecked = false
-                return@setOnCheckedChangeListener
-            }
+            if (invalidateRecommendation(binding.cbUp)) return@setOnCheckedChangeListener
             viewModel.updateRecommendationUi(id, isChecked, true)
         }
         binding.cbDown.setOnCheckedChangeListener { _, isChecked ->
-            if (isMyPost) {
-                binding.root.makeSnackbar(getString(R.string.post_detail_writer_cant_recommend))
-                binding.cbDown.isChecked = false
-                return@setOnCheckedChangeListener
-            }
+            if (invalidateRecommendation(binding.cbDown)) return@setOnCheckedChangeListener
             viewModel.updateRecommendationUi(id, isChecked, false)
         }
+    }
+
+    private fun invalidateRecommendation(checkbox: CheckBox): Boolean {
+        if (!isLogin) {
+            binding.root.makeSnackbar(getString(R.string.post_detail_login_required))
+            checkbox.isChecked = false
+            return true
+        }
+        if (isMyPost) {
+            binding.root.makeSnackbar(getString(R.string.post_detail_writer_cant_recommend))
+            checkbox.isChecked = false
+            return true
+        }
+        return false
     }
 
     private fun setImageSlider(post: PostUiModel) {
