@@ -3,9 +3,11 @@ package edonymyeon.backend.post.ui;
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
+import edonymyeon.backend.post.application.HotFindingCondition;
 import edonymyeon.backend.post.application.PostReadService;
 import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
+import edonymyeon.backend.post.ui.annotation.HotPostSizing;
 import edonymyeon.backend.post.ui.annotation.PostPaging;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
@@ -35,6 +37,15 @@ public class PostReadController {
         SpecificPostInfoResponse specificPost = postReadService.findSpecificPost(postId, memberId);
         return ResponseEntity.ok()
                 .body(specificPost);
+    }
+
+    @GetMapping("/posts/hot")
+    public ResponseEntity<Slice<GeneralPostInfoResponse>> findHotPosts(
+            @HotPostSizing HotFindingCondition hotFindingCondition
+    ) {
+        Slice<GeneralPostInfoResponse> posts = postReadService.findHotPosts(hotFindingCondition);
+        return ResponseEntity.ok()
+                .body(posts);
     }
 
     @GetMapping("/search")

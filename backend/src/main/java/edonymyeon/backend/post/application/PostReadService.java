@@ -1,31 +1,30 @@
 package edonymyeon.backend.post.application;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
-import static org.springframework.data.domain.Sort.Direction;
-
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.post.application.dto.AllThumbsInPostResponse;
-import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
-import edonymyeon.backend.post.application.dto.ReactionCountResponse;
-import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
-import edonymyeon.backend.post.application.dto.ThumbsStatusInPostResponse;
-import edonymyeon.backend.post.application.dto.WriterDetailResponse;
+import edonymyeon.backend.post.application.dto.*;
+import edonymyeon.backend.post.domain.HotPostPolicy;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.post.repository.PostSpecification;
-import java.util.Objects;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Objects;
+import java.util.Optional;
+
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
+import static org.springframework.data.domain.Sort.Direction;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -124,5 +123,19 @@ public class PostReadService {
 
         final Slice<Post> foundPosts = postRepository.findAll(searchResults, pageRequest);
         return foundPosts.map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
+    }
+
+    public Slice<GeneralPostInfoResponse> findHotPosts(final HotFindingCondition hotFindingCondition) {
+        final LocalDateTime findStartDate = LocalDateTime.now()
+                .minus(HotPostPolicy.FINDING_PERIOD, ChronoUnit.DAYS);
+
+        Slice<Post> hotPost = postRepository.findHotPosts(
+                findStartDate,
+                HotPostPolicy.VIEW_COUNT_WEIGHT,
+                HotPostPolicy.THUMBS_COUNT_WEIGHT,
+                hotFindingCondition.toPage()
+        );
+
+        return hotPost.map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
     }
 }
