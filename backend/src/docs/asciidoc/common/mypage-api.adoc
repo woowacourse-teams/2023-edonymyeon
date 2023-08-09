@@ -4,6 +4,7 @@
 === 회원 정보 조회
 
 === 내가 쓴 글 조회
+operation::my-posts[snippets='request-headers,query-parameters,http-request,response-fields,http-response']
 
 === 회원 정보 수정
 
