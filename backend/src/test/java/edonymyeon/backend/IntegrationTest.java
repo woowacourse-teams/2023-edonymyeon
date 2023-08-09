@@ -73,7 +73,6 @@ public class IntegrationTest {
         return Long.parseLong(location.split("/")[2]);
     }
 
-
     protected ExtractableResponse<Response> 게시글_하나를_상세_조회한다(final Member 열람인, final long 게시글_id) {
         return RestAssured
                 .given()

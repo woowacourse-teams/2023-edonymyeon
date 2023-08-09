@@ -1,5 +1,6 @@
 package edonymyeon.backend.report.domain;
 
+import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.domain.Post;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,6 +26,11 @@ public class Report {
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
+
+    @ManyToOne
+    @JoinColumn(name = "reporter_id")
+    private Member reporter;
+
     private AbusingType abusingType;
     private String additionalComment;
 }
