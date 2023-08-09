@@ -15,45 +15,28 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import edonymyeon.backend.DocsTest;
 import edonymyeon.backend.auth.application.AuthService;
 import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.headers.HeaderDescriptor;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.request.ParameterDescriptor;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(ReplaceUnderscores.class)
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs
-@SpringBootTest
-public class AuthControllerDocsTest {
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+public class AuthControllerDocsTest extends DocsTest {
 
     @MockBean
     private AuthService authService;
 
     @Test
-    void 로그인_요청을_보낸다() throws Exception {
+    void 로그인_문서화() throws Exception {
         final LoginRequest request = new LoginRequest("example@example.com", "password1234!");
         when(authService.findMember(request)).thenReturn(any());
 
@@ -81,7 +64,7 @@ public class AuthControllerDocsTest {
     }
 
     @Test
-    void 중복_확인_요청을_보낸다_성공() throws Exception {
+    void 회원가입시_중복_확인_문서화() throws Exception {
         String target = "email";
         String value = "example@example.com";
         final DuplicateCheckResponse duplicateCheckResponse = new DuplicateCheckResponse(false);
@@ -111,7 +94,7 @@ public class AuthControllerDocsTest {
     }
 
     @Test
-    void 회원가입_요청을_보낸다() throws Exception {
+    void 회원가입_문서화() throws Exception {
         final JoinRequest request = new JoinRequest("email@email.com", "password1234!", "testNickname");
 
         doNothing().when(authService).joinMember(request);
@@ -121,11 +104,10 @@ public class AuthControllerDocsTest {
                 .content(objectMapper.writeValueAsString(request));
 
         FieldDescriptor[] 요청값 = {
-            fieldWithPath("email").description("사용할 이메일"),
-            fieldWithPath("password").description("사용할 비밀번호"),
-            fieldWithPath("nickname").description("사용할 닉네임")
+                fieldWithPath("email").description("사용할 이메일"),
+                fieldWithPath("password").description("사용할 비밀번호"),
+                fieldWithPath("nickname").description("사용할 닉네임")
         };
-
 
         final RestDocumentationResultHandler 문서화 = document("join",
                 requestFields(요청값)
