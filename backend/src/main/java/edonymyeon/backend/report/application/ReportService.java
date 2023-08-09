@@ -6,7 +6,6 @@ import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.report.domain.AbusingType;
 import edonymyeon.backend.report.domain.Report;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +25,8 @@ public class ReportService {
 
         final Report report = Report.builder()
                 .post(post)
-                .abusingType(AbusingType.of(reportRequest.abusingType()))
-                .additionalComment(reportRequest.additionalComment())
+                .abusingType(AbusingType.of(reportRequest.reportId()))
+                .additionalComment(reportRequest.content())
                 .build();
 
         return reportRepository.save(report).getId();
