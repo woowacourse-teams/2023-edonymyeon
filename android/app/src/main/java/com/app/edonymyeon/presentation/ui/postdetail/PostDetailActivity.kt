@@ -15,11 +15,14 @@ import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostDetailBinding
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.datasource.recommend.RecommendRemoteDataSource
+import com.app.edonymyeon.data.datasource.report.ReportRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.data.repository.RecommendRepositoryImpl
+import com.app.edonymyeon.data.repository.ReportRepositoryImpl
 import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
+import com.app.edonymyeon.presentation.ui.postdetail.dialog.ReportDialog
 import com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.util.makeSnackbar
@@ -37,14 +40,19 @@ class PostDetailActivity : AppCompatActivity() {
         PostDetailViewModelFactory(
             PostRepositoryImpl(PostRemoteDataSource()),
             RecommendRepositoryImpl(RecommendRemoteDataSource()),
+            ReportRepositoryImpl(ReportRemoteDataSource()),
         )
     }
 
-    private val dialog: DeleteDialog by lazy {
+    private val reportDialog: ReportDialog by lazy {
+        ReportDialog(id, viewModel)
+    }
+
+    private val deleteDialog: DeleteDialog by lazy {
         DeleteDialog {
             viewModel.deletePost(id)
             binding.root.makeSnackbar("delete")
-            dialog.dismiss()
+            deleteDialog.dismiss()
             startActivity(PostActivity.newIntent(this))
             finish()
         }
@@ -66,12 +74,18 @@ class PostDetailActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_post_detail, menu)
+        hideReportForWriter(menu)
         hideMenusForWriter(menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_report -> {
+                reportDialog.show(supportFragmentManager, "ReportDialog")
+                true
+            }
+
             R.id.action_update -> {
                 val post = viewModel.post.value ?: return false
                 startActivity(
@@ -86,7 +100,7 @@ class PostDetailActivity : AppCompatActivity() {
             }
 
             R.id.action_delete -> {
-                dialog.show(supportFragmentManager, "DeleteDialog")
+                deleteDialog.show(supportFragmentManager, "DeleteDialog")
                 true
             }
 
@@ -96,6 +110,14 @@ class PostDetailActivity : AppCompatActivity() {
             }
 
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun hideReportForWriter(menu: Menu?) {
+        viewModel.post.observe(this) { post ->
+            if (post.isWriter) {
+                menu?.findItem(R.id.action_report)?.isVisible = false
+            }
         }
     }
 

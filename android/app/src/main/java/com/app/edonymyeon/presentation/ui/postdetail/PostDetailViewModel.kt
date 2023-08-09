@@ -14,11 +14,13 @@ import com.domain.edonymyeon.model.Post
 import com.domain.edonymyeon.model.Recommendation
 import com.domain.edonymyeon.repository.PostRepository
 import com.domain.edonymyeon.repository.RecommendRepository
+import com.domain.edonymyeon.repository.ReportRepository
 import kotlinx.coroutines.launch
 
 class PostDetailViewModel(
     private val postRepository: PostRepository,
     private val recommendRepository: RecommendRepository,
+    private val reportRepository: ReportRepository,
 ) : ViewModel() {
 
     private val _post = MutableLiveData<PostUiModel>()
@@ -62,6 +64,18 @@ class PostDetailViewModel(
         viewModelScope.launch {
             postRepository.deletePost(postId)
                 .onSuccess {}
+                .onFailure {
+                    it as CustomThrowable
+                    when (it.code) {
+                    }
+                }
+        }
+    }
+
+    fun postReport(postId: Long, reportId: Int, content: String?) {
+        viewModelScope.launch {
+            reportRepository.postReport(postId, reportId, content)
+                .onSuccess { }
                 .onFailure {
                     it as CustomThrowable
                     when (it.code) {
