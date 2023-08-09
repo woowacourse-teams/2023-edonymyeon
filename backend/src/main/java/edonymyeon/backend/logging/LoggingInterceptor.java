@@ -43,16 +43,19 @@ public class LoggingInterceptor implements HandlerInterceptor {
         MDC.put("statuscode", String.valueOf(response.getStatus()));
         MDC.put("request-contentType", request.getContentType());
         MDC.put("response-contentType", response.getContentType());
-        if (Objects.nonNull(response.getContentType()) &&
-                response.getContentType().contains(MediaType.TEXT_HTML_VALUE) ||
-                response.getContentType().contains(MediaType.IMAGE_GIF_VALUE) ||
-                response.getContentType().contains(MediaType.IMAGE_JPEG_VALUE) ||
-                response.getContentType().contains(MediaType.IMAGE_PNG_VALUE)
-        ) {
+        if (isContentTypeNotLoggingResponseBody(response)) {
             MDC.clear();
             return;
         }
         logResponseBody(response);
+    }
+
+    private static boolean isContentTypeNotLoggingResponseBody(final HttpServletResponse response) {
+        return Objects.nonNull(response.getContentType()) &&
+                (response.getContentType().contains(MediaType.TEXT_HTML_VALUE) ||
+                response.getContentType().contains(MediaType.IMAGE_GIF_VALUE) ||
+                response.getContentType().contains(MediaType.IMAGE_JPEG_VALUE) ||
+                response.getContentType().contains(MediaType.IMAGE_PNG_VALUE));
     }
 
     private void logResponseBody(final HttpServletResponse response) throws IOException {
