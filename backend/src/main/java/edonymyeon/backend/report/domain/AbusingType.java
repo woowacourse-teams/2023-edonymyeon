@@ -19,7 +19,7 @@ public enum AbusingType {
     }
 
     public static AbusingType of(final int abusingType) {
-        return Arrays.stream(AbusingType.values())
+        return Arrays.stream(values())
                 .filter(type -> type.typeCode == abusingType)
                 .findAny()
                 .orElseThrow(() -> new EdonymyeonException(ExceptionInformation.ABUSING_TYPE_NOT_FOUND));

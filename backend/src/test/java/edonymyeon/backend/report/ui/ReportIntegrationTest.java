@@ -2,8 +2,6 @@ package edonymyeon.backend.report.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
@@ -12,17 +10,14 @@ import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
 class ReportIntegrationTest extends IntegrationTest implements ImageFileCleaner {
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Test
-    void 특정_게시글을_신고한다() throws JsonProcessingException {
+    void 특정_게시글을_신고한다() {
         final Member member = 사용자를_하나_만든다();
         final ExtractableResponse<Response> post = 게시글을_하나_만든다(member);
         final long postId = 응답의_location헤더에서_id를_추출한다(post);
@@ -32,19 +27,19 @@ class ReportIntegrationTest extends IntegrationTest implements ImageFileCleaner 
         final ExtractableResponse<Response> 게시글_신고_응답 = RestAssured
                 .given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(objectMapper.writeValueAsString(reportRequest))
+                .body(reportRequest)
                 .when()
                 .auth().preemptive().basic(member.getEmail(), member.getPassword())
                 .post("/report")
                 .then()
                 .extract();
 
-        assertThat(게시글_신고_응답.statusCode()).isEqualTo(201);
+        assertThat(게시글_신고_응답.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(게시글_신고_응답.header("location")).isNotNull();
     }
 
     @Test
-    void 로그인하지_않은_사용자는_신고하지_못한다() throws JsonProcessingException {
+    void 로그인하지_않은_사용자는_신고하지_못한다() {
         final Member member = 사용자를_하나_만든다();
         final ExtractableResponse<Response> post = 게시글을_하나_만든다(member);
         final long postId = 응답의_location헤더에서_id를_추출한다(post);
@@ -54,7 +49,7 @@ class ReportIntegrationTest extends IntegrationTest implements ImageFileCleaner 
         final ExtractableResponse<Response> 게시글_신고_응답 = RestAssured
                 .given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(objectMapper.writeValueAsString(reportRequest))
+                .body(reportRequest)
                 .when()
                 .post("/report")
                 .then()
