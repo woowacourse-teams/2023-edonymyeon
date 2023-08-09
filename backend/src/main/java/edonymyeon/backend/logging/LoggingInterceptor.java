@@ -44,10 +44,10 @@ public class LoggingInterceptor implements HandlerInterceptor {
         MDC.put("request-contentType", request.getContentType());
         MDC.put("response-contentType", response.getContentType());
         if (Objects.nonNull(response.getContentType()) &&
-                response.getContentType().contains(MediaType.TEXT_HTML_VALUE) ||
+                (response.getContentType().contains(MediaType.TEXT_HTML_VALUE) ||
                 response.getContentType().contains(MediaType.IMAGE_GIF_VALUE) ||
                 response.getContentType().contains(MediaType.IMAGE_JPEG_VALUE) ||
-                response.getContentType().contains(MediaType.IMAGE_PNG_VALUE)
+                response.getContentType().contains(MediaType.IMAGE_PNG_VALUE))
         ) {
             MDC.clear();
             return;
