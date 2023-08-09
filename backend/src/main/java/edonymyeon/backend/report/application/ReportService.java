@@ -24,6 +24,7 @@ public class ReportService {
 
     private final MemberRepository memberRepository;
 
+    @Transactional
     public Long report(ReportRequest reportRequest, MemberId reporterId) {
         final Post post = postRepository.findById(reportRequest.postId())
                 .orElseThrow(() -> new EdonymyeonException(ExceptionInformation.POST_ID_NOT_FOUND));
