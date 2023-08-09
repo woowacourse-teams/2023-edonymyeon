@@ -108,6 +108,7 @@ class PostEditorActivity : AppCompatActivity() {
                         savePost()
                         CoroutineScope(Dispatchers.IO).launch {
                             delay(2000)
+                            setResult(RESULT_RELOAD_CODE)
                             navigateToDetail()
                         }
                     } else {
@@ -297,6 +298,8 @@ class PostEditorActivity : AppCompatActivity() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
         )
+
+        const val RESULT_RELOAD_CODE = 1001
 
         fun newIntent(context: Context, code: Int): Intent {
             return Intent(context, PostEditorActivity::class.java).apply {
