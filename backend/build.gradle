@@ -50,6 +50,11 @@ dependencies {
 	testImplementation 'io.rest-assured:rest-assured:5.3.1'
 
 	implementation 'com.mysql:mysql-connector-j'
+
+	// actuator 추가
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	// 프로메테우스 추가
+	implementation 'io.micrometer:micrometer-registry-prometheus'
 }
 
 tasks.named('test') {
