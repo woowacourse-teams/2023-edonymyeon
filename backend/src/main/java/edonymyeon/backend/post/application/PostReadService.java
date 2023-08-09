@@ -18,8 +18,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -126,16 +124,12 @@ public class PostReadService {
     }
 
     public Slice<GeneralPostInfoResponse> findHotPosts(final HotFindingCondition hotFindingCondition) {
-        final LocalDateTime findStartDate = LocalDateTime.now()
-                .minus(HotPostPolicy.FINDING_PERIOD, ChronoUnit.DAYS);
-
         Slice<Post> hotPost = postRepository.findHotPosts(
-                findStartDate,
+                HotPostPolicy.getFindPeriod(),
                 HotPostPolicy.VIEW_COUNT_WEIGHT,
                 HotPostPolicy.THUMBS_COUNT_WEIGHT,
                 hotFindingCondition.toPage()
         );
-
         return hotPost.map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
     }
 }

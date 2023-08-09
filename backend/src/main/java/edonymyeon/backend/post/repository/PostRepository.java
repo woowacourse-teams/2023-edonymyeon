@@ -30,12 +30,12 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
 
     @EntityGraph(attributePaths = "member")
     @Query("""
-            SELECT p 
-            FROM Post p 
-            LEFT JOIN Thumbs t 
-            ON p.id = t.post.id 
-            WHERE p.createdAt >= :findStartDate 
-            GROUP BY p.id 
+            SELECT p
+            FROM Post p
+            LEFT JOIN Thumbs t
+            ON p.id = t.post.id
+            WHERE p.createdAt >= :findStartDate
+            GROUP BY p.id
             ORDER BY (COUNT(t.id) * :thumbsCountWeight + p.viewCount * :viewCountWeight) DESC, p.createdAt ASC
             """)
     Slice<Post> findHotPosts(
