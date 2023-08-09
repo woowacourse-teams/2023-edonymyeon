@@ -29,13 +29,15 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
     Slice<Post> findAllByMemberId(Long memberId, Pageable pageable);
 
     @EntityGraph(attributePaths = "member")
-    @Query("SELECT p " +
-            "FROM Post p " +
-            "LEFT JOIN Thumbs t " +
-            "ON p.id = t.post.id " +
-            "WHERE p.createdAt >= :findStartDate " +
-            "GROUP BY p.id " +
-            "ORDER BY (COUNT(t.id) * :thumbsCountWeight + p.viewCount * :viewCountWeight) DESC, p.createdAt ASC")
+    @Query("""
+            SELECT p 
+            FROM Post p 
+            LEFT JOIN Thumbs t 
+            ON p.id = t.post.id 
+            WHERE p.createdAt >= :findStartDate 
+            GROUP BY p.id 
+            ORDER BY (COUNT(t.id) * :thumbsCountWeight + p.viewCount * :viewCountWeight) DESC, p.createdAt ASC
+            """)
     Slice<Post> findHotPosts(
             @Param("findStartDate") final LocalDateTime findStartDate,
             @Param("viewCountWeight") final int viewCountWeight,
