@@ -13,6 +13,7 @@ import io.restassured.path.json.JsonPath;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -88,5 +89,18 @@ public class HotPostIntegrationTest extends IntegrationTest {
                     softly.assertThat(jsonPath.getLong("content[4].id")).isEqualTo(post5.getId());
                 }
         );
+    }
+
+    @Test
+    void 최근_일주일_이내의_글이_없다면_빈리스트가_조회된다() {
+        JsonPath jsonPath = RestAssured.given()
+                .when()
+                .get("posts/hot")
+                .then()
+                .extract()
+                .body()
+                .jsonPath();
+
+        assertThat(jsonPath.getList("content").size()).isEqualTo(0);
     }
 }
