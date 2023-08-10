@@ -4,6 +4,8 @@ import static edonymyeon.backend.consumption.domain.ConsumptionType.SAVING;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -82,6 +84,9 @@ public class MemberControllerDocsTest extends DocsTest {
 
         final RestDocumentationResultHandler 문서화 = document("purchase-confirm",
                 preprocessRequest(prettyPrint()),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
+                ),
                 pathParameters(
                         parameterWithName("postId").description("게시글 id")
                 ),
@@ -118,6 +123,9 @@ public class MemberControllerDocsTest extends DocsTest {
 
         final RestDocumentationResultHandler 문서화 = document("saving-confirm",
                 preprocessRequest(prettyPrint()),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
+                ),
                 pathParameters(
                         parameterWithName("postId").description("게시글 id")
                 ),
@@ -149,6 +157,9 @@ public class MemberControllerDocsTest extends DocsTest {
                         .encodeToString((회원.getEmail() + ":" + 회원.getPassword()).getBytes()));
 
         final RestDocumentationResultHandler 문서화 = document("confirm-remove",
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
+                ),
                 pathParameters(
                         parameterWithName("postId").description("게시글 id")
                 )

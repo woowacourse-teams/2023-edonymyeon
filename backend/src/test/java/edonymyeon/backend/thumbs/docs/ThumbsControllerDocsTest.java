@@ -1,6 +1,8 @@
 package edonymyeon.backend.thumbs.docs;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
@@ -80,6 +82,9 @@ public class ThumbsControllerDocsTest {
         this.mockMvc.perform(좋아요_요청)
                 .andExpect(status().isOk())
                 .andDo(document("thumbs-up",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
+                        ),
                         pathParameters(
                                 parameterWithName("postId").description("게시글 id")
                         )
@@ -99,6 +104,9 @@ public class ThumbsControllerDocsTest {
         this.mockMvc.perform(싫어요_요청)
                 .andExpect(status().isOk())
                 .andDo(document("thumbs-down",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
+                        ),
                         pathParameters(
                                 parameterWithName("postId").description("게시글 id")
                         )
@@ -118,6 +126,9 @@ public class ThumbsControllerDocsTest {
         this.mockMvc.perform(좋아요_취소_요청)
                 .andExpect(status().isOk())
                 .andDo(document("thumbs-up-delete",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
+                        ),
                         pathParameters(
                                 parameterWithName("postId").description("게시글 id")
                         )
@@ -137,6 +148,9 @@ public class ThumbsControllerDocsTest {
         this.mockMvc.perform(싫어요_취소_요청)
                 .andExpect(status().isOk())
                 .andDo(document("thumbs-down-delete",
+                        requestHeaders(
+                                headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
+                        ),
                         pathParameters(
                                 parameterWithName("postId").description("게시글 id")
                         )

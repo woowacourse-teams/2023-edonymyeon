@@ -3,6 +3,8 @@ package edonymyeon.backend.post.docs;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
@@ -125,6 +127,9 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
         final RestDocumentationResultHandler 문서화 = document("post-update",
                 preprocessResponse(prettyPrint()),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
+                ),
                 pathParameters(
                         parameterWithName("postId").description("게시글 id")
                 ),
@@ -162,6 +167,9 @@ public class PostControllerDocsTest implements ImageFileCleaner {
                         .encodeToString((글쓴이.getEmail() + ":" + 글쓴이.getPassword()).getBytes()));
 
         final RestDocumentationResultHandler 문서화 = document("post-delete",
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
+                ),
                 pathParameters(
                         parameterWithName("postId").description("게시글 id")
                 )
