@@ -3,6 +3,7 @@ package edonymyeon.backend.consumption.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import edonymyeon.backend.EdonymyeonTest;
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.domain.ConsumptionType;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
@@ -13,20 +14,11 @@ import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.PostTestSupport;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.TestConstructor.AutowireMode;
-import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-@DisplayNameGeneration(ReplaceUnderscores.class)
-@TestConstructor(autowireMode = AutowireMode.ALL)
-@Transactional
-@SpringBootTest
+@EdonymyeonTest
 class MemberConsumptionServiceImplTest {
 
     private final MemberConsumptionServiceImpl consumptionConfirmService;

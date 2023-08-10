@@ -26,10 +26,8 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
-@Transactional
 @Import(TestConfig.class)
 @TestInstance(Lifecycle.PER_CLASS)
 @DisplayName("게시글 전체 조회 테스트")
