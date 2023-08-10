@@ -59,6 +59,8 @@ class MyPageFragment : Fragment() {
     }
 
     private fun setViewByLogin() {
+        val isLogin: Boolean = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
+
         if (isLogin) {
             setViewForLogin()
         } else {
@@ -132,7 +134,7 @@ class MyPageFragment : Fragment() {
     }
 
     private fun logout() {
-        PreferenceUtil.setValue(AuthLocalDataSource.USER_ACCESS_TOKEN, "")
+        PreferenceUtil.setValue(AuthLocalDataSource.USER_ACCESS_TOKEN, null)
         RetrofitClient.getInstance().clearAccessToken()
         (activity as MainActivity).refreshActivity()
     }

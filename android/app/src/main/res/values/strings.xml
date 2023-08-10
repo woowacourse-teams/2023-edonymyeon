@@ -34,6 +34,7 @@
     <string name="post_detail_toolbar_menu_report">수정</string>
     <string name="post_detail_writer_cant_scrap">본인이 작성한 글은 스크랩할 수 없습니다.</string>
     <string name="post_detail_writer_cant_recommend">본인이 작성한 글은 추천할 수 없습니다.</string>
+    <string name="post_detail_login_required">추천 기능은 회원만 이용할 수 있습니다.</string>
 
     <!-- post detail dialog -->
     <string name="post_detail_dialog_title">정말로 삭제하시겠습니까?</string>
