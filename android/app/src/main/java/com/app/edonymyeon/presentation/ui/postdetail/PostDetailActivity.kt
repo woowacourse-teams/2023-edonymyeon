@@ -221,7 +221,7 @@ class PostDetailActivity : AppCompatActivity() {
     private fun addIndicatorViews(params: LinearLayout.LayoutParams) {
         List<ImageView>(binding.vpImageSlider.adapter?.itemCount ?: 0) {
             ImageView(this).apply {
-                setImageResource(R.drawable.ic_indicator_focus_off)
+                setImageResource(R.drawable.ic_bcc4d8_indicator_focus_off)
                 layoutParams = params
             }.also { indicatorView ->
                 binding.llIndicators.addView(indicatorView)
@@ -233,9 +233,9 @@ class PostDetailActivity : AppCompatActivity() {
         for (i in 0 until binding.llIndicators.childCount) {
             val indicatorView = binding.llIndicators.getChildAt(i) as ImageView
             if (i == position) {
-                indicatorView.setImageResource(R.drawable.ic_indicator_focus_on)
+                indicatorView.setImageResource(R.drawable.ic_576b9e_indicator_focus_on)
             } else {
-                indicatorView.setImageResource(R.drawable.ic_indicator_focus_off)
+                indicatorView.setImageResource(R.drawable.ic_bcc4d8_indicator_focus_off)
             }
         }
     }
