@@ -43,10 +43,6 @@ class PostEditorViewModel(
     val postId: LiveData<Long>
         get() = _postId
 
-    init {
-        _galleryImages.value = images
-    }
-
     fun initViewModelOnUpdate(post: PostUiModel) {
         _postTitle.value = post.title
         _postPrice.value = post.price.toString()

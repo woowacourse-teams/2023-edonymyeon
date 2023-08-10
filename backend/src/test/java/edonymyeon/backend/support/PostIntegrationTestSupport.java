@@ -81,7 +81,8 @@ public class PostIntegrationTestSupport {
         public ExtractableResponse<Response> build() {
             Member member = this.member == null ? memberTestSupport.builder().build() : this.member;
 
-            return RestAssured.given()
+            return RestAssured
+                    .given()
                     .auth().preemptive().basic(member.getEmail(), member.getPassword())
                     .multiPart("title", this.title == null ? DEFAULT_TITLE : this.title)
                     .multiPart("content", this.content == null ? DEFAULT_CONTENT : this.content)

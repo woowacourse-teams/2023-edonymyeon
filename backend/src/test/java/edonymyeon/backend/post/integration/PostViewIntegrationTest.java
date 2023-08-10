@@ -40,18 +40,4 @@ public class PostViewIntegrationTest extends IntegrationTest implements ImageFil
     private void 작성자가_자신의_글을_조회하면_조회수가_오르지_않는다(final Member 작성자, final Post 게시글) {
         다른사람이_글을_조회하면_조회수가_오른다(작성자, 게시글, 0);
     }
-
-    private Member 사용자를_하나_만든다() {
-        return memberTestSupport.builder().build();
-    }
-
-    private ExtractableResponse<Response> 게시글_하나를_상세_조회한다(final Member 열람인, final long 게시글_id) {
-        return RestAssured
-                .given()
-                .when()
-                .auth().preemptive().basic(열람인.getEmail(), 열람인.getPassword())
-                .get("/posts/" + 게시글_id)
-                .then()
-                .extract();
-    }
 }

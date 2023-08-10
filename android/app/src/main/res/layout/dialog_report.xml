@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_ffffff_radius_10dp">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="16dp"
+            android:text="@string/post_report_dialog_title"
+            android:textColor="@color/blue_576b9e"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="@id/gl_margin_start"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/div_title_content"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/black_434343"
+            app:layout_constraintEnd_toEndOf="@id/gl_margin_end"
+            app:layout_constraintStart_toStartOf="@id/gl_margin_start"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
+        <Space
+            android:id="@+id/space_content_top"
+            android:layout_width="320dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H, 360:20"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/div_title_content" />
+
+        <TextView
+            android:id="@+id/tv_report_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/post_report_dialog_description"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@+id/gl_margin_end"
+            app:layout_constraintStart_toStartOf="@id/gl_margin_start"
+            app:layout_constraintTop_toBottomOf="@id/space_content_top" />
+
+        <Space
+            android:id="@+id/space_description_bottom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,360:16"
+            app:layout_constraintEnd_toStartOf="@+id/gl_margin_end"
+            app:layout_constraintStart_toStartOf="@id/gl_margin_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_report_description" />
+
+        <RadioGroup
+            android:id="@+id/rg_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="@+id/gl_margin_start"
+            app:layout_constraintTop_toBottomOf="@+id/space_description_bottom">
+
+            <RadioButton
+                android:id="@+id/rb_report_profit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:text="@string/post_report_dialog_report_profit"
+                android:textSize="15sp" />
+
+            <RadioButton
+                android:id="@+id/rb_report_privacy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:text="@string/post_report_dialog_report_privacy" />
+
+            <RadioButton
+                android:id="@+id/rb_report_obscene"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:text="@string/post_report_dialog_report_obscene" />
+
+            <RadioButton
+                android:id="@+id/rb_report_abuse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:text="@string/post_report_dialog_report_abuse" />
+
+            <RadioButton
+                android:id="@+id/rb_report_repeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:text="@string/post_report_dialog_report_repeat" />
+
+            <RadioButton
+                android:id="@+id/rb_report_etc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:text="@string/post_report_dialog_report_etc" />
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/et_report_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="16dp"
+            android:autofillHints=""
+            android:background="@drawable/bg_stroke_576b9e_radius_10dp"
+            android:gravity="start"
+            android:hint="@string/post_report_dialog_input_reason"
+            android:inputType="text"
+            android:padding="10dp"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintDimensionRatio="H, 360: 70"
+            app:layout_constraintEnd_toStartOf="@+id/gl_margin_end"
+            app:layout_constraintStart_toStartOf="@id/gl_margin_start"
+            app:layout_constraintTop_toBottomOf="@id/rg_report" />
+
+        <Space
+            android:id="@+id/space"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,360:30"
+            app:layout_constraintEnd_toStartOf="@+id/gl_margin_end"
+            app:layout_constraintStart_toStartOf="@id/gl_margin_start"
+            app:layout_constraintTop_toBottomOf="@+id/et_report_content" />
+
+        <TextView
+            android:id="@+id/tv_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/post_report_dialog_cancel"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/gl_margin_start"
+            app:layout_constraintTop_toBottomOf="@+id/space" />
+
+        <TextView
+            android:id="@+id/tv_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/post_report_dialog_report"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/div_title_content"
+            app:layout_constraintTop_toBottomOf="@+id/space" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,360:20"
+            app:layout_constraintEnd_toStartOf="@+id/gl_margin_end"
+            app:layout_constraintStart_toStartOf="@id/gl_margin_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_report" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_margin_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_margin_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="304dp" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

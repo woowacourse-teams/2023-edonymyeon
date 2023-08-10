@@ -62,7 +62,8 @@ public enum ExceptionInformation {
     CONSUMPTION_PERIOD_MONTH_ILLEGAL(6548, "해당 기간의 소비 금액은 조회할 수 없습니다."),
 
     // 9___: 어드민 페이지 관련
-    LOGGING_TYPE_NOT_EXISTS(9001,"존재하지 않는 로그 타입입니다.");
+    LOGGING_TYPE_NOT_EXISTS(9001,"존재하지 않는 로그 타입입니다."),
+    ABUSING_TYPE_NOT_FOUND(9100, "존재하지 않는 리포팅 분류입니다.");
 
     private int code;
 
