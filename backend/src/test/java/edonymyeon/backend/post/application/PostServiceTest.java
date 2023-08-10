@@ -23,6 +23,7 @@ import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.MockMultipartFileTestSupport;
+import jakarta.persistence.EntityManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -225,7 +226,7 @@ class PostServiceTest implements ImageFileCleaner {
         }
 
         @Test
-        void 제목과_내용과_가격을_수정할_수_있다(@Autowired PostRepository postRepository) {
+        void 제목과_내용과_가격을_수정할_수_있다(@Autowired PostRepository postRepository, @Autowired EntityManager entityManager) {
             // given
             final PostRequest postRequest = new PostRequest(
                     "I love you",
@@ -234,6 +235,8 @@ class PostServiceTest implements ImageFileCleaner {
                     null
             );
             final PostResponse post = postService.createPost(memberId, postRequest);
+            System.out.println(postRepository.findById(post.id()).get().getCreatedAt());
+            System.out.println(postRepository.findById(post.id()).get().getModifiedAt());
 
             // when
             final PostModificationRequest updatedPostRequest = new PostModificationRequest(
@@ -253,6 +256,11 @@ class PostServiceTest implements ImageFileCleaner {
                         softly.assertThat(findPost.getPrice()).isEqualTo(updatedPostRequest.price());
                     }
             );
+
+            entityManager.flush();
+            entityManager.clear();
+            System.out.println(postRepository.findById(post.id()).get().getCreatedAt());
+            System.out.println(postRepository.findById(post.id()).get().getModifiedAt());
         }
 
         @Nested
