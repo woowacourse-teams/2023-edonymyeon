@@ -8,6 +8,9 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.responseH
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
@@ -54,6 +57,7 @@ public class AuthControllerDocsTest extends DocsTest {
         };
 
         final RestDocumentationResultHandler 문서화 = document("login",
+                preprocessRequest(prettyPrint()),
                 requestFields(로그인_요청_파라미터),
                 responseHeaders(응답_헤더)
         );
@@ -84,6 +88,7 @@ public class AuthControllerDocsTest extends DocsTest {
         };
 
         final RestDocumentationResultHandler 문서화 = document("validate-join",
+                preprocessResponse(prettyPrint()),
                 queryParameters(요청_쿼리_파라미터),
                 responseFields(응답값)
         );
@@ -110,6 +115,7 @@ public class AuthControllerDocsTest extends DocsTest {
         };
 
         final RestDocumentationResultHandler 문서화 = document("join",
+                preprocessRequest(prettyPrint()),
                 requestFields(요청값)
         );
 
