@@ -62,7 +62,8 @@ public enum ExceptionInformation {
 
     // 9___: 어드민 페이지 관련
     LOGGING_TYPE_NOT_EXISTS(9001,"존재하지 않는 로그 타입입니다."),
-    ABUSING_TYPE_NOT_FOUND(9100, "존재하지 않는 리포팅 분류입니다.");
+    ABUSING_TYPE_NOT_FOUND(9100, "존재하지 않는 리포팅 분류입니다."),
+    NOTIFICATION_REQUEST_FAILED(9200, "IOException으로 인해 알림 발송 요청에 실패했습니다.");
 
     private int code;
 
