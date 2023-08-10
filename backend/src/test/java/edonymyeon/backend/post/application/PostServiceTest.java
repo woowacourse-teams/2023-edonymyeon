@@ -226,7 +226,7 @@ class PostServiceTest implements ImageFileCleaner {
         }
 
         @Test
-        void 제목과_내용과_가격을_수정할_수_있다(@Autowired PostRepository postRepository, @Autowired EntityManager entityManager) {
+        void 제목과_내용과_가격을_수정할_수_있다(@Autowired PostRepository postRepository) {
             // given
             final PostRequest postRequest = new PostRequest(
                     "I love you",
