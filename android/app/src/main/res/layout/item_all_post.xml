@@ -13,6 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:elevation="20dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -20,15 +21,15 @@
             android:id="@+id/tv_all_post_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16.95dp"
-            android:layout_marginTop="11dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
             android:ellipsize="end"
             android:fontFamily="@font/dohyeon"
             android:lines="1"
             android:maxLines="1"
             android:text="@{allPostItem.title}"
             android:textColor="@color/black_434343"
-            android:textSize="12sp"
+            android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.68"
@@ -38,15 +39,15 @@
             android:id="@+id/tv_all_post_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:fontFamily="@font/dohyeon"
             android:lineSpacingExtra="2sp"
             android:lines="2"
             android:maxLines="2"
             android:text="@{allPostItem.content}"
-            android:textColor="@color/black_434343"
-            android:textSize="8sp"
+            android:textColor="@color/gray_7c7a7a"
+            android:textSize="12sp"
             app:layout_constraintStart_toStartOf="@id/tv_all_post_title"
             app:layout_constraintTop_toBottomOf="@id/tv_all_post_title"
             app:layout_constraintWidth_percent="0.68"
@@ -57,22 +58,21 @@
             android:id="@+id/tv_all_post_name_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:layout_marginBottom="10dp"
             android:fontFamily="@font/dohyeon"
             android:lines="1"
             android:text="@{allPostItem.nickname + ` | ` + allPostItem.date}"
             android:textColor="@color/black_434343"
             android:textSize="8sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/tv_all_post_title"
             app:layout_constraintTop_toBottomOf="@id/tv_all_post_content"
             tools:ignore="SmallSp"
             tools:text="로피 | 1일전" />
 
         <ImageView
-
             android:id="@+id/iv_all_post_thumb_nail"
+            imgUrlCenterCrop="@{allPostItem.thumbnailUrl}"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scaleType="centerCrop"
@@ -84,5 +84,14 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.16"
             tools:src="@drawable/ic_launcher_background" />
+
+        <Space
+            android:id="@+id/space_writer_bottom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,360:16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_all_post_name_date" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
