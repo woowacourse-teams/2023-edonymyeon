@@ -85,7 +85,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setRetrofitToken() {
         RetrofitClient.getInstance().updateAccessToken(
-            AuthLocalDataSource.getInstance(sharedPreferences).getAuthToken() ?: "",
+            AuthLocalDataSource.getInstance(sharedPreferences).getAuthToken(),
         )
     }
 

@@ -24,10 +24,10 @@ object PreferenceUtil {
     }
 
     fun getValue(key: String): String? {
-        return sharedPreferences.getString(key, "")
+        return sharedPreferences.getString(key, null)
     }
 
-    fun setValue(key: String, value: String) {
+    fun setValue(key: String, value: String?) {
         sharedPreferences.edit().putString(key, value).apply()
     }
 }
