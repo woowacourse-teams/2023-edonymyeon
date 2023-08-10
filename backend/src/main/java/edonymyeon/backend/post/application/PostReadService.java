@@ -125,13 +125,14 @@ public class PostReadService {
         return PostSlice.from(foundPosts);
     }
 
-    public Slice<GeneralPostInfoResponse> findHotPosts(final HotFindingCondition hotFindingCondition) {
+    public PostSlice<GeneralPostInfoResponse> findHotPosts(final HotFindingCondition hotFindingCondition) {
         Slice<Post> hotPost = postRepository.findHotPosts(
                 HotPostPolicy.getFindPeriod(),
                 HotPostPolicy.VIEW_COUNT_WEIGHT,
                 HotPostPolicy.THUMBS_COUNT_WEIGHT,
                 hotFindingCondition.toPage()
         );
-        return hotPost.map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
+        Slice<GeneralPostInfoResponse> hotPostSlice = hotPost.map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
+        return PostSlice.from(hotPostSlice);
     }
 }

@@ -40,12 +40,12 @@ public class PostReadController {
     }
 
     @GetMapping("/posts/hot")
-    public ResponseEntity<Slice<GeneralPostInfoResponse>> findHotPosts(
+    public ResponseEntity<PostSlice<GeneralPostInfoResponse>> findHotPosts(
             @HotPostSizing HotFindingCondition hotFindingCondition
     ) {
-        Slice<GeneralPostInfoResponse> posts = postReadService.findHotPosts(hotFindingCondition);
+        PostSlice<GeneralPostInfoResponse> hotPosts = postReadService.findHotPosts(hotFindingCondition);
         return ResponseEntity.ok()
-                .body(posts);
+                .body(hotPosts);
     }
 
     @GetMapping("/search")
