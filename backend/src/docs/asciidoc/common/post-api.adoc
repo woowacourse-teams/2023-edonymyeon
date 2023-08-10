@@ -6,7 +6,7 @@
 operation::post-create[snippets='request-headers,request-parts,http-request,http-response,response-fields']
 
 === 게시글 전체 조회
-operation::post-findAll[snippets='query-parameters,http-response']
+operation::post-findAll[snippets='query-parameters,http-request,http-response']
 
 === 게시글 상세 조회
 
