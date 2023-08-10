@@ -9,6 +9,7 @@ import com.domain.edonymyeon.model.Recommendation
 import com.domain.edonymyeon.model.Writer
 import com.domain.edonymyeon.repository.PostRepository
 import com.domain.edonymyeon.repository.RecommendRepository
+import com.domain.edonymyeon.repository.ReportRepository
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +32,7 @@ class PostDetailViewModelTest() {
     private lateinit var viewModel: PostDetailViewModel
     private lateinit var postRepository: PostRepository
     private lateinit var recommendRepository: RecommendRepository
+    private lateinit var reportRepository: ReportRepository
 
     private val postId = 1L
     private fun createPost(
@@ -76,7 +78,8 @@ class PostDetailViewModelTest() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         postRepository = mockk()
         recommendRepository = mockk()
-        viewModel = PostDetailViewModel(postRepository, recommendRepository)
+        reportRepository = mockk()
+        viewModel = PostDetailViewModel(postRepository, recommendRepository, reportRepository)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

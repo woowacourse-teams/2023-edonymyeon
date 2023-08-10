@@ -34,31 +34,8 @@ import org.springframework.http.MediaType;
 @SuppressWarnings("NonAsciiCharacters")
 public class PostIntegrationTest extends IntegrationTest implements ImageFileCleaner {
 
-    private static final File 이미지1 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
-    private static final File 이미지2 = new File("./src/test/resources/static/img/file/test_image_2.jpg");
-
     @Value("${domain}")
     private String domain;
-
-    private Member 사용자를_하나_만든다() {
-        return memberTestSupport.builder().build();
-    }
-
-    private ExtractableResponse<Response> 게시글을_하나_만든다(final Member member) {
-        return postIntegrationTestSupport.builder()
-                .member(member)
-                .title("this is title")
-                .content("this is content")
-                .price(1000L)
-                .image1(이미지1)
-                .image2(이미지2)
-                .build();
-    }
-
-    private long 응답의_location헤더에서_id를_추출한다(final ExtractableResponse<Response> 게시글_생성_요청_결과) {
-        final String location = 게시글_생성_요청_결과.header("location");
-        return Long.parseLong(location.split("/")[2]);
-    }
 
     @Test
     void 사진을_첨부해서_게시글_작성_가능하다() {
@@ -656,15 +633,5 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                             .isEqualTo(POST_IMAGE_COUNT_INVALID.getMessage());
                 }
         );
-    }
-
-    private ExtractableResponse<Response> 게시글_하나를_상세_조회한다(final Member 열람인, final long 게시글_id) {
-        return RestAssured
-                .given()
-                .when()
-                .auth().preemptive().basic(열람인.getEmail(), 열람인.getPassword())
-                .get("/posts/" + 게시글_id)
-                .then()
-                .extract();
     }
 }

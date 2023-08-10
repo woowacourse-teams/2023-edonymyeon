@@ -8,6 +8,9 @@ plugins {
     kotlin("android") version kotlinVersion apply false
     kotlin("jvm") version kotlinVersion apply false
     id("org.jlleitschuh.gradle.ktlint") version "10.3.0" apply false
+
+    id("com.google.gms.google-services") version "4.3.15" apply false
+    id("com.google.firebase.crashlytics") version "2.9.8" apply false
 }
 
 allprojects {
