@@ -37,11 +37,12 @@ public class PostReadService {
 
     private final Domain domain;
 
-    public Slice<GeneralPostInfoResponse> findPostsByPagingCondition(
+    public PostSlice<GeneralPostInfoResponse> findPostsByPagingCondition(
             final GeneralFindingCondition generalFindingCondition) {
         PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
-        return postRepository.findAllBy(pageRequest)
+        Slice<GeneralPostInfoResponse> posts = postRepository.findAllBy(pageRequest)
                 .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
+        return PostSlice.from(posts);
     }
 
     private static PageRequest convertConditionToPageRequest(final GeneralFindingCondition generalFindingCondition) {
@@ -114,13 +115,14 @@ public class PostReadService {
         );
     }
 
-    public Slice<GeneralPostInfoResponse> searchPosts(final String searchWord,
+    public PostSlice<GeneralPostInfoResponse> searchPosts(final String searchWord,
                                                       final GeneralFindingCondition generalFindingCondition) {
         final Specification<Post> searchResults = PostSpecification.searchBy(searchWord);
         final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
 
-        final Slice<Post> foundPosts = postRepository.findAll(searchResults, pageRequest);
-        return foundPosts.map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
+        Slice<GeneralPostInfoResponse> foundPosts = postRepository.findAll(searchResults, pageRequest)
+                .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
+        return PostSlice.from(foundPosts);
     }
 
     public Slice<GeneralPostInfoResponse> findHotPosts(final HotFindingCondition hotFindingCondition) {

@@ -5,12 +5,12 @@ import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.HotFindingCondition;
 import edonymyeon.backend.post.application.PostReadService;
+import edonymyeon.backend.post.application.PostSlice;
 import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
 import edonymyeon.backend.post.ui.annotation.HotPostSizing;
 import edonymyeon.backend.post.ui.annotation.PostPaging;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Slice;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,9 +24,9 @@ public class PostReadController {
     private final PostReadService postReadService;
 
     @GetMapping("/posts")
-    public ResponseEntity<Slice<GeneralPostInfoResponse>> findAllPosts(
+    public ResponseEntity<PostSlice<GeneralPostInfoResponse>> findAllPosts(
             @PostPaging GeneralFindingCondition generalFindingCondition) {
-        Slice<GeneralPostInfoResponse> posts = postReadService.findPostsByPagingCondition(generalFindingCondition);
+        PostSlice<GeneralPostInfoResponse> posts = postReadService.findPostsByPagingCondition(generalFindingCondition);
         return ResponseEntity.ok()
                 .body(posts);
     }
@@ -49,12 +49,12 @@ public class PostReadController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Slice<GeneralPostInfoResponse>> searchPosts(
+    public ResponseEntity<PostSlice<GeneralPostInfoResponse>> searchPosts(
             @RequestParam String query,
             @PostPaging GeneralFindingCondition generalFindingCondition
     ) {
-        Slice<GeneralPostInfoResponse> posts = postReadService.searchPosts(query, generalFindingCondition);
+        PostSlice<GeneralPostInfoResponse> searchPosts = postReadService.searchPosts(query, generalFindingCondition);
         return ResponseEntity.ok()
-                .body(posts);
+                .body(searchPosts);
     }
 }

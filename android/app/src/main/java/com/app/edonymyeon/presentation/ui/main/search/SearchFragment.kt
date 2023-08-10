@@ -36,7 +36,21 @@ class SearchFragment : Fragment() {
         setSearchAdapter()
         setQuerySearchListener()
         setResultScrollListener()
+        setClickListener()
+        setFocusChangeListener()
+    }
+
+    private fun setClickListener() {
         binding.searchView.setOnClickListener {
+            binding.searchView.requestFocus()
+        }
+    }
+
+    private fun setFocusChangeListener() {
+        binding.searchView.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                binding.searchView.isIconified = false
+            }
         }
     }
 

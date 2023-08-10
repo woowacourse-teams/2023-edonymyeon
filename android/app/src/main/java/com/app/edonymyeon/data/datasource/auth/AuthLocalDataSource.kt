@@ -6,7 +6,7 @@ class AuthLocalDataSource private constructor(private val sharedPreferences: Sha
     AuthDataSource.Local {
 
     override fun getAuthToken(): String? {
-        return sharedPreferences.getString(USER_ACCESS_TOKEN, "")
+        return sharedPreferences.getString(USER_ACCESS_TOKEN, null)
     }
 
     override fun setAuthToken(token: String) {
