@@ -135,26 +135,45 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="@{@string/my_page_price(viewModel.consumptionOnThisMonth.saving)}"
+                    android:text="@{@string/all_price(viewModel.consumptionOnThisMonth.saving)}"
                     android:textColor="@color/gray_434343"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/nanumsquare"
                     app:layout_constraintBottom_toBottomOf="@id/tv_saving_title"
                     app:layout_constraintStart_toEndOf="@id/tv_saving_title"
                     app:layout_constraintTop_toTopOf="@id/tv_saving_title"
-                    tools:text="15,000원" />
+                    tools:text="15,000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all_price_unit"
+                    android:textColor="@color/gray_434343"
+                    app:layout_constraintStart_toEndOf="@id/tv_my_saving"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tv_saving_title"
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/tv_my_purchase"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="@{@string/my_page_price(viewModel.consumptionOnThisMonth.purchase)}"
+                    android:text="@{@string/all_price(viewModel.consumptionOnThisMonth.purchase)}"
                     android:textColor="@color/gray_434343"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/nanumsquare"
                     app:layout_constraintBottom_toBottomOf="@id/tv_purchase_title"
                     app:layout_constraintStart_toEndOf="@id/tv_purchase_title"
                     app:layout_constraintTop_toTopOf="@id/tv_purchase_title"
-                    tools:text="15,000원" />
+                    tools:text="15,000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all_price_unit"
+                    android:textColor="@color/gray_434343"
+                    app:layout_constraintStart_toEndOf="@id/tv_my_purchase"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tv_purchase_title"/>
 
                 <Button
                     android:id="@+id/btn_login"

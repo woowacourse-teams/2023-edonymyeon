@@ -156,14 +156,34 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_post_time" />
 
                 <TextView
+                    android:id="@+id/tv_price_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all_price_title"
+                    app:layout_constraintTop_toBottomOf="@id/space_price_top"
+                    app:layout_constraintStart_toEndOf="@id/space_content_start"
+                    android:textSize="14sp"/>
+
+                <TextView
                     android:id="@+id/tv_price"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nanumsquare"
                     android:text="@{@string/all_price(postViewModel.post.price)}"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toTopOf="@id/tv_price_title"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_price_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_price_title"
+                    tools:text="13,000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:textSize="14sp"
-                    app:layout_constraintStart_toEndOf="@id/space_content_start"
-                    app:layout_constraintTop_toBottomOf="@id/space_price_top"
-                    tools:text="가격: 13,000원" />
+                    app:layout_constraintStart_toEndOf="@id/tv_price"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tv_price_title"
+                    android:text="@string/all_price_unit"/>
 
                 <Space
                     android:id="@+id/space_price_bottom"
