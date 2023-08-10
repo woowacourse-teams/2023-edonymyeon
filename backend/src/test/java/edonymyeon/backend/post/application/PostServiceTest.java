@@ -96,7 +96,7 @@ class PostServiceTest implements ImageFileCleaner {
 
     @Test
     void 작성자의_프로필_사진이_없더라도_상세조회가_가능하다() throws IOException {
-        final Member member = new Member("anonymous@gmail.com", "password123!", "엘렐레", null);
+        final Member member = new Member("anonymous@gmail.com", "password123!", "엘렐레", null, "unknownDevice");
         memberRepository.save(member);
 
         final ActiveMemberId memberId = new ActiveMemberId(member.getId());

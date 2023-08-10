@@ -1,6 +1,7 @@
 package edonymyeon.backend.support;
 
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
+import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ public class MemberTestSupport {
     private static final String DEFAULT_EMAIL = "email";
     private static final String DEFAULT_PASSWORD = "password123!";
     private static final String DEFAULT_NICK_NAME = "nickName";
+    private static final String DEFAULT_DEVICE_TOKEN = "unknownDevice";
     private static int emailCount = 1;
     private static int nickNameCount = 1;
 
@@ -34,6 +36,8 @@ public class MemberTestSupport {
 
         private ProfileImageInfo profileImageInfo;
 
+        private String deviceToken;
+
         public MemberBuilder email(final String email) {
             this.email = email;
             return this;
@@ -54,13 +58,19 @@ public class MemberTestSupport {
             return this;
         }
 
+        public MemberBuilder deviceToken(final String deviceToken) {
+            this.deviceToken = deviceToken;
+            return this;
+        }
+
         public Member build() {
             return memberRepository.save(
                     new Member(
                             email == null ? (DEFAULT_EMAIL + emailCount++) : email,
                             password == null ? DEFAULT_PASSWORD : password,
                             nickname == null ? (DEFAULT_NICK_NAME + nickNameCount++) : nickname,
-                            profileImageInfo == null ? profileImageInfoTestSupport.builder().build() : profileImageInfo
+                            profileImageInfo == null ? profileImageInfoTestSupport.builder().build() : profileImageInfo,
+                            deviceToken == null ? DEFAULT_DEVICE_TOKEN : deviceToken
                     )
             );
         }

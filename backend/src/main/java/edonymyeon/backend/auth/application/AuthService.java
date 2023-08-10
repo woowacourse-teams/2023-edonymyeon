@@ -59,7 +59,8 @@ public class AuthService {
                 joinRequest.email(),
                 joinRequest.password(),
                 joinRequest.nickname(),
-                null
+                null,
+                joinRequest.deviceToken()
         );
 
         validateDuplicateEmail(joinRequest.email());
