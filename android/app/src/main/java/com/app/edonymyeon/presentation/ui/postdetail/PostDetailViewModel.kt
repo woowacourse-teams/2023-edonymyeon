@@ -54,8 +54,6 @@ class PostDetailViewModel(
                     _post.value = it.toUiModel()
                 }.onFailure {
                     it as CustomThrowable
-                    when (it.code) {
-                    }
                 }
         }
     }
@@ -66,8 +64,6 @@ class PostDetailViewModel(
                 .onSuccess {}
                 .onFailure {
                     it as CustomThrowable
-                    when (it.code) {
-                    }
                 }
         }
     }
@@ -78,8 +74,6 @@ class PostDetailViewModel(
                 .onSuccess { }
                 .onFailure {
                     it as CustomThrowable
-                    when (it.code) {
-                    }
                 }
         }
     }
