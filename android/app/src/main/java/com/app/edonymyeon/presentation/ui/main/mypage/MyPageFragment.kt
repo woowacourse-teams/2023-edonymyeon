@@ -64,6 +64,7 @@ class MyPageFragment : Fragment() {
     }
 
     private fun setViewForLogin() {
+        binding.chartMyPayment.isVisible = true
         binding.tvRequiredLogin.isVisible = false
         binding.btnLogin.isVisible = false
         binding.tvLogout.isVisible = true
