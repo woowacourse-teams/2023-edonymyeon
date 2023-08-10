@@ -7,17 +7,28 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import app.edonymyeon.databinding.FragmentHomeBinding
+import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
+import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.presentation.ui.main.home.adapter.AllPostAdapter
 import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
-import com.app.edonymyeon.presentation.uimodel.AllPostItemUiModel
 
 class HomeFragment : Fragment() {
     private val binding: FragmentHomeBinding by lazy {
         FragmentHomeBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels {
+        HomeViewModelFactory(
+            PostRepositoryImpl(PostRemoteDataSource()),
+        )
+    }
+
+    private val allPostAdapter by lazy {
+        AllPostAdapter { id ->
+            startActivity(PostDetailActivity.newIntent(requireContext(), id))
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,21 +43,34 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initObserve()
+        initAllPostAdapter()
+        initListener()
+    }
+
+    override fun onResume() {
+        super.onResume()
         viewModel.getAllPosts()
-        binding.ivAllPostMore.setOnClickListener {
-            startActivity(PostActivity.newIntent(requireContext()))
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        if (!hidden) {
+            viewModel.getAllPosts()
         }
     }
 
     private fun initObserve() {
         viewModel.allPosts.observe(viewLifecycleOwner) {
-            initAllPostAdapter(it)
+            allPostAdapter.setAllPosts(it)
         }
     }
 
-    private fun initAllPostAdapter(it: List<AllPostItemUiModel>) {
-        binding.rvAllPost.adapter = AllPostAdapter(it) { id ->
-            PostDetailActivity.newIntent(requireContext(), id)
+    private fun initAllPostAdapter() {
+        binding.rvAllPost.adapter = allPostAdapter
+    }
+
+    private fun initListener() {
+        binding.ivAllPostMore.setOnClickListener {
+            startActivity(PostActivity.newIntent(requireContext()))
         }
     }
 }
