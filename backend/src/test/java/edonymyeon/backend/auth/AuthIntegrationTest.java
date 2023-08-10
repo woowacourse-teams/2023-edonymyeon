@@ -105,7 +105,7 @@ public class AuthIntegrationTest extends IntegrationTest {
 
     @Test
     public void 회원가입_성공() {
-        final JoinRequest request = new JoinRequest("email@naver.com", "password123!", "kerrobabo");
+        final JoinRequest request = new JoinRequest("email@naver.com", "password123!", "kerrobabo", "unknownDevice");
 
         final ExtractableResponse<Response> response = RestAssured
                 .given()
@@ -127,7 +127,7 @@ public class AuthIntegrationTest extends IntegrationTest {
                 .email(duplicatedEmail)
                 .build();
 
-        final JoinRequest request = new JoinRequest(duplicatedEmail, "password123!", "kerrobabo");
+        final JoinRequest request = new JoinRequest(duplicatedEmail, "password123!", "kerrobabo", "unknownDevice");
 
         final ExtractableResponse<Response> response = RestAssured
                 .given()
@@ -149,7 +149,7 @@ public class AuthIntegrationTest extends IntegrationTest {
                 .nickname(duplicatedNickname)
                 .build();
 
-        final JoinRequest request = new JoinRequest("foxbabo", "password123!", duplicatedNickname);
+        final JoinRequest request = new JoinRequest("foxbabo", "password123!", duplicatedNickname, "unknownDevice");
 
         final ExtractableResponse<Response> response = RestAssured
                 .given()

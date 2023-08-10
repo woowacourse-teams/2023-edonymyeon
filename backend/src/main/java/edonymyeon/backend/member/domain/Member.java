@@ -54,13 +54,20 @@ public class Member {
     @Embedded
     private Device device;
 
-    public Member(final String email, final String password, final String nickname,
-                  final ProfileImageInfo profileImageInfo) {
+    public Member(
+            final String email,
+            final String password,
+            final String nickname,
+            final ProfileImageInfo profileImageInfo,
+            final String deviceToken
+    ) {
+
         validate(email, password, nickname);
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.profileImageInfo = profileImageInfo;
+        this.device = new Device(deviceToken);
     }
 
     public Member(final Long id) {

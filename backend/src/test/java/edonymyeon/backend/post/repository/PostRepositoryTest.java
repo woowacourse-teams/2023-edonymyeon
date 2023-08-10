@@ -52,7 +52,8 @@ class PostRepositoryTest {
                 "email",
                 "password123!",
                 "nickname",
-                null
+                null,
+                "unknownDevice"
         );
         memberRepository.save(member);
     }
