@@ -235,8 +235,6 @@ class PostServiceTest implements ImageFileCleaner {
                     null
             );
             final PostResponse post = postService.createPost(memberId, postRequest);
-            System.out.println(postRepository.findById(post.id()).get().getCreatedAt());
-            System.out.println(postRepository.findById(post.id()).get().getModifiedAt());
 
             // when
             final PostModificationRequest updatedPostRequest = new PostModificationRequest(
@@ -256,11 +254,6 @@ class PostServiceTest implements ImageFileCleaner {
                         softly.assertThat(findPost.getPrice()).isEqualTo(updatedPostRequest.price());
                     }
             );
-
-            entityManager.flush();
-            entityManager.clear();
-            System.out.println(postRepository.findById(post.id()).get().getCreatedAt());
-            System.out.println(postRepository.findById(post.id()).get().getModifiedAt());
         }
 
         @Nested
