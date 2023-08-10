@@ -9,6 +9,7 @@ operation::my-posts[snippets='request-headers,query-parameters,http-request,resp
 === 회원 정보 수정
 
 === 최근 1개월/6개월 간 절약/소비 금액 확인
+operation::recent-consumptions[snippets='query-parameters,http-request,http-response']
 
 === 구매 확정
 operation::purchase-confirm[snippets='path-parameters,request-fields,http-request,http-response']
