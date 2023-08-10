@@ -28,7 +28,7 @@ class PostActivity : AppCompatActivity() {
     }
 
     private val isLogin: Boolean
-        get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != ""
+        get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

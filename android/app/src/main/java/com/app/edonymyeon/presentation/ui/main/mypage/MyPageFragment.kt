@@ -36,9 +36,6 @@ class MyPageFragment : Fragment() {
         )
     }
 
-    private val isLogin: Boolean
-        get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != ""
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
