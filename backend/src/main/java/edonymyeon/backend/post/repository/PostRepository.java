@@ -14,6 +14,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificationExecutor<Post> {
 
@@ -43,4 +44,8 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
             @Param("viewCountWeight") final int viewCountWeight,
             @Param("thumbsCountWeight") final int thumbsCountWeight,
             Pageable pageable);
+
+    @EntityGraph(attributePaths = "member")
+    @Query("SELECT p FROM Post p WHERE p.id IN (:postIds)")
+    List<Post> findByIds(List<Long> postIds);
 }

@@ -1,5 +1,7 @@
 package edonymyeon.backend.post.application;
 
+import edonymyeon.backend.cache.BooleanCacheService;
+import edonymyeon.backend.cache.LongCacheService;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.domain.Domain;
@@ -18,6 +20,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -36,6 +39,10 @@ public class PostReadService {
     private final PostThumbsService thumbsService;
 
     private final Domain domain;
+
+    private final BooleanCacheService booleanCacheService;
+
+    private final LongCacheService longCacheService;
 
     public Slice<GeneralPostInfoResponse> findPostsByPagingCondition(
             final GeneralFindingCondition generalFindingCondition) {
@@ -124,12 +131,41 @@ public class PostReadService {
     }
 
     public Slice<GeneralPostInfoResponse> findHotPosts(final HotFindingCondition hotFindingCondition) {
-        Slice<Post> hotPost = postRepository.findHotPosts(
+        String postIdsKey = HotPostPolicy.getPostIdsCacheKey(hotFindingCondition);
+        String hasNextKey = HotPostPolicy.getHasNextCacheKey(hotFindingCondition);
+
+        if(longCacheService.hasCache(postIdsKey)){
+            return findHotPostsFromCache(postIdsKey, hasNextKey);
+        }
+        return findHotPostFromRepository(hotFindingCondition, postIdsKey, hasNextKey);
+    }
+
+    private Slice<GeneralPostInfoResponse> findHotPostFromRepository(
+            final HotFindingCondition hotFindingCondition,
+            final String postIdsKey,
+            final String hasNextKey
+    ) {
+        final Slice<Post> hotPost = postRepository.findHotPosts(
                 HotPostPolicy.getFindPeriod(),
                 HotPostPolicy.VIEW_COUNT_WEIGHT,
                 HotPostPolicy.THUMBS_COUNT_WEIGHT,
                 hotFindingCondition.toPage()
         );
+
+        final List<Long> hotPostIds = hotPost.stream()
+                .map(Post::getId)
+                .toList();
+
+        longCacheService.save(postIdsKey, hotPostIds);
+        booleanCacheService.save(hasNextKey, hotPost.hasNext());
+
         return hotPost.map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
+    }
+
+    private Slice<GeneralPostInfoResponse> findHotPostsFromCache(String postIdsKey, String hasNextKey) {
+        List<Long> postIds = longCacheService.getPostIds(postIdsKey);
+        List<Post> posts = postRepository.findByIds(postIds);
+        boolean hasNext = booleanCacheService.getHasNext(hasNextKey);
+        return null;
     }
 }
