@@ -9,7 +9,6 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
-    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name="com.app.edonymyeon.application.EdonymyeonApplication"
@@ -26,9 +25,11 @@
 
         <activity
             android:name="com.app.edonymyeon.presentation.ui.login.LoginActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true">
         </activity>
         <activity android:name="com.app.edonymyeon.presentation.ui.signup.SignUpActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true"/>
         <activity
             android:name="com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity"
