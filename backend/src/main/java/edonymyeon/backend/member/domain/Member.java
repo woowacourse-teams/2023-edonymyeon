@@ -105,4 +105,8 @@ public class Member {
         }
         throw new EdonymyeonException(MEMBER_PASSWORD_NOT_MATCH);
     }
+
+    public String getDeviceToken() {
+        return this.device.getDeviceToken();
+    }
 }
