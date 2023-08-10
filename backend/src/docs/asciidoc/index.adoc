@@ -1,0 +1,19 @@
+= 이돈이면 API 명세서
+:toc: left
+:toclevels: 2
+:doctype: book
+:source-highlighter: highlightjs
+:sectlinks:
+:sectnums:
+
+include::common/authentication-api.adoc[]
+
+include::common/post-api.adoc[]
+
+include::common/thumbs-api.adoc[]
+
+include::common/search-api.adoc[]
+
+include::common/mypage-api.adoc[]
+
+include::common/report-api.adoc[]

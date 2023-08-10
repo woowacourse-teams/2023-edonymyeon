@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import app.edonymyeon.R
@@ -17,6 +18,13 @@ import com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 
 class PostActivity : AppCompatActivity() {
+    private val activityLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == PostEditorActivity.RESULT_RELOAD_CODE) {
+                loadNewData()
+            }
+        }
+
     private val binding: ActivityPostBinding by lazy {
         ActivityPostBinding.inflate(layoutInflater)
     }
@@ -31,12 +39,7 @@ class PostActivity : AppCompatActivity() {
         initAppbar()
         setPostAdapter()
         setListener()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.clearResult()
-        viewModel.getPosts()
+        loadNewData()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -99,8 +102,13 @@ class PostActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadNewData() {
+        viewModel.clearResult()
+        viewModel.getPosts()
+    }
+
     private fun navigateToPostEditor() {
-        startActivity(PostEditorActivity.newIntent(this, PostEditorActivity.POST_CODE))
+        activityLauncher.launch(PostEditorActivity.newIntent(this, PostEditorActivity.POST_CODE))
     }
 
     private fun navigateToLogin() {

@@ -1,14 +1,5 @@
 package edonymyeon.backend.post.integration;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.AUTHORIZATION_EMPTY;
-import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_DOMAIN_INVALID;
-import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_STORE_NAME_INVALID;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_IMAGE_COUNT_INVALID;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
@@ -23,13 +14,17 @@ import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.io.File;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import static edonymyeon.backend.global.exception.ExceptionInformation.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class PostIntegrationTest extends IntegrationTest implements ImageFileCleaner {
@@ -269,7 +264,7 @@ public class PostIntegrationTest extends IntegrationTest implements ImageFileCle
                                 .size(3)
                                 .page(1)
                                 .build())
-                .get().toList().get(0);
+                .getContent().get(0);
 
         assertSoftly(softly -> {
             softly.assertThat(jsonPath.getList("content")).hasSize(3);

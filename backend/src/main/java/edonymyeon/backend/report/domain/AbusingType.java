@@ -3,7 +3,9 @@ package edonymyeon.backend.report.domain;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import java.util.Arrays;
+import lombok.Getter;
 
+@Getter
 public enum AbusingType {
     COMMERCIAL_PURPOSE(1),
     PERSONAL_INFORMATION_DISCLOSURE(2),
