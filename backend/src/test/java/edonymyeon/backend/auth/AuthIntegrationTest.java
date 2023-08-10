@@ -168,7 +168,7 @@ public class AuthIntegrationTest extends IntegrationTest {
         final Member member = memberTestSupport.builder()
                 .build();
 
-        final LoginRequest request = new LoginRequest(member.getEmail(), member.getPassword());
+        final LoginRequest request = new LoginRequest(member.getEmail(), member.getPassword(), "unknownDevice");
         System.out.println("request = " + request);
         final ExtractableResponse<Response> response = RestAssured
                 .given()
