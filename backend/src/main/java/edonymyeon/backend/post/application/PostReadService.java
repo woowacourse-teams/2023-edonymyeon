@@ -2,6 +2,8 @@ package edonymyeon.backend.post.application;
 
 import edonymyeon.backend.cache.BooleanCacheService;
 import edonymyeon.backend.cache.LongCacheService;
+import edonymyeon.backend.cache.BooleanCacheService;
+import edonymyeon.backend.cache.LongCacheService;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.domain.Domain;
@@ -20,7 +22,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -40,12 +41,11 @@ public class PostReadService {
 
     private final Domain domain;
 
-    public PostSlice<GeneralPostInfoResponse> findPostsByPagingCondition(
-            private final BooleanCacheService booleanCacheService;
+    private final BooleanCacheService booleanCacheService;
 
     private final LongCacheService longCacheService;
 
-    public Slice<GeneralPostInfoResponse> findPostsByPagingCondition(
+    public PostSlice<GeneralPostInfoResponse> findPostsByPagingCondition(
             final GeneralFindingCondition generalFindingCondition) {
         PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
         Slice<GeneralPostInfoResponse> posts = postRepository.findAllBy(pageRequest)
@@ -133,7 +133,7 @@ public class PostReadService {
         return PostSlice.from(foundPosts);
     }
 
-    public Slice<GeneralPostInfoResponse> findHotPosts(final HotFindingCondition hotFindingCondition) {
+    public PostSlice<GeneralPostInfoResponse> findHotPosts(final HotFindingCondition hotFindingCondition) {
         String postIdsKey = HotPostPolicy.getPostIdsCacheKey(hotFindingCondition);
         String hasNextKey = HotPostPolicy.getHasNextCacheKey(hotFindingCondition);
 
