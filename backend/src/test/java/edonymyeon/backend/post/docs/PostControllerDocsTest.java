@@ -7,7 +7,6 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -16,26 +15,19 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
-import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
-import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
-import edonymyeon.backend.post.application.dto.AllThumbsInPostResponse;
-import edonymyeon.backend.post.application.dto.ThumbsStatusInPostResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.thumbs.application.PostThumbsServiceImpl;
 import jakarta.servlet.http.Part;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import org.apache.http.entity.ContentType;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -46,7 +38,6 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
@@ -87,21 +78,14 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     private void 게시글_레포지토리를_모킹한다(final Post 게시글) {
         when(postRepository.findById(게시글.getId())).thenReturn(Optional.of(게시글));
         doNothing().when(postRepository).deleteById(게시글.getId());
-        when(postRepository.findAllBy(any())).thenReturn(new SliceImpl<>(List.of(게시글)));
     }
 
     private void 게시글_이미지_정보_레포지토리를_모킹한다() {
         doNothing().when(postImageInfoRepository).deleteAll(any());
     }
 
-    private void 추천_서비스를_모킹한다(final Member 회원, final Post 게시글) {
+    private void 추천_서비스를_모킹한다(final Post 게시글) {
         doNothing().when(postThumbsService).deleteAllThumbsInPost(게시글.getId());
-        when(postThumbsService
-                .findAllThumbsInPost(게시글.getId()))
-                .thenReturn(new AllThumbsInPostResponse(4, 5));
-        when(postThumbsService
-                .findThumbsStatusInPost(new ActiveMemberId(회원.getId()), 게시글.getId()))
-                .thenReturn(new ThumbsStatusInPostResponse(false, false));
     }
 
     @Test
@@ -174,7 +158,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);
         게시글_이미지_정보_레포지토리를_모킹한다();
-        추천_서비스를_모킹한다(글쓴이, 게시글);
+        추천_서비스를_모킹한다(게시글);
 
         final MockHttpServletRequestBuilder 게시글_삭제_요청 = delete("/posts/{postId}", 게시글.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -193,53 +177,6 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
         this.mockMvc.perform(게시글_삭제_요청)
                 .andExpect(status().isNoContent())
-                .andDo(문서화);
-    }
-
-    @Test
-    void 게시글을_전체_조회한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
-        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), LocalDateTime.now(), 0);
-
-        회원_레포지토리를_모킹한다(글쓴이);
-        게시글_레포지토리를_모킹한다(게시글);
-
-        final var 게시글_전체_조회_요청 = get("/posts")
-                .param("size", "10")
-                .param("page", "0")
-                .contentType(MediaType.APPLICATION_JSON_VALUE);
-
-        final RestDocumentationResultHandler 문서화 = document("post-findAll",
-                queryParameters(
-                        parameterWithName("size").description("한 페이지 당 조회할 게시글 수"),
-                        parameterWithName("page").description("조회할 게시글의 페이지")
-                )
-        );
-
-        this.mockMvc.perform(게시글_전체_조회_요청)
-                .andExpect(status().isOk())
-                .andDo(문서화);
-    }
-
-    @Test
-    void 게시글을_상세_조회한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
-        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), LocalDateTime.now(), 0);
-
-        회원_레포지토리를_모킹한다(글쓴이);
-        게시글_레포지토리를_모킹한다(게시글);
-        추천_서비스를_모킹한다(글쓴이, 게시글);
-
-        final var 게시글_상세_조회_요청 = get("/posts/{postId}", 게시글.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((글쓴이.getEmail() + ":" + 글쓴이.getPassword()).getBytes()));
-
-        final RestDocumentationResultHandler 문서화 = document("post-findOne");
-
-        this.mockMvc.perform(게시글_상세_조회_요청)
-                .andExpect(status().isOk())
                 .andDo(문서화);
     }
 }
