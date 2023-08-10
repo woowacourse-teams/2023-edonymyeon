@@ -1,9 +1,5 @@
 package edonymyeon.backend.post.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertAll;
-
 import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.global.exception.EdonymyeonException;
@@ -16,8 +12,6 @@ import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.repository.PostRepository;
-import java.io.IOException;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,6 +20,13 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
+
+import java.io.IOException;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SuppressWarnings("NonAsciiCharacters")
 @Import(TestConfig.class)
@@ -80,8 +81,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
     @Test
     void 작성된_모든_게시글을_조회할_수_있다() {
         final var postFindingCondition = GeneralFindingCondition.builder().build();
-        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition).get()
-                .toList();
+        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition).getContent();
 
         assertAll(
                 () -> assertThat(postFindingResponses).hasSize(3),
@@ -114,8 +114,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
     @Test
     void 게시글은_기본으로_등록일_내림차순으로_정렬된다() {
         final var postFindingCondition = GeneralFindingCondition.builder().build();
-        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition).get()
-                .toList();
+        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition).getContent();
         final var createdAts = postFindingResponses.stream()
                 .map(GeneralPostInfoResponse::createdAt)
                 .toList();
@@ -134,8 +133,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
         final var postFindingCondition = GeneralFindingCondition.builder()
                 .size(10)
                 .build();
-        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition).get()
-                .toList();
+        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition).getContent();
 
         assertThat(postFindingResponses)
                 .hasSize(10);
@@ -149,7 +147,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
                 .build();
         final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition);
 
-        assertThat(postFindingResponses.get().toList().get(0).title())
+        assertThat(postFindingResponses.getContent().get(0).title())
                 .isEqualTo(POST_REQUEST2_TITLE);
     }
 
@@ -162,8 +160,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
         postRepository.deleteAll();
 
         final var postFindingCondition = GeneralFindingCondition.builder().build();
-        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition).get()
-                .toList();
+        final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition).getContent();
 
         assertThat(postFindingResponses)
                 .isNotNull()
