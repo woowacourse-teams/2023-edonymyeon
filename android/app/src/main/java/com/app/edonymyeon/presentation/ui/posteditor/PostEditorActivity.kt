@@ -290,6 +290,7 @@ class PostEditorActivity : AppCompatActivity() {
         private const val KEY_POST_EDITOR_POST = "key_post_editor_post"
         const val POST_CODE = 2000
         const val UPDATE_CODE = 3000
+        const val RESULT_RELOAD_CODE = 1001
         private val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")
             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
@@ -298,8 +299,6 @@ class PostEditorActivity : AppCompatActivity() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
         )
-
-        const val RESULT_RELOAD_CODE = 1001
 
         fun newIntent(context: Context, code: Int): Intent {
             return Intent(context, PostEditorActivity::class.java).apply {
