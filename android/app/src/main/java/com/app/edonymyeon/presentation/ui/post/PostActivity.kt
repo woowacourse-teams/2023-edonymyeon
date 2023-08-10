@@ -8,10 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostBinding
-import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
-import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
 import com.app.edonymyeon.presentation.ui.post.adapter.PostAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
@@ -26,9 +24,6 @@ class PostActivity : AppCompatActivity() {
     private val viewModel: PostViewModel by lazy {
         PostViewModelFactory(PostRepositoryImpl(PostRemoteDataSource())).create(PostViewModel::class.java)
     }
-
-    private val isLogin: Boolean
-        get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,7 +88,7 @@ class PostActivity : AppCompatActivity() {
 
     private fun setListener() {
         binding.ivPostNew.setOnClickListener {
-            if (isLogin) {
+            if (viewModel.isLogin) {
                 navigateToPostEditor()
             } else {
                 binding.root.makeSnackbarWithEvent(

@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
+import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
+import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.uimodel.ConsumptionAmountUiModel
@@ -31,6 +33,9 @@ class MyPageViewModel(
     private val _consumptionOnThisMonth = MutableLiveData<ConsumptionAmountUiModel>()
     val consumptionOnThisMonth: LiveData<ConsumptionAmountUiModel>
         get() = _consumptionOnThisMonth
+
+    val isLogin: Boolean
+        get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
 
     fun getMonthLists(): List<String> =
         _consumptions.value?.toDomain()?.monthRange?.yearMonthList ?: emptyList()

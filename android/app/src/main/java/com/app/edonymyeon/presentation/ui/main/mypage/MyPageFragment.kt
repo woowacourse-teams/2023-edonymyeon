@@ -56,9 +56,7 @@ class MyPageFragment : Fragment() {
     }
 
     private fun setViewByLogin() {
-        val isLogin: Boolean = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
-
-        if (isLogin) {
+        if (viewModel.isLogin) {
             setViewForLogin()
         } else {
             setViewForNotLogin()

@@ -15,7 +15,7 @@ class AlarmFragment : Fragment() {
         FragmentAlarmBinding.inflate(layoutInflater)
     }
 
-    private val isLogin: Boolean
+    private val isLogin: Boolean // viewModel에 변수 정의할 예정
         get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
 
     override fun onCreateView(
