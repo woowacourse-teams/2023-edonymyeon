@@ -50,7 +50,7 @@ public class PostCreationDocsTest implements ImageFileCleaner {
     private MemberRepository memberRepository;
 
     private void 회원_레포지토리를_모킹한다(final Member 회원) {
-        when(memberRepository.findByEmailAndPassword(회원.getEmail(), 회원.getPassword())).thenReturn(
+        when(memberRepository.findByEmail(회원.getEmail())).thenReturn(
                 Optional.of(회원));
         when(memberRepository.findById(회원.getId())).thenReturn(Optional.of(회원));
     }
