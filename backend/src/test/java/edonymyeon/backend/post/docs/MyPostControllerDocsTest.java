@@ -6,6 +6,8 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -112,6 +114,7 @@ public class MyPostControllerDocsTest extends DocsTest {
         };
 
         final RestDocumentationResultHandler 문서화 = document("my-posts",
+                preprocessResponse(prettyPrint()),
                 requestHeaders(요청_헤더),
                 queryParameters(요청_쿼리_파라미터),
                 responseFields(응답)

@@ -6,6 +6,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -122,6 +124,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
         });
 
         final RestDocumentationResultHandler 문서화 = document("post-update",
+                preprocessResponse(prettyPrint()),
                 pathParameters(
                         parameterWithName("postId").description("게시글 id")
                 ),
