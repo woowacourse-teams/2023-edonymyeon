@@ -6,8 +6,10 @@
 operation::post-create[snippets='request-headers,request-parts,http-request,http-response,response-fields']
 
 === 게시글 전체 조회
+operation::post-findAll[snippets='request-headers,request-parts,http-request,http-response,response-fields']
 
 === 게시글 상세 조회
+operation::post-findOne[snippets='request-headers,request-parts,http-request,http-response,response-fields']
 
 === 게시글 수정
 
