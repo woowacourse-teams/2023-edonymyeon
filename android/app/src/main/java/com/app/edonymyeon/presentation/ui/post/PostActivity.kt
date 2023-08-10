@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import app.edonymyeon.R
@@ -15,6 +16,13 @@ import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity
 
 class PostActivity : AppCompatActivity() {
+    private val activityLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == PostEditorActivity.RESULT_RELOAD_CODE) {
+                loadNewData()
+            }
+        }
+
     private val binding: ActivityPostBinding by lazy {
         ActivityPostBinding.inflate(layoutInflater)
     }
@@ -28,7 +36,11 @@ class PostActivity : AppCompatActivity() {
         setContentView(binding.root)
         initAppbar()
         setPostAdapter()
+        setClickListener()
+        loadNewData()
+    }
 
+    private fun setClickListener() {
         binding.ivPostNew.setOnClickListener {
             startPostEditorActivity()
         }
@@ -62,12 +74,6 @@ class PostActivity : AppCompatActivity() {
         })
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.clearResult()
-        viewModel.getPosts()
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -82,13 +88,18 @@ class PostActivity : AppCompatActivity() {
     }
 
     private fun startPostEditorActivity() {
-        startActivity(PostEditorActivity.newIntent(this, PostEditorActivity.POST_CODE))
+        activityLauncher.launch(PostEditorActivity.newIntent(this, PostEditorActivity.POST_CODE))
     }
 
     private fun initAppbar() {
         setSupportActionBar(binding.tbPost)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = getString(R.string.post_all_post)
+    }
+
+    private fun loadNewData() {
+        viewModel.clearResult()
+        viewModel.getPosts()
     }
 
     companion object {

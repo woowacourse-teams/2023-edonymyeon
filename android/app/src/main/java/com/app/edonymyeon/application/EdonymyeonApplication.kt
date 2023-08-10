@@ -11,7 +11,7 @@ class EdonymyeonApplication : Application() {
 
         PreferenceUtil.init(applicationContext)
         RetrofitClient.getInstance().updateAccessToken(
-            PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) ?: "",
+            PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN),
         )
     }
 }

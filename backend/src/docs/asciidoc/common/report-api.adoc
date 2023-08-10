@@ -1,0 +1,5 @@
+[[authentication-api]]
+== 신고
+
+=== 신고 등록
+operation::report-save[snippets='http-request,http-response']
