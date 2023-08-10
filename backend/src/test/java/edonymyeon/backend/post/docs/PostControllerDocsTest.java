@@ -15,17 +15,15 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
-import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
-import edonymyeon.backend.thumbs.application.ThumbsService;
+import edonymyeon.backend.thumbs.application.PostThumbsServiceImpl;
 import jakarta.servlet.http.Part;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import org.apache.http.entity.ContentType;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -65,10 +63,10 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     private PostImageInfoRepository postImageInfoRepository;
 
     @MockBean
-    private ThumbsService thumbsService;
+    private PostThumbsServiceImpl postThumbsService;
 
     private void 회원_레포지토리를_모킹한다(final Member 회원) {
-        when(memberRepository.findByEmailAndPassword(회원.getEmail(), 회원.getPassword())).thenReturn(
+        when(memberRepository.findByEmail(회원.getEmail())).thenReturn(
                 Optional.of(회원));
         when(memberRepository.findById(회원.getId())).thenReturn(Optional.of(회원));
     }
@@ -83,13 +81,13 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     }
 
     private void 추천_서비스를_모킹한다(final Post 게시글) {
-        doNothing().when(thumbsService).deleteAllThumbsInPost(게시글.getId());
+        doNothing().when(postThumbsService).deleteAllThumbsInPost(게시글.getId());
     }
 
     @Test
     void 게시글을_수정한다() throws Exception {
         final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
-        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), LocalDateTime.now(), 0L);
+        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이);
         final PostImageInfo 유지하는_이미지_정보 = new PostImageInfo("stay.jpg", 게시글);
         final PostImageInfo 삭제될_이미지_정보 = new PostImageInfo("delete.jpg", 게시글);
         게시글.addPostImageInfo(유지하는_이미지_정보);
@@ -147,7 +145,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     @Test
     void 게시글을_삭제한다() throws Exception {
         final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
-        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), LocalDateTime.now(), 0L);
+        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이);
 
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);

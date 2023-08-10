@@ -15,7 +15,6 @@ import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -56,15 +55,15 @@ public class ThumbsControllerDocsTest {
     @BeforeEach
     void 회원_두명_가입하고_글쓰기_모킹() {
         글쓴이 = new Member(1L, "email", "password", "nickname", null);
-        when(memberRepository.findByEmailAndPassword(글쓴이.getEmail(), 글쓴이.getPassword())).thenReturn(Optional.of(글쓴이));
+        when(memberRepository.findByEmail(글쓴이.getEmail())).thenReturn(Optional.of(글쓴이));
         when(memberRepository.findById(글쓴이.getId())).thenReturn(Optional.of(글쓴이));
 
         반응_하는_사람 = new Member(2L, "email2", "password2", "nickname2", null);
-        when(memberRepository.findByEmailAndPassword(반응_하는_사람.getEmail(), 반응_하는_사람.getPassword())).thenReturn(
+        when(memberRepository.findByEmail(반응_하는_사람.getEmail())).thenReturn(
                 Optional.of(반응_하는_사람));
         when(memberRepository.findById(반응_하는_사람.getId())).thenReturn(Optional.of(반응_하는_사람));
 
-        글 = new Post(1L, "title", "content", 1_000L, 글쓴이, null, LocalDateTime.now(), 0L);
+        글 = new Post(1L, "title", "content", 1_000L, 글쓴이);
         when(postRepository.findById(글.getId())).thenReturn(Optional.of(글));
     }
 
