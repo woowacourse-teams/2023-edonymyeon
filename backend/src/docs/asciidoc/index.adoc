@@ -15,3 +15,5 @@ include::common/thumbs-api.adoc[]
 include::common/search-api.adoc[]
 
 include::common/mypage-api.adoc[]
+
+include::common/report-api.adoc[]

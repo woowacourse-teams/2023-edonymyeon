@@ -2,4 +2,4 @@
 == 신고
 
 === 신고 등록
-operation::report-save[snippets='request-fields,http-request,http-response']
+operation::report-save[snippets='http-request,http-response']
