@@ -1,4 +1,4 @@
-package com.app.edonymyeon.presentation.ui.post.adapter
+package com.app.edonymyeon.presentation.common.diffutil
 
 import androidx.recyclerview.widget.DiffUtil
 import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
