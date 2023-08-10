@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="post"
+            type="com.app.edonymyeon.presentation.uimodel.PostItemUiModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_ffffff_radius_10dp"
+        android:elevation="20dp"
+        android:paddingHorizontal="16dp">
+
+        <Space
+            android:id="@+id/space_title_top"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H, 360:20"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_hot_post_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@{post.title}"
+            android:textColor="@color/black_434343"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/space_title_top"
+            app:layout_constraintWidth_percent="0.7"
+            tools:text="골프채를 살까요? 말까요?" />
+
+        <Space
+            android:id="@+id/space_title_bottom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,360:16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_hot_post_title" />
+
+        <TextView
+            android:id="@+id/tv_hot_post_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@{post.content}"
+            android:textColor="@color/black_434343"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/space_title_bottom"
+            app:layout_constraintWidth_percent="0.7"
+            tools:text="안녕하세요 골린이 인데요. 이번에 골프채를 사려고 하는데 이 모델을 더 저렴한 걸 살 수 있을 것 같은데 이걸 사는게 맞을까요 아닐까요?" />
+
+        <Space
+            android:id="@+id/space_content_bottom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,360:16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_hot_post_content" />
+
+        <TextView
+            android:id="@+id/tv_hot_post_writer_createdAt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/all_writer_createdAt(post.nickname, post.createdAt)}"
+            android:textColor="@color/black_434343"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/space_content_bottom" />
+
+        <Space
+            android:id="@+id/space_reaction_top"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,360:8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_hot_post_writer_createdAt" />
+
+        <com.app.edonymyeon.presentation.common.customview.PostReactionView
+            android:id="@+id/prv_hot_post_reaction"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,360:20"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/space_reaction_top" />
+
+        <Space
+            android:id="@+id/space"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,360:8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/prv_hot_post_reaction" />
+
+        <ImageView
+            imgUrlCenterCrop="@{post.thumbnailUrl}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/space_reaction_top"
+            app:layout_constraintDimensionRatio="H,1:1"
+            app:layout_constraintEnd_toEndOf="@+id/space_content_bottom"
+            app:layout_constraintTop_toTopOf="@+id/space_title_bottom"
+            app:layout_constraintWidth_percent="0.2"
+            tools:src="@drawable/ic_login_logo" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
