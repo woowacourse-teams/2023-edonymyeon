@@ -86,10 +86,6 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
         final var postFindingResponses = postReadService.findPostsByPagingCondition(postFindingCondition).get()
                 .toList();
 
-        final Pattern 파일_경로_형식 = Pattern.compile(
-                domain + "test-inserting\\d+\\.(png|jpg|jpeg)"
-        );
-
         assertAll(
                 () -> assertThat(postFindingResponses).hasSize(3),
                 () -> assertThat(postFindingResponses)
