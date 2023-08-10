@@ -106,10 +106,13 @@ class PostEditorViewModel(
         _postTitle.value = editTitle.toString()
     }
 
-    fun setPrice(editPrice: Editable) {
-        _postPrice.value = editPrice.toString()
+    fun setPurchasePriceTextChanged(price: CharSequence, start: Int, end: Int, count: Int) {
+        _postPrice.value = price.toString()
     }
 
+    fun setPurchasePrice(price: String) {
+        _postPrice.value = price
+    }
     fun setContent(editContent: Editable) {
         _postContent.value = editContent.toString()
     }
