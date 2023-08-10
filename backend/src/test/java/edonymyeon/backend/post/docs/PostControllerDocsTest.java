@@ -210,6 +210,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
                 .contentType(MediaType.APPLICATION_JSON_VALUE);
 
         final RestDocumentationResultHandler 문서화 = document("post-findAll",
+                preprocessResponse(prettyPrint()),
                 queryParameters(
                         parameterWithName("size").description("한 페이지 당 조회할 게시글 수"),
                         parameterWithName("page").description("조회할 게시글의 페이지")
@@ -236,7 +237,9 @@ public class PostControllerDocsTest implements ImageFileCleaner {
                         + java.util.Base64.getEncoder()
                         .encodeToString((글쓴이.getEmail() + ":" + 글쓴이.getPassword()).getBytes()));
 
-        final RestDocumentationResultHandler 문서화 = document("post-findOne");
+        final RestDocumentationResultHandler 문서화 = document("post-findOne",
+                preprocessResponse(prettyPrint())
+        );
 
         this.mockMvc.perform(게시글_상세_조회_요청)
                 .andExpect(status().isOk())

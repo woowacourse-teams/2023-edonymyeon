@@ -4,26 +4,22 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
-import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
-import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
-import edonymyeon.backend.post.application.dto.AllThumbsInPostResponse;
-import edonymyeon.backend.post.application.dto.ThumbsStatusInPostResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.report.application.ReportRepository;
 import edonymyeon.backend.report.application.ReportRequest;
 import edonymyeon.backend.report.domain.AbusingType;
 import edonymyeon.backend.report.domain.Report;
-import edonymyeon.backend.thumbs.application.PostThumbsServiceImpl;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +43,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureRestDocs
 @SpringBootTest
 public class ReportDocsTest implements ImageFileCleaner {
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -97,7 +94,9 @@ public class ReportDocsTest implements ImageFileCleaner {
                         + java.util.Base64.getEncoder()
                         .encodeToString((글쓴이.getEmail() + ":" + 글쓴이.getPassword()).getBytes()));
 
-        final RestDocumentationResultHandler 문서화 = document("report-save");
+        final RestDocumentationResultHandler 문서화 = document("report-save",
+                preprocessRequest(prettyPrint())
+        );
 
         this.mockMvc.perform(게시글_상세_조회_요청)
                 .andExpect(status().isCreated())
