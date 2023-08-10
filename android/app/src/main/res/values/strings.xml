@@ -3,6 +3,7 @@
 
     <!-- common -->
     <string name="all_price">가격: %,d원</string>
+    <string name="all_writer_createdAt">%s | %s</string>
 
     <!-- login   -->
     <string name="login_title">로그인</string>

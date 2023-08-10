@@ -4,10 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.viewpager2.widget.ViewPager2
+import app.edonymyeon.R
 import app.edonymyeon.databinding.FragmentHomeBinding
 import com.app.edonymyeon.presentation.ui.main.home.adapter.AllPostAdapter
+import com.app.edonymyeon.presentation.ui.main.home.adapter.HotPostAdapter
 import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import com.app.edonymyeon.presentation.uimodel.AllPostItemUiModel
@@ -18,6 +23,12 @@ class HomeFragment : Fragment() {
     }
 
     private val viewModel: HomeViewModel by viewModels()
+
+    private val hotPostAdapter by lazy {
+        HotPostAdapter { id ->
+            PostDetailActivity.newIntent(requireContext(), id)
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,6 +43,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initObserve()
+        initHotPostAdapter()
         viewModel.getAllPosts()
         binding.ivAllPostMore.setOnClickListener {
             startActivity(PostActivity.newIntent(requireContext()))
@@ -42,11 +54,60 @@ class HomeFragment : Fragment() {
         viewModel.allPosts.observe(viewLifecycleOwner) {
             initAllPostAdapter(it)
         }
+        viewModel.hotPosts.observe(viewLifecycleOwner) {
+            hotPostAdapter.setHotPosts(it)
+            setImageIndicators()
+        }
     }
 
     private fun initAllPostAdapter(it: List<AllPostItemUiModel>) {
         binding.rvAllPost.adapter = AllPostAdapter(it) { id ->
             PostDetailActivity.newIntent(requireContext(), id)
+        }
+    }
+
+    private fun initHotPostAdapter() {
+        binding.vpHotPost.offscreenPageLimit = 1
+        binding.vpHotPost.adapter = hotPostAdapter
+        binding.vpHotPost.registerOnPageChangeCallback(
+            object : ViewPager2.OnPageChangeCallback() {
+                override fun onPageSelected(position: Int) {
+                    super.onPageSelected(position)
+                    updateCurrentIndicator(position)
+                }
+            },
+        )
+    }
+
+    private fun setImageIndicators() {
+        val params = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+        ).apply { setMargins(8, 0, 8, 0) }
+
+        addIndicatorViews(params)
+        updateCurrentIndicator(0)
+    }
+
+    private fun addIndicatorViews(params: LinearLayout.LayoutParams) {
+        List(binding.vpHotPost.adapter?.itemCount ?: 0) {
+            ImageView(requireContext()).apply {
+                setImageResource(R.drawable.ic_bfc3ce_indicator_focus_off)
+                layoutParams = params
+            }.also { indicatorView ->
+                binding.llIndicators.addView(indicatorView)
+            }
+        }
+    }
+
+    private fun updateCurrentIndicator(position: Int) {
+        for (i in 0 until binding.llIndicators.childCount) {
+            val indicatorView = binding.llIndicators.getChildAt(i) as ImageView
+            if (i == position) {
+                indicatorView.setImageResource(R.drawable.ic_ffffff_indicator_focus_on)
+            } else {
+                indicatorView.setImageResource(R.drawable.ic_bfc3ce_indicator_focus_off)
+            }
         }
     }
 }
