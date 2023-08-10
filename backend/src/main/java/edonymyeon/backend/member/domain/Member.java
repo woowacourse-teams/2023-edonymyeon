@@ -8,6 +8,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PA
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -49,6 +50,9 @@ public class Member {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private ProfileImageInfo profileImageInfo;
+
+    @Embedded
+    private Device device;
 
     public Member(final String email, final String password, final String nickname,
                   final ProfileImageInfo profileImageInfo) {
