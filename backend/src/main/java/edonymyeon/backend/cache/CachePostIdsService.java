@@ -10,7 +10,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class LongCacheService {
+public class CachePostIdsService {
 
     private final RedisTemplate<String, Long> redisTemplate;
 
@@ -27,5 +27,9 @@ public class LongCacheService {
     public void save(String postIdsKey, List<Long> hotPostIds) {
         redisTemplate.delete(postIdsKey);
         redisTemplate.opsForList().leftPushAll(postIdsKey, hotPostIds);
+    }
+
+    public void delete(String postIdsKey) {
+        redisTemplate.delete(postIdsKey);
     }
 }

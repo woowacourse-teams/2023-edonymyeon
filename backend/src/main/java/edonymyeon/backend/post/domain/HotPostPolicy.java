@@ -15,7 +15,7 @@ public class HotPostPolicy {
 
     private static final String POST_IDS_CACHE_KEY = "HOT_POST_SIZE:%s_PAGE:%s";
 
-    private static final String HAS_NEXT_CACHE_KEY = "HOT_POST_SIZE:%s_PAGE:%s_HAS_NEXT";
+    private static final String IS_LAST_CACHE_KEY = "HOT_POST_SIZE:%s_PAGE:%s_LAST";
 
     public static LocalDateTime getFindPeriod(){
         return LocalDateTime.now()
@@ -26,7 +26,7 @@ public class HotPostPolicy {
         return String.format(HotPostPolicy.POST_IDS_CACHE_KEY, hotFindingCondition.getSize(), hotFindingCondition.getPage());
     }
 
-    public static String getHasNextCacheKey(HotFindingCondition hotFindingCondition){
-        return String.format(HotPostPolicy.HAS_NEXT_CACHE_KEY, hotFindingCondition.getSize(), hotFindingCondition.getPage());
+    public static String getLastCacheKey(HotFindingCondition hotFindingCondition){
+        return String.format(HotPostPolicy.IS_LAST_CACHE_KEY, hotFindingCondition.getSize(), hotFindingCondition.getPage());
     }
 }

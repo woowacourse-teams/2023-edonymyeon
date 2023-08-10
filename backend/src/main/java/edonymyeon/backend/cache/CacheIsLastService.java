@@ -12,29 +12,33 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_HAS_
 
 @RequiredArgsConstructor
 @Service
-public class BooleanCacheService {
+public class CacheIsLastService {
 
     private final RedisTemplate<String, Boolean> redisTemplate;
 
-    public boolean getHasNext(String hasNextKey) {
-        validateHasCache(hasNextKey);
+    public boolean getHasNext(String isLastKey) {
+        validateHasCache(isLastKey);
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(Boolean.class));
         return Boolean.TRUE.equals(redisTemplate.opsForValue().get("key"));
     }
 
-    private void validateHasCache(String hasNextKey) {
+    private void validateHasCache(String isLastKey) {
         Boolean hasKey = redisTemplate.opsForValue()
                 .getOperations()
-                .hasKey(hasNextKey);
+                .hasKey(isLastKey);
 
         if(Objects.isNull(hasKey) || Boolean.FALSE.equals(hasKey)){
             throw new EdonymyeonException(POST_HAS_NEXT_NOT_FOUND_IN_CACHE);
         }
     }
 
-    public void save(String hasNextKey, boolean hasNext) {
-        redisTemplate.delete(hasNextKey);
+    public void save(String isLastKey, boolean hasNext) {
+        redisTemplate.delete(isLastKey);
         redisTemplate.opsForValue()
-                .append(hasNextKey, String.valueOf(hasNext));
+                .append(isLastKey, String.valueOf(hasNext));
+    }
+
+    public void delete(String isLastKey) {
+        redisTemplate.delete(isLastKey);
     }
 }
