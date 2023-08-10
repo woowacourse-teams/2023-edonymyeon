@@ -2,4 +2,4 @@
 == 검색
 
 === 게시글 검색
-operation::post-search[snippets='query-parameters,http-response']
+operation::post-search[snippets='query-parameters,http-request,http-response']
