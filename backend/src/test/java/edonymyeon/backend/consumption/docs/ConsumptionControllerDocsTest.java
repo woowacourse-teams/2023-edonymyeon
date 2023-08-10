@@ -2,6 +2,8 @@ package edonymyeon.backend.consumption.docs;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -65,6 +67,9 @@ public class ConsumptionControllerDocsTest extends DocsTest {
 
         final RestDocumentationResultHandler 문서화 = document("recent-consumptions",
                 preprocessResponse(prettyPrint()),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
+                ),
                 queryParameters(
                         parameterWithName("period-month").description("조회 기간 ex) 1, 6")
                 ),

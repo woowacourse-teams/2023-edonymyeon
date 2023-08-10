@@ -9,15 +9,16 @@ operation::my-posts[snippets='request-headers,query-parameters,http-request,resp
 === 회원 정보 수정
 
 === 최근 1개월/6개월 간 절약/소비 금액 확인
-operation::recent-consumptions[snippets='query-parameters,http-request,http-response']
+operation::recent-consumptions[snippets='request-headers,query-parameters,http-request,http-response']
 
 === 구매 확정
-operation::purchase-confirm[snippets='path-parameters,request-fields,http-request,http-response']
+
+operation::purchase-confirm[snippets='request-headers,path-parameters,request-fields,http-request,http-response']
 
 === 절약 확정
 
-operation::saving-confirm[snippets='path-parameters,request-fields,http-request,http-response']
+operation::saving-confirm[snippets='request-headers,path-parameters,request-fields,http-request,http-response']
 
 === 확정 취소
 
-operation::confirm-remove[snippets='path-parameters,http-request,http-response']
+operation::confirm-remove[snippets='request-headers,path-parameters,http-request,http-response']

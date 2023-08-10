@@ -1,6 +1,8 @@
 package edonymyeon.backend.post.docs;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -81,6 +83,9 @@ public class PostCreationDocsTest implements ImageFileCleaner {
         final RestDocumentationResultHandler 문서화 = document("post-create",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
+                ),
                 requestParts(
                         partWithName("title").description("제목"),
                         partWithName("content").description("내용"),
