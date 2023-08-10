@@ -101,7 +101,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun updateCurrentIndicator(position: Int) {
-        for (i in 0 until binding.llIndicators.childCount) {
+        (0 until binding.llIndicators.childCount).forEach { i ->
             val indicatorView = binding.llIndicators.getChildAt(i) as ImageView
             if (i == position) {
                 indicatorView.setImageResource(R.drawable.ic_ffffff_indicator_focus_on)
