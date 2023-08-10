@@ -23,7 +23,6 @@ import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.MockMultipartFileTestSupport;
-import jakarta.persistence.EntityManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
