@@ -61,7 +61,6 @@
             android:layout_marginBottom="10dp"
             android:fontFamily="@font/dohyeon"
             android:lines="1"
-            android:text="@{allPostItem.nickname + ` | ` + allPostItem.date}"
             android:textColor="@color/black_434343"
             android:textSize="8sp"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.app.edonymyeon.presentation.uimodel.AllPostItemUiModel
+import com.app.edonymyeon.presentation.uimodel.DateUiModel
 
 class HomeViewModel : ViewModel() {
     private val _allPosts = MutableLiveData<List<AllPostItemUiModel>>()
@@ -20,7 +21,7 @@ class HomeViewModel : ViewModel() {
             title = "title $it",
             content = "content $it",
             nickname = "nickname $it",
-            date = "date $it",
+            date = DateUiModel("date $it"),
             thumbnailUrl = "thumbnailUrl $it",
         )
     }

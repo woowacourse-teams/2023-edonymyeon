@@ -93,7 +93,7 @@
                 android:layout_marginBottom="10dp"
                 android:fontFamily="@font/dohyeon"
                 android:lines="1"
-                android:text="@{@string/my_post_createdAt(post.createdAt)}"
+                android:text="@{@string/my_post_createdAt(post.createdAt.toString())}"
                 android:textColor="@color/black_434343"
                 android:textSize="8sp"
                 app:layout_constraintBottom_toBottomOf="parent"
