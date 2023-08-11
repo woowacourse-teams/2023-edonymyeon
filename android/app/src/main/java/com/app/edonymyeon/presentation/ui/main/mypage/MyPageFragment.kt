@@ -19,6 +19,7 @@ import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
 import com.app.edonymyeon.presentation.ui.main.MainActivity
 import com.app.edonymyeon.presentation.ui.main.mypage.chart.LineChartManager
+import com.app.edonymyeon.presentation.ui.main.mypage.dialog.WithdrawDialog
 import com.app.edonymyeon.presentation.ui.mypost.MyPostActivity
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -33,6 +34,12 @@ class MyPageFragment : Fragment() {
             ProfileRepositoryImpl(ProfileRemoteDataSource()),
             ConsumptionsRepositoryImpl(ConsumptionsRemoteDataSource()),
         )
+    }
+
+    private val withdrawDialog: WithdrawDialog by lazy {
+        WithdrawDialog {
+            withdrawDialog.dismiss()
+        }
     }
 
     override fun onCreateView(
@@ -59,6 +66,9 @@ class MyPageFragment : Fragment() {
     private fun initListener() {
         binding.tvMyPost.setOnClickListener {
             navigateToMyPost()
+        }
+        binding.tvWithdraw.setOnClickListener {
+            withdrawDialog.show(requireActivity().supportFragmentManager, "WithdrawDialog")
         }
     }
 
