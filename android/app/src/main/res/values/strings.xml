@@ -2,7 +2,10 @@
     <string name="app_name">이돈이면</string>
 
     <!-- common -->
-    <string name="all_price">가격: %,d원</string>
+    <string name="all_price_long">가격: %,d원</string>
+    <string name="all_price">%,d</string>
+    <string name="all_price_title">가격</string>
+    <string name="all_price_unit">원</string>
     <string name="all_required_login">로그인이 필요한 서비스입니다.</string>
 
     <!-- login   -->
@@ -76,14 +79,12 @@
     <string name="post_editor_page_title">글쓰기</string>
     <string name="post_editor_post_title">제목</string>
     <string name="post_editor_post_title_hint">제목을 입력하세요</string>
-    <string name="post_editor_post_price">가격</string>
     <string name="post_editor_price_hint">가격을 입력하세요</string>
     <string name="post_editor_post_category">카테코리</string>
     <string name="post_editor_camera_description">사진 찍는 버튼</string>
     <string name="post_editor_gallery_description">갤러리에서 이미지 고르는 버튼</string>
     <string name="post_editor_content_hint">내용을 입력하세요</string>
     <string name="post_editor_page_write">등록</string>
-    <string name="post_editor_price_unit">원</string>
     <string name="post_editor_image_limit_message">사진은 10장까지 선택 가능합니다</string>
     <string name="post_editor_check_permission">권한 허용 필요</string>
     <string name="post_editor_check_title_input">제목은 필수 입력 항목입니다</string>
