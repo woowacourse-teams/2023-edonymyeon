@@ -40,7 +40,7 @@ public class PostReadService {
 
     private final Domain domain;
 
-    private final BooleanCacheService booleanCacheService;
+    private final HotPostPolicy hotPostPolicy;
 
     private final CacheIsLastService cacheIsLastService;
 
@@ -135,8 +135,8 @@ public class PostReadService {
     }
 
     public PostSlice<GeneralPostInfoResponse> findHotPosts(final HotFindingCondition hotFindingCondition) {
-        String postIdsKey = HotPostPolicy.getPostIdsCacheKey(hotFindingCondition);
-        String isLastKey = HotPostPolicy.getLastCacheKey(hotFindingCondition);
+        String postIdsKey = hotPostPolicy.getPostIdsCacheKey(hotFindingCondition);
+        String isLastKey = hotPostPolicy.getLastCacheKey(hotFindingCondition);
 
         if (cachePostIdsService.hasCache(postIdsKey)) {
             return findHotPostsFromCache(postIdsKey, isLastKey);
@@ -170,9 +170,9 @@ public class PostReadService {
 
     private Slice<Post> findHotPostSliceFromRepositoryByPolicy(HotFindingCondition hotFindingCondition) {
         return postRepository.findHotPosts(
-                HotPostPolicy.getFindPeriod(),
-                HotPostPolicy.VIEW_COUNT_WEIGHT,
-                HotPostPolicy.THUMBS_COUNT_WEIGHT,
+                hotPostPolicy.getFindPeriod(),
+                hotPostPolicy.getViewCountWeight(),
+                hotPostPolicy.getThumbsCountWeight(),
                 hotFindingCondition.toPage()
         );
     }

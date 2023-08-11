@@ -47,5 +47,5 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
 
     @EntityGraph(attributePaths = "member")
     @Query("SELECT p FROM Post p WHERE p.id IN (:postIds)")
-    List<Post> findByIds(List<Long> postIds);
+    List<Post> findByIds(@Param("postIds") final List<Long> postIds);
 }
