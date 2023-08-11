@@ -3,11 +3,16 @@ package com.app.edonymyeon.presentation.ui.main.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.app.edonymyeon.data.common.CustomThrowable
+import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.uimodel.AllPostItemUiModel
 import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
 import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
+import com.domain.edonymyeon.repository.PostRepository
+import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(private val postRepository: PostRepository) : ViewModel() {
     private val _allPosts = MutableLiveData<List<AllPostItemUiModel>>()
     val allPosts: LiveData<List<AllPostItemUiModel>>
         get() = _allPosts
@@ -18,7 +23,16 @@ class HomeViewModel : ViewModel() {
 
     fun getAllPosts() {
         _allPosts.value = allPostDummy
-        _hotPosts.value = hotPostDummy
+    }
+
+    fun getHotPosts() {
+        viewModelScope.launch {
+            postRepository.getHotPosts().onSuccess { post ->
+                _hotPosts.value = post.posts.map { it.toUiModel() }
+            }.onFailure {
+                it as CustomThrowable
+            }
+        }
     }
 
     private val allPostDummy = List(5) {

@@ -11,6 +11,8 @@ import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import app.edonymyeon.R
 import app.edonymyeon.databinding.FragmentHomeBinding
+import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
+import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.presentation.ui.main.home.adapter.AllPostAdapter
 import com.app.edonymyeon.presentation.ui.main.home.adapter.HotPostAdapter
 import com.app.edonymyeon.presentation.ui.post.PostActivity
@@ -22,11 +24,13 @@ class HomeFragment : Fragment() {
         FragmentHomeBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by viewModels() {
+        HomeViewModelFactory(PostRepositoryImpl(PostRemoteDataSource()))
+    }
 
     private val hotPostAdapter by lazy {
         HotPostAdapter { id ->
-            PostDetailActivity.newIntent(requireContext(), id)
+            requireContext().startActivity(PostDetailActivity.newIntent(requireContext(), id))
         }
     }
 
@@ -45,7 +49,9 @@ class HomeFragment : Fragment() {
         setObserver()
         setHotPostAdapter()
         setListener()
+
         viewModel.getAllPosts()
+        viewModel.getHotPosts()
     }
 
     private fun setObserver() {
