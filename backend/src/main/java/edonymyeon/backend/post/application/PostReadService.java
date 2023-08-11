@@ -7,6 +7,7 @@ import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.dto.*;
+import edonymyeon.backend.post.domain.HotPostPolicy;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.post.repository.PostSpecification;
@@ -122,5 +123,16 @@ public class PostReadService {
         Slice<GeneralPostInfoResponse> foundPosts = postRepository.findAll(searchResults, pageRequest)
                 .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
         return PostSlice.from(foundPosts);
+    }
+
+    public PostSlice<GeneralPostInfoResponse> findHotPosts(final HotFindingCondition hotFindingCondition) {
+        Slice<Post> hotPost = postRepository.findHotPosts(
+                HotPostPolicy.getFindPeriod(),
+                HotPostPolicy.VIEW_COUNT_WEIGHT,
+                HotPostPolicy.THUMBS_COUNT_WEIGHT,
+                hotFindingCondition.toPage()
+        );
+        Slice<GeneralPostInfoResponse> hotPostSlice = hotPost.map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
+        return PostSlice.from(hotPostSlice);
     }
 }

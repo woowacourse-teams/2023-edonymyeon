@@ -8,6 +8,7 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
+import edonymyeon.backend.post.application.HotFindingCondition;
 import edonymyeon.backend.post.application.dto.AllThumbsInPostResponse;
 import edonymyeon.backend.post.application.dto.ThumbsStatusInPostResponse;
 import edonymyeon.backend.post.domain.Post;
@@ -43,6 +44,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -92,6 +94,11 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
     private void 게시글_검색을_모킹한다(final Post 게시글) {
         when(postRepository.findAll((Specification<Post>) any(), (Pageable) any())).thenReturn(new PageImpl<>(List.of(게시글)));
+    }
+
+    private void 핫_게시글_조회를_모킹한다(final Post 게시글) {
+        when(postRepository.findHotPosts(any(LocalDateTime.class), anyInt(), anyInt(), any()))
+                .thenReturn(new SliceImpl<>(List.of(게시글)));
     }
 
     private void 게시글_이미지_정보_레포지토리를_모킹한다() {
@@ -272,6 +279,50 @@ public class PostControllerDocsTest implements ImageFileCleaner {
         );
 
         this.mockMvc.perform(게시글_검색_요청)
+                .andExpect(status().isOk())
+                .andDo(문서화);
+    }
+
+    @Test
+    void 핫_게시글을_조회한다() throws Exception {
+        final HotFindingCondition findingCondition = HotFindingCondition.builder().build();
+
+        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
+        final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), LocalDateTime.now(), 0);
+
+        회원_레포지토리를_모킹한다(글쓴이);
+        게시글_레포지토리를_모킹한다(게시글);
+        핫_게시글_조회를_모킹한다(게시글);
+
+        final var 핫_게시글_조회_요청 = get("/posts/hot")
+                .queryParam("page", findingCondition.getPage().toString())
+                .queryParam("size", findingCondition.getSize().toString())
+                .contentType(MediaType.APPLICATION_JSON_VALUE);
+
+        FieldDescriptor[] 응답 = {
+                fieldWithPath("content").description("게시글 목록"),
+                fieldWithPath("content[].id").description("게시글 id"),
+                fieldWithPath("content[].title").description("게시글 제목"),
+                fieldWithPath("content[].image").description("게시글 이미지 url"),
+                fieldWithPath("content[].content").description("게시글 내용"),
+                fieldWithPath("content[].createdAt").description("게시글 생성 날짜"),
+                fieldWithPath("content[].writer.nickName").description("닉네임"),
+                fieldWithPath("content[].reactionCount.viewCount").description("조회수"),
+                fieldWithPath("content[].reactionCount.commentCount").description("댓글 수"),
+                fieldWithPath("content[].reactionCount.scrapCount").description("스크랩수"),
+                fieldWithPath("last").description("현재 요청한 페이지가 마지막 페이지인지")
+        };
+
+        final RestDocumentationResultHandler 문서화 = document("post-hotPosts",
+                preprocessResponse(prettyPrint()),
+                queryParameters(
+                        parameterWithName("size").description("한 페이지 당 조회할 게시글 수"),
+                        parameterWithName("page").description("조회할 게시글의 페이지")
+                ),
+                responseFields(응답)
+        );
+
+        this.mockMvc.perform(핫_게시글_조회_요청)
                 .andExpect(status().isOk())
                 .andDo(문서화);
     }
