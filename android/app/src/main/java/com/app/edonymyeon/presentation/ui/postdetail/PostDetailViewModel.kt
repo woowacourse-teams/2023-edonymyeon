@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
+import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
+import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
@@ -42,6 +44,9 @@ class PostDetailViewModel(
     private val _isRecommendationRequestDone = MutableLiveData<Boolean>(true)
     val isRecommendationRequestDone: LiveData<Boolean>
         get() = _isRecommendationRequestDone
+
+    val isLogin: Boolean
+        get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
 
     fun getPostDetail(postId: Long) {
         viewModelScope.launch {
