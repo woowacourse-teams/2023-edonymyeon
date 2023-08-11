@@ -21,6 +21,7 @@ import com.app.edonymyeon.presentation.ui.main.MainActivity
 import com.app.edonymyeon.presentation.ui.main.mypage.chart.LineChartManager
 import com.app.edonymyeon.presentation.ui.main.mypage.dialog.WithdrawDialog
 import com.app.edonymyeon.presentation.ui.mypost.MyPostActivity
+import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 
@@ -54,45 +55,6 @@ class MyPageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setViewByLogin()
-        initListener()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        setViewByLogin()
-    }
-
-    private fun initListener() {
-        binding.tvMyPost.setOnClickListener {
-            navigateToMyPost()
-        }
-        binding.tvWithdraw.setOnClickListener {
-            withdrawDialog.show(requireActivity().supportFragmentManager, "WithdrawDialog")
-        }
-    }
-
-    private fun navigateToMyPost() {
-        startActivity(MyPostActivity.newIntent(requireContext()))
-    }
-
-    private fun setViewByLogin() {
-        val isLogin: Boolean = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
-
-        if (isLogin) {
-            setViewForLogin()
-        } else {
-            setViewForNotLogin()
-        }
-    }
-
-    private fun setViewForLogin() {
-        binding.tvRequiredLogin.isVisible = false
-        binding.btnLogin.isVisible = false
-        binding.tvLogout.setOnClickListener { logout() }
-
-        viewModel.getUserProfile()
-        viewModel.setConsumptions(PERIOD_MONTH)
 
         setConsumptionChart(
             LineChartManager(
@@ -102,9 +64,51 @@ class MyPageFragment : Fragment() {
         )
     }
 
+    override fun onResume() {
+        super.onResume()
+        setViewByLogin()
+    }
+
+    private fun setViewByLogin() {
+        if (viewModel.isLogin) {
+            setViewForLogin()
+        } else {
+            setViewForNotLogin()
+        }
+    }
+
+    private fun setViewForLogin() {
+        binding.chartMyPayment.isVisible = true
+        binding.tvRequiredLogin.isVisible = false
+        binding.btnLogin.isVisible = false
+        binding.tvLogout.isVisible = true
+        binding.tvWithdraw.isVisible = true
+        binding.tvLogout.setOnClickListener { logout() }
+        binding.tvMyPost.setOnClickListener { navigateToMyPost() }
+        binding.tvUpdateUserInfo.setOnClickListener { }
+        binding.tvWithdraw.setOnClickListener { showDialog() }
+        viewModel.getUserProfile()
+        viewModel.setConsumptions(PERIOD_MONTH)
+
+        binding.chartMyPayment.invalidate()
+    }
+
     private fun setViewForNotLogin() {
         binding.chartMyPayment.isVisible = false
+        binding.tvLogout.isVisible = false
+        binding.tvWithdraw.isVisible = false
         binding.btnLogin.setOnClickListener { navigateToLogin() }
+        binding.tvMyPost.setOnClickListener { makeLoginSnackbar() }
+        binding.tvUpdateUserInfo.setOnClickListener { makeLoginSnackbar() }
+
+        viewModel.setNoUserState(getString(R.string.my_page_required_login))
+    }
+
+    private fun makeLoginSnackbar() {
+        binding.root.makeSnackbarWithEvent(
+            message = getString(R.string.all_required_login),
+            eventTitle = getString(R.string.login_title),
+        ) { navigateToLogin() }
     }
 
     private fun setConsumptionChart(chartManager: LineChartManager) {
@@ -134,6 +138,7 @@ class MyPageFragment : Fragment() {
                 setMarkerView()
             }
         }
+        chartManager.setViewWithNoData()
     }
 
     private fun logout() {
@@ -142,8 +147,16 @@ class MyPageFragment : Fragment() {
         (activity as MainActivity).refreshActivity()
     }
 
+    private fun navigateToMyPost() {
+        startActivity(MyPostActivity.newIntent(requireContext()))
+    }
+
     private fun navigateToLogin() {
         startActivity(LoginActivity.newIntent(requireContext()))
+    }
+
+    private fun showDialog() {
+        withdrawDialog.show(requireActivity().supportFragmentManager, "WithdrawDialog")
     }
 
     companion object {

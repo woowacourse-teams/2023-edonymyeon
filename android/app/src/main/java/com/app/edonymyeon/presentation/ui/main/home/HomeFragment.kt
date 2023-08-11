@@ -31,20 +31,20 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initObserve()
+        setObserver()
         viewModel.getAllPosts()
         binding.ivAllPostMore.setOnClickListener {
             startActivity(PostActivity.newIntent(requireContext()))
         }
     }
 
-    private fun initObserve() {
+    private fun setObserver() {
         viewModel.allPosts.observe(viewLifecycleOwner) {
-            initAllPostAdapter(it)
+            setAllPostAdapter(it)
         }
     }
 
-    private fun initAllPostAdapter(it: List<AllPostItemUiModel>) {
+    private fun setAllPostAdapter(it: List<AllPostItemUiModel>) {
         binding.rvAllPost.adapter = AllPostAdapter(it) { id ->
             PostDetailActivity.newIntent(requireContext(), id)
         }

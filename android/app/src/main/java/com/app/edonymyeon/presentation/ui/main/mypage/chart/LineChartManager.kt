@@ -101,8 +101,7 @@ class LineChartManager(
                 val chartContentText = findViewById<TextView>(R.id.tv_chart_content)
 
                 override fun refreshContent(e: Entry, highlight: Highlight?) {
-                    chartContentText.text =
-                        resources.getString(R.string.my_page_price, e.y.toInt())
+                    chartContentText.text = resources.getString(R.string.my_page_price, e.y.toInt())
                     super.refreshContent(e, highlight)
                 }
 
@@ -110,5 +109,12 @@ class LineChartManager(
                     return MPPointF(-(width / 1.5).toFloat(), -height.toFloat())
                 }
             }
+    }
+
+    fun setViewWithNoData() {
+        lineChart.apply {
+            setNoDataText(resources.getString(R.string.my_page_loading_data))
+            setNoDataTextColor(resources.getColor(R.color.black_434343, null))
+        }
     }
 }
