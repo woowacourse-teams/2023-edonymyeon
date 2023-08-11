@@ -19,10 +19,12 @@ import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostEditorBinding
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
+import com.app.edonymyeon.presentation.ui.mypost.dialog.ConsumptionDialog
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import com.app.edonymyeon.presentation.ui.posteditor.adapter.PostEditorImagesAdapter
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.util.getParcelableExtraCompat
+import com.app.edonymyeon.presentation.util.makeSnackbar
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -80,17 +82,12 @@ class PostEditorActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initBinding()
+        initAppbar()
+        initObserve()
         setAdapter()
         observeImages()
         initializeViewModelWithPostIfUpdate()
-        initAppbar()
         setCameraAndGalleryClickListener()
-    }
-
-    private fun initializeViewModelWithPostIfUpdate() {
-        if (originActivityKey == UPDATE_CODE) {
-            post?.let { viewModel.initViewModelOnUpdate(it) }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -163,6 +160,15 @@ class PostEditorActivity : AppCompatActivity() {
         supportActionBar?.title = ""
     }
 
+    private fun initObserve() {
+        viewModel.postPrice.observe(this) { price ->
+            runCatching { if (price != ConsumptionDialog.BLANK) price?.toInt() ?: 0 }.onFailure {
+                binding.root.makeSnackbar(this.getString(R.string.dialog_input_price_error_message))
+                viewModel.setPurchasePrice(ConsumptionDialog.BLANK)
+            }
+        }
+    }
+
     private fun setCameraAndGalleryClickListener() {
         binding.ivPostCamera.setOnClickListener { requestPermission() }
         binding.ivPostGallery.setOnClickListener { navigateToGallery() }
@@ -197,6 +203,12 @@ class PostEditorActivity : AppCompatActivity() {
     private fun observeImages() {
         viewModel.galleryImages.observe(this) { images ->
             adapter.setImages(images)
+        }
+    }
+
+    private fun initializeViewModelWithPostIfUpdate() {
+        if (originActivityKey == UPDATE_CODE) {
+            post?.let { viewModel.initViewModelOnUpdate(it) }
         }
     }
 
