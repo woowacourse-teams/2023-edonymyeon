@@ -44,9 +44,6 @@ public class PostServiceHotPostsTest {
         postIdsCacheKey = hotPostPolicy.getPostIdsCacheKey(findingCondition);
         isLastCacheKey = hotPostPolicy.getLastCacheKey(findingCondition);
 
-        postTestSupport.builder().build();
-        postTestSupport.builder().build();
-
         cachePostIdsService.delete(postIdsCacheKey);
         cacheIsLastService.delete(isLastCacheKey);
     }
@@ -62,23 +59,42 @@ public class PostServiceHotPostsTest {
 
     @Test
     void 캐시가_존재하지_않아도_조회되고_새로_캐싱한다() {
+        postTestSupport.builder().build();
+        postTestSupport.builder().build();
+
         var hotPosts = postReadService.findHotPosts(findingCondition).getContent();
 
         assertSoftly(softly -> {
                     softly.assertThat(hotPosts).hasSize(2);
                     softly.assertThat(cachePostIdsService.hasCache(postIdsCacheKey)).isTrue();
+                    softly.assertThat(cacheIsLastService.hasCache(isLastCacheKey)).isTrue();
                 }
         );
     }
 
     @Test
     void 캐싱이_되어있으면_조회된다() {
+        postTestSupport.builder().build();
+        postTestSupport.builder().build();
+
         var hotPosts = postReadService.findHotPosts(findingCondition).getContent();
         var hotPostFromCache = postReadService.findHotPosts(findingCondition).getContent();
 
         assertSoftly(softly -> {
                     softly.assertThat(hotPosts.size()).isEqualTo(hotPostFromCache.size());
                     softly.assertThat(hotPosts).containsAll(hotPostFromCache);
+                }
+        );
+    }
+
+    @Test
+    void 최근_글이_없으면_캐싱에_저장하지_않고_빈리스트가_조회된다() {
+        var hotPosts = postReadService.findHotPosts(findingCondition).getContent();
+
+        assertSoftly(softly -> {
+                    softly.assertThat(hotPosts).isEmpty();
+                    softly.assertThat(cachePostIdsService.hasCache(postIdsCacheKey)).isFalse();
+                    softly.assertThat(cacheIsLastService.hasCache(isLastCacheKey)).isFalse();
                 }
         );
     }

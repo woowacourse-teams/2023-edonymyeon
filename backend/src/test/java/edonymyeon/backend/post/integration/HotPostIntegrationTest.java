@@ -1,29 +1,57 @@
 package edonymyeon.backend.post.integration;
 
+import edonymyeon.backend.CacheConfig;
 import edonymyeon.backend.IntegrationTest;
+import edonymyeon.backend.cache.CacheIsLastService;
+import edonymyeon.backend.cache.CachePostIdsService;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.post.application.HotFindingCondition;
 import edonymyeon.backend.post.application.PostReadService;
+import edonymyeon.backend.post.domain.HotPostPolicy;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
+@Import(CacheConfig.class)
 public class HotPostIntegrationTest extends IntegrationTest {
 
     @Autowired
-    ThumbsRepository thumbsRepository;
+    private ThumbsRepository thumbsRepository;
 
     @Autowired
-    PostReadService postReadService;
+    private PostReadService postReadService;
+
+    @Autowired
+    private HotPostPolicy hotPostPolicy;
+
+    @Autowired
+    private CachePostIdsService cachePostIdsService;
+
+    @Autowired
+    private CacheIsLastService cacheIsLastService;
+
+    private final HotFindingCondition findingCondition = HotFindingCondition.builder().build();
+
+    @BeforeEach
+    void 캐시를_삭제하고_시작하도록_한다(){
+        String postIdsCacheKey = hotPostPolicy.getPostIdsCacheKey(findingCondition);
+        String isLastCacheKey = hotPostPolicy.getLastCacheKey(findingCondition);
+
+        cachePostIdsService.delete(postIdsCacheKey);
+        cacheIsLastService.delete(isLastCacheKey);
+    }
 
     @Test
     void 핫게시글이_순서대로_찾아지는지_확인한다() {

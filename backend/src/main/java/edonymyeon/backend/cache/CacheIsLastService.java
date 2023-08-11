@@ -22,6 +22,12 @@ public class CacheIsLastService {
         return Boolean.TRUE.equals(redisTemplate.opsForValue().get("key"));
     }
 
+    public boolean hasCache(String key) {
+        return Boolean.TRUE.equals(redisTemplate.opsForValue()
+                .getOperations()
+                .hasKey(key));
+    }
+
     private void validateHasCache(String isLastKey) {
         Boolean hasKey = redisTemplate.opsForValue()
                 .getOperations()

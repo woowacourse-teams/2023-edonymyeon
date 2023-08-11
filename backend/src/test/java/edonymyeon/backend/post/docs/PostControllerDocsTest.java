@@ -1,5 +1,6 @@
 package edonymyeon.backend.post.docs;
 
+import edonymyeon.backend.CacheConfig;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
@@ -24,6 +25,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.SliceImpl;
@@ -43,8 +45,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -62,6 +63,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
+@Import(CacheConfig.class)
 @SpringBootTest
 public class PostControllerDocsTest implements ImageFileCleaner {
 
@@ -99,6 +101,8 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     private void 핫_게시글_조회를_모킹한다(final Post 게시글) {
         when(postRepository.findHotPosts(any(LocalDateTime.class), anyInt(), anyInt(), any()))
                 .thenReturn(new SliceImpl<>(List.of(게시글)));
+        when(postRepository.findByIds(anyList()))
+                .thenReturn(List.of(게시글));   
     }
 
     private void 게시글_이미지_정보_레포지토리를_모킹한다() {

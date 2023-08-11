@@ -178,6 +178,12 @@ public class PostReadService {
     }
 
     private void saveHotPostsInCache(String postIdsKey, String isLastKey, Slice<Post> hotPost) {
+        if(hotPost.get().toList().isEmpty()){
+            cachePostIdsService.delete(postIdsKey);
+            cacheIsLastService.delete(isLastKey);
+            return;
+        }
+
         final List<Long> hotPostIds = hotPost.stream()
                 .map(Post::getId)
                 .toList();
