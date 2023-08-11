@@ -34,24 +34,39 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setSearchAdapter()
+        setListener()
+    }
+
+    private fun setSearchAdapter() {
+        val searchAdapter = SearchAdapter(onClick = {
+            startActivity(PostDetailActivity.newIntent(requireContext(), it))
+        })
+
+        binding.rvSearchResult.adapter = searchAdapter
+        viewModel.searchResult.observe(viewLifecycleOwner) {
+            searchAdapter.setPosts(it)
+        }
+    }
+
+    private fun setListener() {
         setQuerySearchListener()
         setResultScrollListener()
         setClickListener()
         setFocusChangeListener()
     }
 
-    private fun setClickListener() {
-        binding.searchView.setOnClickListener {
-            binding.searchView.requestFocus()
-        }
-    }
-
-    private fun setFocusChangeListener() {
-        binding.searchView.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) {
-                binding.searchView.isIconified = false
+    private fun setQuerySearchListener() {
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                viewModel.clearResult()
+                viewModel.getSearchResult(query ?: "")
+                return true
             }
-        }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
+        })
     }
 
     private fun setResultScrollListener() {
@@ -67,28 +82,17 @@ class SearchFragment : Fragment() {
         })
     }
 
-    private fun setSearchAdapter() {
-        val searchAdapter = SearchAdapter(onClick = {
-            startActivity(PostDetailActivity.newIntent(requireContext(), it))
-        })
-
-        binding.rvSearchResult.adapter = searchAdapter
-        viewModel.searchResult.observe(viewLifecycleOwner) {
-            searchAdapter.setPosts(it)
+    private fun setClickListener() {
+        binding.searchView.setOnClickListener {
+            binding.searchView.requestFocus()
         }
     }
 
-    private fun setQuerySearchListener() {
-        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                viewModel.clearResult()
-                viewModel.getSearchResult(query ?: "")
-                return true
+    private fun setFocusChangeListener() {
+        binding.searchView.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                binding.searchView.isIconified = false
             }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return true
-            }
-        })
+        }
     }
 }

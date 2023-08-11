@@ -33,17 +33,8 @@ class SignUpActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initBinding()
-        initListener()
-        initObserver()
-    }
-
-    private fun initObserver() {
-        viewModel.isSignUpSuccess.observe(this) {
-            if (it) {
-                startActivity(LoginActivity.newIntent(this))
-                finish()
-            }
-        }
+        setListener()
+        setObserver()
     }
 
     private fun initBinding() {
@@ -51,7 +42,7 @@ class SignUpActivity : AppCompatActivity() {
         binding.viewModel = viewModel
     }
 
-    private fun initListener() {
+    private fun setListener() {
         binding.btJoin.setOnClickListener {
             viewModel.signUp(
                 binding.etEmail.text.toString(),
@@ -59,6 +50,7 @@ class SignUpActivity : AppCompatActivity() {
                 binding.etNickname.text.toString(),
             )
         }
+
         binding.etEmail.setOnFocusChangeListener { v, hasFocus ->
             if (!hasFocus) {
                 viewModel.verifyEmail(binding.etEmail.text.toString())
@@ -68,6 +60,15 @@ class SignUpActivity : AppCompatActivity() {
         binding.etNickname.setOnFocusChangeListener { v, hasFocus ->
             if (!hasFocus) {
                 viewModel.verifyNickname(binding.etNickname.text.toString())
+            }
+        }
+    }
+
+    private fun setObserver() {
+        viewModel.isSignUpSuccess.observe(this) {
+            if (it) {
+                startActivity(LoginActivity.newIntent(this))
+                finish()
             }
         }
     }

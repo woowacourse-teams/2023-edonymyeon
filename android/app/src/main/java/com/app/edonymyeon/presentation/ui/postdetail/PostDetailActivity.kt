@@ -67,8 +67,8 @@ class PostDetailActivity : AppCompatActivity() {
 
         initBinding()
         initAppbar()
-        initPost()
-        initObserve()
+        getPost()
+        setObserver()
         setRecommendationCheckedListener()
     }
 
@@ -154,11 +154,11 @@ class PostDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun initPost() {
+    private fun getPost() {
         viewModel.getPostDetail(id)
     }
 
-    private fun initObserve() {
+    private fun setObserver() {
         viewModel.post.observe(this) {
             setImageSlider(it)
             setImageIndicators()

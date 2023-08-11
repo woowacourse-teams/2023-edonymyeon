@@ -49,9 +49,7 @@ class PostActivity : AppCompatActivity() {
                 true
             }
 
-            else -> {
-                false
-            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

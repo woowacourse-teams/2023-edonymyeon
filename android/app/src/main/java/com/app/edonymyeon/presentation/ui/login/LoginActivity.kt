@@ -87,15 +87,15 @@ class LoginActivity : AppCompatActivity() {
         )
     }
 
-    private fun navigateToJoin() {
-        startActivity(SignUpActivity.newIntent(this))
-    }
-
     private fun setJoinClickListener() {
         binding.btJoin.setOnClickListener {
             navigateToJoin()
             finish()
         }
+    }
+
+    private fun navigateToJoin() {
+        startActivity(SignUpActivity.newIntent(this))
     }
 
     companion object {

@@ -80,17 +80,11 @@ class PostEditorActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initBinding()
-        setAdapter()
-        observeImages()
-        initializeViewModelWithPostIfUpdate()
         initAppbar()
+        setAdapter()
+        setImagesObserver()
+        initViewModelWithPostIfUpdate()
         setCameraAndGalleryClickListener()
-    }
-
-    private fun initializeViewModelWithPostIfUpdate() {
-        if (originActivityKey == UPDATE_CODE) {
-            post?.let { viewModel.initViewModelOnUpdate(it) }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -127,31 +121,6 @@ class PostEditorActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToDetail() {
-        startActivity(PostDetailActivity.newIntent(this, viewModel.postId.value ?: -1))
-        finish()
-    }
-
-    private fun savePost() {
-        when (originActivityKey) {
-            POST_CODE -> {
-                viewModel.savePost()
-            }
-
-            UPDATE_CODE -> {
-                post?.let { viewModel.updatePost(it.id) }
-            }
-        }
-    }
-
-    private fun showSnackbarForMissingTitle() {
-        Snackbar.make(
-            binding.clPostEditor,
-            getString(R.string.post_editor_snackbar_missing_title_message),
-            Snackbar.LENGTH_SHORT,
-        ).show()
-    }
-
     private fun initBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
@@ -161,6 +130,22 @@ class PostEditorActivity : AppCompatActivity() {
         setSupportActionBar(binding.tbPostEditor)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = ""
+    }
+
+    private fun setAdapter() {
+        binding.rvPostEditorImages.adapter = adapter
+    }
+
+    private fun setImagesObserver() {
+        viewModel.galleryImages.observe(this) { images ->
+            adapter.setImages(images)
+        }
+    }
+
+    private fun initViewModelWithPostIfUpdate() {
+        if (originActivityKey == UPDATE_CODE) {
+            post?.let { viewModel.initViewModelOnUpdate(it) }
+        }
     }
 
     private fun setCameraAndGalleryClickListener() {
@@ -186,18 +171,35 @@ class PostEditorActivity : AppCompatActivity() {
         }
     }
 
-    private fun setAdapter() {
-        binding.rvPostEditorImages.adapter = adapter
+    private fun navigateToCamera() {
+        takeCameraImage.launch(null)
     }
 
-    private fun deleteImages(image: String) {
-        viewModel.deleteSelectedImages(image)
+    private fun navigateToGallery() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+        pickMultipleImage.launch(intent)
     }
 
-    private fun observeImages() {
-        viewModel.galleryImages.observe(this) { images ->
-            adapter.setImages(images)
+    private fun savePost() {
+        when (originActivityKey) {
+            POST_CODE -> {
+                viewModel.savePost()
+            }
+
+            UPDATE_CODE -> {
+                post?.let { viewModel.updatePost(it.id) }
+            }
         }
+    }
+
+    private fun showSnackbarForMissingTitle() {
+        Snackbar.make(
+            binding.clPostEditor,
+            getString(R.string.post_editor_snackbar_missing_title_message),
+            Snackbar.LENGTH_SHORT,
+        ).show()
     }
 
     private fun showPermissionSnackbar() {
@@ -217,15 +219,8 @@ class PostEditorActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun navigateToGallery() {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-        pickMultipleImage.launch(intent)
-    }
-
-    private fun navigateToCamera() {
-        takeCameraImage.launch(null)
+    private fun deleteImages(image: String) {
+        viewModel.deleteSelectedImages(image)
     }
 
     private fun setGalleryImages(data: Intent?) {
@@ -241,10 +236,9 @@ class PostEditorActivity : AppCompatActivity() {
         setAdapter()
     }
 
-    private fun addSelectedImageFromUri(data: Intent?) {
-        data?.data?.let { imageUri ->
-            viewModel.addSelectedImages(imageUri.toString())
-        }
+    private fun setCameraImage(bitmap: Bitmap) {
+        val imageUri = getImageUri(bitmap)
+        viewModel.addSelectedImages(imageUri.toString())
     }
 
     private fun addSelectedImagesFromClipData(count: Int, clipData: ClipData) {
@@ -254,21 +248,10 @@ class PostEditorActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkImageCountLimit(count: Int, limitCount: Int): Boolean {
-        if (count > limitCount) {
-            Snackbar.make(
-                binding.clPostEditor,
-                getString(R.string.post_editor_image_limit_message),
-                Snackbar.LENGTH_SHORT,
-            ).show()
-            return false
+    private fun addSelectedImageFromUri(data: Intent?) {
+        data?.data?.let { imageUri ->
+            viewModel.addSelectedImages(imageUri.toString())
         }
-        return true
-    }
-
-    private fun setCameraImage(bitmap: Bitmap) {
-        val imageUri = getImageUri(bitmap)
-        viewModel.addSelectedImages(imageUri.toString())
     }
 
     private fun getImageUri(bitmap: Bitmap): Uri? {
@@ -284,6 +267,23 @@ class PostEditorActivity : AppCompatActivity() {
         return null
     }
 
+    private fun checkImageCountLimit(count: Int, limitCount: Int): Boolean {
+        if (count > limitCount) {
+            Snackbar.make(
+                binding.clPostEditor,
+                getString(R.string.post_editor_image_limit_message),
+                Snackbar.LENGTH_SHORT,
+            ).show()
+            return false
+        }
+        return true
+    }
+
+    private fun navigateToDetail() {
+        startActivity(PostDetailActivity.newIntent(this, viewModel.postId.value ?: -1))
+        finish()
+    }
+
     companion object {
         private const val MAX_IMAGES_COUNT = 10
         private const val KEY_POST_EDITOR_CHECK = "key_post_editor_check"
@@ -291,10 +291,12 @@ class PostEditorActivity : AppCompatActivity() {
         const val POST_CODE = 2000
         const val UPDATE_CODE = 3000
         const val RESULT_RELOAD_CODE = 1001
+
         private val contentValues = ContentValues().apply {
             put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")
             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
         }
+
         private val requestPermissions = arrayOf(
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
