@@ -7,6 +7,7 @@
     <string name="all_price_title">가격</string>
     <string name="all_price_unit">원</string>
     <string name="all_required_login">로그인이 필요한 서비스입니다.</string>
+    <string name="all_writer_createdAt">%s | %s</string>
 
     <!-- login   -->
     <string name="login_title">로그인</string>
