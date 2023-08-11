@@ -24,7 +24,7 @@ class RetrofitClient private constructor(private val baseUrl: String) {
         return retrofit.create(service)
     }
 
-    fun updateAccessToken(token: String) {
+    fun updateAccessToken(token: String?) {
         accessTokenInterceptor.setToken(token)
     }
 
