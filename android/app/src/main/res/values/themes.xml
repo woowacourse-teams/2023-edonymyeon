@@ -1,7 +1,7 @@
 <resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.Edonymyeon" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="android:fontFamily">@font/dohyeon</item>
+        <item name="android:fontFamily">@font/nanumsquare</item>
         <!-- StatusBar -->
         <item name="android:statusBarColor">@color/gray_b0b9d1</item>
         <item name="android:windowLightStatusBar">true</item>
