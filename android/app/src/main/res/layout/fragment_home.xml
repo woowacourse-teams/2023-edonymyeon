@@ -1,4 +1,6 @@
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -7,11 +9,10 @@
             type="com.app.edonymyeon.presentation.ui.main.home.HomeViewModel" />
     </data>
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/gray_f5f5f5"
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,6 +37,21 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <ImageView
+                    android:id="@+id/iv_logo"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginEnd="8dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_edonymyeon_logo_white"
+                    app:layout_constraintDimensionRatio="W, 47:58"
+                    app:layout_constraintEnd_toStartOf="@+id/tv_title"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/space_title_top"
+                    app:layout_constraintWidth_percent="0.1305" />
+
                 <TextView
                     android:id="@+id/tv_title"
                     android:layout_width="wrap_content"
@@ -44,71 +60,86 @@
                     android:text="@string/home_edonymyeon"
                     android:textColor="@color/white_ffffff"
                     android:textSize="32sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_logo"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/space_title_top" />
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/iv_logo" />
 
                 <Space
                     android:id="@+id/space_title_bottom"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    app:layout_constraintDimensionRatio="H,360:31"
+                    app:layout_constraintDimensionRatio="H,360:24"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_hot_post"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:background="@color/white_ffffff"
-                    app:layout_constraintDimensionRatio="H,323:159"
+                <TextView
+                    android:id="@+id/tv_hot_post"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/dohyeon"
+                    android:text="@string/home_hot_post"
+                    android:textColor="@color/white_ffffff"
+                    android:textSize="22sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/space_title_bottom"
-                    app:layout_constraintWidth_percent="0.897">
+                    app:layout_constraintTop_toBottomOf="@id/space_title_bottom" />
 
-                    <TextView
-                        android:id="@+id/tv_hot_post"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="10dp"
-                        android:fontFamily="@font/dohyeon"
-                        android:text="@string/home_hot_post"
-                        android:textColor="@color/black_434343"
-                        android:textSize="16sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                <Space
+                    android:id="@+id/space_hot_post_top"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="H, 360:8"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_hot_post" />
 
-                    <ImageButton
-                        android:id="@+id/iv_hot_post_more"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginEnd="20dp"
-                        android:src="@drawable/ic_hot_post_more"
-                        app:layout_constraintBottom_toBottomOf="@id/tv_hot_post"
-                        app:layout_constraintDimensionRatio="H,9:10"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@id/tv_hot_post"
-                        app:layout_constraintWidth_percent="0.023" />
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/vp_hot_post"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginHorizontal="16dp"
+                    app:layout_constraintDimensionRatio="H,316:120"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/space_hot_post_top" />
 
+                <Space
+                    android:id="@+id/space_hot_post_bottom"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="H,360:8"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/vp_hot_post" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                <LinearLayout
+                    android:id="@+id/ll_indicators"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    app:layout_constraintDimensionRatio="H,172:10"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/space_hot_post_bottom"
+                    app:layout_constraintWidth_percent="0.5" />
 
                 <Space
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    app:layout_constraintDimensionRatio="H,360:19"
+                    app:layout_constraintDimensionRatio="H, 360:13"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/cl_hot_post" />
+                    app:layout_constraintTop_toBottomOf="@id/ll_indicators" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/gray_f5f5f5"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cl_top">
@@ -127,7 +158,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
-                    android:fontFamily="@font/dohyeon"
                     android:text="@string/home_all_post"
                     android:textColor="@color/black_434343"
                     android:textSize="20sp"
@@ -142,6 +172,7 @@
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_all_post_more"
                     app:layout_constraintBottom_toBottomOf="@id/tv_all_post"
+                    app:layout_constraintDimensionRatio="H,14:16"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_all_post" />
 
@@ -179,8 +210,6 @@
                     app:layout_constraintTop_toBottomOf="@id/rv_all_post" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

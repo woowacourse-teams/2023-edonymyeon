@@ -55,7 +55,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_dialog_title"
             app:layout_constraintWidth_percent="0.7" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_dialog_yes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
             app:layout_constraintStart_toEndOf="@id/btn_dialog_no"
             app:layout_constraintTop_toBottomOf="@id/space_title_bottom" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_dialog_no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
