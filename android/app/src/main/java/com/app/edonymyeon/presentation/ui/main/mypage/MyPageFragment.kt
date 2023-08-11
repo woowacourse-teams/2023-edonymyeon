@@ -48,6 +48,13 @@ class MyPageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setConsumptionChart(
+            LineChartManager(
+                binding.chartMyPayment,
+                resources.getColor(R.color.gray_615f5f, null),
+            ),
+        )
     }
 
     override fun onResume() {
@@ -75,12 +82,7 @@ class MyPageFragment : Fragment() {
         viewModel.getUserProfile()
         viewModel.setConsumptions(PERIOD_MONTH)
 
-        setConsumptionChart(
-            LineChartManager(
-                binding.chartMyPayment,
-                resources.getColor(R.color.gray_615f5f, null),
-            ),
-        )
+        binding.chartMyPayment.invalidate()
     }
 
     private fun setViewForNotLogin() {
