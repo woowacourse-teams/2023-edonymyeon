@@ -47,14 +47,14 @@ public class ThumbsService {
         if (postThumbs.isEmpty()) {
             Thumbs thumbs = new Thumbs(post, loginMember, ThumbsType.UP);
             thumbsRepository.save(thumbs);
-            publisher.publishEvent(new ThumbsUpEvent());
+            publisher.publishEvent(new ThumbsUpEvent(post));
             return;
         }
 
         Thumbs thumbs = postThumbs.get();
         thumbs.up();
 
-        publisher.publishEvent(new ThumbsUpEvent());
+        publisher.publishEvent(new ThumbsUpEvent(post));
     }
 
     private Member findMemberById(final MemberId memberId) {
