@@ -129,6 +129,7 @@ class MyPageFragment : Fragment() {
                 setMarkerView()
             }
         }
+        chartManager.setViewWithNoData()
     }
 
     private fun logout() {

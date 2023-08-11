@@ -70,6 +70,7 @@
     <string name="my_page_graph_saving">절약금액 (단위 10,000원)</string>
     <string name="my_page_graph_purchase">소비금액 (단위 10,000원)</string>
     <string name="my_page_price">%,d원</string>
+    <string name="my_page_loading_data">데이터를 불러오고 있습니다.</string>
 
     <!--post_editor-->
     <string name="post_editor_page_title">글쓰기</string>
