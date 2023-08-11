@@ -49,12 +49,12 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.getAllPosts()
+        refreshAndScrollToTop()
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
         if (!hidden) {
-            viewModel.getAllPosts()
+            refreshAndScrollToTop()
         }
     }
 
@@ -72,5 +72,16 @@ class HomeFragment : Fragment() {
         binding.ivAllPostMore.setOnClickListener {
             startActivity(PostActivity.newIntent(requireContext()))
         }
+    }
+
+    private fun refreshAndScrollToTop() {
+        viewModel.getAllPosts()
+        viewModel.allPostSuccess.observe(viewLifecycleOwner) {
+            binding.rvAllPost.smoothScrollToPosition(TOP_POSITION)
+        }
+    }
+
+    companion object {
+        private const val TOP_POSITION = 0
     }
 }

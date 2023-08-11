@@ -15,14 +15,20 @@ class HomeViewModel(private val repository: PostRepository) : ViewModel() {
     val allPosts: LiveData<List<AllPostItemUiModel>>
         get() = _allPosts
 
+    private val _allPostsSuccess = MutableLiveData<Boolean>()
+    val allPostSuccess: LiveData<Boolean>
+        get() = _allPostsSuccess
+
     fun getAllPosts() {
         viewModelScope.launch {
             repository.getPosts(ALL_POST_DEFAULT_SIZE, ALL_POST_DEFAULT_PAGE).onSuccess {
                 _allPosts.value = it.posts.map { post ->
                     post.toAllPostItemUiModel()
                 }
+                _allPostsSuccess.value = true
             }.onFailure {
                 it as CustomThrowable
+                _allPostsSuccess.value = false
             }
         }
     }
