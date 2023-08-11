@@ -5,12 +5,15 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_DO
 import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_IS_SELF_UP_DOWN;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.notification.application.NotificationSender;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
@@ -26,6 +29,7 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +54,19 @@ public class ThumbsDownServiceTest {
 
     private PostResponse postResponse;
 
+    @MockBean
+    private NotificationSender notificationSender;
+
     @BeforeEach
+    void 사전작업() {
+        회원가입과_게시글쓰기를_한다();
+        알림전송기능을_모킹한다();
+    }
+
+    void 알림전송기능을_모킹한다() {
+        when(notificationSender.sendNotification(any(), any(), any())).thenReturn(true);
+    }
+
     public void 회원가입과_게시글쓰기를_한다() {
         postWriter = registerMember();
         PostRequest postRequest = new PostRequest(

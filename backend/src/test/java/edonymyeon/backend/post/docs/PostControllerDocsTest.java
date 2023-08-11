@@ -1,9 +1,31 @@
 package edonymyeon.backend.post.docs;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
@@ -15,6 +37,10 @@ import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.thumbs.application.PostThumbsServiceImpl;
 import jakarta.servlet.http.Part;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import org.apache.http.entity.ContentType;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -37,26 +63,6 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SuppressWarnings("NonAsciiCharacters")
 @DisplayNameGeneration(ReplaceUnderscores.class)
@@ -93,7 +99,8 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     }
 
     private void 게시글_검색을_모킹한다(final Post 게시글) {
-        when(postRepository.findAll((Specification<Post>) any(), (Pageable) any())).thenReturn(new PageImpl<>(List.of(게시글)));
+        when(postRepository.findAll((Specification<Post>) any(), (Pageable) any())).thenReturn(
+                new PageImpl<>(List.of(게시글)));
     }
 
     private void 핫_게시글_조회를_모킹한다(final Post 게시글) {
@@ -117,7 +124,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
     @Test
     void 게시글을_수정한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
+        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, new Device("kj234jkn342kj"));
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이);
         final PostImageInfo 유지하는_이미지_정보 = new PostImageInfo("stay.jpg", 게시글);
         final PostImageInfo 삭제될_이미지_정보 = new PostImageInfo("delete.jpg", 게시글);
@@ -179,7 +186,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
     @Test
     void 게시글을_삭제한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
+        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, new Device("kj234jkn342kj"));
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이);
 
         회원_레포지토리를_모킹한다(글쓴이);
@@ -209,7 +216,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
     @Test
     void 게시글을_전체_조회한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
+        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, new Device("kj234jkn342kj"));
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), LocalDateTime.now(), 0);
 
         회원_레포지토리를_모킹한다(글쓴이);
@@ -237,8 +244,9 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     void 게시글을_검색한다() throws Exception {
         final GeneralFindingCondition findingCondition = GeneralFindingCondition.builder().build();
 
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
-        final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), LocalDateTime.now(), 0);
+        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, new Device("kj234jkn342kj"));
+        final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(),
+                LocalDateTime.now(), 0);
 
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);
@@ -287,8 +295,9 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     void 핫_게시글을_조회한다() throws Exception {
         final HotFindingCondition findingCondition = HotFindingCondition.builder().build();
 
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
-        final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), LocalDateTime.now(), 0);
+        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, new Device("kj234jkn342kj"));
+        final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(),
+                LocalDateTime.now(), 0);
 
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);
@@ -329,7 +338,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
     @Test
     void 게시글을_상세_조회한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
+        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, new Device("kj234jkn342kj"));
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), LocalDateTime.now(), 0);
 
         회원_레포지토리를_모킹한다(글쓴이);

@@ -15,6 +15,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
@@ -59,7 +60,7 @@ public class PostCreationDocsTest implements ImageFileCleaner {
 
     @Test
     void 게시글을_생성한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
+        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, new Device("kj234jkn342kj"));
         회원_레포지토리를_모킹한다(글쓴이);
 
         Part 제목 = new MockPart("title", null, "제목입니다".getBytes(StandardCharsets.UTF_8));

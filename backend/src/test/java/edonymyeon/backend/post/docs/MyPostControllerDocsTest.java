@@ -56,7 +56,7 @@ public class MyPostControllerDocsTest extends DocsTest {
     void 내_게시글_조회_문서화() throws Exception {
         final GeneralFindingCondition findingCondition = GeneralFindingCondition.builder().build();
 
-        Member 회원 = new Member("example@example.com", "password11234!", "testNickname", null);
+        Member 회원 = new Member("example@example.com", "password11234!", "testNickname", null, "kj234jkn342kj");
         회원_레포지토리를_모킹한다(회원);
 
         final Post 게시글1 = new Post(1L, "제목1", "내용1", 1000L, 회원, PostImageInfos.create(), LocalDateTime.now(), 0);

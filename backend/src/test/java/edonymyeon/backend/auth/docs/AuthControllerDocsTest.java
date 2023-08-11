@@ -40,7 +40,8 @@ public class AuthControllerDocsTest extends DocsTest {
 
     @Test
     void 로그인_문서화() throws Exception {
-        final LoginRequest request = new LoginRequest("example@example.com", "password1234!");
+        final LoginRequest request = new LoginRequest("example@example.com", "password1234!", "kj234jkn342kj");
+
         when(authService.findMember(request)).thenReturn(any());
 
         final MockHttpServletRequestBuilder 로그인_요청 = post("/login")
@@ -49,7 +50,8 @@ public class AuthControllerDocsTest extends DocsTest {
 
         final FieldDescriptor[] 로그인_요청_파라미터 = {
                 fieldWithPath("email").description("이메일"),
-                fieldWithPath("password").description("비밀번호")
+                fieldWithPath("password").description("비밀번호"),
+                fieldWithPath("deviceToken").description("로그인시 사용한 디바이스 토큰")
         };
 
         final HeaderDescriptor[] 응답_헤더 = {
@@ -100,7 +102,8 @@ public class AuthControllerDocsTest extends DocsTest {
 
     @Test
     void 회원가입_문서화() throws Exception {
-        final JoinRequest request = new JoinRequest("email@email.com", "password1234!", "testNickname");
+        final JoinRequest request = new JoinRequest("email@email.com", "password1234!", "testNickname",
+                "kj234jkn342kj");
 
         doNothing().when(authService).joinMember(request);
 
@@ -111,7 +114,8 @@ public class AuthControllerDocsTest extends DocsTest {
         FieldDescriptor[] 요청값 = {
                 fieldWithPath("email").description("사용할 이메일"),
                 fieldWithPath("password").description("사용할 비밀번호"),
-                fieldWithPath("nickname").description("사용할 닉네임")
+                fieldWithPath("nickname").description("사용할 닉네임"),
+                fieldWithPath("deviceToken").description("회원가입시 사용한 디바이스 토큰")
         };
 
         final RestDocumentationResultHandler 문서화 = document("join",

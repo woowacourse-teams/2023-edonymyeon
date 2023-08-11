@@ -1,12 +1,15 @@
 package edonymyeon.backend.thumbs.application;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.AnonymousMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.notification.application.NotificationSender;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.PostThumbsService;
 import edonymyeon.backend.post.application.dto.AllThumbsInPostResponse;
@@ -20,6 +23,7 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +50,15 @@ public class ThumbsInPostServiceTest {
 
     private PostResponse postResponse;
 
+    @MockBean
+    private NotificationSender notificationSender;
+
     @BeforeEach
+    public void 사전작업() {
+        두_회원의_가입과_하나의_게시글쓰기를_한다();
+        알림전송기능을_모킹한다();
+    }
+
     public void 두_회원의_가입과_하나의_게시글쓰기를_한다() {
         otherMember = registerMember();
         Member postWriter = registerMember();
@@ -59,6 +71,11 @@ public class ThumbsInPostServiceTest {
         );
         MemberId memberId = new ActiveMemberId(postWriter.getId());
         postResponse = postService.createPost(memberId, postRequest);
+    }
+
+    @BeforeEach
+    void 알림전송기능을_모킹한다() {
+        when(notificationSender.sendNotification(any(), any(), any())).thenReturn(true);
     }
 
     @Test

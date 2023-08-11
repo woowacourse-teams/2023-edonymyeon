@@ -18,6 +18,7 @@ import edonymyeon.backend.DocsTest;
 import edonymyeon.backend.consumption.application.ConsumptionService;
 import edonymyeon.backend.consumption.application.dto.ConsumptionPriceResponse;
 import edonymyeon.backend.consumption.application.dto.RecentConsumptionsResponse;
+import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import java.util.List;
@@ -47,7 +48,8 @@ public class ConsumptionControllerDocsTest extends DocsTest {
 
     @Test
     void 특정기간의_소비금액을_확인한다() throws Exception {
-        final Member 회원 = new Member(1L, "email@email.com", "password123!", "nickname", null);
+        final Member 회원 = new Member(1L, "email@email.com", "password123!", "nickname", null,
+                new Device("kj234jkn342kj"));
         final RecentConsumptionsResponse response = new RecentConsumptionsResponse(
                 "2023-08",
                 "2023-08",
