@@ -1,11 +1,15 @@
 package edonymyeon.backend.notification.application;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.PostTestSupport;
 import edonymyeon.backend.thumbs.application.ThumbsService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -29,6 +33,11 @@ class NotificationEventListenerTest {
 
     @SpyBean
     private NotificationEventListener notificationEventListener;
+
+    @BeforeEach
+    void 알림전송기능을_모킹한다() {
+        doNothing().when(notificationEventListener).listen(any());
+    }
 
     @Test
     void 나의_게시글에_따봉을_누르면_알림을_전송한다() {

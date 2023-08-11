@@ -5,12 +5,15 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_DO
 import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP_DELETE_FAIL_WHEN_THUMBS_DOWN;
 import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP_IS_NOT_EXIST;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.notification.application.NotificationSender;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
@@ -26,6 +29,7 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,8 +52,20 @@ public class DeleteThumbsServiceTest {
 
     private PostResponse postResponse;
 
+    @MockBean
+    private NotificationSender notificationSender;
+
     @BeforeEach
-    public void 회원가입과_게시글쓰기를_한다() {
+    void 사전작업() {
+        회원가입과_게시글쓰기를_한다();
+        알림전송기능을_모킹한다();
+    }
+
+    void 알림전송기능을_모킹한다() {
+        when(notificationSender.sendNotification(any(), any(), any())).thenReturn(true);
+    }
+
+    void 회원가입과_게시글쓰기를_한다() {
         Member postWriter = registerMember();
         PostRequest postRequest = new PostRequest(
                 "title",

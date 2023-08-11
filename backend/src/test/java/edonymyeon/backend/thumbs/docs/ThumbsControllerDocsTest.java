@@ -1,5 +1,6 @@
 package edonymyeon.backend.thumbs.docs;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -10,8 +11,10 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.notification.application.NotificationSender;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.thumbs.domain.Thumbs;
@@ -50,17 +53,29 @@ public class ThumbsControllerDocsTest {
     @MockBean
     private ThumbsRepository thumbsRepository;
 
+    @MockBean
+    private NotificationSender notificationSender;
+
     private Member 글쓴이;
     private Member 반응_하는_사람;
     private Post 글;
 
     @BeforeEach
+    void 사전작업() {
+        알림전송기능을_모킹한다();
+        회원_두명_가입하고_글쓰기_모킹();
+    }
+
+    void 알림전송기능을_모킹한다() {
+        when(notificationSender.sendNotification(any(), any(), any())).thenReturn(true);
+    }
+
     void 회원_두명_가입하고_글쓰기_모킹() {
-        글쓴이 = new Member(1L, "email", "password", "nickname", null);
+        글쓴이 = new Member(1L, "email", "password", "nickname", null, new Device("kj234jkn342kj"));
         when(memberRepository.findByEmail(글쓴이.getEmail())).thenReturn(Optional.of(글쓴이));
         when(memberRepository.findById(글쓴이.getId())).thenReturn(Optional.of(글쓴이));
 
-        반응_하는_사람 = new Member(2L, "email2", "password2", "nickname2", null);
+        반응_하는_사람 = new Member(2L, "email2", "password2", "nickname2", null, new Device("kj234jkn342kj"));
         when(memberRepository.findByEmail(반응_하는_사람.getEmail())).thenReturn(
                 Optional.of(반응_하는_사람));
         when(memberRepository.findById(반응_하는_사람.getId())).thenReturn(Optional.of(반응_하는_사람));

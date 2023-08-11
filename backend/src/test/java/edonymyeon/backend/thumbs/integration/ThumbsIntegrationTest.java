@@ -3,11 +3,14 @@ package edonymyeon.backend.thumbs.integration;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import edonymyeon.backend.IntegrationTest;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.notification.application.NotificationSender;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
@@ -18,6 +21,7 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -40,6 +44,9 @@ class ThumbsIntegrationTest extends IntegrationTest {
 
     private Long postId;
 
+    @MockBean
+    private NotificationSender notificationSender;
+
     private Member registerMember() {
         Member member = memberTestSupport.builder()
                 .build();
@@ -49,6 +56,15 @@ class ThumbsIntegrationTest extends IntegrationTest {
     }
 
     @BeforeEach
+    void 사전작업() {
+        알림전송기능을_모킹한다();
+        테스트_실행전_두_회원의_가입과_게시글_작성을_실행한다();
+    }
+
+    void 알림전송기능을_모킹한다() {
+        when(notificationSender.sendNotification(any(), any(), any())).thenReturn(true);
+    }
+
     void 테스트_실행전_두_회원의_가입과_게시글_작성을_실행한다() {
         postWriter = registerMember();
         otherMember = registerMember();
