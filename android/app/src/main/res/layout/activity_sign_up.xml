@@ -62,7 +62,6 @@
                 android:id="@+id/tv_email"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:fontFamily="@font/dohyeon"
                 android:gravity="center_vertical"
                 android:text="@string/login_email"
                 android:textColor="@color/black_000000"
@@ -89,7 +88,6 @@
                     android:autofillHints="emailAddress"
                     android:background="@null"
                     android:ellipsize="end"
-                    android:fontFamily="@font/dohyeon"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:onTextChanged="@{viewModel.onEmailTextChanged}"
@@ -142,7 +140,6 @@
                 android:id="@+id/tv_nickname"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:fontFamily="@font/dohyeon"
                 android:gravity="center_vertical"
                 android:text="@string/sign_up_nickname"
                 android:textColor="@color/black_000000"
@@ -180,7 +177,6 @@
                     android:autofillHints="emailAddress"
                     android:background="@null"
                     android:ellipsize="end"
-                    android:fontFamily="@font/dohyeon"
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:onTextChanged="@{viewModel.onNicknameTextChanged}"
@@ -197,7 +193,6 @@
                     android:id="@+id/tv_nickname_check"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:fontFamily="@font/dohyeon"
                     android:gravity="center"
                     android:text="@string/sign_up_verify_duplication"
                     android:textColor="@color/black_434343"
@@ -232,7 +227,6 @@
                 android:id="@+id/tv_password"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:fontFamily="@font/dohyeon"
                 android:gravity="center_vertical"
                 android:text="@string/sign_up_password"
                 android:textColor="@color/black_000000"
@@ -271,7 +265,6 @@
                 app:layout_constraintWidth_percent="0.88">
 
                 <EditText
-                    android:fontFamily="sans-serif"
                     android:id="@+id/et_password"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
@@ -294,7 +287,6 @@
                     android:id="@+id/tv_password_check"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:fontFamily="@font/dohyeon"
                     android:gravity="center"
                     android:text="@{viewModel.isPasswordValid ? @string/sign_up_available : @string/sign_up_unavailable}"
                     android:textColor="@color/black_434343"
@@ -329,7 +321,6 @@
                 android:id="@+id/tv_password_verify"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:fontFamily="@font/dohyeon"
                 android:gravity="center_vertical"
                 android:text="@string/sign_up_verify_password"
                 android:textColor="@color/black_000000"
@@ -351,7 +342,6 @@
                 app:layout_constraintWidth_percent="0.88">
 
                 <EditText
-                    android:fontFamily="sans-serif"
                     android:id="@+id/et_password_verify"
                     onPasswordCheckTextChanged="@{(text) -> viewModel.onPasswordCheckTextChanged(text, etPassword.getText().toString())}"
                     android:layout_width="0dp"
@@ -374,7 +364,6 @@
                     android:id="@+id/tv_password_verify_check"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:fontFamily="@font/dohyeon"
                     android:gravity="center"
                     android:text="@string/sign_up_matching_password"
                     android:textColor="@color/black_434343"
@@ -395,13 +384,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cl_password_verify" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/bt_join"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@{viewModel.isSignUpAble() ? @drawable/bg_576b9e_radius_25dp : @drawable/bg_d9d9d9_radius_25dp}"
                 android:clickable="@{viewModel.isSignUpAble}"
-                android:fontFamily="@font/dohyeon"
                 android:text="@string/login_join"
                 android:textColor="@color/white_ffffff"
                 android:textSize="16sp"
