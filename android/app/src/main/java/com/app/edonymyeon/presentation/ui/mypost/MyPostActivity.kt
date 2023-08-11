@@ -38,7 +38,7 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
         viewModel.getMyPosts()
         setResultScrollListener()
         setAdapter()
-        observeMyPosts()
+        setMyPostsObserver()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -58,16 +58,6 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
         supportActionBar?.title = ""
     }
 
-    private fun setAdapter() {
-        binding.rvMyPost.adapter = adapter
-    }
-
-    private fun observeMyPosts() {
-        viewModel.posts.observe(this) {
-            adapter.setMyPosts(it)
-        }
-    }
-
     private fun setResultScrollListener() {
         binding.rvMyPost.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -79,6 +69,16 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
                 }
             }
         })
+    }
+
+    private fun setAdapter() {
+        binding.rvMyPost.adapter = adapter
+    }
+
+    private fun setMyPostsObserver() {
+        viewModel.posts.observe(this) {
+            adapter.setMyPosts(it)
+        }
     }
 
     override fun onMyPostClick(id: Long) {
