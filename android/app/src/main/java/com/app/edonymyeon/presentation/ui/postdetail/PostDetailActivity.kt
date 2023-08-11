@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.viewModels
@@ -51,7 +52,6 @@ class PostDetailActivity : AppCompatActivity() {
     private val deleteDialog: DeleteDialog by lazy {
         DeleteDialog {
             viewModel.deletePost(id)
-            binding.root.makeSnackbar("delete")
             deleteDialog.dismiss()
             startActivity(PostActivity.newIntent(this))
             finish()
@@ -67,8 +67,8 @@ class PostDetailActivity : AppCompatActivity() {
 
         initBinding()
         initAppbar()
-        initPost()
-        initObserve()
+        getPost()
+        setObserver()
         setRecommendationCheckedListener()
     }
 
@@ -154,11 +154,11 @@ class PostDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun initPost() {
+    private fun getPost() {
         viewModel.getPostDetail(id)
     }
 
-    private fun initObserve() {
+    private fun setObserver() {
         viewModel.post.observe(this) {
             setImageSlider(it)
             setImageIndicators()
@@ -177,21 +177,27 @@ class PostDetailActivity : AppCompatActivity() {
 
     private fun setRecommendationCheckedListener() {
         binding.cbUp.setOnCheckedChangeListener { _, isChecked ->
-            if (isMyPost) {
-                binding.root.makeSnackbar(getString(R.string.post_detail_writer_cant_recommend))
-                binding.cbUp.isChecked = false
-                return@setOnCheckedChangeListener
-            }
+            if (invalidateRecommendation(binding.cbUp)) return@setOnCheckedChangeListener
             viewModel.updateRecommendationUi(id, isChecked, true)
         }
         binding.cbDown.setOnCheckedChangeListener { _, isChecked ->
-            if (isMyPost) {
-                binding.root.makeSnackbar(getString(R.string.post_detail_writer_cant_recommend))
-                binding.cbDown.isChecked = false
-                return@setOnCheckedChangeListener
-            }
+            if (invalidateRecommendation(binding.cbDown)) return@setOnCheckedChangeListener
             viewModel.updateRecommendationUi(id, isChecked, false)
         }
+    }
+
+    private fun invalidateRecommendation(checkbox: CheckBox): Boolean {
+        if (!viewModel.isLogin) {
+            binding.root.makeSnackbar(getString(R.string.post_detail_login_required))
+            checkbox.isChecked = false
+            return true
+        }
+        if (isMyPost) {
+            binding.root.makeSnackbar(getString(R.string.post_detail_writer_cant_recommend))
+            checkbox.isChecked = false
+            return true
+        }
+        return false
     }
 
     private fun setImageSlider(post: PostUiModel) {

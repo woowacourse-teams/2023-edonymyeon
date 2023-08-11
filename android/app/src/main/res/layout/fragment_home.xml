@@ -12,6 +12,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/gray_f5f5f5"
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -139,7 +140,6 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/gray_f5f5f5"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cl_top">
@@ -170,6 +170,7 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginEnd="32dp"
+                    android:background="@android:color/transparent"
                     android:src="@drawable/ic_all_post_more"
                     app:layout_constraintBottom_toBottomOf="@id/tv_all_post"
                     app:layout_constraintDimensionRatio="H,14:16"

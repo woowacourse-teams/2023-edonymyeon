@@ -42,17 +42,15 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initObserve()
-        initHotPostAdapter()
+        setObserver()
+        setHotPostAdapter()
+        setListener()
         viewModel.getAllPosts()
-        binding.ivAllPostMore.setOnClickListener {
-            startActivity(PostActivity.newIntent(requireContext()))
-        }
     }
 
-    private fun initObserve() {
+    private fun setObserver() {
         viewModel.allPosts.observe(viewLifecycleOwner) {
-            initAllPostAdapter(it)
+            setAllPostAdapter(it)
         }
         viewModel.hotPosts.observe(viewLifecycleOwner) {
             hotPostAdapter.setHotPosts(it)
@@ -60,13 +58,19 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun initAllPostAdapter(it: List<AllPostItemUiModel>) {
+    private fun setAllPostAdapter(it: List<AllPostItemUiModel>) {
         binding.rvAllPost.adapter = AllPostAdapter(it) { id ->
             PostDetailActivity.newIntent(requireContext(), id)
         }
     }
 
-    private fun initHotPostAdapter() {
+    private fun setListener() {
+        binding.ivAllPostMore.setOnClickListener {
+            startActivity(PostActivity.newIntent(requireContext()))
+        }
+    }
+
+    private fun setHotPostAdapter() {
         binding.vpHotPost.offscreenPageLimit = 1
         binding.vpHotPost.adapter = hotPostAdapter
         binding.vpHotPost.registerOnPageChangeCallback(
