@@ -146,7 +146,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/et_password" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/bt_login"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -190,7 +190,7 @@
                 app:layout_constraintStart_toEndOf="@id/space_join_left"
                 app:layout_constraintTop_toBottomOf="@id/space_login_bottom" />
 
-            <Button
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/bt_join"
                 android:layout_width="0dp"
                 android:layout_height="0dp"

@@ -24,13 +24,15 @@ public class MyPostService {
 
     private final Domain domain;
 
-    public Slice<MyPostResponse> findMyPosts(final MemberId memberIdDto,
-                                             final GeneralFindingCondition findingCondition) {
+    public PostSlice<MyPostResponse> findMyPosts(final MemberId memberIdDto,
+                                                 final GeneralFindingCondition findingCondition) {
         final Slice<Post> posts = postRepository.findAllByMemberId(memberIdDto.id(), findingCondition.toPage());
         final List<Long> postIds = posts.map(Post::getId).toList();
         final Map<Long, PostConsumptionResponse> consumptionsByPostId = postConsumptionService.findConsumptionsByPostIds(
                 postIds);
 
-        return posts.map(post -> MyPostResponse.of(post, domain, consumptionsByPostId.get(post.getId())));
+        final Slice<MyPostResponse> result = posts.map(
+                post -> MyPostResponse.of(post, domain, consumptionsByPostId.get(post.getId())));
+        return PostSlice.from(result);
     }
 }

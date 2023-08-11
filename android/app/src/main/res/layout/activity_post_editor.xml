@@ -92,7 +92,7 @@
             android:id="@+id/et_post_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:afterTextChanged="@{viewModel.setPrice}"
+            android:onTextChanged="@{viewModel.setPurchasePriceTextChanged}"
             android:autofillHints="no"
             android:background="@android:color/transparent"
             android:hint="@string/post_editor_price_hint"
