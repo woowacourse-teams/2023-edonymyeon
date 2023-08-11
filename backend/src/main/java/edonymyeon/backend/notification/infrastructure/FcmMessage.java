@@ -1,4 +1,4 @@
-package edonymyeon.backend.notification.application;
+package edonymyeon.backend.notification.infrastructure;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
