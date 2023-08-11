@@ -2,9 +2,11 @@
     <string name="app_name">이돈이면</string>
 
     <!-- common -->
+    <string name="all_price_long">가격: %,d원</string>
     <string name="all_price">%,d</string>
     <string name="all_price_title">가격</string>
     <string name="all_price_unit">원</string>
+
 
     <!-- login   -->
     <string name="login_title">로그인</string>
