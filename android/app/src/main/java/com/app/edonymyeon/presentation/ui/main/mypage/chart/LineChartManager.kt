@@ -74,7 +74,7 @@ class LineChartManager(
             this.textColor = textColor
             valueFormatter = object : IndexAxisValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    return (value / UNIT_MONEY).toInt().toString()
+                    return (value / UNIT_MONEY + 0.1).toInt().toString()
                 }
             }
         }
