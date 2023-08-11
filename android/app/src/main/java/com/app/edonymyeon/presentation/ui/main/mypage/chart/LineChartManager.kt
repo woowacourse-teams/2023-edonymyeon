@@ -74,8 +74,7 @@ class LineChartManager(
             this.textColor = textColor
             valueFormatter = object : IndexAxisValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    // 단위 만 원 (90,000 -> 9 로 표기)
-                    return (value / 10000).toInt().toString()
+                    return (value / UNIT_MONEY).toInt().toString()
                 }
             }
         }
@@ -116,5 +115,9 @@ class LineChartManager(
             setNoDataText(resources.getString(R.string.my_page_loading_data))
             setNoDataTextColor(resources.getColor(R.color.black_434343, null))
         }
+    }
+
+    companion object {
+        private const val UNIT_MONEY = 1_000
     }
 }
