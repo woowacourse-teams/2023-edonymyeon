@@ -316,7 +316,6 @@
                     app:layout_constraintBottom_toTopOf="@id/tv_withdraw"
                     app:layout_constraintDimensionRatio="H,336:48"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.51"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_update_user_info"
                     app:layout_constraintWidth_percent="0.87" />
