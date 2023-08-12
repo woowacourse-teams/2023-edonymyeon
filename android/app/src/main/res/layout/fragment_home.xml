@@ -166,16 +166,15 @@
 
                 <ImageButton
                     android:id="@+id/iv_all_post_more"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="32dp"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_all_post_more"
                     app:layout_constraintBottom_toBottomOf="@id/tv_all_post"
                     app:layout_constraintDimensionRatio="H,14:16"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_all_post"
-                    app:layout_constraintWidth_percent="0.027" />
+                    app:layout_constraintTop_toTopOf="@id/tv_all_post" />
 
                 <Space
                     android:id="@+id/space_all_post_title_bottom"
@@ -211,8 +210,6 @@
                     app:layout_constraintTop_toBottomOf="@id/rv_all_post" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>
