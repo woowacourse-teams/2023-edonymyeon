@@ -14,14 +14,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostDetailBinding
-import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.datasource.recommend.RecommendRemoteDataSource
 import com.app.edonymyeon.data.datasource.report.ReportRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.data.repository.RecommendRepositoryImpl
 import com.app.edonymyeon.data.repository.ReportRepositoryImpl
-import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
@@ -63,17 +61,14 @@ class PostDetailActivity : AppCompatActivity() {
     private val isMyPost: Boolean
         get() = viewModel.post.value?.isWriter == true
 
-    private val isLogin: Boolean
-        get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
         initBinding()
         initAppbar()
-        initPost()
-        initObserve()
+        getPost()
+        setObserver()
         setRecommendationCheckedListener()
     }
 
@@ -159,11 +154,11 @@ class PostDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun initPost() {
+    private fun getPost() {
         viewModel.getPostDetail(id)
     }
 
-    private fun initObserve() {
+    private fun setObserver() {
         viewModel.post.observe(this) {
             setImageSlider(it)
             setImageIndicators()
@@ -192,7 +187,7 @@ class PostDetailActivity : AppCompatActivity() {
     }
 
     private fun invalidateRecommendation(checkbox: CheckBox): Boolean {
-        if (!isLogin) {
+        if (!viewModel.isLogin) {
             binding.root.makeSnackbar(getString(R.string.post_detail_login_required))
             checkbox.isChecked = false
             return true
@@ -232,7 +227,7 @@ class PostDetailActivity : AppCompatActivity() {
     private fun addIndicatorViews(params: LinearLayout.LayoutParams) {
         List<ImageView>(binding.vpImageSlider.adapter?.itemCount ?: 0) {
             ImageView(this).apply {
-                setImageResource(R.drawable.ic_indicator_focus_off)
+                setImageResource(R.drawable.ic_bcc4d8_indicator_focus_off)
                 layoutParams = params
             }.also { indicatorView ->
                 binding.llIndicators.addView(indicatorView)
@@ -244,9 +239,9 @@ class PostDetailActivity : AppCompatActivity() {
         for (i in 0 until binding.llIndicators.childCount) {
             val indicatorView = binding.llIndicators.getChildAt(i) as ImageView
             if (i == position) {
-                indicatorView.setImageResource(R.drawable.ic_indicator_focus_on)
+                indicatorView.setImageResource(R.drawable.ic_576b9e_indicator_focus_on)
             } else {
-                indicatorView.setImageResource(R.drawable.ic_indicator_focus_off)
+                indicatorView.setImageResource(R.drawable.ic_bcc4d8_indicator_focus_off)
             }
         }
     }

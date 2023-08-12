@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
+import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
+import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.uimodel.ConsumptionAmountUiModel
@@ -32,10 +34,8 @@ class MyPageViewModel(
     val consumptionOnThisMonth: LiveData<ConsumptionAmountUiModel>
         get() = _consumptionOnThisMonth
 
-    init {
-        _profile.value = WriterUiModel(0L, "로그인해주세요", null)
-        _consumptionOnThisMonth.value = ConsumptionAmountUiModel(0, 0)
-    }
+    val isLogin: Boolean
+        get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
 
     fun getMonthLists(): List<String> =
         _consumptions.value?.toDomain()?.monthRange?.yearMonthList ?: emptyList()
@@ -49,10 +49,13 @@ class MyPageViewModel(
                 }
                 .onFailure {
                     it as CustomThrowable
-                    when (it.code) {
-                    }
                 }
         }
+    }
+
+    fun setNoUserState(defaultNickname: String) {
+        _profile.value = WriterUiModel(0L, defaultNickname, null)
+        _consumptionOnThisMonth.value = ConsumptionAmountUiModel(0, 0)
     }
 
     fun setConsumptions(period: Int) {
@@ -65,8 +68,6 @@ class MyPageViewModel(
                 }
                 .onFailure {
                     it as CustomThrowable
-                    when (it.code) {
-                    }
                 }
         }
     }

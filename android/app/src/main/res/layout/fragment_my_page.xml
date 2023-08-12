@@ -11,12 +11,12 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/gray_f5f5f5">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/gray_f5f5f5">
+            android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_user_info"
@@ -52,6 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/my_page_title"
+                    android:fontFamily="@font/dohyeon"
                     android:textColor="@color/black_000000"
                     android:textSize="28sp"
                     app:layout_constraintStart_toEndOf="@id/space_my_page_title_start"
@@ -135,28 +136,45 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="@{@string/my_page_price(viewModel.consumptionOnThisMonth.saving)}"
+                    android:text="@{@string/all_price(viewModel.consumptionOnThisMonth.saving)}"
                     android:textColor="@color/gray_434343"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_saving_title"
                     app:layout_constraintStart_toEndOf="@id/tv_saving_title"
                     app:layout_constraintTop_toTopOf="@id/tv_saving_title"
-                    tools:text="15,000원" />
+                    tools:text="15,000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all_price_unit"
+                    android:textColor="@color/gray_434343"
+                    app:layout_constraintStart_toEndOf="@id/tv_my_saving"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tv_saving_title"
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/tv_my_purchase"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="@{@string/my_page_price(viewModel.consumptionOnThisMonth.purchase)}"
+                    android:text="@{@string/all_price(viewModel.consumptionOnThisMonth.purchase)}"
                     android:textColor="@color/gray_434343"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_purchase_title"
                     app:layout_constraintStart_toEndOf="@id/tv_purchase_title"
                     app:layout_constraintTop_toTopOf="@id/tv_purchase_title"
-                    tools:text="15,000원" />
+                    tools:text="15,000" />
 
-                <Button
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all_price_unit"
+                    android:textColor="@color/gray_434343"
+                    app:layout_constraintStart_toEndOf="@id/tv_my_purchase"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tv_purchase_title"/>
+
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_login"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
@@ -244,7 +262,7 @@
                     android:id="@+id/tv_required_login"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
-                    android:text="@string/my_page_required_login"
+                    android:text="@string/all_required_login"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="H, 194: 24"

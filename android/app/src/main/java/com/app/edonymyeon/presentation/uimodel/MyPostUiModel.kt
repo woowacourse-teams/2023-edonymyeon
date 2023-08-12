@@ -5,6 +5,6 @@ data class MyPostUiModel(
     val title: String,
     val image: String?,
     val content: String,
-    val createdAt: String,
+    val createdAt: DateUiModel,
     val consumption: ConsumptionUiModel,
 )

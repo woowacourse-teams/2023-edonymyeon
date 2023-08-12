@@ -99,7 +99,7 @@
             android:id="@+id/tv_price_unit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/post_editor_price_unit"
+            android:text="@string/all_price_unit"
             android:textColor="@color/gray_434343"
             android:textSize="16sp"
             android:visibility="@{type == ConsumptionType.PURCHASE ? View.VISIBLE : View.GONE}"

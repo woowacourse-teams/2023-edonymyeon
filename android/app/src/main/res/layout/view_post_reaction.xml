@@ -14,14 +14,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.1" />
+            app:layout_constraintWidth_percent="0.08" />
 
         <TextView
             android:id="@+id/tv_view_count"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:gravity="center_vertical"
-            android:textSize="16sp"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_view_count"
             app:layout_constraintTop_toTopOf="parent"
@@ -44,14 +44,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/space_view_count_right"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.1" />
+            app:layout_constraintWidth_percent="0.08" />
 
         <TextView
             android:id="@+id/tv_comment_count"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:gravity="center_vertical"
-            android:textSize="16sp"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_comment_count"
             app:layout_constraintTop_toTopOf="parent"
@@ -74,14 +74,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/space_comment_count_right"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.1" />
+            app:layout_constraintWidth_percent="0.08" />
 
         <TextView
             android:id="@+id/tv_scrap_count"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:gravity="center_vertical"
-            android:textSize="16sp"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_scrap_count"
             app:layout_constraintTop_toTopOf="parent"

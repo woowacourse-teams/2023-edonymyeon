@@ -108,7 +108,7 @@ class MyPostViewModel(val repository: ProfileRepository) : ViewModel() {
 
     fun getYearMonth(id: Long) {
         val post = _posts.value?.find { it.id == id }
-        val createdAt = post?.createdAt ?: ""
+        val createdAt = post?.createdAt?.createdAt ?: ""
         val createdYearMonth = getYearMonthFromDate(createdAt)
         val nowYearMonth = getYearMonthFromDate(LocalDateTime.now().toString())
         val yearMonthList = getYearMonthList(createdYearMonth, nowYearMonth)

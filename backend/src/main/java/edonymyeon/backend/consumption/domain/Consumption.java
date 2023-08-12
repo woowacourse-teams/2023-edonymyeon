@@ -6,6 +6,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTI
 import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_YEAR_ILLEGAL;
 import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTION_YEAR_MONTH_ILLEGAL;
 
+import edonymyeon.backend.global.domain.TemporalRecord;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.post.domain.Post;
 import jakarta.persistence.Column;
@@ -27,11 +28,11 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-@EqualsAndHashCode(of = {"id"})
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-public class Consumption {
+public class Consumption extends TemporalRecord {
 
     private static final long MAX_PRICE = 10_000_000_000L;
     private static final int MIN_PRICE = 0;

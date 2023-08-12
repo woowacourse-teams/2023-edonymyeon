@@ -2,6 +2,7 @@ package com.app.edonymyeon.presentation.ui.post.adapter
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
+import com.app.edonymyeon.presentation.common.diffutil.PostDiffUtilCallback
 import com.app.edonymyeon.presentation.ui.post.viewholder.PostViewHolder
 import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
 
