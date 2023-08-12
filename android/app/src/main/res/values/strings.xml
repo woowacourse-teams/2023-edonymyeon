@@ -2,7 +2,12 @@
     <string name="app_name">이돈이면</string>
 
     <!-- common -->
-    <string name="all_price">가격: %,d원</string>
+    <string name="all_price_long">가격: %,d원</string>
+    <string name="all_price">%,d</string>
+    <string name="all_price_title">가격</string>
+    <string name="all_price_unit">원</string>
+    <string name="all_required_login">로그인이 필요한 서비스입니다.</string>
+    <string name="all_writer_createdAt">%s | %s</string>
 
     <!-- login   -->
     <string name="login_title">로그인</string>
@@ -33,6 +38,7 @@
     <string name="post_detail_toolbar_menu_report">수정</string>
     <string name="post_detail_writer_cant_scrap">본인이 작성한 글은 스크랩할 수 없습니다.</string>
     <string name="post_detail_writer_cant_recommend">본인이 작성한 글은 추천할 수 없습니다.</string>
+    <string name="post_detail_login_required">추천 기능은 회원만 이용할 수 있습니다.</string>
 
     <!-- post detail dialog -->
     <string name="post_detail_dialog_title">정말로 삭제하시겠습니까?</string>
@@ -64,23 +70,22 @@
     <string name="my_page_login">로그인</string>
     <string name="my_page_saving_title">절약금액:</string>
     <string name="my_page_purchase_title">소비금액:</string>
-    <string name="my_page_required_login">로그인이 필요한 서비스입니다.</string>
+    <string name="my_page_required_login">로그인해주세요</string>
     <string name="my_page_graph_saving">절약금액 (단위 10,000원)</string>
     <string name="my_page_graph_purchase">소비금액 (단위 10,000원)</string>
     <string name="my_page_price">%,d원</string>
+    <string name="my_page_loading_data">데이터를 불러오고 있습니다.</string>
 
     <!--post_editor-->
     <string name="post_editor_page_title">글쓰기</string>
     <string name="post_editor_post_title">제목</string>
     <string name="post_editor_post_title_hint">제목을 입력하세요</string>
-    <string name="post_editor_post_price">가격</string>
     <string name="post_editor_price_hint">가격을 입력하세요</string>
     <string name="post_editor_post_category">카테코리</string>
     <string name="post_editor_camera_description">사진 찍는 버튼</string>
     <string name="post_editor_gallery_description">갤러리에서 이미지 고르는 버튼</string>
     <string name="post_editor_content_hint">내용을 입력하세요</string>
     <string name="post_editor_page_write">등록</string>
-    <string name="post_editor_price_unit">원</string>
     <string name="post_editor_image_limit_message">사진은 10장까지 선택 가능합니다</string>
     <string name="post_editor_check_permission">권한 허용 필요</string>
     <string name="post_editor_check_title_input">제목은 필수 입력 항목입니다</string>

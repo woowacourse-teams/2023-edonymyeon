@@ -11,7 +11,6 @@ import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.data.datasource.auth.AuthRemoteDataSource
 import com.app.edonymyeon.data.repository.AuthRepositoryImpl
 import com.app.edonymyeon.data.service.client.RetrofitClient
-import com.app.edonymyeon.presentation.ui.main.MainActivity
 import com.app.edonymyeon.presentation.ui.signup.SignUpActivity
 import com.app.edonymyeon.presentation.util.makeSnackbar
 
@@ -65,7 +64,6 @@ class LoginActivity : AppCompatActivity() {
         viewModel.isSuccess.observe(this) {
             if (it) {
                 setRetrofitToken()
-                navigateToMain()
                 finish()
             } else {
                 setEmailAndPasswordEmpty()
@@ -85,16 +83,8 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setRetrofitToken() {
         RetrofitClient.getInstance().updateAccessToken(
-            AuthLocalDataSource.getInstance(sharedPreferences).getAuthToken() ?: "",
+            AuthLocalDataSource.getInstance(sharedPreferences).getAuthToken(),
         )
-    }
-
-    private fun navigateToMain() {
-        startActivity(MainActivity.newIntent(this))
-    }
-
-    private fun navigateToJoin() {
-        startActivity(SignUpActivity.newIntent(this))
     }
 
     private fun setJoinClickListener() {
@@ -102,6 +92,10 @@ class LoginActivity : AppCompatActivity() {
             navigateToJoin()
             finish()
         }
+    }
+
+    private fun navigateToJoin() {
+        startActivity(SignUpActivity.newIntent(this))
     }
 
     companion object {

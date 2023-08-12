@@ -1,6 +1,8 @@
 package com.app.edonymyeon.mapper
 
 import com.app.edonymyeon.data.dto.response.Post
+import com.app.edonymyeon.presentation.uimodel.AllPostItemUiModel
+import com.app.edonymyeon.presentation.uimodel.DateUiModel
 import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
 import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
 import com.domain.edonymyeon.model.Count
@@ -26,11 +28,20 @@ fun PostItem.toUiModel(): PostItemUiModel = PostItemUiModel(
     title = title,
     content = content,
     thumbnailUrl = image,
-    createdAt = createdAt,
+    createdAt = DateUiModel(createdAt),
     nickname = nickname,
     reactionCount = ReactionCountUiModel(
         reactionCount.viewCount.value,
         reactionCount.commentCount.value,
         reactionCount.scrapCount.value,
     ),
+)
+
+fun PostItem.toAllPostItemUiModel(): AllPostItemUiModel = AllPostItemUiModel(
+    id = id,
+    title = title,
+    content = content,
+    nickname = nickname,
+    date = DateUiModel(createdAt),
+    thumbnailUrl = image,
 )

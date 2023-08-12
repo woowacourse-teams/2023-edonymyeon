@@ -105,6 +105,6 @@ class ConsumptionDialog(
     }
 
     companion object {
-        private const val BLANK = ""
+        const val BLANK = ""
     }
 }

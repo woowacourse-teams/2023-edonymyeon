@@ -18,7 +18,7 @@ class AccessTokenInterceptor : Interceptor {
         proceed(newRequest)
     }
 
-    fun setToken(token: String) {
+    fun setToken(token: String?) {
         this.token = token
     }
 
