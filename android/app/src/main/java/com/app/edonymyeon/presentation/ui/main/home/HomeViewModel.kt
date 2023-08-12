@@ -28,7 +28,7 @@ class HomeViewModel : ViewModel() {
             title = "title $it",
             content = "content $it",
             nickname = "nickname $it",
-            date = DateUiModel("date $it"),
+            date = DateUiModel("2023-08-09T11:24:05.91282"),
             thumbnailUrl = "thumbnailUrl $it",
         )
     }
@@ -40,7 +40,7 @@ class HomeViewModel : ViewModel() {
             content = "content $it",
             thumbnailUrl = "thumbnailUrl $it",
             nickname = "nickname $it",
-            createdAt = DateUiModel("date $it"),
+            createdAt = DateUiModel("2023-08-09T11:24:05.91282"),
             reactionCount = ReactionCountUiModel(
                 viewCount = it,
                 commentCount = it,
