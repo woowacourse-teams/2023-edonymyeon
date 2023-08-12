@@ -21,7 +21,7 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 @Inherited
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @TestConstructor(autowireMode = AutowireMode.ALL)
-@Sql(value = "/truncate.sql", executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(value = "/truncate.sql")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public @interface EdonymyeonTest {
 }

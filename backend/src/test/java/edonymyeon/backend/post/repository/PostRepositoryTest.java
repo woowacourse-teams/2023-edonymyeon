@@ -1,8 +1,10 @@
 package edonymyeon.backend.post.repository;
 
+import static org.assertj.core.api.FactoryBasedNavigableListAssert.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.EdonymyeonTest;
+import edonymyeon.backend.member.application.dto.AnonymousMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.HotFindingCondition;
@@ -12,8 +14,11 @@ import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.PostTestSupport;
 import edonymyeon.backend.support.ThumbsUpPostTestSupport;
 import lombok.RequiredArgsConstructor;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -70,7 +75,7 @@ class PostRepositoryTest {
                 HotPostPolicy.THUMBS_COUNT_WEIGHT,
                 page);
 
-        assertThat(hotPosts.isEmpty()).isTrue();
+        Assertions.assertThat(hotPosts.isEmpty()).isTrue();
     }
 
     @Test
