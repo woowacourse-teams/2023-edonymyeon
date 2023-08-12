@@ -17,15 +17,22 @@ import com.app.edonymyeon.presentation.ui.main.home.adapter.AllPostAdapter
 import com.app.edonymyeon.presentation.ui.main.home.adapter.HotPostAdapter
 import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
-import com.app.edonymyeon.presentation.uimodel.AllPostItemUiModel
 
 class HomeFragment : Fragment() {
     private val binding: FragmentHomeBinding by lazy {
         FragmentHomeBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: HomeViewModel by viewModels() {
-        HomeViewModelFactory(PostRepositoryImpl(PostRemoteDataSource()))
+    private val viewModel: HomeViewModel by viewModels {
+        HomeViewModelFactory(
+            PostRepositoryImpl(PostRemoteDataSource()),
+        )
+    }
+
+    private val allPostAdapter by lazy {
+        AllPostAdapter { id ->
+            startActivity(PostDetailActivity.newIntent(requireContext(), id))
+        }
     }
 
     private val hotPostAdapter by lazy {
@@ -47,6 +54,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setObserver()
+        setAllPostAdapter()
         setHotPostAdapter()
         setListener()
 
@@ -54,9 +62,20 @@ class HomeFragment : Fragment() {
         viewModel.getHotPosts()
     }
 
+    override fun onResume() {
+        super.onResume()
+        refreshAndScrollToTop()
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        if (!hidden) {
+            refreshAndScrollToTop()
+        }
+    }
+
     private fun setObserver() {
         viewModel.allPosts.observe(viewLifecycleOwner) {
-            setAllPostAdapter(it)
+            allPostAdapter.setAllPosts(it)
         }
         viewModel.hotPosts.observe(viewLifecycleOwner) {
             hotPostAdapter.setHotPosts(it)
@@ -64,16 +83,8 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setAllPostAdapter(it: List<AllPostItemUiModel>) {
-        binding.rvAllPost.adapter = AllPostAdapter(it) { id ->
-            PostDetailActivity.newIntent(requireContext(), id)
-        }
-    }
-
-    private fun setListener() {
-        binding.ivAllPostMore.setOnClickListener {
-            startActivity(PostActivity.newIntent(requireContext()))
-        }
+    private fun setAllPostAdapter() {
+        binding.rvAllPost.adapter = allPostAdapter
     }
 
     private fun setHotPostAdapter() {
@@ -119,5 +130,22 @@ class HomeFragment : Fragment() {
                 indicatorView.setImageResource(R.drawable.ic_bfc3ce_indicator_focus_off)
             }
         }
+    }
+
+    private fun setListener() {
+        binding.ivAllPostMore.setOnClickListener {
+            startActivity(PostActivity.newIntent(requireContext()))
+        }
+    }
+
+    private fun refreshAndScrollToTop() {
+        viewModel.getAllPosts()
+        viewModel.allPostSuccess.observe(viewLifecycleOwner) {
+            binding.rvAllPost.smoothScrollToPosition(TOP_POSITION)
+        }
+    }
+
+    companion object {
+        private const val TOP_POSITION = 0
     }
 }
