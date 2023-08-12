@@ -5,7 +5,7 @@ data class PostItemUiModel(
     val title: String,
     val content: String,
     val thumbnailUrl: String?,
-    val createdAt: String,
+    val createdAt: DateUiModel,
     val nickname: String,
     val reactionCount: ReactionCountUiModel,
 )

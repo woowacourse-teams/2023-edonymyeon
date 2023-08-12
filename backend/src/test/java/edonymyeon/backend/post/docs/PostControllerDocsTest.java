@@ -210,7 +210,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     @Test
     void 게시글을_전체_조회한다() throws Exception {
         final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
-        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), LocalDateTime.now(), 0);
+        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0);
 
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);
@@ -238,7 +238,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
         final GeneralFindingCondition findingCondition = GeneralFindingCondition.builder().build();
 
         final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
-        final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), LocalDateTime.now(), 0);
+        final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), 0);
 
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);
@@ -288,7 +288,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
         final HotFindingCondition findingCondition = HotFindingCondition.builder().build();
 
         final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
-        final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), LocalDateTime.now(), 0);
+        final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), 0);
 
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);
@@ -330,7 +330,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     @Test
     void 게시글을_상세_조회한다() throws Exception {
         final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
-        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), LocalDateTime.now(), 0);
+        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0);
 
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);
