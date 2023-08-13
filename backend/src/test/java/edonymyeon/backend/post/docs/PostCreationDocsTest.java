@@ -46,8 +46,7 @@ public class PostCreationDocsTest implements ImageFileCleaner {
 
     @Test
     void 게시글을_생성한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, new Device("kj234jkn342kj"));
-        회원_레포지토리를_모킹한다(글쓴이);
+        final Member 글쓴이 = memberTestSupport.builder().build();
 
         Part 제목 = new MockPart("title", null, "제목입니다".getBytes(StandardCharsets.UTF_8));
         Part 내용 = new MockPart("content", null, "내용입니다".getBytes(StandardCharsets.UTF_8));
