@@ -86,6 +86,10 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     @MockBean
     private PostThumbsServiceImpl postThumbsService;
 
+    private static Member makeMember() {
+        return new Member(1L, "email", "password", "nickname", null, null);
+    }
+
     private void 회원_레포지토리를_모킹한다(final Member 회원) {
         when(memberRepository.findByEmail(회원.getEmail())).thenReturn(
                 Optional.of(회원));
@@ -216,7 +220,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
     @Test
     void 게시글을_전체_조회한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
+        final Member 글쓴이 = makeMember();
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0);
 
         회원_레포지토리를_모킹한다(글쓴이);
@@ -244,7 +248,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     void 게시글을_검색한다() throws Exception {
         final GeneralFindingCondition findingCondition = GeneralFindingCondition.builder().build();
 
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
+        final Member 글쓴이 = makeMember();
         final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), 0);
 
         회원_레포지토리를_모킹한다(글쓴이);
@@ -294,7 +298,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     void 핫_게시글을_조회한다() throws Exception {
         final HotFindingCondition findingCondition = HotFindingCondition.builder().build();
 
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
+        final Member 글쓴이 = makeMember();
         final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), 0);
 
         회원_레포지토리를_모킹한다(글쓴이);
@@ -336,7 +340,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
     @Test
     void 게시글을_상세_조회한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
+        final Member 글쓴이 = makeMember();
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0);
 
         회원_레포지토리를_모킹한다(글쓴이);

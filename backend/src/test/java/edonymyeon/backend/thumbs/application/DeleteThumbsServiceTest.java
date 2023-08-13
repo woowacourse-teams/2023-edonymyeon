@@ -62,7 +62,7 @@ public class DeleteThumbsServiceTest {
     }
 
     void 알림전송기능을_모킹한다() {
-        when(notificationSender.sendNotification(any(), any(), any())).thenReturn(true);
+        when(notificationSender.sendNotification(any(), any())).thenReturn(true);
     }
 
     void 회원가입과_게시글쓰기를_한다() {

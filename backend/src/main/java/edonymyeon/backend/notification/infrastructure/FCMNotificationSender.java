@@ -31,9 +31,9 @@ public class FCMNotificationSender implements NotificationSender {
     private final ObjectMapper objectMapper;
 
     @Override
-    public boolean sendNotification(final Receiver receiver, final String title, final String content) {
+    public boolean sendNotification(final Receiver receiver, final String title) {
         try {
-            final String requestBody = makeFCMNotificationRequestBody(receiver.getToken(), title, content);
+            final String requestBody = makeFCMNotificationRequestBody(receiver.getToken(), title);
             final OkHttpClient client = new OkHttpClient();
             final Request request = makeFCMNotificationRequest(requestBody);
             final Response response = sendFCMNotificationRequest(client, request);
@@ -43,12 +43,11 @@ public class FCMNotificationSender implements NotificationSender {
         }
     }
 
-    @NotNull
-    private static Response sendFCMNotificationRequest(final OkHttpClient client, final Request request) throws IOException {
+    private Response sendFCMNotificationRequest(final OkHttpClient client, final Request request)
+            throws IOException {
         return client.newCall(request).execute();
     }
 
-    @NotNull
     private Request makeFCMNotificationRequest(final String message) throws IOException {
         final RequestBody requestBody = RequestBody.create(message,
                 MediaType.get("application/json; charset=utf-8"));
@@ -60,13 +59,12 @@ public class FCMNotificationSender implements NotificationSender {
                 .build();
     }
 
-    private String makeFCMNotificationRequestBody(String targetToken, String title, String body) throws JsonProcessingException {
+    private String makeFCMNotificationRequestBody(String targetToken, String title) throws JsonProcessingException {
         final FcmMessage fcmMessage = FcmMessage.builder()
                 .message(FcmMessage.Message.builder()
                         .token(targetToken)
                         .notification(FcmMessage.Notification.builder()
                                 .title(title)
-                                .body(body)
                                 .image(null)
                                 .build()
                         ).build())

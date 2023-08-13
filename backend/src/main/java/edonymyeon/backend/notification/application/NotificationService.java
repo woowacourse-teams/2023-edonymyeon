@@ -1,8 +1,11 @@
 package edonymyeon.backend.notification.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.NOTIFICATION_REQUEST_FAILED;
+import static edonymyeon.backend.notification.domain.NotificationMessage.THUMBS_NOTIFICATION_TITLE;
 
 import edonymyeon.backend.global.exception.BusinessLogicException;
+import edonymyeon.backend.notification.domain.Notification;
+import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.post.domain.Post;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,22 +16,23 @@ import org.springframework.stereotype.Service;
 @Service
 public class NotificationService {
 
-    public static final String THUMBS_NOTIFICATION_TITLE = "당신의 글에 누군가 반응을 남겼습니다.";
-
-    public static final String THUMBS_NOTIFICATION_CONTENT = "클릭하여 확인해보세요!";
-
     private final NotificationSender notificationSender;
+
+    private final NotificationRepository notificationRepository;
 
     public void sendThumbsNotificationToWriter(final Post post) {
         final Receiver receiver = new Receiver(post.getMember());
         final boolean isSentSuccessfully = notificationSender.sendNotification(
                 receiver,
-                THUMBS_NOTIFICATION_TITLE,
-                THUMBS_NOTIFICATION_CONTENT
+                THUMBS_NOTIFICATION_TITLE.getMessage()
         );
 
         if (!isSentSuccessfully) {
             throw new BusinessLogicException(NOTIFICATION_REQUEST_FAILED);
         }
+
+        final Notification notification = new Notification(THUMBS_NOTIFICATION_TITLE.getMessage(), ScreenType.POST,
+                post.getId());
+        notificationRepository.save(notification);
     }
 }

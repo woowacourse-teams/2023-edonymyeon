@@ -62,7 +62,7 @@ class ThumbsIntegrationTest extends IntegrationTest {
     }
 
     void 알림전송기능을_모킹한다() {
-        when(notificationSender.sendNotification(any(), any(), any())).thenReturn(true);
+        when(notificationSender.sendNotification(any(), any())).thenReturn(true);
     }
 
     void 테스트_실행전_두_회원의_가입과_게시글_작성을_실행한다() {

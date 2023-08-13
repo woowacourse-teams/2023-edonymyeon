@@ -11,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
-import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
@@ -21,7 +20,6 @@ import edonymyeon.backend.report.application.ReportRepository;
 import edonymyeon.backend.report.application.ReportRequest;
 import edonymyeon.backend.report.domain.AbusingType;
 import edonymyeon.backend.report.domain.Report;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -79,7 +77,7 @@ public class ReportDocsTest implements ImageFileCleaner {
 
     @Test
     void 게시글을_상세_조회한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
+        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null);
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0);
 
         회원_레포지토리를_모킹한다(글쓴이);
