@@ -54,12 +54,10 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setObserver()
+        setPosts()
         setAllPostAdapter()
         setHotPostAdapter()
         setListener()
-
-        viewModel.getAllPosts()
-        viewModel.getHotPosts()
     }
 
     override fun onResume() {
@@ -81,6 +79,11 @@ class HomeFragment : Fragment() {
             hotPostAdapter.setHotPosts(it)
             setImageIndicators()
         }
+    }
+
+    private fun setPosts() {
+        viewModel.getAllPosts()
+        viewModel.getHotPosts()
     }
 
     private fun setAllPostAdapter() {
@@ -139,7 +142,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun refreshAndScrollToTop() {
-        viewModel.getAllPosts()
+        setPosts()
         viewModel.allPostSuccess.observe(viewLifecycleOwner) {
             binding.rvAllPost.smoothScrollToPosition(TOP_POSITION)
         }
