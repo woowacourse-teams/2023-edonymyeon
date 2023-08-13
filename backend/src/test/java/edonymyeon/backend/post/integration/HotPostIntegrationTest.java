@@ -2,13 +2,13 @@ package edonymyeon.backend.post.integration;
 
 import edonymyeon.backend.CacheConfig;
 import edonymyeon.backend.IntegrationTest;
-import edonymyeon.backend.cache.CacheIsLastService;
-import edonymyeon.backend.cache.CachePostIdsService;
+import edonymyeon.backend.cache.application.CacheIsLastService;
+import edonymyeon.backend.cache.application.CachePostIdsService;
+import edonymyeon.backend.cache.util.HotPostCachePolicy;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.application.HotFindingCondition;
 import edonymyeon.backend.post.application.PostReadService;
-import edonymyeon.backend.post.domain.HotPostPolicy;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
@@ -34,7 +34,7 @@ public class HotPostIntegrationTest extends IntegrationTest {
     private PostReadService postReadService;
 
     @Autowired
-    private HotPostPolicy hotPostPolicy;
+    private HotPostCachePolicy hotPostCachePolicy;
 
     @Autowired
     private CachePostIdsService cachePostIdsService;
@@ -46,8 +46,8 @@ public class HotPostIntegrationTest extends IntegrationTest {
 
     @BeforeEach
     void 캐시를_삭제하고_시작하도록_한다(){
-        String postIdsCacheKey = hotPostPolicy.getPostIdsCacheKey(findingCondition);
-        String isLastCacheKey = hotPostPolicy.getLastCacheKey(findingCondition);
+        String postIdsCacheKey = hotPostCachePolicy.getPostIdsCacheKey(findingCondition);
+        String isLastCacheKey = hotPostCachePolicy.getLastCacheKey(findingCondition);
 
         cachePostIdsService.delete(postIdsCacheKey);
         cacheIsLastService.delete(isLastCacheKey);

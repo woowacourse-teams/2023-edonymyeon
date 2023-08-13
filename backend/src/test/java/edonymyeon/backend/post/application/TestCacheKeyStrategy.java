@@ -1,6 +1,6 @@
 package edonymyeon.backend.post.application;
 
-import edonymyeon.backend.post.domain.CacheKeyStrategy;
+import edonymyeon.backend.cache.util.CacheKeyStrategy;
 
 public class TestCacheKeyStrategy implements CacheKeyStrategy {
 

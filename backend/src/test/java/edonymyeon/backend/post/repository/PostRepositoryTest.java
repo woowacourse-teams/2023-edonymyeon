@@ -41,9 +41,7 @@ class PostRepositoryTest {
     private final ThumbsUpPostTestSupport thumbsPostTestSupport;
 
     private final PostTestSupport postTestSupport;
-
-    private final HotPostPolicy hotPostPolicy;
-
+    
     private final Pageable page = HotFindingCondition.of(0,5).toPage();
 
     private Member member;
@@ -79,9 +77,9 @@ class PostRepositoryTest {
     @Test
     void 최근_게시글이_없다면_빈_리스트가_조회된다() {
         Slice<Post> hotPosts = postRepository.findHotPosts(
-                hotPostPolicy.getFindPeriod(),
-                hotPostPolicy.getViewCountWeight(),
-                hotPostPolicy.getThumbsCountWeight(),
+                HotPostPolicy.getFindPeriod(),
+                HotPostPolicy.getViewCountWeight(),
+                HotPostPolicy.getThumbsCountWeight(),
                 page);
 
         assertThat(hotPosts.isEmpty()).isTrue();
@@ -98,9 +96,9 @@ class PostRepositoryTest {
 
         // then
         Slice<Post> hotPosts = postRepository.findHotPosts(
-                hotPostPolicy.getFindPeriod(),
-                hotPostPolicy.getViewCountWeight(),
-                hotPostPolicy.getThumbsCountWeight(),
+                HotPostPolicy.getFindPeriod(),
+                HotPostPolicy.getViewCountWeight(),
+                HotPostPolicy.getThumbsCountWeight(),
                 page);
 
         for (Post hotPost : hotPosts) {
@@ -148,9 +146,9 @@ class PostRepositoryTest {
 
         // then
         Slice<Post> hotPosts = postRepository.findHotPosts(
-                hotPostPolicy.getFindPeriod(),
-                hotPostPolicy.getViewCountWeight(),
-                hotPostPolicy.getThumbsCountWeight(),
+                HotPostPolicy.getFindPeriod(),
+                HotPostPolicy.getViewCountWeight(),
+                HotPostPolicy.getThumbsCountWeight(),
                 page);
 
         assertSoftly(softly -> {
@@ -179,9 +177,9 @@ class PostRepositoryTest {
 
         // then
         Slice<Post> hotPosts = postRepository.findHotPosts(
-                hotPostPolicy.getFindPeriod(),
-                hotPostPolicy.getViewCountWeight(),
-                hotPostPolicy.getThumbsCountWeight(),
+                HotPostPolicy.getFindPeriod(),
+                HotPostPolicy.getViewCountWeight(),
+                HotPostPolicy.getThumbsCountWeight(),
                 page);
 
         assertSoftly(softly -> {

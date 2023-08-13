@@ -1,6 +1,7 @@
 package edonymyeon.backend.post.application;
 
-import edonymyeon.backend.cache.CachePostService;
+import edonymyeon.backend.cache.application.CachePostService;
+import edonymyeon.backend.cache.application.dto.CachedPostResponse;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.domain.Domain;
@@ -38,8 +39,6 @@ public class PostReadService {
     private final PostThumbsService thumbsService;
 
     private final Domain domain;
-
-    private final HotPostPolicy hotPostPolicy;
 
     private final CachePostService cachePostService;
 
@@ -139,8 +138,8 @@ public class PostReadService {
     }
 
     private PostSlice<GeneralPostInfoResponse> findCachedPosts(final HotFindingCondition hotFindingCondition) {
-        PostSlice<Long> cachedHotPosts = cachePostService.findCachedPosts(hotFindingCondition);
-        List<GeneralPostInfoResponse> posts = postRepository.findByIds(cachedHotPosts.getContent())
+        CachedPostResponse cachedHotPosts = cachePostService.findCachedPosts(hotFindingCondition);
+        List<GeneralPostInfoResponse> posts = postRepository.findByIds(cachedHotPosts.postIds())
                 .stream()
                 .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()))
                 .toList();
@@ -156,9 +155,9 @@ public class PostReadService {
 
     private Slice<Post> findHotPostSliceFromRepositoryByPolicy(final HotFindingCondition hotFindingCondition) {
         return postRepository.findHotPosts(
-                hotPostPolicy.getFindPeriod(),
-                hotPostPolicy.getViewCountWeight(),
-                hotPostPolicy.getThumbsCountWeight(),
+                HotPostPolicy.getFindPeriod(),
+                HotPostPolicy.getViewCountWeight(),
+                HotPostPolicy.getThumbsCountWeight(),
                 hotFindingCondition.toPage()
         );
     }

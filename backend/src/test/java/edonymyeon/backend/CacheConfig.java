@@ -1,7 +1,7 @@
 package edonymyeon.backend;
 
+import edonymyeon.backend.cache.util.HotPostCachePolicy;
 import edonymyeon.backend.post.application.TestCacheKeyStrategy;
-import edonymyeon.backend.post.domain.HotPostPolicy;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 public class CacheConfig {
 
     @Bean
-    public HotPostPolicy hotPostPolicy(){
-        return new HotPostPolicy(new TestCacheKeyStrategy());
+    public HotPostCachePolicy hotPostCachePolicy(){
+        return new HotPostCachePolicy(new TestCacheKeyStrategy());
     }
 }

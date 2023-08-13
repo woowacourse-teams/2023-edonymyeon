@@ -1,4 +1,4 @@
-package edonymyeon.backend.post.domain;
+package edonymyeon.backend.cache.util;
 
 public interface CacheKeyStrategy {
 

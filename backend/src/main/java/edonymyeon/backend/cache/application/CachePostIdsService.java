@@ -1,4 +1,4 @@
-package edonymyeon.backend.cache;
+package edonymyeon.backend.cache.application;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

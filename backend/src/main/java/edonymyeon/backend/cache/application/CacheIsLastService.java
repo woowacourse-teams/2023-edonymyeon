@@ -1,4 +1,4 @@
-package edonymyeon.backend.cache;
+package edonymyeon.backend.cache.application;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import lombok.RequiredArgsConstructor;

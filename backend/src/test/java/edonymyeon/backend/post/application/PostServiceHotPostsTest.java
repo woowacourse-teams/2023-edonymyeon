@@ -1,9 +1,9 @@
 package edonymyeon.backend.post.application;
 
 import edonymyeon.backend.CacheConfig;
-import edonymyeon.backend.cache.CacheIsLastService;
-import edonymyeon.backend.cache.CachePostIdsService;
-import edonymyeon.backend.post.domain.HotPostPolicy;
+import edonymyeon.backend.cache.application.CacheIsLastService;
+import edonymyeon.backend.cache.application.CachePostIdsService;
+import edonymyeon.backend.cache.util.HotPostCachePolicy;
 import edonymyeon.backend.support.PostTestSupport;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,7 +23,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 @SpringBootTest
 public class PostServiceHotPostsTest {
 
-    private final HotPostPolicy hotPostPolicy;
+    private final HotPostCachePolicy hotPostCachePolicy;
 
     private final CachePostIdsService cachePostIdsService;
 
@@ -41,8 +41,8 @@ public class PostServiceHotPostsTest {
 
     @BeforeEach
     void 새글을_두개_등록하고_남아있는_캐시를_삭제한다() {
-        postIdsCacheKey = hotPostPolicy.getPostIdsCacheKey(findingCondition);
-        isLastCacheKey = hotPostPolicy.getLastCacheKey(findingCondition);
+        postIdsCacheKey = hotPostCachePolicy.getPostIdsCacheKey(findingCondition);
+        isLastCacheKey = hotPostCachePolicy.getLastCacheKey(findingCondition);
 
         cachePostIdsService.delete(postIdsCacheKey);
         cacheIsLastService.delete(isLastCacheKey);
