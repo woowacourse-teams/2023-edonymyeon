@@ -1,4 +1,4 @@
-package edonymyeon.backend;
+package edonymyeon.backend.support;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
@@ -23,5 +22,5 @@ import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 @TestConstructor(autowireMode = AutowireMode.ALL)
 @Sql(value = "/truncate.sql")
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public @interface EdonymyeonTest {
+public @interface IntegrationTest {
 }

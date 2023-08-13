@@ -1,12 +1,6 @@
-package edonymyeon.backend;
+package edonymyeon.backend.support;
 
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.support.ConsumptionTestSupport;
-import edonymyeon.backend.support.MemberTestSupport;
-import edonymyeon.backend.support.PostImageInfoTestSupport;
-import edonymyeon.backend.support.PostIntegrationTestSupport;
-import edonymyeon.backend.support.PostTestSupport;
-import edonymyeon.backend.support.ProfileImageInfoTestSupport;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -16,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 @SuppressWarnings("NonAsciiCharacters")
-@EdonymyeonTest
-public class IntegrationTest {
+@IntegrationTest
+public class IntegrationFixture {
 
     protected static final File 이미지1 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
     protected static final File 이미지2 = new File("./src/test/resources/static/img/file/test_image_2.jpg");

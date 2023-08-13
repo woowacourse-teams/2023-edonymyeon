@@ -1,9 +1,8 @@
 package edonymyeon.backend.post.repository;
 
-import static org.assertj.core.api.FactoryBasedNavigableListAssert.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.EdonymyeonTest;
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.member.application.dto.AnonymousMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -22,7 +21,7 @@ import org.springframework.data.domain.Slice;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-@EdonymyeonTest
+@IntegrationTest
 class PostRepositoryTest {
 
     private final PostRepository postRepository;

@@ -2,7 +2,7 @@ package edonymyeon.backend.post.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edonymyeon.backend.EdonymyeonTest;
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.AnonymousMemberId;
@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Import;
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
 @Import(TestConfig.class)
-@EdonymyeonTest
+@IntegrationTest
 public class PostViewTest implements ImageFileCleaner {
 
     private final PostReadService postReadService;

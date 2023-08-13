@@ -2,7 +2,7 @@ package edonymyeon.backend.post.repository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import edonymyeon.backend.EdonymyeonTest;
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.PostTestSupport;
 import java.util.Arrays;
@@ -15,7 +15,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-@EdonymyeonTest
+@IntegrationTest
 public class PostSpecificationTest {
 
     private final PostTestSupport postTestSupport;

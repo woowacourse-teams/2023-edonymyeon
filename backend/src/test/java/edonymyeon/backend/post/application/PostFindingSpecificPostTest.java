@@ -3,7 +3,7 @@ package edonymyeon.backend.post.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import edonymyeon.backend.EdonymyeonTest;
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.image.profileimage.repository.ProfileImageInfoRepository;
@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Import;
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
 @Import(TestConfig.class)
-@EdonymyeonTest
+@IntegrationTest
 public class PostFindingSpecificPostTest {
 
     private final PostRepository postRepository;

@@ -3,7 +3,7 @@ package edonymyeon.backend.consumption.integration;
 import static edonymyeon.backend.consumption.integration.steps.ConsumptionSteps.특정_기간의_소비금액을_확인한다;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edonymyeon.backend.IntegrationTest;
+import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.domain.ConsumptionType;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
@@ -22,12 +22,11 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-public class ConsumptionIntegrationTest extends IntegrationTest {
+public class ConsumptionIntegrationTest extends IntegrationFixture {
 
     private final ConsumptionTestSupport consumptionTestSupport;
 

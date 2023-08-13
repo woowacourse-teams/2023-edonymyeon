@@ -6,7 +6,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.EdonymyeonTest;
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-@EdonymyeonTest
+@IntegrationTest
 class ThumbsUpServiceTest {
 
     private final ThumbsService thumbsService;

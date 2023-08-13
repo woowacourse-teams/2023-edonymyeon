@@ -3,7 +3,7 @@ package edonymyeon.backend.consumption.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.EdonymyeonTest;
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.domain.ConsumptionType;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-@EdonymyeonTest
+@IntegrationTest
 class MemberConsumptionServiceImplTest {
 
     private final MemberConsumptionServiceImpl consumptionConfirmService;

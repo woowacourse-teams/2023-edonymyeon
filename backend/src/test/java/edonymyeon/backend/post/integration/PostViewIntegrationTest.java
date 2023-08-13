@@ -2,17 +2,16 @@ package edonymyeon.backend.post.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edonymyeon.backend.IntegrationTest;
+import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.domain.Post;
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class PostViewIntegrationTest extends IntegrationTest implements ImageFileCleaner {
+public class PostViewIntegrationTest extends IntegrationFixture implements ImageFileCleaner {
 
     @Test
     void 게시글_조회수_시나리오() {

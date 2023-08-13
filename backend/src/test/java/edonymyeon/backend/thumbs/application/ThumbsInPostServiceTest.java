@@ -2,7 +2,7 @@ package edonymyeon.backend.thumbs.application;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.EdonymyeonTest;
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.AnonymousMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-@EdonymyeonTest
+@IntegrationTest
 public class ThumbsInPostServiceTest {
 
     private final PostThumbsService postThumbsService;

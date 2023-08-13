@@ -1,6 +1,6 @@
 package edonymyeon.backend.post.integration;
 
-import edonymyeon.backend.IntegrationTest;
+import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.application.PostReadService;
@@ -12,14 +12,13 @@ import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-public class HotPostIntegrationTest extends IntegrationTest {
+public class HotPostIntegrationTest extends IntegrationFixture {
 
     final ThumbsRepository thumbsRepository;
 
