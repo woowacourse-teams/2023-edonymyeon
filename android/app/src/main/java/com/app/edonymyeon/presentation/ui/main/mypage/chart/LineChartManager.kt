@@ -1,5 +1,6 @@
 package com.app.edonymyeon.presentation.ui.main.mypage.chart
 
+import android.graphics.Typeface
 import android.widget.TextView
 import androidx.annotation.ColorInt
 import app.edonymyeon.R
@@ -17,6 +18,7 @@ import com.github.mikephil.charting.utils.MPPointF
 class LineChartManager(
     private val lineChart: LineChart,
     @ColorInt private val textColor: Int,
+    private val fontStyle: Typeface,
 ) {
     fun getLineDataSet(
         entries: List<Entry>,
@@ -39,7 +41,7 @@ class LineChartManager(
         lineChart.apply {
             data = lineData
             setTouchEnabled(true) // 터치 가능하도록
-            setExtraOffsets(10f, 0f, 15f, 15f) // 여백
+            setExtraOffsets(10f, 0f, 20f, 15f) // 여백
             isDoubleTapToZoomEnabled = false
             setScaleEnabled(false) // zoom 불가능
             setDrawGridBackground(false)
@@ -59,8 +61,9 @@ class LineChartManager(
             this.textColor = textColor
             mAxisMaximum = 6f // 6개월
             mAxisMinimum = 1f
-            textSize = 8f
             granularity = 1f // x축 간격
+            textSize = 8f
+            typeface = fontStyle
             valueFormatter = object : IndexAxisValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
                     return xAxisCharList[value.toInt() - 1]
@@ -72,10 +75,10 @@ class LineChartManager(
     private fun setLeftYAxis(@ColorInt textColor: Int) {
         lineChart.axisLeft.apply {
             this.textColor = textColor
+            typeface = fontStyle
             valueFormatter = object : IndexAxisValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    // 단위 만 원 (90,000 -> 9 로 표기)
-                    return (value / 10000).toInt().toString()
+                    return (value / UNIT_MONEY + 0.1).toInt().toString()
                 }
             }
         }
@@ -90,8 +93,12 @@ class LineChartManager(
     private fun setLegend(@ColorInt textColor: Int) {
         lineChart.legend.apply {
             this.textColor = textColor
+            typeface = fontStyle
             xEntrySpace = 20f // 라벨 간 간격 (가로)
-            horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER // 중앙 정렬
+            verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+            horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+            orientation = Legend.LegendOrientation.HORIZONTAL
+            xOffset = 10f
         }
     }
 
@@ -116,5 +123,9 @@ class LineChartManager(
             setNoDataText(resources.getString(R.string.my_page_loading_data))
             setNoDataTextColor(resources.getColor(R.color.black_434343, null))
         }
+    }
+
+    companion object {
+        private const val UNIT_MONEY = 1_000
     }
 }
