@@ -26,10 +26,10 @@ class WithdrawDialog(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        initListener()
+        setListener()
     }
 
-    private fun initListener() {
+    private fun setListener() {
         binding.tvWithdrawOk.setOnClickListener { onWithdrawClick() }
         binding.tvWithdrawCancel.setOnClickListener { dismiss() }
     }
