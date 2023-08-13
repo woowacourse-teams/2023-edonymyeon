@@ -28,7 +28,6 @@ public enum ExceptionInformation {
     POST_MEMBER_NOT_SAME(2666, "게시글 작성자가 아닙니다."),
     POST_IMAGE_COUNT_INVALID(2667, "게시글 하나에 이미지는 최대 10개까지 등록 가능합니다."),
     POST_INVALID_PAGINATION_CONDITION(2700, "유효하지 않은 게시글 조회 조건입니다."),
-    POST_HAS_NEXT_NOT_FOUND_IN_CACHE(2800, "다음 페이지 존재여부가 캐시에 저장되어 있지 않습니다."),
 
     // 3___: 회원 관련
     MEMBER_ID_NOT_FOUND(3000, "존재하지 않는 회원입니다."),

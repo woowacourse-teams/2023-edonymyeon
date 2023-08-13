@@ -12,25 +12,27 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CachePostService {
+public class PostCachingService {
 
-    private final CacheIsLastService cacheIsLastService;
+    private final BooleanTemplate booleanTemplate;
 
-    private final CachePostIdsService cachePostIdsService;
+    private final LongTemplate longTemplate;
 
     private final HotPostCachePolicy hotPostPolicy;
 
     public boolean isPostsCached(final HotFindingCondition hotFindingCondition) {
         String postIdsKey = hotPostPolicy.getPostIdsCacheKey(hotFindingCondition);
-        return cachePostIdsService.hasCache(postIdsKey);
+        String isLastKey = hotPostPolicy.getLastCacheKey(hotFindingCondition);
+
+        return longTemplate.hasCache(postIdsKey) && booleanTemplate.hasCache(isLastKey);
     }
 
     public CachedPostResponse findCachedPosts(HotFindingCondition hotFindingCondition) {
         String postIdsKey = hotPostPolicy.getPostIdsCacheKey(hotFindingCondition);
         String isLastKey = hotPostPolicy.getLastCacheKey(hotFindingCondition);
 
-        List<Long> postIds = cachePostIdsService.getPostIds(postIdsKey);
-        boolean isLast = cacheIsLastService.getHasNext(isLastKey);
+        List<Long> postIds = longTemplate.getAllData(postIdsKey);
+        boolean isLast = booleanTemplate.getData(isLastKey);
         return new CachedPostResponse(postIds, isLast);
     }
 
@@ -39,8 +41,8 @@ public class CachePostService {
         String isLastKey = hotPostPolicy.getLastCacheKey(hotFindingCondition);
 
         if (isEmpty(hotPost)) {
-            cachePostIdsService.delete(postIdsKey);
-            cacheIsLastService.delete(isLastKey);
+            longTemplate.delete(postIdsKey);
+            booleanTemplate.delete(isLastKey);
             return;
         }
 
@@ -48,8 +50,8 @@ public class CachePostService {
                 .map(Post::getId)
                 .toList();
 
-        cachePostIdsService.save(postIdsKey, hotPostIds);
-        cacheIsLastService.save(isLastKey, hotPost.isLast());
+        longTemplate.save(postIdsKey, hotPostIds);
+        booleanTemplate.save(isLastKey, hotPost.isLast());
     }
 
     private boolean isEmpty(Slice<Post> hotPost) {

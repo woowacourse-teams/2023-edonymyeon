@@ -1,8 +1,8 @@
 package edonymyeon.backend.post.application;
 
 import edonymyeon.backend.CacheConfig;
-import edonymyeon.backend.cache.application.CacheIsLastService;
-import edonymyeon.backend.cache.application.CachePostIdsService;
+import edonymyeon.backend.cache.application.BooleanTemplate;
+import edonymyeon.backend.cache.application.LongTemplate;
 import edonymyeon.backend.cache.util.HotPostCachePolicy;
 import edonymyeon.backend.support.PostTestSupport;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +25,9 @@ public class PostServiceHotPostsTest {
 
     private final HotPostCachePolicy hotPostCachePolicy;
 
-    private final CachePostIdsService cachePostIdsService;
+    private final LongTemplate longTemplate;
 
-    private final CacheIsLastService cacheIsLastService;
+    private final BooleanTemplate booleanTemplate;
 
     private final PostTestSupport postTestSupport;
 
@@ -44,8 +44,8 @@ public class PostServiceHotPostsTest {
         postIdsCacheKey = hotPostCachePolicy.getPostIdsCacheKey(findingCondition);
         isLastCacheKey = hotPostCachePolicy.getLastCacheKey(findingCondition);
 
-        cachePostIdsService.delete(postIdsCacheKey);
-        cacheIsLastService.delete(isLastCacheKey);
+        longTemplate.delete(postIdsCacheKey);
+        booleanTemplate.delete(isLastCacheKey);
     }
 
     @Test
@@ -66,8 +66,8 @@ public class PostServiceHotPostsTest {
 
         assertSoftly(softly -> {
                     softly.assertThat(hotPosts).hasSize(2);
-                    softly.assertThat(cachePostIdsService.hasCache(postIdsCacheKey)).isTrue();
-                    softly.assertThat(cacheIsLastService.hasCache(isLastCacheKey)).isTrue();
+                    softly.assertThat(longTemplate.hasCache(postIdsCacheKey)).isTrue();
+                    softly.assertThat(booleanTemplate.hasCache(isLastCacheKey)).isTrue();
                 }
         );
     }
@@ -93,8 +93,8 @@ public class PostServiceHotPostsTest {
 
         assertSoftly(softly -> {
                     softly.assertThat(hotPosts).isEmpty();
-                    softly.assertThat(cachePostIdsService.hasCache(postIdsCacheKey)).isFalse();
-                    softly.assertThat(cacheIsLastService.hasCache(isLastCacheKey)).isFalse();
+                    softly.assertThat(longTemplate.hasCache(postIdsCacheKey)).isFalse();
+                    softly.assertThat(booleanTemplate.hasCache(isLastCacheKey)).isFalse();
                 }
         );
     }

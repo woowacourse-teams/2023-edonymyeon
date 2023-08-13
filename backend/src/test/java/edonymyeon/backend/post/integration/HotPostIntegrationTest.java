@@ -2,8 +2,8 @@ package edonymyeon.backend.post.integration;
 
 import edonymyeon.backend.CacheConfig;
 import edonymyeon.backend.IntegrationTest;
-import edonymyeon.backend.cache.application.CacheIsLastService;
-import edonymyeon.backend.cache.application.CachePostIdsService;
+import edonymyeon.backend.cache.application.BooleanTemplate;
+import edonymyeon.backend.cache.application.LongTemplate;
 import edonymyeon.backend.cache.util.HotPostCachePolicy;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
@@ -37,10 +37,10 @@ public class HotPostIntegrationTest extends IntegrationTest {
     private HotPostCachePolicy hotPostCachePolicy;
 
     @Autowired
-    private CachePostIdsService cachePostIdsService;
+    private LongTemplate longTemplate;
 
     @Autowired
-    private CacheIsLastService cacheIsLastService;
+    private BooleanTemplate booleanTemplate;
 
     private final HotFindingCondition findingCondition = HotFindingCondition.builder().build();
 
@@ -49,8 +49,8 @@ public class HotPostIntegrationTest extends IntegrationTest {
         String postIdsCacheKey = hotPostCachePolicy.getPostIdsCacheKey(findingCondition);
         String isLastCacheKey = hotPostCachePolicy.getLastCacheKey(findingCondition);
 
-        cachePostIdsService.delete(postIdsCacheKey);
-        cacheIsLastService.delete(isLastCacheKey);
+        longTemplate.delete(postIdsCacheKey);
+        booleanTemplate.delete(isLastCacheKey);
     }
 
     @Test

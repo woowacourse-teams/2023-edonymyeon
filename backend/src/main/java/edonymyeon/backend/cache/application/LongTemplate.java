@@ -3,14 +3,14 @@ package edonymyeon.backend.cache.application;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
-@Service
-public class CachePostIdsService {
+@Component
+public class LongTemplate {
 
     private final RedisTemplate<String, Long> redisTemplate;
 
@@ -18,7 +18,7 @@ public class CachePostIdsService {
         return Boolean.TRUE.equals(redisTemplate.opsForList().getOperations().hasKey(key));
     }
 
-    public List<Long> getPostIds(String key) {
+    public List<Long> getAllData(String key) {
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(Long.class));
         Long len = redisTemplate.opsForList().size(key);
         return len == 0 ? new ArrayList<>() : redisTemplate.opsForList().range(key, 0, len - 1);

@@ -1,6 +1,6 @@
 package edonymyeon.backend.post.application;
 
-import edonymyeon.backend.cache.application.CachePostService;
+import edonymyeon.backend.cache.application.PostCachingService;
 import edonymyeon.backend.cache.application.dto.CachedPostResponse;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
@@ -40,7 +40,7 @@ public class PostReadService {
 
     private final Domain domain;
 
-    private final CachePostService cachePostService;
+    private final PostCachingService postCachingService;
 
     public PostSlice<GeneralPostInfoResponse> findPostsByPagingCondition(
             final GeneralFindingCondition generalFindingCondition) {
@@ -131,14 +131,14 @@ public class PostReadService {
     }
 
     public PostSlice<GeneralPostInfoResponse> findHotPosts(final HotFindingCondition hotFindingCondition) {
-        if (cachePostService.isPostsCached(hotFindingCondition)) {
+        if (postCachingService.isPostsCached(hotFindingCondition)) {
             return findCachedPosts(hotFindingCondition);
         }
         return findHotPostFromRepository(hotFindingCondition);
     }
 
     private PostSlice<GeneralPostInfoResponse> findCachedPosts(final HotFindingCondition hotFindingCondition) {
-        CachedPostResponse cachedHotPosts = cachePostService.findCachedPosts(hotFindingCondition);
+        CachedPostResponse cachedHotPosts = postCachingService.findCachedPosts(hotFindingCondition);
         List<GeneralPostInfoResponse> posts = postRepository.findByIds(cachedHotPosts.postIds())
                 .stream()
                 .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()))
@@ -148,7 +148,7 @@ public class PostReadService {
 
     private PostSlice<GeneralPostInfoResponse> findHotPostFromRepository(final HotFindingCondition hotFindingCondition) {
         final Slice<Post> hotPost = findHotPostSliceFromRepositoryByPolicy(hotFindingCondition);
-        cachePostService.cachePosts(hotFindingCondition, hotPost);
+        postCachingService.cachePosts(hotFindingCondition, hotPost);
         Slice<GeneralPostInfoResponse> hotPostSlice = hotPost.map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
         return PostSlice.from(hotPostSlice);
     }
