@@ -6,6 +6,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP
 import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP_IS_NOT_EXIST;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
@@ -21,21 +22,12 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.TestConstructor.AutowireMode;
-import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-@DisplayNameGeneration(ReplaceUnderscores.class)
-@TestConstructor(autowireMode = AutowireMode.ALL)
-@Transactional
-@SpringBootTest
+@IntegrationTest
 public class DeleteThumbsServiceTest {
 
     private final ThumbsService thumbsService;

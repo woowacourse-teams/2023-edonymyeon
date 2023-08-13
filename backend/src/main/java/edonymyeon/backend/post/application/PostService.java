@@ -18,6 +18,7 @@ import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -90,10 +91,11 @@ public class PostService {
         checkWriter(member, post);
 
         final List<PostImageInfo> postImageInfos = post.getPostImageInfos();
+        final ArrayList<PostImageInfo> copyOfPostImageInfos = new ArrayList<>(postImageInfos);
         thumbsService.deleteAllThumbsInPost(postId);
         postImageInfoRepository.deleteAllByPostId(postId);
         postRepository.deleteById(postId);
-        postImageInfos.forEach(imageFileUploader::removeFile);
+        copyOfPostImageInfos.forEach(imageFileUploader::removeFile);
     }
 
     private Post findPostById(final Long postId) {
@@ -121,11 +123,13 @@ public class PostService {
 
         final List<String> imageStoreNames = convertUrlToStoreName(request.originalImages());
         final List<PostImageInfo> deletedImagesOfPost = post.findImagesToDelete(imageStoreNames);
+        final ArrayList<PostImageInfo> copyOfDeletedImagesOfPost = new ArrayList<>(deletedImagesOfPost);
+
         post.removePostImageInfos(deletedImagesOfPost);
         postImageInfoRepository.deleteAll(deletedImagesOfPost);
 
         if (isImagesEmpty(request.newImages())) {
-            deletedImagesOfPost.forEach(imageFileUploader::removeFile);
+            copyOfDeletedImagesOfPost.forEach(imageFileUploader::removeFile);
             return new PostResponse(postId);
         }
 

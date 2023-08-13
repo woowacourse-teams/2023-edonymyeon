@@ -4,7 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.IntegrationTest;
+import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -13,26 +13,22 @@ import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(ReplaceUnderscores.class)
-class ThumbsIntegrationTest extends IntegrationTest {
+@RequiredArgsConstructor
+public class ThumbsIntegrationTest extends IntegrationFixture {
 
     public static final String UP = "up";
 
     public static final String DOWN = "down";
 
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
 
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     private Member postWriter;
 

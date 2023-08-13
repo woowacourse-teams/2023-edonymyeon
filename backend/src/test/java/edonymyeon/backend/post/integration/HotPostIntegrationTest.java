@@ -1,6 +1,6 @@
 package edonymyeon.backend.post.integration;
 
-import edonymyeon.backend.IntegrationTest;
+import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.application.PostReadService;
@@ -10,20 +10,19 @@ import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class HotPostIntegrationTest extends IntegrationTest {
+@RequiredArgsConstructor
+public class HotPostIntegrationTest extends IntegrationFixture {
 
-    @Autowired
-    ThumbsRepository thumbsRepository;
+    final ThumbsRepository thumbsRepository;
 
-    @Autowired
-    PostReadService postReadService;
+    final PostReadService postReadService;
 
     @Test
     void 핫게시글이_순서대로_찾아지는지_확인한다() {

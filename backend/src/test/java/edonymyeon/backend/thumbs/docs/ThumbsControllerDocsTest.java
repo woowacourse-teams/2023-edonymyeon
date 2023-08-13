@@ -10,6 +10,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
@@ -18,28 +19,24 @@ import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(ReplaceUnderscores.class)
+@RequiredArgsConstructor
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
-@SpringBootTest
+@IntegrationTest
 public class ThumbsControllerDocsTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
     @MockBean
     private MemberRepository memberRepository;

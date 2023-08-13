@@ -5,7 +5,7 @@ import static edonymyeon.backend.member.integration.steps.MemberConsumptionSteps
 import static edonymyeon.backend.member.integration.steps.MemberConsumptionSteps.확정_취소_요청을_보낸다;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edonymyeon.backend.IntegrationTest;
+import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
@@ -23,7 +23,7 @@ import org.springframework.http.HttpStatus;
 public class MemberConsumptionIntegrationTest {
 
     @Nested
-    class 구매_확정할_때 extends IntegrationTest {
+    class 구매_확정할_때 extends IntegrationFixture {
 
         @Test
         void 게시글의_작성자면_성공한다() {
@@ -88,7 +88,7 @@ public class MemberConsumptionIntegrationTest {
     }
 
     @Nested
-    class 절약_확정할_때 extends IntegrationTest {
+    class 절약_확정할_때 extends IntegrationFixture {
 
         @Test
         void 게시글의_작성자면_성공한다() {
@@ -154,7 +154,7 @@ public class MemberConsumptionIntegrationTest {
     }
 
     @Nested
-    class 확정_취소할_때 extends IntegrationTest {
+    class 확정_취소할_때 extends IntegrationFixture {
 
         @Test
         void 게시글의_작성자면_성공한다() {
