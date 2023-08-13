@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context="com.app.edonymyeon.presentation.ui.alarmsetting.AlarmSettingActivity">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb_post"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/blue_576b9e"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/btn_back_black">
+
+            <TextView
+                android:id="@+id/tv_post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:fontFamily="@font/dohyeon"
+                android:text="@string/alarm_setting_tool_bar_title"
+                android:textColor="@color/white_ffffff"
+                android:textSize="20sp" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+
+        <TextView
+            android:id="@+id/tv_alarm_setting_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/alarm_setting_title"
+            android:textColor="@color/black_000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tb_post" />
+
+        <TextView
+            android:id="@+id/tv_alarm_setting_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:paddingBottom="13dp"
+            android:text="@string/alarm_setting_content"
+            android:textColor="@color/gray_666666"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@id/tv_alarm_setting_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_alarm_setting_title" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_alarm_setting"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="H,40:24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tb_post"
+            app:layout_constraintWidth_percent="0.11" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -22,7 +22,9 @@
         android:theme="@style/Theme.Edonymyeon"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
+        <activity
+            android:name="com.app.edonymyeon.presentation.ui.alarmsetting.AlarmSettingActivity"
+            android:exported="false" />
         <activity
             android:name="com.app.edonymyeon.presentation.ui.login.LoginActivity"
             android:exported="true"
@@ -32,7 +34,10 @@
             android:name="com.app.edonymyeon.presentation.ui.signup.SignUpActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize" />
-
+        <activity
+            android:name="com.app.edonymyeon.presentation.ui.signup.SignUpActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity"
             android:exported="true" />
@@ -53,14 +58,15 @@
         <activity
             android:name="com.app.edonymyeon.presentation.ui.mypost.MyPostActivity"
             android:exported="true" />
-
         <activity
             android:name="com.app.edonymyeon.presentation.ui.post.PostActivity"
             android:exported="true" />
-        <service android:name="com.app.edonymyeon.application.MyMessageService"
+
+        <service
+            android:name="com.app.edonymyeon.data.service.fcm.AlarmService"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
