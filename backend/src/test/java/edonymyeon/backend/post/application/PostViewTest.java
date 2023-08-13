@@ -24,8 +24,11 @@ import org.springframework.context.annotation.Import;
 public class PostViewTest implements ImageFileCleaner {
 
     private final PostReadService postReadService;
+
     private final PostTestSupport postTestSupport;
+
     private final MemberTestSupport memberTestSupport;
+
     private final PostRepository postRepository;
 
     private Post post;

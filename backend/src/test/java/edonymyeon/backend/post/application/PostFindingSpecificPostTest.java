@@ -27,13 +27,19 @@ import org.springframework.context.annotation.Import;
 public class PostFindingSpecificPostTest {
 
     private final PostRepository postRepository;
+
     private final MemberRepository memberRepository;
+
     private final ProfileImageInfoRepository profileImageInfoRepository;
+
     private final MemberTestSupport memberTestSupport;
+
     private final PostReadService postReadService;
 
     private MemberId memberId;
+
     private MemberId member2Id;
+
     private Long postId;
 
     @BeforeEach

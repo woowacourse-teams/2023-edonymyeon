@@ -15,12 +15,15 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import edonymyeon.backend.EdonymyeonTest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
+import edonymyeon.backend.support.MemberTestSupport;
 import jakarta.servlet.http.Part;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.apache.http.entity.ContentType;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -39,28 +42,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(ReplaceUnderscores.class)
+@RequiredArgsConstructor
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
-@SpringBootTest
+@EdonymyeonTest
 public class PostCreationDocsTest implements ImageFileCleaner {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
-    @MockBean
-    private MemberRepository memberRepository;
-
-    private void 회원_레포지토리를_모킹한다(final Member 회원) {
-        when(memberRepository.findByEmail(회원.getEmail())).thenReturn(
-                Optional.of(회원));
-        when(memberRepository.findById(회원.getId())).thenReturn(Optional.of(회원));
-    }
+    private final MemberTestSupport memberTestSupport;
 
     @Test
     void 게시글을_생성한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null);
-        회원_레포지토리를_모킹한다(글쓴이);
+        final Member 글쓴이 = memberTestSupport.builder().build();
 
         Part 제목 = new MockPart("title", null, "제목입니다".getBytes(StandardCharsets.UTF_8));
         Part 내용 = new MockPart("content", null, "내용입니다".getBytes(StandardCharsets.UTF_8));

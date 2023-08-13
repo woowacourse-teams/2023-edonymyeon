@@ -10,6 +10,7 @@ import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,13 +18,12 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
+@RequiredArgsConstructor
 public class HotPostIntegrationTest extends IntegrationTest {
 
-    @Autowired
-    ThumbsRepository thumbsRepository;
+    final ThumbsRepository thumbsRepository;
 
-    @Autowired
-    PostReadService postReadService;
+    final PostReadService postReadService;
 
     @Test
     void 핫게시글이_순서대로_찾아지는지_확인한다() {

@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,10 +26,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
+@RequiredArgsConstructor
 public class ConsumptionIntegrationTest extends IntegrationTest {
 
-    @Autowired
-    private ConsumptionTestSupport consumptionTestSupport;
+    private final ConsumptionTestSupport consumptionTestSupport;
 
     @ParameterizedTest(name = "조회 기간 = {0} 개월")
     @ValueSource(ints = {-1, 0, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12, 13, 14})

@@ -10,25 +10,23 @@ import edonymyeon.backend.report.application.ReportService;
 import edonymyeon.backend.report.domain.Report;
 import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.PostTestSupport;
+import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @SuppressWarnings("NonAsciiCharacters")
+@RequiredArgsConstructor
 @EdonymyeonTest
 class ReportServiceTest {
 
-    @Autowired
-    private ReportService reportService;
+    private final ReportService reportService;
 
-    @Autowired
-    private ReportRepository reportRepository;
+    private final ReportRepository reportRepository;
 
-    @Autowired
-    private PostTestSupport postTestSupport;
+    private final PostTestSupport postTestSupport;
 
-    @Autowired
-    private MemberTestSupport memberTestSupport;
+    private final MemberTestSupport memberTestSupport;
 
     @Test
     void 특정_게시글을_신고할_수_있다() {

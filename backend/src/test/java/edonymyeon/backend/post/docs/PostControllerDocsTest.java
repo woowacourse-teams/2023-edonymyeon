@@ -1,5 +1,6 @@
 package edonymyeon.backend.post.docs;
 
+import edonymyeon.backend.EdonymyeonTest;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
@@ -15,6 +16,7 @@ import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.thumbs.application.PostThumbsServiceImpl;
 import jakarta.servlet.http.Part;
+import lombok.RequiredArgsConstructor;
 import org.apache.http.entity.ContentType;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -59,14 +61,13 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SuppressWarnings("NonAsciiCharacters")
-@DisplayNameGeneration(ReplaceUnderscores.class)
+@RequiredArgsConstructor
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
-@SpringBootTest
+@EdonymyeonTest
 public class PostControllerDocsTest implements ImageFileCleaner {
 
-    @Autowired
-    private MockMvc mockMvc;
+    private final MockMvc mockMvc;
 
     @MockBean
     private MemberRepository memberRepository;

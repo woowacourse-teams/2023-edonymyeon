@@ -1,6 +1,7 @@
 package edonymyeon.backend;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,15 +10,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-@DisplayNameGeneration(ReplaceUnderscores.class)
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
-@SpringBootTest
+@RequiredArgsConstructor
+@EdonymyeonTest
 public class DocsTest {
 
-    @Autowired
-    protected MockMvc mockMvc;
+    protected final MockMvc mockMvc;
 
-    @Autowired
-    protected ObjectMapper objectMapper;
+    protected final ObjectMapper objectMapper;
 }

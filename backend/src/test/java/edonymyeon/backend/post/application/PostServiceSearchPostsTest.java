@@ -19,7 +19,9 @@ public class PostServiceSearchPostsTest {
             null);
 
     private final PostReadService postReadService;
+
     private final MemberTestSupport memberTestSupport;
+
     private final PostTestSupport postTestSupport;
 
     private Long postId1;

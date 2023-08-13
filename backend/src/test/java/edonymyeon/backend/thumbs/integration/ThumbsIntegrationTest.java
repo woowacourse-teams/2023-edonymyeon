@@ -23,17 +23,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
+@RequiredArgsConstructor
 public class ThumbsIntegrationTest extends IntegrationTest {
 
     public static final String UP = "up";
 
     public static final String DOWN = "down";
 
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
 
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
     private Member postWriter;
 

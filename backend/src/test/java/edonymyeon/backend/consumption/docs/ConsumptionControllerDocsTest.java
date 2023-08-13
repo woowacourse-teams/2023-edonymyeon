@@ -14,6 +14,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.DocsTest;
 import edonymyeon.backend.consumption.application.ConsumptionService;
 import edonymyeon.backend.consumption.application.dto.ConsumptionPriceResponse;
@@ -22,10 +23,12 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import java.util.List;
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -36,6 +39,11 @@ public class ConsumptionControllerDocsTest extends DocsTest {
 
     @MockBean
     private MemberRepository memberRepository;
+
+    public ConsumptionControllerDocsTest(final MockMvc mockMvc,
+                                         final ObjectMapper objectMapper) {
+        super(mockMvc, objectMapper);
+    }
 
     private void 회원_레포지토리를_모킹한다(final Member 회원) {
         when(memberRepository.findByEmail(회원.getEmail())).thenReturn(Optional.of(회원));

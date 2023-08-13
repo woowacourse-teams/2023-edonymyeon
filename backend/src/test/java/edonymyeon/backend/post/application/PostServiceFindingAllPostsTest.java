@@ -12,6 +12,7 @@ import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.repository.PostRepository;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SuppressWarnings("NonAsciiCharacters")
 @Import(TestConfig.class)
-@TestInstance(Lifecycle.PER_CLASS)
+@RequiredArgsConstructor
 @DisplayName("게시글 전체 조회 테스트")
 public class PostServiceFindingAllPostsTest extends IntegrationTest implements ImageFileCleaner {
 
@@ -53,11 +54,9 @@ public class PostServiceFindingAllPostsTest extends IntegrationTest implements I
     public static final String IMAGE1_RELATIVE_PATH = "/static/img/file/test_image_1.jpg";
     public static final String IMAGE2_RELATIVE_PATH = "/static/img/file/test_image_2.jpg";
 
-    @Autowired
-    private PostReadService postReadService;
+    private final PostReadService postReadService;
 
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
 
     private MemberId memberId;
     private MemberId memberId2;

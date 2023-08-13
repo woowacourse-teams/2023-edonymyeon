@@ -2,6 +2,7 @@ package edonymyeon.backend.consumption.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import edonymyeon.backend.EdonymyeonTest;
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.domain.ConsumptionType;
 import edonymyeon.backend.member.domain.Member;
@@ -26,23 +27,15 @@ import org.springframework.test.context.TestConstructor.AutowireMode;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-@DisplayNameGeneration(ReplaceUnderscores.class)
-@TestConstructor(autowireMode = AutowireMode.ALL)
-@Import({MemberTestSupport.class, PostTestSupport.class, ProfileImageInfoTestSupport.class,
-        ConsumptionTestSupport.class})
-@DataJpaTest
+@EdonymyeonTest
 class ConsumptionRepositoryTest {
 
-    @Autowired
     private final ConsumptionRepository consumptionRepository;
 
-    @Autowired
     private final MemberTestSupport memberTestSupport;
 
-    @Autowired
-    private ConsumptionTestSupport consumptionTestSupport;
+    private final ConsumptionTestSupport consumptionTestSupport;
 
-    @Autowired
     private final PostTestSupport postTestSupport;
 
     @Test
