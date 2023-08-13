@@ -72,8 +72,8 @@
     <string name="my_page_saving_title">절약금액:</string>
     <string name="my_page_purchase_title">소비금액:</string>
     <string name="my_page_required_login">로그인해주세요</string>
-    <string name="my_page_graph_saving">절약금액 (단위 10,000원)</string>
-    <string name="my_page_graph_purchase">소비금액 (단위 10,000원)</string>
+    <string name="my_page_graph_saving">절약금액</string>
+    <string name="my_page_graph_purchase">소비금액\t\t\t\t(단위 1,000원)</string>
     <string name="my_page_price">%,d원</string>
     <string name="my_page_loading_data">데이터를 불러오고 있습니다.</string>
 

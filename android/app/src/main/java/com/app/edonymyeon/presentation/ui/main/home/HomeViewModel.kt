@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.mapper.toAllPostItemUiModel
 import com.app.edonymyeon.presentation.uimodel.AllPostItemUiModel
+import com.app.edonymyeon.presentation.uimodel.DateUiModel
 import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
 import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
 import com.domain.edonymyeon.repository.PostRepository
@@ -46,7 +47,7 @@ class HomeViewModel(private val repository: PostRepository) : ViewModel() {
             content = "content $it",
             thumbnailUrl = "thumbnailUrl $it",
             nickname = "nickname $it",
-            createdAt = "date $it",
+            createdAt = DateUiModel("2023-08-09T11:24:05.91282"),
             reactionCount = ReactionCountUiModel(
                 viewCount = it,
                 commentCount = it,
