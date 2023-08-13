@@ -16,6 +16,7 @@ import com.app.edonymyeon.data.repository.ConsumptionsRepositoryImpl
 import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
 import com.app.edonymyeon.data.service.client.RetrofitClient
 import com.app.edonymyeon.data.util.PreferenceUtil
+import com.app.edonymyeon.presentation.ui.alarmsetting.AlarmSettingActivity
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
 import com.app.edonymyeon.presentation.ui.main.MainActivity
 import com.app.edonymyeon.presentation.ui.main.mypage.chart.LineChartManager
@@ -87,8 +88,10 @@ class MyPageFragment : Fragment() {
         binding.btnLogin.isVisible = false
         binding.tvLogout.isVisible = true
         binding.tvWithdraw.isVisible = true
+        binding.tvUpdateAlarmSetting.isVisible = true
         binding.tvLogout.setOnClickListener { logout() }
         binding.tvMyPost.setOnClickListener { navigateToMyPost() }
+        binding.tvUpdateAlarmSetting.setOnClickListener { navigateToAlarmSetting() }
         binding.tvUpdateUserInfo.setOnClickListener { }
         binding.tvWithdraw.setOnClickListener { showDialog() }
         viewModel.getUserProfile()
@@ -100,6 +103,7 @@ class MyPageFragment : Fragment() {
     private fun setViewForNotLogin() {
         binding.chartMyPayment.isVisible = false
         binding.tvLogout.isVisible = false
+        binding.tvUpdateAlarmSetting.isVisible = false
         binding.tvWithdraw.isVisible = false
         binding.btnLogin.setOnClickListener { navigateToLogin() }
         binding.tvMyPost.setOnClickListener { makeLoginSnackbar() }
@@ -153,6 +157,10 @@ class MyPageFragment : Fragment() {
 
     private fun navigateToMyPost() {
         startActivity(MyPostActivity.newIntent(requireContext()))
+    }
+
+    private fun navigateToAlarmSetting() {
+        startActivity(AlarmSettingActivity.newIntent(requireContext()))
     }
 
     private fun navigateToLogin() {

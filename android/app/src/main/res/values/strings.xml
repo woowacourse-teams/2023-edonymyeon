@@ -65,6 +65,7 @@
     <string name="my_page_my_post">내가 쓴 글</string>
     <string name="my_page_my_comment">댓글 단 글</string>
     <string name="my_page_update_user_info">회원 정보 수정</string>
+    <string name="my_page_alarm_setting">푸시 알람 설정</string>
     <string name="my_page_logout">로그아웃</string>
     <string name="my_page_withdraw">회원탈퇴</string>
     <string name="my_page_login">로그인</string>
@@ -140,5 +141,9 @@
     <string name="alarm_setting_tool_bar_title">푸시 알림 설정</string>
     <string name="alarm_setting_title">푸시 알림 수신</string>
     <string name="alarm_setting_content">해제하면 푸시 알림을 수신할 수 없습니다.</string>
+    <string name="alarm_setting_one_reaction">좋아요/싫어요 건별 알림 수신</string>
+    <string name="alarm_setting_ten_reaction">좋아요/싫어요 10개당 알림 수신</string>
+    <string name="alarm_setting_confirm_consumption">소비 확정여부 수신</string>
+
 
 </resources>
