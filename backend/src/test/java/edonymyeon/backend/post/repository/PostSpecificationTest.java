@@ -2,27 +2,20 @@ package edonymyeon.backend.post.repository;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.PostTestSupport;
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
-@Transactional
-@SpringBootTest
+@IntegrationTest
 public class PostSpecificationTest {
 
     private final PostTestSupport postTestSupport;

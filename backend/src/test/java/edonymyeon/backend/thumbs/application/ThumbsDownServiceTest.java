@@ -8,6 +8,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
@@ -24,22 +25,12 @@ import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.TestConstructor.AutowireMode;
-import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-@DisplayNameGeneration(ReplaceUnderscores.class)
-@TestConstructor(autowireMode = AutowireMode.ALL)
-@Transactional
-@SpringBootTest
+@IntegrationTest
 public class ThumbsDownServiceTest {
 
     private final ThumbsService thumbsService;

@@ -3,7 +3,7 @@ package edonymyeon.backend.auth;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.IntegrationTest;
+import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
@@ -18,7 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class AuthIntegrationTest extends IntegrationTest {
+public class AuthIntegrationTest extends IntegrationFixture {
 
     @Test
     public void 이메일_중복을_체크한다_중복X() {

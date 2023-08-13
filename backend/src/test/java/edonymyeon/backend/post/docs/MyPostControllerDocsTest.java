@@ -14,7 +14,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import edonymyeon.backend.DocsTest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edonymyeon.backend.support.DocsTest;
 import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.member.domain.Member;
@@ -25,7 +26,6 @@ import edonymyeon.backend.post.application.PostSlice;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.application.dto.response.PostConsumptionResponse;
 import edonymyeon.backend.post.domain.Post;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -38,6 +38,7 @@ import org.springframework.restdocs.headers.HeaderDescriptor;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.request.ParameterDescriptor;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -50,7 +51,14 @@ public class MyPostControllerDocsTest extends DocsTest {
     private MemberRepository memberRepository;
 
     @Autowired
-    private Domain domain;
+    private final Domain domain;
+
+    public MyPostControllerDocsTest(final MockMvc mockMvc,
+                                    final ObjectMapper objectMapper,
+                                    final Domain domain) {
+        super(mockMvc, objectMapper);
+        this.domain = domain;
+    }
 
     @Test
     void 내_게시글_조회_문서화() throws Exception {

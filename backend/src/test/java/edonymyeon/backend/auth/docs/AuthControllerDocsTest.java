@@ -18,7 +18,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import edonymyeon.backend.DocsTest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edonymyeon.backend.support.DocsTest;
 import edonymyeon.backend.auth.application.AuthService;
 import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
@@ -30,6 +31,7 @@ import org.springframework.restdocs.headers.HeaderDescriptor;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.request.ParameterDescriptor;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -37,6 +39,11 @@ public class AuthControllerDocsTest extends DocsTest {
 
     @MockBean
     private AuthService authService;
+
+    public AuthControllerDocsTest(final MockMvc mockMvc,
+                                  final ObjectMapper objectMapper) {
+        super(mockMvc, objectMapper);
+    }
 
     @Test
     void 로그인_문서화() throws Exception {

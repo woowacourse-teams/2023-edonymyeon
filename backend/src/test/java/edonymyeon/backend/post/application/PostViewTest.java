@@ -2,37 +2,34 @@ package edonymyeon.backend.post.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.AnonymousMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.PostTestSupport;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.TestConstructor.AutowireMode;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-@DisplayNameGeneration(ReplaceUnderscores.class)
-@TestConstructor(autowireMode = AutowireMode.ALL)
 @Import(TestConfig.class)
-@SpringBootTest
+@IntegrationTest
 public class PostViewTest implements ImageFileCleaner {
 
     private final PostReadService postReadService;
+
     private final PostTestSupport postTestSupport;
+
     private final MemberTestSupport memberTestSupport;
+
+    private final PostRepository postRepository;
 
     private Post post;
     private Member writer;
@@ -67,7 +64,7 @@ public class PostViewTest implements ImageFileCleaner {
         postReadService.findSpecificPost(post.getId(), new ActiveMemberId(viewer.getId()));
         postReadService.findSpecificPost(post.getId(), new ActiveMemberId(viewer.getId()));
 
-        assertThat(post.getViewCount()).isEqualTo(3);
+        assertThat(postRepository.findById(post.getId()).get().getViewCount()).isEqualTo(3);
     }
 
     @Test
@@ -77,7 +74,7 @@ public class PostViewTest implements ImageFileCleaner {
         postReadService.findSpecificPost(post.getId(), new AnonymousMemberId());
         postReadService.findSpecificPost(post.getId(), new AnonymousMemberId());
 
-        assertThat(post.getViewCount()).isEqualTo(3);
+        assertThat(postRepository.findById(post.getId()).get().getViewCount()).isEqualTo(3);
     }
 }
 

@@ -1,17 +1,6 @@
 package edonymyeon.backend.post.integration;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.AUTHORIZATION_EMPTY;
-import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_DOMAIN_INVALID;
-import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_STORE_NAME_INVALID;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_IMAGE_COUNT_INVALID;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
-
-import edonymyeon.backend.IntegrationTest;
+import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
@@ -36,7 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class PostIntegrationTest extends IntegrationTest implements ImageFileCleaner {
+public class PostIntegrationTest extends IntegrationFixture implements ImageFileCleaner {
 
     @Value("${domain}")
     private String domain;

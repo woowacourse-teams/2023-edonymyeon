@@ -1,28 +1,17 @@
-package edonymyeon.backend;
+package edonymyeon.backend.support;
 
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.support.ConsumptionTestSupport;
-import edonymyeon.backend.support.MemberTestSupport;
-import edonymyeon.backend.support.PostImageInfoTestSupport;
-import edonymyeon.backend.support.PostIntegrationTestSupport;
-import edonymyeon.backend.support.PostTestSupport;
-import edonymyeon.backend.support.ProfileImageInfoTestSupport;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.io.File;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.test.annotation.DirtiesContext;
 
-@DisplayNameGeneration(ReplaceUnderscores.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class IntegrationTest {
+@SuppressWarnings("NonAsciiCharacters")
+@IntegrationTest
+public class IntegrationFixture {
 
     protected static final File 이미지1 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
     protected static final File 이미지2 = new File("./src/test/resources/static/img/file/test_image_2.jpg");

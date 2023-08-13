@@ -1,5 +1,8 @@
 package edonymyeon.backend.post.repository;
 
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.member.application.dto.AnonymousMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -10,26 +13,15 @@ import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.PostTestSupport;
 import edonymyeon.backend.support.ThumbsUpPostTestSupport;
 import lombok.RequiredArgsConstructor;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.TestConstructor.AutowireMode;
-import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
-@Transactional
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-@DisplayNameGeneration(ReplaceUnderscores.class)
-@TestConstructor(autowireMode = AutowireMode.ALL)
-@SpringBootTest
+@IntegrationTest
 class PostRepositoryTest {
 
     private final PostRepository postRepository;
@@ -83,7 +75,7 @@ class PostRepositoryTest {
                 HotPostPolicy.THUMBS_COUNT_WEIGHT,
                 page);
 
-        assertThat(hotPosts.isEmpty()).isTrue();
+        Assertions.assertThat(hotPosts.isEmpty()).isTrue();
     }
 
     @Test
