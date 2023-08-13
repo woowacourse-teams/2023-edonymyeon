@@ -51,8 +51,8 @@ public class PostServiceHotPostsTest {
     @Test
     void 테스트용_키가_제대로_생성되는지_확인한다() {
         assertSoftly(softly -> {
-                    softly.assertThat(postIdsCacheKey).contains("TEST_HOT", "SIZE:" + findingCondition.getSize(), "PAGE:" + findingCondition.getPage());
-                    softly.assertThat(isLastCacheKey).contains("TEST_HOT", "LAST", "SIZE:" + findingCondition.getSize(), "PAGE:" + findingCondition.getPage());
+                    softly.assertThat(postIdsCacheKey).contains("TEST-HOT", "SIZE=" + findingCondition.getSize(), "PAGE=" + findingCondition.getPage());
+                    softly.assertThat(isLastCacheKey).contains("TEST-HOT", "LAST", "SIZE=" + findingCondition.getSize(), "PAGE=" + findingCondition.getPage());
                 }
         );
     }

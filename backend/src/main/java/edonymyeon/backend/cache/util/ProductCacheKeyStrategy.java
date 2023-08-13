@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProductCacheKeyStrategy implements CacheKeyStrategy{
 
-    private static final String POST_IDS_CACHE_KEY = "HOT_POST_SIZE:%s_PAGE:%s";
+    private static final String POST_IDS_CACHE_KEY = "HOT-POST:SIZE=%s_PAGE=%s";
 
-    private static final String IS_LAST_CACHE_KEY = "HOT_POST_SIZE:%s_PAGE:%s_LAST";
+    private static final String IS_LAST_CACHE_KEY = "HOT-POST-LAST:SIZE=%s_PAGE=%s";
 
     @Override
     public String getPostIdsCacheKey(final Integer size, final Integer page){
