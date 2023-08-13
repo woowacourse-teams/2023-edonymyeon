@@ -53,6 +53,7 @@ class MyPageFragment : Fragment() {
             LineChartManager(
                 binding.chartMyPayment,
                 resources.getColor(R.color.gray_615f5f, null),
+                resources.getFont(R.font.nanumsquare),
             ),
         )
     }
