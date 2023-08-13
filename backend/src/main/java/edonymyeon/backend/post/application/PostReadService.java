@@ -1,7 +1,6 @@
 package edonymyeon.backend.post.application;
 
-import edonymyeon.backend.cache.CacheIsLastService;
-import edonymyeon.backend.cache.CachePostIdsService;
+import edonymyeon.backend.cache.CachePostService;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.domain.Domain;
@@ -42,9 +41,7 @@ public class PostReadService {
 
     private final HotPostPolicy hotPostPolicy;
 
-    private final CacheIsLastService cacheIsLastService;
-
-    private final CachePostIdsService cachePostIdsService;
+    private final CachePostService cachePostService;
 
     public PostSlice<GeneralPostInfoResponse> findPostsByPagingCondition(
             final GeneralFindingCondition generalFindingCondition) {
@@ -135,60 +132,34 @@ public class PostReadService {
     }
 
     public PostSlice<GeneralPostInfoResponse> findHotPosts(final HotFindingCondition hotFindingCondition) {
-        String postIdsKey = hotPostPolicy.getPostIdsCacheKey(hotFindingCondition);
-        String isLastKey = hotPostPolicy.getLastCacheKey(hotFindingCondition);
-
-        if (cachePostIdsService.hasCache(postIdsKey)) {
-            return findHotPostsFromCache(postIdsKey, isLastKey);
+        if (cachePostService.isPostsCached(hotFindingCondition)) {
+            return findCachedPosts(hotFindingCondition);
         }
-        return findHotPostFromRepository(hotFindingCondition, postIdsKey, isLastKey);
+        return findHotPostFromRepository(hotFindingCondition);
     }
 
-    private PostSlice<GeneralPostInfoResponse> findHotPostsFromCache(String postIdsKey, String hasNextKey) {
-        List<Long> postIds = cachePostIdsService.getPostIds(postIdsKey);
-        boolean isLast = cacheIsLastService.getHasNext(hasNextKey);
-
-        List<GeneralPostInfoResponse> hotPosts = postRepository.findByIds(postIds)
+    private PostSlice<GeneralPostInfoResponse> findCachedPosts(final HotFindingCondition hotFindingCondition) {
+        PostSlice<Long> cachedHotPosts = cachePostService.findCachedPosts(hotFindingCondition);
+        List<GeneralPostInfoResponse> posts = postRepository.findByIds(cachedHotPosts.getContent())
                 .stream()
                 .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()))
                 .toList();
-
-        return new PostSlice<>(hotPosts, isLast);
+        return new PostSlice<>(posts, cachedHotPosts.isLast());
     }
 
-    private PostSlice<GeneralPostInfoResponse> findHotPostFromRepository(
-            final HotFindingCondition hotFindingCondition,
-            final String postIdsKey,
-            final String isLastKey
-    ) {
+    private PostSlice<GeneralPostInfoResponse> findHotPostFromRepository(final HotFindingCondition hotFindingCondition) {
         final Slice<Post> hotPost = findHotPostSliceFromRepositoryByPolicy(hotFindingCondition);
-        saveHotPostsInCache(postIdsKey, isLastKey, hotPost);
-
+        cachePostService.cachePosts(hotFindingCondition, hotPost);
         Slice<GeneralPostInfoResponse> hotPostSlice = hotPost.map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
         return PostSlice.from(hotPostSlice);
     }
 
-    private Slice<Post> findHotPostSliceFromRepositoryByPolicy(HotFindingCondition hotFindingCondition) {
+    private Slice<Post> findHotPostSliceFromRepositoryByPolicy(final HotFindingCondition hotFindingCondition) {
         return postRepository.findHotPosts(
                 hotPostPolicy.getFindPeriod(),
                 hotPostPolicy.getViewCountWeight(),
                 hotPostPolicy.getThumbsCountWeight(),
                 hotFindingCondition.toPage()
         );
-    }
-
-    private void saveHotPostsInCache(String postIdsKey, String isLastKey, Slice<Post> hotPost) {
-        if(hotPost.get().toList().isEmpty()){
-            cachePostIdsService.delete(postIdsKey);
-            cacheIsLastService.delete(isLastKey);
-            return;
-        }
-
-        final List<Long> hotPostIds = hotPost.stream()
-                .map(Post::getId)
-                .toList();
-
-        cachePostIdsService.save(postIdsKey, hotPostIds);
-        cacheIsLastService.save(isLastKey, hotPost.isLast());
     }
 }
