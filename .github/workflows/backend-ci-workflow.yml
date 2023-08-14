@@ -28,6 +28,11 @@ jobs:
         with:
           java-version: '17'
           distribution: 'corretto'
+          
+      - name: Setup Testcontainers Cloud Client
+        uses: atomicjar/testcontainers-cloud-setup-action@v1
+        with:
+          token: ${{ secrets.TC_CLOUD_TOKEN }}
 
       - name: Gradle 명령 실행을 위한 권한을 부여합니다
         run: chmod +x gradlew
