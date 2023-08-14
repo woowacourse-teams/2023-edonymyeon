@@ -14,6 +14,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,6 +32,7 @@ public class NotificationService {
         return NotificationsResponse.from(notifications);
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void sendThumbsNotificationToWriter(final Post post) {
         final Receiver receiver = new Receiver(post.getMember());
         final boolean isSentSuccessfully = notificationSender.sendNotification(

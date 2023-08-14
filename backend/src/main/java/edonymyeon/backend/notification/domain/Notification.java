@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,8 +21,7 @@ import lombok.NoArgsConstructor;
 public class Notification extends TemporalRecord {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
@@ -37,10 +37,15 @@ public class Notification extends TemporalRecord {
     private boolean read;
 
     public Notification(final Member member, final String title, final ScreenType screenType, final Long postId) {
+        this.id = generateId();
         this.member = member;
         this.title = title;
         this.screenType = screenType;
         this.postId = postId;
         this.read = false;
+    }
+
+    private String generateId() {
+        return UUID.randomUUID().toString();
     }
 }
