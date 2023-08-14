@@ -84,7 +84,7 @@
                 android:padding="10dp"
                 android:textColor="@color/black_000000"
                 android:textSize="13sp"
-                app:layout_constraintDimensionRatio="H,320:34"
+                app:layout_constraintDimensionRatio="H,320:38"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_email"
@@ -131,7 +131,7 @@
                 android:textColor="@color/black_000000"
                 android:textColorHint="@color/black_000000"
                 android:textSize="13sp"
-                app:layout_constraintDimensionRatio="H,320:34"
+                app:layout_constraintDimensionRatio="H,320:38"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_password"
@@ -150,10 +150,12 @@
                 android:id="@+id/bt_login"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@drawable/bg_576b9e_radius_25dp"
+                android:background="@drawable/bg_576b9e_radius_6dp"
                 android:onClick="@{() -> viewModel.onLoginClick(etEmail.getText().toString(), etPassword.getText().toString())}"
+                android:stateListAnimator="@null"
                 android:text="@string/login_login"
                 android:textColor="@color/white_ffffff"
+                android:textSize="16sp"
                 app:layout_constraintDimensionRatio="H,320:47"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -164,10 +166,33 @@
                 android:id="@+id/space_login_bottom"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintDimensionRatio="H,360:45"
+                app:layout_constraintDimensionRatio="H,360:14"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bt_login" />
+
+            <ImageButton
+                android:id="@+id/bt_login_kakao"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@android:color/transparent"
+                android:elevation="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/btn_login_kakao"
+                app:layout_constraintDimensionRatio="H,320:47"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/space_login_bottom"
+                app:layout_constraintWidth_percent="0.88" />
+
+            <Space
+                android:id="@+id/space_kakao_login_bottom"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H,360:45"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bt_login_kakao" />
 
             <Space
                 android:id="@+id/space_join_left"
@@ -175,7 +200,7 @@
                 android:layout_height="0dp"
                 app:layout_constraintDimensionRatio="H,33:28"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/space_login_bottom"
+                app:layout_constraintTop_toBottomOf="@id/space_kakao_login_bottom"
                 app:layout_constraintWidth_percent="0.091" />
 
             <TextView
@@ -188,13 +213,15 @@
                 app:layout_constraintBottom_toBottomOf="@id/space_join_left"
                 app:layout_constraintDimensionRatio="W,107:28"
                 app:layout_constraintStart_toEndOf="@id/space_join_left"
-                app:layout_constraintTop_toBottomOf="@id/space_login_bottom" />
+                app:layout_constraintTop_toBottomOf="@id/space_kakao_login_bottom"
+                app:layout_constraintVertical_bias="0.0" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/bt_join"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@drawable/bg_576b9e_radius_25dp"
+                android:background="@drawable/bg_576b9e_radius_6dp"
+                android:stateListAnimator="@null"
                 android:text="@string/login_join"
                 android:textColor="@color/white_ffffff"
                 android:textSize="16sp"
