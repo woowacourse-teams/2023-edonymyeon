@@ -3,7 +3,7 @@ package edonymyeon.backend.image;
 import static edonymyeon.backend.global.exception.ExceptionInformation.REQUEST_FILE_SIZE_TOO_LARGE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edonymyeon.backend.IntegrationTest;
+import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class ImageFileSizeIntegrationTest extends IntegrationTest implements ImageFileCleaner {
+public class ImageFileSizeIntegrationTest extends IntegrationFixture implements ImageFileCleaner {
 
     private static final File 크기_21MB_이미지 = new File("./src/test/resources/static/img/file/test_image_21mb.jpg");
     private static final File 크기_20MB_이미지 = new File("./src/test/resources/static/img/file/test_image_20mb.jpg");

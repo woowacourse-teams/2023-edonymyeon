@@ -1,6 +1,6 @@
 package edonymyeon.backend.post.integration;
 
-import edonymyeon.backend.IntegrationTest;
+import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
@@ -27,7 +27,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class PostIntegrationTest extends IntegrationTest implements ImageFileCleaner {
+public class PostIntegrationTest extends IntegrationFixture implements ImageFileCleaner {
 
     @Value("${domain}")
     private String domain;

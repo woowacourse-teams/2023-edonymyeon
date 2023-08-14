@@ -1,5 +1,6 @@
 package edonymyeon.backend.report;
 
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.post.domain.Post;
@@ -9,31 +10,22 @@ import edonymyeon.backend.report.application.ReportService;
 import edonymyeon.backend.report.domain.Report;
 import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.PostTestSupport;
+import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
-@DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
-@Transactional
-@SpringBootTest
+@RequiredArgsConstructor
+@IntegrationTest
 class ReportServiceTest {
 
-    @Autowired
-    private ReportService reportService;
+    private final ReportService reportService;
 
-    @Autowired
-    private ReportRepository reportRepository;
+    private final ReportRepository reportRepository;
 
-    @Autowired
-    private PostTestSupport postTestSupport;
+    private final PostTestSupport postTestSupport;
 
-    @Autowired
-    private MemberTestSupport memberTestSupport;
+    private final MemberTestSupport memberTestSupport;
 
     @Test
     void 특정_게시글을_신고할_수_있다() {

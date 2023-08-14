@@ -2,7 +2,7 @@ package edonymyeon.backend.report.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edonymyeon.backend.IntegrationTest;
+import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.report.application.ReportRequest;
@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
-class ReportIntegrationTest extends IntegrationTest implements ImageFileCleaner {
+class ReportIntegrationTest extends IntegrationFixture implements ImageFileCleaner {
 
     @Test
     void 특정_게시글을_신고한다() {

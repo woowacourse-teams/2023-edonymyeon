@@ -2,7 +2,6 @@ package com.app.edonymyeon.presentation.uimodel
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import java.time.LocalDateTime
 
 @Parcelize
 data class PostUiModel(
@@ -11,7 +10,7 @@ data class PostUiModel(
     val price: Int,
     val content: String,
     val images: List<String>,
-    val createdAt: LocalDateTime,
+    val createdAt: DateUiModel,
     val writer: WriterUiModel,
     val reactionCount: ReactionCountUiModel,
     val recommendation: RecommendationUiModel,

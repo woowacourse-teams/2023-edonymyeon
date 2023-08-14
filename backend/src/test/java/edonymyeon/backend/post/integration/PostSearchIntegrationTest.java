@@ -3,7 +3,7 @@ package edonymyeon.backend.post.integration;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.IntegrationTest;
+import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.domain.Member;
 import io.restassured.RestAssured;
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class PostSearchIntegrationTest extends IntegrationTest {
+public class PostSearchIntegrationTest extends IntegrationFixture {
 
     @BeforeEach
     void 테스트_실행전_한_회원의_가입과_두_게시글_작성을_실행한다() {

@@ -2,6 +2,7 @@ package edonymyeon.backend.consumption.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.domain.ConsumptionType;
 import edonymyeon.backend.member.domain.Member;
@@ -9,40 +10,24 @@ import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.ConsumptionTestSupport;
 import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.PostTestSupport;
-import edonymyeon.backend.support.ProfileImageInfoTestSupport;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.TestConstructor.AutowireMode;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-@DisplayNameGeneration(ReplaceUnderscores.class)
-@TestConstructor(autowireMode = AutowireMode.ALL)
-@Import({MemberTestSupport.class, PostTestSupport.class, ProfileImageInfoTestSupport.class,
-        ConsumptionTestSupport.class})
-@DataJpaTest
+@IntegrationTest
 class ConsumptionRepositoryTest {
 
-    @Autowired
     private final ConsumptionRepository consumptionRepository;
 
-    @Autowired
     private final MemberTestSupport memberTestSupport;
 
-    @Autowired
-    private ConsumptionTestSupport consumptionTestSupport;
+    private final ConsumptionTestSupport consumptionTestSupport;
 
-    @Autowired
     private final PostTestSupport postTestSupport;
 
     @Test

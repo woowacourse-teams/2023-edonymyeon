@@ -100,6 +100,8 @@
                     android:layout_height="0dp"
                     android:text="@{postViewModel.post.title}"
                     android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black_434343"
                     app:layout_constraintStart_toEndOf="@id/space_content_start"
                     app:layout_constraintTop_toBottomOf="@id/space_image_bottom"
                     tools:text="립스틱 살까말까 고민 중인데..." />
@@ -158,12 +160,14 @@
                 <TextView
                     android:id="@+id/tv_price"
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:text="@{@string/all_price(postViewModel.post.price)}"
-                    android:textSize="14sp"
-                    app:layout_constraintStart_toEndOf="@id/space_content_start"
+                    android:layout_height="wrap_content"
+                    android:text="@{@string/all_price_long(postViewModel.post.price)}"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
                     app:layout_constraintTop_toBottomOf="@id/space_price_top"
+                    app:layout_constraintStart_toEndOf="@id/space_content_start"
                     tools:text="가격: 13,000원" />
+
 
                 <Space
                     android:id="@+id/space_price_bottom"

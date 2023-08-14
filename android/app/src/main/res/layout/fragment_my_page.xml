@@ -52,6 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/my_page_title"
+                    android:fontFamily="@font/dohyeon"
                     android:textColor="@color/black_000000"
                     android:textSize="28sp"
                     app:layout_constraintStart_toEndOf="@id/space_my_page_title_start"
@@ -135,26 +136,43 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="@{@string/my_page_price(viewModel.consumptionOnThisMonth.saving)}"
+                    android:text="@{@string/all_price(viewModel.consumptionOnThisMonth.saving)}"
                     android:textColor="@color/gray_434343"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_saving_title"
                     app:layout_constraintStart_toEndOf="@id/tv_saving_title"
                     app:layout_constraintTop_toTopOf="@id/tv_saving_title"
-                    tools:text="15,000원" />
+                    tools:text="15,000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all_price_unit"
+                    android:textColor="@color/gray_434343"
+                    app:layout_constraintStart_toEndOf="@id/tv_my_saving"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tv_saving_title"
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/tv_my_purchase"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:text="@{@string/my_page_price(viewModel.consumptionOnThisMonth.purchase)}"
+                    android:text="@{@string/all_price(viewModel.consumptionOnThisMonth.purchase)}"
                     android:textColor="@color/gray_434343"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_purchase_title"
                     app:layout_constraintStart_toEndOf="@id/tv_purchase_title"
                     app:layout_constraintTop_toTopOf="@id/tv_purchase_title"
-                    tools:text="15,000원" />
+                    tools:text="15,000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all_price_unit"
+                    android:textColor="@color/gray_434343"
+                    app:layout_constraintStart_toEndOf="@id/tv_my_purchase"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tv_purchase_title"/>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_login"
@@ -265,11 +283,10 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_bottom"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:background="@drawable/bg_ffffff_radius_15"
                 android:elevation="4dp"
                 android:paddingVertical="15dp"
-                app:layout_constraintDimensionRatio="H,336:140"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/space_graph_bottom"
@@ -284,9 +301,11 @@
                     android:textColor="@color/black_000000"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toTopOf="@id/tv_update_user_info"
+                    app:layout_constraintDimensionRatio="H,336:48"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"
                     app:layout_constraintWidth_percent="0.87" />
 
                 <TextView
@@ -298,6 +317,7 @@
                     android:textColor="@color/black_000000"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toTopOf="@id/tv_logout"
+                    app:layout_constraintDimensionRatio="H,336:48"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_my_post"
@@ -311,10 +331,26 @@
                     android:text="@string/my_page_logout"
                     android:textColor="@color/black_000000"
                     android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/tv_withdraw"
+                    app:layout_constraintDimensionRatio="H,336:48"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_update_user_info"
+                    app:layout_constraintWidth_percent="0.87" />
+
+                <TextView
+                    android:id="@+id/tv_withdraw"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/my_page_withdraw"
+                    android:textColor="@color/black_000000"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="H,336:48"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_logout"
                     app:layout_constraintWidth_percent="0.87" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 

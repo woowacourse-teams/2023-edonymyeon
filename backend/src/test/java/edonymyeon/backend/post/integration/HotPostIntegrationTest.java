@@ -1,7 +1,7 @@
 package edonymyeon.backend.post.integration;
 
 import edonymyeon.backend.CacheConfig;
-import edonymyeon.backend.IntegrationTest;
+import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.cache.application.BooleanTemplate;
 import edonymyeon.backend.cache.application.LongTemplate;
 import edonymyeon.backend.cache.util.HotPostCachePolicy;
@@ -15,32 +15,28 @@ import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
+@RequiredArgsConstructor
 @Import(CacheConfig.class)
-public class HotPostIntegrationTest extends IntegrationTest {
+public class HotPostIntegrationTest extends IntegrationFixture {
 
-    @Autowired
-    private ThumbsRepository thumbsRepository;
+    private final ThumbsRepository thumbsRepository;
 
-    @Autowired
-    private PostReadService postReadService;
+    private final PostReadService postReadService;
 
-    @Autowired
-    private HotPostCachePolicy hotPostCachePolicy;
+    private final HotPostCachePolicy hotPostCachePolicy;
 
-    @Autowired
-    private LongTemplate longTemplate;
+    private final LongTemplate longTemplate;
 
-    @Autowired
-    private BooleanTemplate booleanTemplate;
+    private final BooleanTemplate booleanTemplate;
 
     private final HotFindingCondition findingCondition = HotFindingCondition.builder().build();
 

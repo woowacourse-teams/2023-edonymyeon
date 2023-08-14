@@ -1,6 +1,7 @@
 package com.app.edonymyeon.mapper
 
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
+import com.app.edonymyeon.presentation.uimodel.DateUiModel
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.domain.edonymyeon.model.Count
 import com.domain.edonymyeon.model.Post
@@ -16,7 +17,7 @@ fun Post.toUiModel(): PostUiModel {
         price = price,
         content = content,
         images = images,
-        createdAt = createdAt,
+        createdAt = DateUiModel(createdAt.toString()),
         writer = writer.toUiModel(),
         reactionCount = reactionCount.toUiModel(),
         recommendation = recommendation.toUiModel(),

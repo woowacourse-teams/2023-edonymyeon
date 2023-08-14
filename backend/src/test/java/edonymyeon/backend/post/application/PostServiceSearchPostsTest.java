@@ -1,34 +1,27 @@
 package edonymyeon.backend.post.application;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.PostTestSupport;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.TestConstructor.AutowireMode;
-import org.springframework.transaction.annotation.Transactional;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
-@SuppressWarnings("NonAsciiCharacters")
+@IntegrationTest
 @RequiredArgsConstructor
-@DisplayNameGeneration(ReplaceUnderscores.class)
-@TestConstructor(autowireMode = AutowireMode.ALL)
-@Transactional
-@SpringBootTest
 public class PostServiceSearchPostsTest {
 
     private static final GeneralFindingCondition emptyFindingCondition = GeneralFindingCondition.of(null, null, null,
             null);
 
     private final PostReadService postReadService;
+
     private final MemberTestSupport memberTestSupport;
+
     private final PostTestSupport postTestSupport;
 
     private Long postId1;

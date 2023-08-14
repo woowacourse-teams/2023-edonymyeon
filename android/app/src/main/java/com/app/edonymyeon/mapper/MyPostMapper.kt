@@ -1,6 +1,7 @@
 package com.app.edonymyeon.mapper
 
 import com.app.edonymyeon.data.dto.response.MyPostResponse
+import com.app.edonymyeon.presentation.uimodel.DateUiModel
 import com.app.edonymyeon.presentation.uimodel.MyPostUiModel
 import com.domain.edonymyeon.model.MyPost
 
@@ -10,7 +11,7 @@ fun MyPostResponse.toUiModel(): MyPostUiModel {
         title = title,
         image = image,
         content = content,
-        createdAt = createdAt,
+        createdAt = DateUiModel(createdAt),
         consumption = consumption.toUiModel(),
     )
 }
@@ -32,7 +33,7 @@ fun MyPost.toUiModel(): MyPostUiModel {
         title = title,
         image = image,
         content = content,
-        createdAt = createdAt,
+        createdAt = DateUiModel(createdAt),
         consumption = consumption.toUiModel(),
     )
 }
