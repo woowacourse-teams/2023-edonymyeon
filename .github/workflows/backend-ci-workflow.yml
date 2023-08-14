@@ -29,10 +29,11 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
           
-      - name: Setup Testcontainers Cloud Client
-        uses: atomicjar/testcontainers-cloud-setup-action@v1
-        with:
-          token: ${{ secrets.TC_CLOUD_TOKEN }}
+      - name: Install redis
+        run: sudo apt-get install -y redis-tools redis-server
+        
+      - name: Verify that redis is up
+        run: redis-cli ping
 
       - name: Gradle 명령 실행을 위한 권한을 부여합니다
         run: chmod +x gradlew
