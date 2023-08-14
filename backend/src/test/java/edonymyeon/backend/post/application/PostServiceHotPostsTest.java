@@ -8,19 +8,13 @@ import edonymyeon.backend.support.PostTestSupport;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
-@Transactional
-@RequiredArgsConstructor
-@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @Import(CacheConfig.class)
-@SpringBootTest
+@RequiredArgsConstructor
 public class PostServiceHotPostsTest {
 
     private final HotPostCachePolicy hotPostCachePolicy;
