@@ -1,8 +1,13 @@
 package edonymyeon.backend.post.integration;
 
+import edonymyeon.backend.CacheConfig;
 import edonymyeon.backend.support.IntegrationFixture;
+import edonymyeon.backend.cache.application.BooleanTemplate;
+import edonymyeon.backend.cache.application.LongTemplate;
+import edonymyeon.backend.cache.util.HotPostCachePolicy;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.post.application.HotFindingCondition;
 import edonymyeon.backend.post.application.PostReadService;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.thumbs.domain.Thumbs;
@@ -11,18 +16,38 @@ import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
+@Import(CacheConfig.class)
 public class HotPostIntegrationTest extends IntegrationFixture {
 
-    final ThumbsRepository thumbsRepository;
+    private final ThumbsRepository thumbsRepository;
 
-    final PostReadService postReadService;
+    private final PostReadService postReadService;
+
+    private final HotPostCachePolicy hotPostCachePolicy;
+
+    private final LongTemplate longTemplate;
+
+    private final BooleanTemplate booleanTemplate;
+
+    private final HotFindingCondition findingCondition = HotFindingCondition.builder().build();
+
+    @BeforeEach
+    void 캐시를_삭제하고_시작하도록_한다(){
+        String postIdsCacheKey = hotPostCachePolicy.getPostIdsCacheKey(findingCondition);
+        String isLastCacheKey = hotPostCachePolicy.getLastCacheKey(findingCondition);
+
+        longTemplate.delete(postIdsCacheKey);
+        booleanTemplate.delete(isLastCacheKey);
+    }
 
     @Test
     void 핫게시글이_순서대로_찾아지는지_확인한다() {
