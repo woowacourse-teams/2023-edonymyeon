@@ -4,6 +4,7 @@ import edonymyeon.backend.CacheConfig;
 import edonymyeon.backend.cache.application.BooleanTemplate;
 import edonymyeon.backend.cache.application.LongTemplate;
 import edonymyeon.backend.cache.util.HotPostCachePolicy;
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.PostTestSupport;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +16,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 @SuppressWarnings("NonAsciiCharacters")
 @Import(CacheConfig.class)
 @RequiredArgsConstructor
+@IntegrationTest
 public class PostServiceHotPostsTest {
 
     private final HotPostCachePolicy hotPostCachePolicy;
