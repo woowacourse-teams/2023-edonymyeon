@@ -41,6 +41,8 @@ public class PostService {
 
     private final PostThumbsService thumbsService;
 
+    private final PostConsumptionService postConsumptionService;
+
     private final Domain domain;
 
     @Transactional
@@ -92,6 +94,7 @@ public class PostService {
 
         final List<PostImageInfo> postImageInfos = post.getPostImageInfos();
         final ArrayList<PostImageInfo> copyOfPostImageInfos = new ArrayList<>(postImageInfos);
+        postConsumptionService.deleteConsumptionByPostId(postId);
         thumbsService.deleteAllThumbsInPost(postId);
         postImageInfoRepository.deleteAllByPostId(postId);
         postRepository.deleteById(postId);

@@ -53,4 +53,9 @@ public class PostConsumptionServiceImpl implements PostConsumptionService {
                 consumption.getConsumptionMonth()
         );
     }
+
+    @Override
+    public void deleteConsumptionByPostId(final long postId) {
+        consumptionRepository.deleteByPostId(postId);
+    }
 }
