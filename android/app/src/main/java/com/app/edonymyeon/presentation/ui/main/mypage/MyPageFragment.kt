@@ -39,7 +39,9 @@ class MyPageFragment : Fragment() {
 
     private val withdrawDialog: WithdrawDialog by lazy {
         WithdrawDialog {
+            viewModel.withdraw()
             withdrawDialog.dismiss()
+            logout()
         }
     }
 

@@ -39,4 +39,7 @@ interface ProfileService {
 
     @GET("/profile")
     suspend fun getProfile(): Response<ProfileResponse>
+
+    @DELETE("/withdraw")
+    suspend fun withdraw(): Response<Unit>
 }

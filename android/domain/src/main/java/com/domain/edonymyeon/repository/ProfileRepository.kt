@@ -14,4 +14,5 @@ interface ProfileRepository {
     suspend fun postSavingConfirm(id: Long, year: Int, month: Int): Result<Unit>
     suspend fun deleteConfirm(id: Long): Result<Unit>
     suspend fun getProfile(): Result<Any>
+    suspend fun withdraw(): Result<Unit>
 }
