@@ -15,6 +15,7 @@ public class CacheConfig {
         return new HotPostCachePolicy(new TestCacheKeyStrategy());
     }
 
+    // test container 설정
     private static final String REDIS_DOCKER_IMAGE = "redis:5.0.3-alpine";
 
     static {
