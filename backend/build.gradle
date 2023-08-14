@@ -64,6 +64,8 @@ dependencies {
 
 	// redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	// embedded redis
+	implementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.1'
 }
 
 tasks.named('test') {
