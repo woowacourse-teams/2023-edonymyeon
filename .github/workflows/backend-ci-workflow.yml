@@ -29,18 +29,6 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
 
-      - name: Docker 이미지 Build
-        run: docker build -t lucaskang134/boot-prac-ci .
-      
-      - name: docker login 
-        uses: docker/login-action@v2
-        with: 
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-  
-      - name: docker Hub push
-        run: docker push lucaskang134/boot-prac-ci
-
       - name: Gradle 명령 실행을 위한 권한을 부여합니다
         run: chmod +x gradlew
 
