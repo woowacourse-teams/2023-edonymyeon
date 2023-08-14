@@ -23,7 +23,7 @@ class LoginActivity : AppCompatActivity() {
     private val viewModel: LoginViewModel by lazy {
         LoginViewModelFactory(
             AuthRepositoryImpl(
-                AuthLocalDataSource.getInstance(sharedPreferences),
+                AuthLocalDataSource(),
                 AuthRemoteDataSource(),
             ),
         ).create(
@@ -83,7 +83,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setRetrofitToken() {
         RetrofitClient.getInstance().updateAccessToken(
-            AuthLocalDataSource.getInstance(sharedPreferences).getAuthToken(),
+            AuthLocalDataSource().getAuthToken(),
         )
     }
 
