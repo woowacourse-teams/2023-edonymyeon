@@ -5,7 +5,6 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.text.Editable
 import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -14,6 +13,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.loader.content.CursorLoader
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.dto.response.PostEditorResponse
+import com.app.edonymyeon.presentation.ui.mypost.dialog.ConsumptionDialog
+import com.app.edonymyeon.presentation.uimodel.PostEditorUiModel
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.domain.edonymyeon.repository.PostRepository
 import kotlinx.coroutines.launch
@@ -24,70 +25,64 @@ class PostEditorViewModel(
 ) : AndroidViewModel(application) {
     private val images = mutableListOf<String>()
     private val _galleryImages = MutableLiveData<List<String>>()
-    val galleryImages: LiveData<List<String>>
-        get() = _galleryImages
+    val galleryImages: LiveData<List<String>> get() = _galleryImages
 
-    private val _postTitle = MutableLiveData<String>()
-    val postTitle: LiveData<String>
-        get() = _postTitle
+    private val _isPostPriceValid = MutableLiveData<Boolean>()
+    val isPostPriceValid: LiveData<Boolean> get() = _isPostPriceValid
 
-    private val _postPrice = MutableLiveData<String>()
-    val postPrice: LiveData<String>
-        get() = _postPrice
+    private val _isUploadSuccess = MutableLiveData<Boolean>()
+    val isUploadSuccess: LiveData<Boolean> get() = _isUploadSuccess
 
-    private val _postContent = MutableLiveData<String>()
-    val postContent: LiveData<String>
-        get() = _postContent
+    private val _isUploadAble = MutableLiveData<Boolean>()
+    val isUpdateAble: LiveData<Boolean> get() = _isUploadAble
+
+    private val _postEditor = MutableLiveData<PostEditorUiModel>()
+    val postEditor: LiveData<PostEditorUiModel> get() = _postEditor
 
     private val _postId = MutableLiveData<Long>()
-    val postId: LiveData<Long>
-        get() = _postId
+    val postId: LiveData<Long> get() = _postId
 
     fun initViewModelOnUpdate(post: PostUiModel) {
-        _postTitle.value = post.title
-        _postPrice.value = post.price.toString()
-        _postContent.value = post.content
+        _postEditor.value = PostEditorUiModel(post.title, post.price.toString(), post.content)
         images.addAll(post.images.map { it.toUri().toString() })
         _galleryImages.value = post.images.map { it.toUri().toString() }
     }
 
-    fun savePost() {
+    fun savePost(title: String, content: String, price: Int) {
         viewModelScope.launch {
             repository.savePost(
-                _postTitle.value.toString(),
-                _postContent.value ?: "",
-                _postPrice.value?.toInt() ?: 0,
+                title,
+                content,
+                price,
                 getImagesFilepath(
-                    _galleryImages.value?.toList()?.map { Uri.parse(it) }
-                        ?: listOf(),
+                    _galleryImages.value?.toList()?.map { Uri.parse(it) } ?: listOf(),
                 ),
             ).onSuccess {
                 _postId.value = (it as PostEditorResponse).id
+                _isUploadSuccess.value = true
             }.onFailure {
+                _isUploadSuccess.value = false
                 it as CustomThrowable
-                when (it.code) {
-                }
             }
         }
     }
 
-    fun updatePost(id: Long) {
+    fun updatePost(id: Long, title: String, content: String, price: Int) {
         viewModelScope.launch {
             repository.updatePost(
                 id,
-                _postTitle.value.toString(),
-                _postContent.value.toString(),
-                _postPrice.value?.toInt() ?: 0,
+                title,
+                content,
+                price,
                 getImagesFilepath(
-                    _galleryImages.value?.toList()?.map { Uri.parse(it) }
-                        ?: listOf(),
+                    _galleryImages.value?.toList()?.map { Uri.parse(it) } ?: listOf(),
                 ),
             ).onSuccess {
+                _isUploadSuccess.value = true
                 _postId.value = (it as PostEditorResponse).id
             }.onFailure {
+                _isUploadSuccess.value = false
                 it as CustomThrowable
-                when (it.code) {
-                }
             }
         }
     }
@@ -102,19 +97,19 @@ class PostEditorViewModel(
         _galleryImages.value = images.toList()
     }
 
-    fun setTitle(editTitle: Editable) {
-        _postTitle.value = editTitle.toString()
+    fun checkPriceValidate(price: CharSequence, start: Int, end: Int, count: Int) {
+        val postPrice = price.toString()
+        runCatching {
+            if (postPrice != ConsumptionDialog.BLANK) postPrice?.toInt() ?: 0
+        }.onSuccess {
+            _isPostPriceValid.value = true
+        }.onFailure {
+            _isPostPriceValid.value = false
+        }
     }
 
-    fun setPurchasePriceTextChanged(price: CharSequence, start: Int, end: Int, count: Int) {
-        _postPrice.value = price.toString()
-    }
-
-    fun setPurchasePrice(price: String) {
-        _postPrice.value = price
-    }
-    fun setContent(editContent: Editable) {
-        _postContent.value = editContent.toString()
+    fun checkTitleValidate(title: String) {
+        _isUploadAble.value = title.isNotBlank()
     }
 
     private fun getImagesFilepath(uris: List<Uri>): List<String> {
