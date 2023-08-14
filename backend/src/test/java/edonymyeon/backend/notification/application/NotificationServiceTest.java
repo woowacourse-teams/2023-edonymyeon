@@ -6,19 +6,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import edonymyeon.backend.global.exception.BusinessLogicException;
-import edonymyeon.backend.member.application.dto.ActiveMemberId;
-import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.notification.domain.Notification;
+import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.notification.infrastructure.FCMNotificationSender;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.support.IntegrationTest;
-import edonymyeon.backend.support.MemberTestSupport;
-import edonymyeon.backend.support.PostTestSupport;
-import edonymyeon.backend.thumbs.application.ThumbsService;
-import edonymyeon.backend.thumbs.domain.Thumbs;
-import edonymyeon.backend.thumbs.repository.ThumbsRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +51,26 @@ class NotificationServiceTest extends IntegrationFixture {
                 .isInstanceOf(BusinessLogicException.class);
 
         assertThat(notificationRepository.findAll()).hasSize(0);
+    }
+
+    @Test
+    void 특정_알림을_사용자가_읽었음을_체크할_수_있다(@Autowired NotificationRepository notificationRepository) {
+        final var post = postTestSupport.builder().build();
+        final var notificationId = notificationRepository.save(
+                        new Notification(post.getMember(), "알림이 도착했어요!", ScreenType.POST, post.getId()))
+                .getId();
+
+        var notification = notificationRepository.findById(notificationId);
+        notification.ifPresentOrElse(
+                not -> assertThat(not.isRead()).isFalse(),
+                Assertions::fail);
+
+        notificationService.markNotificationAsRead(notificationId);
+
+        notification = notificationRepository.findById(notificationId);
+        notification.ifPresentOrElse(
+                not -> assertThat(not.isRead()).isTrue(),
+                Assertions::fail
+        );
     }
 }

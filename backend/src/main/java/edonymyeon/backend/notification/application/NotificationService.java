@@ -11,6 +11,7 @@ import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.post.domain.Post;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -51,5 +52,11 @@ public class NotificationService {
                 post.getId()
         );
         notificationRepository.save(notification);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void markNotificationAsRead(final String notificationId) {
+        final Optional<Notification> notification = notificationRepository.findById(notificationId);
+        notification.ifPresent(Notification::markAsRead);
     }
 }
