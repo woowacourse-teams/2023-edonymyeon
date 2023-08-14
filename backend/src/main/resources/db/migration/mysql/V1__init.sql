@@ -1,4 +1,4 @@
-create table profile_image_info (
+create table if not exists profile_image_info (
     id bigint not null auto_increment,
     created_at datetime(6),
     modified_at datetime(6),
