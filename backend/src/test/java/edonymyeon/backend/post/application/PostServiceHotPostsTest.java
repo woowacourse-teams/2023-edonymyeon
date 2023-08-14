@@ -84,6 +84,24 @@ public class PostServiceHotPostsTest {
     }
 
     @Test
+    void 시간이_지나면_키가_만료되는지_확인한다() throws InterruptedException {
+        // given
+        postTestSupport.builder().build();
+        postTestSupport.builder().build();
+
+        // when
+        postReadService.findHotPosts(findingCondition);
+        Thread.sleep(6000);
+
+        // then
+        assertSoftly(softly -> {
+                    softly.assertThat(longTemplate.hasCache(hotPostCachePolicy.getLastCacheKey(findingCondition))).isFalse();
+                    softly.assertThat(booleanTemplate.hasCache(hotPostCachePolicy.getLastCacheKey(findingCondition))).isFalse();
+                }
+        );
+    }
+
+    @Test
     void 최근_글이_없으면_캐싱에_저장하지_않고_빈리스트가_조회된다() {
         var hotPosts = postReadService.findHotPosts(findingCondition).getContent();
 

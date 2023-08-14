@@ -51,7 +51,9 @@ public class PostCachingService {
                 .toList();
 
         longTemplate.save(postIdsKey, hotPostIds);
+        longTemplate.setExpire(postIdsKey, hotPostPolicy.getExpiredSeconds());
         booleanTemplate.save(isLastKey, hotPost.isLast());
+        booleanTemplate.setExpire(isLastKey, hotPostPolicy.getExpiredSeconds());
     }
 
     private boolean isEmpty(Slice<Post> hotPost) {
