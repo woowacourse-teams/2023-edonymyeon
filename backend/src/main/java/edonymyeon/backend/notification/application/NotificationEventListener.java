@@ -1,5 +1,6 @@
 package edonymyeon.backend.notification.application;
 
+import edonymyeon.backend.thumbs.application.event.ThumbsDownEvent;
 import edonymyeon.backend.thumbs.application.event.ThumbsUpEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
@@ -12,7 +13,12 @@ public class NotificationEventListener {
     private final NotificationService notificationService;
 
     @EventListener
-    public void listen(ThumbsUpEvent event) {
+    public void sendThumbsUpNotification(ThumbsUpEvent event) {
+        notificationService.sendThumbsNotificationToWriter(event.post());
+    }
+
+    @EventListener
+    public void sendThumbsDownNotification(ThumbsDownEvent event) {
         notificationService.sendThumbsNotificationToWriter(event.post());
     }
 }

@@ -36,7 +36,7 @@ class NotificationEventListenerTest {
 
     @BeforeEach
     void 알림전송기능을_모킹한다() {
-        doNothing().when(notificationEventListener).listen(any());
+        doNothing().when(notificationEventListener).sendThumbsUpNotification(any());
     }
 
     @Test
@@ -45,7 +45,7 @@ class NotificationEventListenerTest {
         final Post post = postTestSupport.builder().build();
         thumbsService.thumbsUp(new ActiveMemberId(member.getId()), post.getId());
 
-        Mockito.verify(notificationEventListener, Mockito.atLeast(1)).listen(Mockito.any());
+        Mockito.verify(notificationEventListener, Mockito.atLeast(1)).sendThumbsUpNotification(Mockito.any());
     }
 
 }

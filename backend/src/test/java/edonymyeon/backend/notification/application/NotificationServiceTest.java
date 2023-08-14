@@ -6,21 +6,22 @@ import static org.mockito.Mockito.when;
 
 import edonymyeon.backend.notification.infrastructure.FCMNotificationSender;
 import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.PostTestSupport;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-@SpringBootTest
+@SuppressWarnings("NonAsciiCharacters")
+@RequiredArgsConstructor
+@IntegrationTest
 class NotificationServiceTest {
 
-    @Autowired
-    private PostTestSupport postTestSupport;
+    private final PostTestSupport postTestSupport;
 
-    @Autowired
-    private NotificationService notificationService;
+    private final NotificationService notificationService;
 
     @MockBean
     private FCMNotificationSender notificationSender;
