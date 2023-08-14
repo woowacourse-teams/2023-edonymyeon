@@ -61,6 +61,10 @@ dependencies {
 	// 이 덕분에 .adoc 파일에서 operation 같은 매크로를 사용하여 스니펫 조각들을 연동할 수 있는 것입니다.
 	// 그리고 최종적으로 .adoc 파일을 HTML로 만들어 export 해줍니다.
 	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+
+	// flyway 추가
+	implementation 'org.flywaydb:flyway-mysql'
+	implementation 'org.flywaydb:flyway-core'
 }
 
 tasks.named('test') {
