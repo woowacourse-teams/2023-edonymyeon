@@ -117,4 +117,7 @@ dependencies {
     // firebase crashlytics & analytics
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
+
+    // kakao login SDK
+    implementation("com.kakao.sdk:v2-user:2.10.0")
 }
