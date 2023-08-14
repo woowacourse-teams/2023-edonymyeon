@@ -34,11 +34,16 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        initAppbar()
+        setAppbar()
         viewModel.getMyPosts()
         setResultScrollListener()
         setAdapter()
         setMyPostsObserver()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadNewData()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -52,7 +57,7 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
         }
     }
 
-    private fun initAppbar() {
+    private fun setAppbar() {
         setSupportActionBar(binding.tbMypost)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = ""
@@ -116,6 +121,11 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
                 ConsumptionType.SAVING -> "SavingConfirmDialog"
             },
         )
+    }
+
+    private fun loadNewData() {
+        viewModel.clearResult()
+        viewModel.getMyPosts()
     }
 
     companion object {

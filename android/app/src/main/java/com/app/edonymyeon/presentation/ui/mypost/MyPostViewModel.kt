@@ -46,7 +46,7 @@ class MyPostViewModel(val repository: ProfileRepository) : ViewModel() {
     }
 
     fun clearResult() {
-        currentPage.initPage()
+        currentPage = currentPage.initPage()
         _posts.value = emptyList()
     }
 
