@@ -35,8 +35,7 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setAppbar()
-        viewModel.getMyPosts()
-        setResultScrollListener()
+        setListener()
         setAdapter()
         setMyPostsObserver()
     }
@@ -63,7 +62,7 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
         supportActionBar?.title = ""
     }
 
-    private fun setResultScrollListener() {
+    private fun setListener() {
         binding.rvMyPost.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (viewModel.hasNextPage()) {
@@ -74,6 +73,11 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
                 }
             }
         })
+
+        binding.srlRefresh.setOnRefreshListener {
+            binding.srlRefresh.isRefreshing = false
+            loadNewData()
+        }
     }
 
     private fun setAdapter() {
@@ -84,6 +88,11 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
         viewModel.posts.observe(this) {
             adapter.setMyPosts(it)
         }
+    }
+
+    private fun loadNewData() {
+        viewModel.clearResult()
+        viewModel.getMyPosts()
     }
 
     override fun onMyPostClick(id: Long) {
@@ -121,11 +130,6 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
                 ConsumptionType.SAVING -> "SavingConfirmDialog"
             },
         )
-    }
-
-    private fun loadNewData() {
-        viewModel.clearResult()
-        viewModel.getMyPosts()
     }
 
     companion object {
