@@ -1,11 +1,14 @@
 package edonymyeon.backend.auth.ui;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import edonymyeon.backend.auth.application.AuthService;
 import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
+import edonymyeon.backend.auth.application.dto.KakaoLoginRequest;
+import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
+import edonymyeon.backend.auth.domain.TokenGenerator;
 import java.net.URI;
-import java.util.Base64;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -21,18 +24,26 @@ public class AuthController {
 
     private final AuthService authService;
 
+    private final TokenGenerator tokenGenerator;
+
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest) {
         authService.findMember(loginRequest);
-        final String basicAuthValue = getBasicAuthValue(loginRequest);
+        final String basicToken = tokenGenerator.getBasicToken(loginRequest.email(), loginRequest.password());
         return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, basicAuthValue)
+                .header(HttpHeaders.AUTHORIZATION, basicToken)
                 .build();
     }
 
-    private String getBasicAuthValue(final LoginRequest loginRequest) {
-        String valueToEncode = loginRequest.email() + ":" + loginRequest.password();
-        return "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
+    @PostMapping("/auth/kakao/login")
+    public ResponseEntity<KakaoLoginResponse> loginWithKakao(@RequestBody KakaoLoginRequest loginRequest)
+            throws JsonProcessingException {
+        final KakaoLoginResponse kakaoLoginResponse = authService.getKakaoLoginResponse(loginRequest);
+
+        final String basicToken = authService.findMemberByKakao(kakaoLoginResponse);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, basicToken)
+                .build();
     }
 
     @GetMapping("/join")

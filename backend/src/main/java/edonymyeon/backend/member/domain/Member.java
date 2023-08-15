@@ -10,6 +10,8 @@ import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,14 +19,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import java.util.Objects;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -47,6 +52,11 @@ public class Member extends TemporalRecord {
     @Column(nullable = false, unique = true)
     private String nickname;
 
+    @Enumerated(value = EnumType.STRING)
+    private SocialType socialType;
+
+    private Long socialId;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private ProfileImageInfo profileImageInfo;
@@ -62,6 +72,16 @@ public class Member extends TemporalRecord {
 
     public Member(final Long id) {
         this.id = id;
+    }
+
+    public static Member of(final Long socialId, final SocialType socialType) {
+        return Member.builder()
+                .socialId(socialId)
+                .socialType(socialType)
+                .email(UUID.randomUUID().toString())
+                .password(UUID.randomUUID().toString())
+                .nickname("#" + socialType.name() + UUID.randomUUID())
+                .build();
     }
 
     private void validate(final String email, final String password, final String nickname) {
@@ -94,5 +114,10 @@ public class Member extends TemporalRecord {
             return;
         }
         throw new EdonymyeonException(MEMBER_PASSWORD_NOT_MATCH);
+    }
+
+    public enum SocialType {
+
+        KAKAO
     }
 }

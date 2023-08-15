@@ -2,6 +2,7 @@ package edonymyeon.backend.support;
 
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.domain.Member.SocialType;
 import edonymyeon.backend.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,8 @@ public class MemberTestSupport {
 
     public final class MemberBuilder {
 
+        private Long id;
+
         private String email;
 
         private String password;
@@ -33,6 +36,15 @@ public class MemberTestSupport {
         private String nickname;
 
         private ProfileImageInfo profileImageInfo;
+
+        private SocialType socialType;
+
+        private Long socialId;
+
+        public MemberBuilder id(final Long id) {
+            this.id = id;
+            return this;
+        }
 
         public MemberBuilder email(final String email) {
             this.email = email;
@@ -54,12 +66,25 @@ public class MemberTestSupport {
             return this;
         }
 
+        public MemberBuilder socialType(final SocialType socialType) {
+            this.socialType = socialType;
+            return this;
+        }
+
+        public MemberBuilder socialId(final Long socialId) {
+            this.socialId = socialId;
+            return this;
+        }
+
         public Member build() {
             return memberRepository.save(
                     new Member(
+                            id == null ? null : id,
                             email == null ? (DEFAULT_EMAIL + emailCount++) : email,
                             password == null ? DEFAULT_PASSWORD : password,
                             nickname == null ? (DEFAULT_NICK_NAME + nickNameCount++) : nickname,
+                            socialType == null ? null : socialType,
+                            socialId == null ? null : socialId,
                             profileImageInfo == null ? profileImageInfoTestSupport.builder().build() : profileImageInfo
                     )
             );
