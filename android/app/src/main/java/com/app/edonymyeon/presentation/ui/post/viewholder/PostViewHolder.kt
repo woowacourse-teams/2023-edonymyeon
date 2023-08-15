@@ -25,7 +25,6 @@ class PostViewHolder(parent: ViewGroup, onClick: (Int) -> Unit) :
         binding.prvAllPostReaction.reactionCount = ReactionCountUiModel(
             post.reactionCount.viewCount,
             post.reactionCount.commentCount,
-            post.reactionCount.scrapCount,
         )
     }
 }

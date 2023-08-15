@@ -51,7 +51,6 @@ class HomeViewModel(private val repository: PostRepository) : ViewModel() {
             reactionCount = ReactionCountUiModel(
                 viewCount = it,
                 commentCount = it,
-                scrapCount = it,
             ),
         )
     }
