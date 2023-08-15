@@ -36,7 +36,6 @@ class HomeViewModelTest {
             reactionCount = ReactionCount(
                 viewCount = Count(it),
                 commentCount = Count(it),
-                scrapCount = Count(it),
             ),
         )
     }
