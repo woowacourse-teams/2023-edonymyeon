@@ -1,26 +1,6 @@
 package edonymyeon.backend.post.docs;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import edonymyeon.backend.CacheConfig;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
@@ -48,6 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.SliceImpl;
@@ -62,11 +43,31 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @IntegrationTest
+@Import(CacheConfig.class)
 public class PostControllerDocsTest implements ImageFileCleaner {
 
     private final MockMvc mockMvc;
@@ -107,6 +108,8 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     private void 핫_게시글_조회를_모킹한다(final Post 게시글) {
         when(postRepository.findHotPosts(any(LocalDateTime.class), anyInt(), anyInt(), any()))
                 .thenReturn(new SliceImpl<>(List.of(게시글)));
+        when(postRepository.findByIds(anyList()))
+                .thenReturn(List.of(게시글));
     }
 
     private void 게시글_이미지_정보_레포지토리를_모킹한다() {
