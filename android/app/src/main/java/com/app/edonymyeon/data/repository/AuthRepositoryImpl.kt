@@ -48,4 +48,17 @@ class AuthRepositoryImpl(
             Result.failure(CustomThrowable(result.code(), errorMessage))
         }
     }
+
+    override suspend fun loginByKakao(accessToken: String): Result<Unit> {
+        val result = authRemoteDataSource.loginByKakao(accessToken)
+        return if (result.isSuccessful) {
+            authLocalDataSource.setAuthToken(result.headers()["Authorization"] as String)
+            Result.success(result.body() ?: Unit)
+        } else {
+            val errorResponse = result.errorBody()?.string()
+            val json = errorResponse?.let { JSONObject(it) }
+            val errorMessage = json?.getString("errorMessage") ?: ""
+            Result.failure(CustomThrowable(result.code(), errorMessage))
+        }
+    }
 }

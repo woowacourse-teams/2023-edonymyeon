@@ -25,4 +25,8 @@ class AuthRemoteDataSource : AuthDataSource.Remote {
     override suspend fun login(loginDataModel: LoginDataModel): Response<Unit> {
         return authService.login(loginDataModel)
     }
+
+    override suspend fun loginByKakao(accessToken: String): Response<Unit> {
+        return authService.loginByKakao(accessToken)
+    }
 }

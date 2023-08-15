@@ -17,6 +17,8 @@ interface AuthDataSource {
             loginDataModel: LoginDataModel,
         ): Response<Unit>
 
+        suspend fun loginByKakao(accessToken: String): Response<Unit>
+
         suspend fun signUp(userRegistrationRequest: UserRegistrationRequest): Response<Unit>
         suspend fun checkDuplicate(target: String, value: String): Response<AuthDuplicateResponse>
     }

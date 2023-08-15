@@ -11,17 +11,17 @@ private const val TAG_KAKAO = "KakaoLogin"
 private const val KAKAO_SUCCESS = "카카오 로그인 성공"
 private const val KAKAO_FAILURE = "카카오 로그인 실패"
 
-private fun getKakaoLoginCallback(loginSuccessEvent: () -> Unit): (OAuthToken?, Throwable?) -> Unit =
+private fun getKakaoLoginCallback(loginSuccessEvent: (String) -> Unit): (OAuthToken?, Throwable?) -> Unit =
     { token, error ->
         if (error != null) {
             Log.e(TAG_KAKAO, "$KAKAO_FAILURE $error")
         } else if (token != null) {
             Log.i(TAG_KAKAO, "$KAKAO_SUCCESS ${token.accessToken}")
-            loginSuccessEvent()
+            loginSuccessEvent(token.accessToken)
         }
     }
 
-fun loginByKakao(context: Context, loginSuccessEvent: () -> Unit) {
+fun loginByKakao(context: Context, loginSuccessEvent: (String) -> Unit) {
     if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
         UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
             if (error != null) {
@@ -39,7 +39,7 @@ fun loginByKakao(context: Context, loginSuccessEvent: () -> Unit) {
                 )
             } else if (token != null) {
                 Log.i(TAG_KAKAO, "$KAKAO_SUCCESS ${token.accessToken}")
-                loginSuccessEvent()
+                loginSuccessEvent(token.accessToken)
             }
         }
     } else {

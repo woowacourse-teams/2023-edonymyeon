@@ -91,7 +91,9 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setKakaoClickListener() {
         binding.btLoginKakao.setOnClickListener {
-            loginByKakao(this) {}
+            loginByKakao(this) { accessToken ->
+                viewModel.loginByKakao(accessToken)
+            }
         }
     }
 
