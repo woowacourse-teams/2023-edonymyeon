@@ -8,6 +8,9 @@ import com.google.auth.oauth2.GoogleCredentials;
 import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.notification.application.NotificationSender;
 import edonymyeon.backend.notification.application.Receiver;
+import edonymyeon.backend.notification.domain.Data;
+import edonymyeon.backend.notification.infrastructure.FcmMessage.Message;
+import edonymyeon.backend.notification.infrastructure.FcmMessage.Notification;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +19,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -25,7 +27,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FCMNotificationSender implements NotificationSender {
 
-    public static final String FIREBASE_ADMIN_KEY_PATH = "edonymyeon-firebase.json";
+    public static final String FIREBASE_ADMIN_KEY_PATH = "firebase/edonymyeon-firebase.json";
     private final String API_URL = "https://fcm.googleapis.com/v1/projects/edonymyeon-5c344/messages:send";
 
     private final ObjectMapper objectMapper;
@@ -33,7 +35,7 @@ public class FCMNotificationSender implements NotificationSender {
     @Override
     public boolean sendNotification(final Receiver receiver, final String title) {
         try {
-            final String requestBody = makeFCMNotificationRequestBody(receiver.getToken(), title);
+            final String requestBody = makeFCMNotificationRequestBody(receiver.getToken(), title, receiver.getData());
             final OkHttpClient client = new OkHttpClient();
             final Request request = makeFCMNotificationRequest(requestBody);
             final Response response = sendFCMNotificationRequest(client, request);
@@ -59,16 +61,18 @@ public class FCMNotificationSender implements NotificationSender {
                 .build();
     }
 
-    private String makeFCMNotificationRequestBody(String targetToken, String title) throws JsonProcessingException {
+    private String makeFCMNotificationRequestBody(String targetToken, String title, Data data)
+            throws JsonProcessingException {
         final FcmMessage fcmMessage = FcmMessage.builder()
-                .message(FcmMessage.Message.builder()
-                        .token(targetToken)
-                        .notification(FcmMessage.Notification.builder()
+                .validateOnly(false)
+                .message(Message.builder()
+                        .notification(Notification.builder()
                                 .title(title)
-                                .image(null)
-                                .build()
-                        ).build())
-                .validateOnly(false).build();
+                                .build())
+                        .data(data)
+                        .token(targetToken)
+                        .build()
+                ).build();
         return objectMapper.writeValueAsString(fcmMessage);
     }
 

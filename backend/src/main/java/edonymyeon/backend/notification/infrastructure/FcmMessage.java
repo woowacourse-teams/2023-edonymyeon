@@ -1,5 +1,6 @@
 package edonymyeon.backend.notification.infrastructure;
 
+import edonymyeon.backend.notification.domain.Data;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,6 +17,7 @@ public class FcmMessage {
     @Getter
     public static class Message {
         private Notification notification;
+        private Data data;
         private String token;
     }
 
