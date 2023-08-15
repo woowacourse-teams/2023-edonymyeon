@@ -36,6 +36,7 @@ class ConsumptionDialog(
         initBinding()
         initObserve()
         setNumberPicker()
+        loadPrice()
         initListener()
     }
 
@@ -52,6 +53,19 @@ class ConsumptionDialog(
                 viewModel.setPurchasePrice(BLANK)
             }
         }
+    }
+
+    private fun setNumberPicker() {
+        viewModel.getYearMonth(id)
+        val minYear = viewModel.yearMonth.value?.keys?.min() ?: 0
+        val maxYear = viewModel.yearMonth.value?.keys?.max() ?: 0
+
+        updateYearNumberPicker(minYear, maxYear)
+        updateMonthNumberPicker(minYear)
+    }
+
+    private fun loadPrice() {
+        viewModel.getPostPrice(id)
     }
 
     private fun initListener() {
@@ -78,15 +92,6 @@ class ConsumptionDialog(
         binding.npYear.setOnValueChangedListener { _, _, newVal ->
             updateMonthNumberPicker(newVal)
         }
-    }
-
-    private fun setNumberPicker() {
-        viewModel.getYearMonth(id)
-        val minYear = viewModel.yearMonth.value?.keys?.min() ?: 0
-        val maxYear = viewModel.yearMonth.value?.keys?.max() ?: 0
-
-        updateYearNumberPicker(minYear, maxYear)
-        updateMonthNumberPicker(minYear)
     }
 
     private fun updateYearNumberPicker(minYear: Int, maxYear: Int) {

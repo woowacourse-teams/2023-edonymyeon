@@ -11,12 +11,15 @@ import com.app.edonymyeon.presentation.uimodel.MyPostUiModel
 import com.domain.edonymyeon.model.Date
 import com.domain.edonymyeon.model.MonthRange
 import com.domain.edonymyeon.model.Page
+import com.domain.edonymyeon.model.Post
+import com.domain.edonymyeon.repository.PostRepository
 import com.domain.edonymyeon.repository.ProfileRepository
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.YearMonth
 
-class MyPostViewModel(val repository: ProfileRepository) : ViewModel() {
+class MyPostViewModel(val repository: ProfileRepository, val postRepository: PostRepository) :
+    ViewModel() {
 
     private var currentPage = Page()
     private var isLastPage = false
@@ -130,6 +133,16 @@ class MyPostViewModel(val repository: ProfileRepository) : ViewModel() {
                 post.copy(consumption = consumption)
             } else {
                 post
+            }
+        }
+    }
+
+    fun getPostPrice(id: Long) {
+        viewModelScope.launch {
+            postRepository.getPostDetail(id).onSuccess {
+                _price.value = (it as Post).price.toString()
+            }.onFailure {
+                it as CustomThrowable
             }
         }
     }
