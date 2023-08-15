@@ -105,7 +105,6 @@
 
     <!--all_post-->
     <string name="post_all_post">전체 게시물</string>
-    <string name="post_filter_recent">최신순</string>
 
     <!--my_post-->
     <string name="my_post_page_title">내가 쓴 글</string>
