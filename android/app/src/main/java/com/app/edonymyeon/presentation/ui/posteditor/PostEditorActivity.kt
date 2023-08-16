@@ -89,7 +89,7 @@ class PostEditorActivity : AppCompatActivity() {
         initAdapter()
         setAdapter()
         setObserver()
-        setViewModelWithPostIfUpdate()
+        setPostIfUpdate()
         setClickListener()
     }
 
@@ -162,7 +162,7 @@ class PostEditorActivity : AppCompatActivity() {
         }
     }
 
-    private fun setViewModelWithPostIfUpdate() {
+    private fun setPostIfUpdate() {
         if (originActivityKey == UPDATE_CODE) {
             post?.let { viewModel.initViewModelOnUpdate(it) }
         }
