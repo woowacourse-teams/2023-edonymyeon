@@ -44,4 +44,7 @@ interface PostService {
         @Part originalImages: List<MultipartBody.Part>,
         @Part newImages: List<MultipartBody.Part>,
     ): Response<PostEditorResponse>
+
+    @GET("/posts/hot")
+    suspend fun getHotPosts(): Response<Posts>
 }
