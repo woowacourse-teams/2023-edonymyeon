@@ -10,7 +10,6 @@ create table if not exists member (
     id bigint not null auto_increment,
     created_at datetime(6),
     modified_at datetime(6),
-    age integer,
     email varchar(255) not null,
     nickname varchar(255) not null,
     password varchar(255) not null,
