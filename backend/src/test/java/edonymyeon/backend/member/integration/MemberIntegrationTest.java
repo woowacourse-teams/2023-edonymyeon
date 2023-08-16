@@ -112,7 +112,7 @@ public class MemberIntegrationTest extends IntegrationFixture {
 
         assertSoftly(
                 softly -> {
-                    softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                    softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
                     softly.assertThat(exception.errorCode()).isEqualTo(MEMBER_IS_DELETED.getCode());
                     softly.assertThat(exception.errorMessage()).isEqualTo(MEMBER_IS_DELETED.getMessage());
                 }
