@@ -7,5 +7,4 @@ import kotlinx.parcelize.Parcelize
 data class ReactionCountUiModel(
     val viewCount: Int,
     val commentCount: Int,
-    val scrapCount: Int,
 ) : Parcelable

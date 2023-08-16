@@ -42,7 +42,6 @@ fun PostDetailResponse.toDomain(): Post {
         reactionCount = ReactionCount(
             viewCount = Count(this.reactionCount.viewCount),
             commentCount = Count(this.reactionCount.commentCount),
-            scrapCount = Count(this.reactionCount.scrapCount),
         ),
         recommendation = Recommendation(
             upCount = Count(this.upCount),

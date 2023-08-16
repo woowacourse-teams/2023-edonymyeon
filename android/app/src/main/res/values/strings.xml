@@ -36,7 +36,6 @@
     <string name="post_detail_toolbar_menu_update">수정</string>
     <string name="post_detail_toolbar_menu_delete">삭제</string>
     <string name="post_detail_toolbar_menu_report">수정</string>
-    <string name="post_detail_writer_cant_scrap">본인이 작성한 글은 스크랩할 수 없습니다.</string>
     <string name="post_detail_writer_cant_recommend">본인이 작성한 글은 추천할 수 없습니다.</string>
     <string name="post_detail_login_required">추천 기능은 회원만 이용할 수 있습니다.</string>
 
@@ -63,8 +62,6 @@
     <string name="my_page_payment_title">월 별 소비/절약 그래프</string>
     <string name="my_page_my_post">내가 쓴 글</string>
     <string name="my_page_my_comment">댓글 단 글</string>
-    <string name="my_page_my_scrab">스크랩</string>
-    <string name="my_page_my_badge">뱃지</string>
     <string name="my_page_update_user_info">회원 정보 수정</string>
     <string name="my_page_logout">로그아웃</string>
     <string name="my_page_withdraw">회원탈퇴</string>
@@ -105,7 +102,6 @@
 
     <!--all_post-->
     <string name="post_all_post">전체 게시물</string>
-    <string name="post_filter_recent">최신순</string>
 
     <!--my_post-->
     <string name="my_post_page_title">내가 쓴 글</string>
