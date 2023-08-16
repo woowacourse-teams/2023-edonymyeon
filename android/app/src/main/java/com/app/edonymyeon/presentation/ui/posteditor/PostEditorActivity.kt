@@ -12,6 +12,8 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -19,17 +21,14 @@ import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostEditorBinding
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
-import com.app.edonymyeon.presentation.ui.mypost.dialog.ConsumptionDialog
+import com.app.edonymyeon.presentation.common.dialog.LoadingDialog
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import com.app.edonymyeon.presentation.ui.posteditor.adapter.PostEditorImagesAdapter
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.util.getParcelableExtraCompat
 import com.app.edonymyeon.presentation.util.makeSnackbar
+import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class PostEditorActivity : AppCompatActivity() {
 
@@ -42,6 +41,11 @@ class PostEditorActivity : AppCompatActivity() {
     private val binding: ActivityPostEditorBinding by lazy {
         ActivityPostEditorBinding.inflate(layoutInflater)
     }
+
+    private val loadingDialog: LoadingDialog by lazy {
+        LoadingDialog(getString(R.string.post_editor_loading_message))
+    }
+
     private val pickMultipleImage =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
@@ -82,45 +86,39 @@ class PostEditorActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initBinding()
-        initAppbar()
+        initAdapter()
         setAdapter()
-        setImagesObserver()
-        setPriceObserver()
-        initViewModelWithPostIfUpdate()
-        setCameraAndGalleryClickListener()
+        setObserver()
+        setPostIfUpdate()
+        setClickListener()
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        hideKeyboard()
+        return true
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.menu_post_editor, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.action_post_save -> {
-                viewModel.postTitle.observe(
-                    this,
-                ) {
-                    if (it.isNotEmpty() || it != null) {
-                        savePost()
-                        CoroutineScope(Dispatchers.IO).launch {
-                            delay(2000)
-                            setResult(RESULT_RELOAD_CODE)
-                            navigateToDetail()
-                        }
-                    } else {
-                        showSnackbarForMissingTitle()
-                    }
-                }
-                return true
+                hideKeyboard()
+                item.isEnabled = false
+                viewModel.checkTitleValidate(binding.etPostTitle.text.toString())
+                true
             }
 
             android.R.id.home -> {
                 finish()
-                return true
+                true
             }
 
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -129,7 +127,7 @@ class PostEditorActivity : AppCompatActivity() {
         binding.viewModel = viewModel
     }
 
-    private fun initAppbar() {
+    private fun initAdapter() {
         setSupportActionBar(binding.tbPostEditor)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = ""
@@ -139,28 +137,38 @@ class PostEditorActivity : AppCompatActivity() {
         binding.rvPostEditorImages.adapter = adapter
     }
 
-    private fun setImagesObserver() {
+    private fun setObserver() {
+        viewModel.isPostPriceValid.observe(this) { isValid ->
+            if (!isValid) {
+                binding.root.makeSnackbar(this.getString(R.string.dialog_input_price_error_message))
+                binding.etPostPrice.setText("")
+            }
+        }
+        viewModel.isUpdateAble.observe(this) { isAble ->
+            if (isAble) {
+                savePost()
+            } else {
+                showSnackbarForMissingTitle()
+                binding.tbPostEditor.menu.findItem(R.id.action_post_save).isEnabled = true
+            }
+        }
+
+        viewModel.postId.observe(this) {
+            setResult(RESULT_RELOAD_CODE)
+            navigateToDetail()
+        }
         viewModel.galleryImages.observe(this) { images ->
             adapter.setImages(images)
         }
     }
 
-    private fun initViewModelWithPostIfUpdate() {
+    private fun setPostIfUpdate() {
         if (originActivityKey == UPDATE_CODE) {
             post?.let { viewModel.initViewModelOnUpdate(it) }
         }
     }
 
-    private fun setPriceObserver() {
-        viewModel.postPrice.observe(this) { price ->
-            runCatching { if (price != ConsumptionDialog.BLANK) price?.toInt() ?: 0 }.onFailure {
-                binding.root.makeSnackbar(this.getString(R.string.dialog_input_price_error_message))
-                viewModel.setPurchasePrice(ConsumptionDialog.BLANK)
-            }
-        }
-    }
-
-    private fun setCameraAndGalleryClickListener() {
+    private fun setClickListener() {
         binding.ivPostCamera.setOnClickListener { requestPermission() }
         binding.ivPostGallery.setOnClickListener { navigateToGallery() }
     }
@@ -195,33 +203,35 @@ class PostEditorActivity : AppCompatActivity() {
     }
 
     private fun savePost() {
-        when (originActivityKey) {
-            POST_CODE -> {
-                viewModel.savePost()
-            }
+        loadingDialog.show(supportFragmentManager, "LoadingDialog")
+        val postTitle = binding.etPostTitle.text.toString()
+        val postContent = binding.etPostContent.text.toString().ifBlank { "" }
+        val postPrice = binding.etPostPrice.text.toString().toInt()
 
-            UPDATE_CODE -> {
-                post?.let { viewModel.updatePost(it.id) }
+        when (originActivityKey) {
+            POST_CODE -> viewModel.savePost(postTitle, postContent, postPrice)
+            UPDATE_CODE -> post?.let {
+                viewModel.updatePost(
+                    it.id,
+                    postTitle,
+                    postContent,
+                    postPrice,
+                )
             }
         }
     }
 
     private fun showSnackbarForMissingTitle() {
-        Snackbar.make(
-            binding.clPostEditor,
-            getString(R.string.post_editor_snackbar_missing_title_message),
-            Snackbar.LENGTH_SHORT,
-        ).show()
+        binding.root.makeSnackbar(getString(R.string.post_editor_snackbar_missing_title_message))
     }
 
     private fun showPermissionSnackbar() {
-        Snackbar.make(
-            binding.clPostEditor,
+        binding.root.makeSnackbarWithEvent(
             getString(R.string.post_editor_check_permission),
-            Snackbar.LENGTH_LONG,
-        )
-            .setAction(getString(R.string.post_editor_snackbar_ok_message)) { openAppSetting() }
-            .show()
+            getString(R.string.post_editor_snackbar_ok_message),
+        ) {
+            openAppSetting()
+        }
     }
 
     private fun openAppSetting() {
@@ -294,6 +304,12 @@ class PostEditorActivity : AppCompatActivity() {
     private fun navigateToDetail() {
         startActivity(PostDetailActivity.newIntent(this, viewModel.postId.value ?: -1))
         finish()
+    }
+
+    private fun hideKeyboard() {
+        val imm: InputMethodManager =
+            getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
     }
 
     companion object {
