@@ -13,23 +13,28 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@RequestMapping("/profile")
 @RestController
 public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<Void> withdraw(@AuthPrincipal MemberId memberId) {
+        memberService.deleteMember(memberId.id());
+        return ResponseEntity.noContent()
+                .build();
+    }
+
+    @GetMapping("/profile")
     public ResponseEntity<MyPageResponse> findMemberInfo(@AuthPrincipal MemberId memberId) {
         final MyPageResponse memberInfo = memberService.findMemberInfoById(memberId.id());
         return ResponseEntity.ok(memberInfo);
     }
 
-    @PostMapping("/my-posts/{postId}/purchase-confirm")
+    @PostMapping("/profile/my-posts/{postId}/purchase-confirm")
     public ResponseEntity<Void> confirmPurchase(@AuthPrincipal final MemberId memberId,
                                                 @PathVariable final Long postId,
                                                 @RequestBody final PurchaseConfirmRequest purchaseConfirmRequest) {
@@ -37,7 +42,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/my-posts/{postId}/saving-confirm")
+    @PostMapping("/profile/my-posts/{postId}/saving-confirm")
     public ResponseEntity<Void> confirmSaving(@AuthPrincipal final MemberId memberId,
                                               @PathVariable final Long postId,
                                               @RequestBody final SavingConfirmRequest savingConfirmRequest) {
@@ -45,7 +50,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/my-posts/{postId}/confirm-remove")
+    @DeleteMapping("/profile/my-posts/{postId}/confirm-remove")
     public ResponseEntity<Void> removeConfirm(@AuthPrincipal final MemberId memberId,
                                               @PathVariable final Long postId) {
         memberService.removeConfirm(memberId, postId);

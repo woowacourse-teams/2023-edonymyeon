@@ -72,4 +72,12 @@ class MemberTest {
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(MEMBER_EMAIL_INVALID.getMessage());
     }
+
+    @Test
+    public void 삭제하면_닉네임은_Unknown() {
+        final Member member = new Member();
+        final String previousNickname = member.getNickname();
+        member.delete();
+        Assertions.assertThat(member.getNickname()).isNotEqualTo(previousNickname);
+    }
 }

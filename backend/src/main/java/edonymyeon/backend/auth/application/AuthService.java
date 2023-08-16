@@ -2,6 +2,7 @@ package edonymyeon.backend.auth.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_DUPLICATE;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_NOT_FOUND;
+import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_IS_DELETED;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_INVALID;
 
 import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
@@ -37,6 +38,9 @@ public class AuthService {
         final Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_EMAIL_NOT_FOUND));
         member.checkPassword(password);
+        if (member.isDeleted()) {
+            throw new EdonymyeonException(MEMBER_IS_DELETED);
+        }
         return new ActiveMemberId(member.getId());
     }
 

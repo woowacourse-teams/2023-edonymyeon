@@ -30,6 +30,14 @@ public class MemberService {
     }
 
     @Transactional
+    public void deleteMember(final Long id) {
+        final Member member = memberRepository.findById(id)
+                .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
+        member.delete();
+        memberRepository.save(member);
+    }
+
+    @Transactional
     public void confirmPurchase(
             final MemberId memberId,
             final Long postId,
