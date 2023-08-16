@@ -4,6 +4,7 @@ import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +37,7 @@ public class MemberTestSupport {
 
         private ProfileImageInfo profileImageInfo;
 
-        private String deviceToken;
+        private List<Device> devices;
 
         public MemberBuilder email(final String email) {
             this.email = email;
@@ -58,8 +59,8 @@ public class MemberTestSupport {
             return this;
         }
 
-        public MemberBuilder deviceToken(final String deviceToken) {
-            this.deviceToken = deviceToken;
+        public MemberBuilder deviceToken(final List<Device> devices) {
+            this.devices = devices;
             return this;
         }
 
@@ -70,7 +71,7 @@ public class MemberTestSupport {
                             password == null ? DEFAULT_PASSWORD : password,
                             nickname == null ? (DEFAULT_NICK_NAME + nickNameCount++) : nickname,
                             profileImageInfo == null ? profileImageInfoTestSupport.builder().build() : profileImageInfo,
-                            deviceToken == null ? DEFAULT_DEVICE_TOKEN : deviceToken
+                            devices == null ? List.of(new Device(DEFAULT_DEVICE_TOKEN)) : devices
                     )
             );
         }

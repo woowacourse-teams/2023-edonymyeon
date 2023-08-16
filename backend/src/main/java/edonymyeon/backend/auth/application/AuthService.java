@@ -11,8 +11,10 @@ import edonymyeon.backend.auth.application.event.JoinMemberEvent;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
+import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -63,7 +65,7 @@ public class AuthService {
                 joinRequest.password(),
                 joinRequest.nickname(),
                 null,
-                joinRequest.deviceToken()
+                List.of(new Device(joinRequest.deviceToken()))
         );
 
         validateDuplicateEmail(joinRequest.email());

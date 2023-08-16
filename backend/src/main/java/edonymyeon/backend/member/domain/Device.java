@@ -1,18 +1,35 @@
 package edonymyeon.backend.member.domain;
 
-import jakarta.persistence.Embeddable;
-import java.time.LocalDateTime;
-import lombok.Getter;
+import edonymyeon.backend.global.domain.TemporalRecord;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor
-@Embeddable
-public class Device {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+public class Device extends TemporalRecord {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String deviceToken;
-    private LocalDateTime lastAccessedAt;
+
+    private boolean isActive;
 
     public Device(final String deviceToken) {
         this.deviceToken = deviceToken;
+        this.isActive = true;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public boolean isActive() {
+        return isActive;
     }
 }

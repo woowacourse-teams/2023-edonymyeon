@@ -8,16 +8,20 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PA
 import edonymyeon.backend.global.domain.TemporalRecord;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -52,23 +56,23 @@ public class Member extends TemporalRecord {
     @JoinColumn
     private ProfileImageInfo profileImageInfo;
 
-    @Embedded
-    private Device device;
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "member_id")
+    private List<Device> devices = new ArrayList<>();
 
     public Member(
             final String email,
             final String password,
             final String nickname,
             final ProfileImageInfo profileImageInfo,
-            final String deviceToken
+            final List<Device> devices
     ) {
-
         validate(email, password, nickname);
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.profileImageInfo = profileImageInfo;
-        this.device = new Device(deviceToken);
+        this.devices = devices;
     }
 
     public Member(final Long id) {
@@ -107,7 +111,12 @@ public class Member extends TemporalRecord {
         throw new EdonymyeonException(MEMBER_PASSWORD_NOT_MATCH);
     }
 
-    public String getDeviceToken() {
-        return this.device.getDeviceToken();
+    public Optional<String> getActiveDeviceToken() {
+        for (Device device : devices) {
+            if (device.isActive()) {
+                return Optional.of(device.getDeviceToken());
+            }
+        }
+        return Optional.empty();
     }
 }

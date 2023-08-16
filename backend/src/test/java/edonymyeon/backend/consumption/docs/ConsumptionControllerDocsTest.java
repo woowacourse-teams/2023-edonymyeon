@@ -15,13 +15,12 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edonymyeon.backend.support.DocsTest;
 import edonymyeon.backend.consumption.application.ConsumptionService;
 import edonymyeon.backend.consumption.application.dto.ConsumptionPriceResponse;
 import edonymyeon.backend.consumption.application.dto.RecentConsumptionsResponse;
-import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.support.DocsTest;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -55,8 +54,7 @@ public class ConsumptionControllerDocsTest extends DocsTest {
 
     @Test
     void 특정기간의_소비금액을_확인한다() throws Exception {
-        final Member 회원 = new Member(1L, "email@email.com", "password123!", "nickname", null,
-                new Device("kj234jkn342kj"));
+        final Member 회원 = new Member(1L, "email@email.com", "password123!", "nickname", null, List.of());
         final RecentConsumptionsResponse response = new RecentConsumptionsResponse(
                 "2023-08",
                 "2023-08",
