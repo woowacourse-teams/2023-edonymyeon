@@ -48,6 +48,10 @@ class PostDetailViewModel(
     val isLogin: Boolean
         get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
 
+    private val _isLoadingSuccess = MutableLiveData<Boolean>(false)
+    val isLoadingSuccess: LiveData<Boolean>
+        get() = _isLoadingSuccess
+
     fun getPostDetail(postId: Long) {
         viewModelScope.launch {
             postRepository.getPostDetail(postId)
@@ -57,8 +61,10 @@ class PostDetailViewModel(
                     _reactionCount.value = it.reactionCount.toUiModel()
                     _isScrap.value = it.isScrap
                     _post.value = it.toUiModel()
+                    _isLoadingSuccess.value = true
                 }.onFailure {
                     it as CustomThrowable
+                    _isLoadingSuccess.value = false
                 }
         }
     }

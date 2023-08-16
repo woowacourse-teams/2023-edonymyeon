@@ -44,6 +44,7 @@
     <string name="post_detail_dialog_title">정말로 삭제하시겠습니까?</string>
     <string name="post_detail_dialog_yes">예</string>
     <string name="post_detail_dialog_no">아니요</string>
+    <string name="post_detail_loading">로딩 중입니다</string>
 
     <!--post report dialog -->
     <string name="post_report_dialog_title">신고 사유</string>
