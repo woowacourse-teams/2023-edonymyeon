@@ -3,6 +3,8 @@ package edonymyeon.backend.member.application;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.image.ImageFileUploader;
+import edonymyeon.backend.image.profileimage.repository.ProfileImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.application.dto.YearMonthDto;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
@@ -10,6 +12,7 @@ import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.application.dto.response.MyPageResponse;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +26,10 @@ public class MemberService {
 
     private final MemberConsumptionService memberConsumptionService;
 
+    private final ProfileImageInfoRepository profileImageInfoRepository;
+
+    private final ImageFileUploader imageFileUploader;
+
     public MyPageResponse findMemberInfoById(final Long id) {
         final Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
@@ -33,6 +40,12 @@ public class MemberService {
     public void deleteMember(final Long id) {
         final Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
+
+        if (Objects.nonNull(member.getProfileImageInfo())) {
+            profileImageInfoRepository.delete(member.getProfileImageInfo());
+            imageFileUploader.removeFile(member.getProfileImageInfo());
+        }
+
         member.delete();
         memberRepository.save(member);
     }
