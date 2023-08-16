@@ -29,7 +29,6 @@ class HotPostViewHolder(parent: ViewGroup, onClick: (Int) -> Unit) :
         binding.prvHotPostReaction.reactionCount = ReactionCountUiModel(
             hotPost.reactionCount.viewCount,
             hotPost.reactionCount.commentCount,
-            hotPost.reactionCount.scrapCount,
         )
     }
 }

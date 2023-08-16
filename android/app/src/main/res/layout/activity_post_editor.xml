@@ -60,14 +60,13 @@
             android:layout_height="0dp"
             android:layout_marginStart="87dp"
             android:layout_marginEnd="20dp"
-            android:afterTextChanged="@{viewModel.setTitle}"
             android:autofillHints="no"
             android:background="@android:color/transparent"
             android:gravity="center_vertical"
             android:hint="@string/post_editor_post_title_hint"
             android:inputType="text"
             android:maxLength="30"
-            android:text="@{viewModel.postTitle}"
+            android:text="@{viewModel.postEditor.title}"
             android:textColor="@color/gray_434343"
             android:textColorHint="@color/gray_615f5f"
             android:textSize="13sp"
@@ -87,17 +86,16 @@
             app:layout_constraintStart_toStartOf="@id/tv_post_title"
             app:layout_constraintTop_toBottomOf="@id/tv_post_title" />
 
-
         <EditText
             android:id="@+id/et_post_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onTextChanged="@{viewModel.setPurchasePriceTextChanged}"
             android:autofillHints="no"
             android:background="@android:color/transparent"
             android:hint="@string/post_editor_price_hint"
             android:inputType="number"
-            android:text="@{viewModel.postPrice}"
+            android:onTextChanged="@{viewModel.checkPriceValidate}"
+            android:text="@{viewModel.postEditor.price}"
             android:textColor="@color/gray_434343"
             android:textColorHint="@color/gray_615f5f"
             android:textSize="13sp"
@@ -115,23 +113,6 @@
             app:layout_constraintBaseline_toBaselineOf="@+id/et_post_price"
             app:layout_constraintStart_toEndOf="@+id/et_post_price" />
 
-        <TextView
-            android:id="@+id/tv_post_category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/post_editor_post_category"
-            android:textColor="@color/gray_7c7a7a"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/tv_post_price"
-            app:layout_constraintTop_toBottomOf="@id/tv_post_price" />
-
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="@+id/et_post_title"
-            app:layout_constraintTop_toTopOf="@id/tv_post_category" />
-
         <Space
             android:id="@+id/space_category_bottom"
             android:layout_width="0dp"
@@ -139,7 +120,7 @@
             app:layout_constraintDimensionRatio="H,360:20"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_post_category" />
+            app:layout_constraintTop_toBottomOf="@id/et_post_price" />
 
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/div_post_editor_title_provider"
@@ -181,13 +162,12 @@
                     android:id="@+id/et_post_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:afterTextChanged="@{viewModel.setContent}"
                     android:autofillHints="no"
                     android:background="@android:color/transparent"
                     android:hint="@string/post_editor_content_hint"
                     android:inputType="textMultiLine"
                     android:maxLength="3000"
-                    android:text="@{viewModel.postContent}"
+                    android:text="@{viewModel.postEditor.content}"
                     android:textColor="@color/gray_434343"
                     android:textColorHint="@color/gray_615f5f"
                     android:textSize="15sp"

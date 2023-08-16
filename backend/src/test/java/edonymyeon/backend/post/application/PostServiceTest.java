@@ -63,6 +63,8 @@ class PostServiceTest implements ImageFileCleaner {
 
     private final ImageFileUploader imageFileUploader;
 
+    private final ConsumptionTestSupport consumptionTestSupport;
+
     private MemberId memberId;
 
     private static Post getFetchedPostWithPostImageInfos(final EntityManager entityManager, final PostResponse post) {
@@ -188,6 +190,18 @@ class PostServiceTest implements ImageFileCleaner {
 
     @Nested
     class 게시글을_삭제할_때 {
+
+        @Test
+        void 연관된_소비내역도_삭제된다(@Autowired PostRepository postRepository, @Autowired ConsumptionRepository consumptionRepository) throws IOException {
+            final PostResponse postResponse = postService.createPost(memberId, getPostRequest());
+            final Post post = postRepository.findById(postResponse.id()).get();
+
+            consumptionTestSupport.builder().post(post).build();
+            assertThat(consumptionRepository.findByPostId(post.getId()).isPresent()).isTrue();
+
+            postService.deletePost(memberId, postResponse.id());
+            assertThat(consumptionRepository.findByPostId(post.getId()).isEmpty()).isTrue();
+        }
 
         @Test
         void 게시글이_삭제되면_디렉토리에_있는_이미지도_삭제된다() throws IOException {

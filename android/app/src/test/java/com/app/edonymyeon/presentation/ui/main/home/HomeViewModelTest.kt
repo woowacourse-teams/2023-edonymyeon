@@ -2,6 +2,7 @@ package com.app.edonymyeon.presentation.ui.main.home
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.app.edonymyeon.mapper.toAllPostItemUiModel
+import com.app.edonymyeon.mapper.toUiModel
 import com.domain.edonymyeon.model.Count
 import com.domain.edonymyeon.model.PostItem
 import com.domain.edonymyeon.model.PostItems
@@ -25,7 +26,7 @@ class HomeViewModelTest {
     private lateinit var viewModel: HomeViewModel
     private lateinit var postRepository: PostRepository
 
-    private val fakeAllPost = List(5) {
+    private val fakePost = List(5) {
         PostItem(
             id = it.toLong(),
             title = "$it title",
@@ -36,13 +37,12 @@ class HomeViewModelTest {
             reactionCount = ReactionCount(
                 viewCount = Count(it),
                 commentCount = Count(it),
-                scrapCount = Count(it),
             ),
         )
     }
 
-    private val fakeAllPosts = PostItems(
-        fakeAllPost,
+    private val fakePosts = PostItems(
+        fakePost,
         true,
     )
 
@@ -68,12 +68,24 @@ class HomeViewModelTest {
         // given
         val size = 5
         val page = 0
-        coEvery { postRepository.getPosts(size, page) } returns Result.success(fakeAllPosts)
+        coEvery { postRepository.getPosts(size, page) } returns Result.success(fakePosts)
 
         // when
         viewModel.getAllPosts()
 
         // then
-        assertEquals(fakeAllPost.map { it.toAllPostItemUiModel() }, viewModel.allPosts.value)
+        assertEquals(fakePost.map { it.toAllPostItemUiModel() }, viewModel.allPosts.value)
+    }
+
+    @Test
+    fun `홈 화면에 보이는 핫 게시글을 불러온다`() {
+        // given
+        coEvery { postRepository.getHotPosts() } returns Result.success(fakePosts)
+
+        // when
+        viewModel.getHotPosts()
+
+        // then
+        assertEquals(fakePost.map { it.toUiModel() }, viewModel.hotPosts.value)
     }
 }
