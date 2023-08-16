@@ -153,11 +153,9 @@ class PostEditorActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.isUploadSuccess.observe(this) { isSuccess ->
-            if (isSuccess) {
-                setResult(RESULT_RELOAD_CODE)
-                navigateToDetail()
-            }
+        viewModel.postId.observe(this) {
+            setResult(RESULT_RELOAD_CODE)
+            navigateToDetail()
         }
         viewModel.galleryImages.observe(this) { images ->
             adapter.setImages(images)

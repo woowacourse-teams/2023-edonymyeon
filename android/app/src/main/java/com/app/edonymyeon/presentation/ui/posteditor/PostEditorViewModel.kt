@@ -30,9 +30,6 @@ class PostEditorViewModel(
     private val _isPostPriceValid = MutableLiveData<Boolean>()
     val isPostPriceValid: LiveData<Boolean> get() = _isPostPriceValid
 
-    private val _isUploadSuccess = MutableLiveData<Boolean>()
-    val isUploadSuccess: LiveData<Boolean> get() = _isUploadSuccess
-
     private val _isUploadAble = MutableLiveData<Boolean>()
     val isUpdateAble: LiveData<Boolean> get() = _isUploadAble
 
@@ -59,9 +56,7 @@ class PostEditorViewModel(
                 ),
             ).onSuccess {
                 _postId.value = (it as PostEditorResponse).id
-                _isUploadSuccess.value = true
             }.onFailure {
-                _isUploadSuccess.value = false
                 it as CustomThrowable
             }
         }
@@ -78,10 +73,8 @@ class PostEditorViewModel(
                     _galleryImages.value?.toList()?.map { Uri.parse(it) } ?: listOf(),
                 ),
             ).onSuccess {
-                _isUploadSuccess.value = true
                 _postId.value = (it as PostEditorResponse).id
             }.onFailure {
-                _isUploadSuccess.value = false
                 it as CustomThrowable
             }
         }
