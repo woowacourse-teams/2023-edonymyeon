@@ -1,15 +1,14 @@
 package edonymyeon.backend.post.integration;
 
 import edonymyeon.backend.CacheConfig;
-import edonymyeon.backend.support.IntegrationFixture;
-import edonymyeon.backend.cache.application.BooleanTemplate;
-import edonymyeon.backend.cache.application.LongTemplate;
+import edonymyeon.backend.cache.application.HotPostsRedisRepository;
 import edonymyeon.backend.cache.util.HotPostCachePolicy;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.application.HotFindingCondition;
 import edonymyeon.backend.post.application.PostReadService;
 import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
@@ -34,19 +33,14 @@ public class HotPostIntegrationTest extends IntegrationFixture {
 
     private final HotPostCachePolicy hotPostCachePolicy;
 
-    private final LongTemplate longTemplate;
-
-    private final BooleanTemplate booleanTemplate;
+    private final HotPostsRedisRepository hotPostsRedisRepository;
 
     private final HotFindingCondition findingCondition = HotFindingCondition.builder().build();
 
     @BeforeEach
     void 캐시를_삭제하고_시작하도록_한다(){
-        String postIdsCacheKey = hotPostCachePolicy.getPostIdsCacheKey(findingCondition);
-        String isLastCacheKey = hotPostCachePolicy.getLastCacheKey(findingCondition);
-
-        longTemplate.delete(postIdsCacheKey);
-        booleanTemplate.delete(isLastCacheKey);
+        String postIdsCacheKey = hotPostCachePolicy.getKey(findingCondition);
+        hotPostsRedisRepository.deleteById(postIdsCacheKey);
     }
 
     @Test

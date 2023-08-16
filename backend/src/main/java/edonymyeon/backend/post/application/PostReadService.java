@@ -131,10 +131,13 @@ public class PostReadService {
     }
 
     public PostSlice<GeneralPostInfoResponse> findHotPosts(final HotFindingCondition hotFindingCondition) {
-        if (postCachingService.isPostsCached(hotFindingCondition)) {
-            return findCachedPosts(hotFindingCondition);
+        if(postCachingService.isNotCached(hotFindingCondition)){
+            return findHotPostFromRepository(hotFindingCondition);
         }
-        return findHotPostFromRepository(hotFindingCondition);
+        if(postCachingService.shouldRefreshCache(hotFindingCondition)){
+            return findHotPostFromRepository(hotFindingCondition);
+        }
+            return findCachedPosts(hotFindingCondition);
     }
 
     private PostSlice<GeneralPostInfoResponse> findCachedPosts(final HotFindingCondition hotFindingCondition) {
