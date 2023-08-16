@@ -34,9 +34,10 @@ class ConsumptionDialog(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         initBinding()
-        initObserve()
+        setObserver()
         setNumberPicker()
-        initListener()
+        loadPrice()
+        setListener()
     }
 
     private fun initBinding() {
@@ -45,7 +46,7 @@ class ConsumptionDialog(
         binding.lifecycleOwner = this
     }
 
-    private fun initObserve() {
+    private fun setObserver() {
         viewModel.price.observe(this) { price ->
             runCatching { if (price != BLANK) price?.toInt() ?: 0 }.onFailure {
                 binding.root.makeSnackbar(this.getString(R.string.dialog_input_price_error_message))
@@ -54,7 +55,20 @@ class ConsumptionDialog(
         }
     }
 
-    private fun initListener() {
+    private fun setNumberPicker() {
+        viewModel.getYearMonth(id)
+        val minYear = viewModel.yearMonth.value?.keys?.min() ?: 0
+        val maxYear = viewModel.yearMonth.value?.keys?.max() ?: 0
+
+        updateYearNumberPicker(minYear, maxYear)
+        updateMonthNumberPicker(minYear)
+    }
+
+    private fun loadPrice() {
+        viewModel.getPostPrice(id)
+    }
+
+    private fun setListener() {
         binding.btnDialogCancel.setOnClickListener {
             viewModel.setPurchasePrice(BLANK)
             dismiss()
@@ -78,15 +92,6 @@ class ConsumptionDialog(
         binding.npYear.setOnValueChangedListener { _, _, newVal ->
             updateMonthNumberPicker(newVal)
         }
-    }
-
-    private fun setNumberPicker() {
-        viewModel.getYearMonth(id)
-        val minYear = viewModel.yearMonth.value?.keys?.min() ?: 0
-        val maxYear = viewModel.yearMonth.value?.keys?.max() ?: 0
-
-        updateYearNumberPicker(minYear, maxYear)
-        updateMonthNumberPicker(minYear)
     }
 
     private fun updateYearNumberPicker(minYear: Int, maxYear: Int) {

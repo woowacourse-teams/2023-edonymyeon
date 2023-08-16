@@ -5,6 +5,7 @@ import com.app.edonymyeon.mapper.toUiModel
 import com.domain.edonymyeon.model.Consumption
 import com.domain.edonymyeon.model.MyPost
 import com.domain.edonymyeon.model.MyPosts
+import com.domain.edonymyeon.repository.PostRepository
 import com.domain.edonymyeon.repository.ProfileRepository
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -23,6 +24,7 @@ class MyPostViewModelTest {
 
     private lateinit var viewModel: MyPostViewModel
     private lateinit var profileRepository: ProfileRepository
+    private lateinit var postRepository: PostRepository
 
     private val fakeMyPost = listOf(
         MyPost(
@@ -79,7 +81,8 @@ class MyPostViewModelTest {
     fun setUp() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         profileRepository = mockk()
-        viewModel = MyPostViewModel(profileRepository)
+        postRepository = mockk()
+        viewModel = MyPostViewModel(profileRepository, postRepository)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
