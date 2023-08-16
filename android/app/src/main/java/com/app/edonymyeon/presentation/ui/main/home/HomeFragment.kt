@@ -19,6 +19,7 @@ import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 
 class HomeFragment : Fragment() {
+
     private val binding: FragmentHomeBinding by lazy {
         FragmentHomeBinding.inflate(layoutInflater)
     }
@@ -40,6 +41,8 @@ class HomeFragment : Fragment() {
             requireContext().startActivity(PostDetailActivity.newIntent(requireContext(), id))
         }
     }
+
+    private var isIndicatorSet = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -77,7 +80,10 @@ class HomeFragment : Fragment() {
         }
         viewModel.hotPosts.observe(viewLifecycleOwner) {
             hotPostAdapter.setHotPosts(it)
-            setImageIndicators()
+            if (!isIndicatorSet) {
+                setImageIndicators()
+                isIndicatorSet = true
+            }
         }
     }
 
