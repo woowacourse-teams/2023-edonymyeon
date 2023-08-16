@@ -2,6 +2,7 @@ package edonymyeon.backend.global.controlleradvice;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.AUTHORIZATION_EMPTY;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_NOT_FOUND;
+import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_IS_DELETED;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
 import static edonymyeon.backend.global.exception.ExceptionInformation.REQUEST_FILE_SIZE_TOO_LARGE;
 import static edonymyeon.backend.global.exception.ExceptionInformation.REQUEST_PARAMETER_NOT_EXIST;
@@ -36,6 +37,7 @@ public class GlobalExceptionHandler {
         exceptionInfoToHttpStatus.put(MEMBER_EMAIL_NOT_FOUND, UNAUTHORIZED);
         exceptionInfoToHttpStatus.put(AUTHORIZATION_EMPTY, UNAUTHORIZED);
         exceptionInfoToHttpStatus.put(POST_MEMBER_NOT_SAME, FORBIDDEN);
+        exceptionInfoToHttpStatus.put(MEMBER_IS_DELETED, UNAUTHORIZED);
     }
 
     @ExceptionHandler(Exception.class)
