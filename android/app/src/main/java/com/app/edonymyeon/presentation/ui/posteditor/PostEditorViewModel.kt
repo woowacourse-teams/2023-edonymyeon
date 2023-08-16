@@ -107,7 +107,7 @@ class PostEditorViewModel(
 
     private fun getFileFromContent(context: Context, uris: List<Uri>): List<File> {
         return uris.filter { it.scheme == "content" }.map { uri ->
-            uri.getBitmapFromUri(context)?.convertResizeImage(context) ?: File("")
+            processAndAdjustImage(context, uri)
         }
     }
 
@@ -115,6 +115,13 @@ class PostEditorViewModel(
         return uris.filter { it.scheme == "http" }.map { uri ->
             uri.toString()
         }
+    }
+
+    private fun processAndAdjustImage(context: Context, uri: Uri): File {
+        val bitmap = uri.getBitmapFromUri(context)
+        val file = bitmap?.convertResizeImage(context)
+        file?.updateExifOrientation(context, uri)
+        return file ?: File("")
     }
 
     private fun Uri.getBitmapFromUri(context: Context): Bitmap? {
@@ -126,20 +133,21 @@ class PostEditorViewModel(
 
     private fun Bitmap.convertResizeImage(context: Context): File {
         val tempFile = File.createTempFile("resized_image", ".jpg", context.cacheDir)
-        val oldExifOrientation =
-            ExifInterface(tempFile.absolutePath).getAttribute(ExifInterface.TAG_ORIENTATION)
+
         FileOutputStream(tempFile).use { fileOutputStream ->
             this.compress(Bitmap.CompressFormat.JPEG, 80, fileOutputStream)
         }
-
-        tempFile.updateExifOrientation(oldExifOrientation ?: "")
         return tempFile
     }
 
-    private fun File.updateExifOrientation(oldExifOrientation: String) {
-        val newExifOrientation = ExifInterface(absolutePath)
-
-        newExifOrientation.setAttribute(ExifInterface.TAG_ORIENTATION, oldExifOrientation)
-        newExifOrientation.saveAttributes()
+    private fun File.updateExifOrientation(context: Context, uri: Uri) {
+        context.contentResolver.openInputStream(uri)?.use {
+            val exif = ExifInterface(it)
+            exif.getAttribute(ExifInterface.TAG_ORIENTATION)?.let {
+                val newExif = ExifInterface(absolutePath)
+                newExif.setAttribute(ExifInterface.TAG_ORIENTATION, it)
+                newExif.saveAttributes()
+            }
+        }
     }
 }
