@@ -3,6 +3,7 @@ package edonymyeon.backend.cache.application;
 import edonymyeon.backend.cache.application.domain.CachedHotPost;
 import edonymyeon.backend.cache.application.dto.CachedPostResponse;
 import edonymyeon.backend.cache.util.HotPostCachePolicy;
+import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.post.application.HotFindingCondition;
 import edonymyeon.backend.post.domain.Post;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import static edonymyeon.backend.global.exception.ExceptionInformation.CACHE_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -28,13 +31,13 @@ public class PostCachingService {
 
     public boolean shouldRefreshCache(final HotFindingCondition hotFindingCondition) {
         CachedHotPost cachedHotPost = hotPostsRedisRepository.findById(hotPostPolicy.getKey(hotFindingCondition))
-                .orElseThrow();
+                .orElseThrow(()-> new EdonymyeonException(CACHE_NOT_FOUND));
         return cachedHotPost.shouldRefresh(hotPostPolicy.getExpiredSeconds());
     }
 
     public CachedPostResponse findCachedPosts(HotFindingCondition hotFindingCondition) {
         CachedHotPost cachedHotPost = hotPostsRedisRepository.findById(hotPostPolicy.getKey(hotFindingCondition))
-                .orElseThrow();
+                .orElseThrow(()-> new EdonymyeonException(CACHE_NOT_FOUND));
         return new CachedPostResponse(cachedHotPost.getPostIds(), cachedHotPost.isLast());
     }
 
