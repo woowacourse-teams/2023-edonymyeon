@@ -9,8 +9,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.NoArgsConstructor;
 
@@ -28,7 +30,11 @@ public class Preference {
     @Enumerated(EnumType.STRING)
     private PreferenceKey preferenceKey;
 
-    @OneToMany(mappedBy = "preference")
+    @ManyToMany
+    @JoinTable(name = "preferences_dependent_preferences",
+            joinColumns = @JoinColumn(name = "preference_id"),
+            inverseJoinColumns = @JoinColumn(name = "dependent_preference_id")
+    )
     private List<Preference> dependentPreferences;
 
     private EnableStatus enabled;
@@ -39,6 +45,26 @@ public class Preference {
         this.preferenceKey = preferenceKey;
         this.dependentPreferences = dependentPreferences;
         this.enabled = enabled;
+    }
+
+    public static List<Preference> makeInitializedPreferences(Member member) {
+        ArrayList<Preference> preferences = new ArrayList<>();
+        for (PreferenceKey preferenceKey : PreferenceKey.values()) {
+            preferences.add(new Preference(member, preferenceKey, new ArrayList<>(), EnableStatus.DISABLED));
+        }
+
+        for (Preference preference : preferences) {
+            final List<Preference> dependentPreferences = preferences.stream()
+                    .filter(pref -> pref.isDependentBy(preference))
+                    .toList();
+            preference.dependentPreferences.addAll(dependentPreferences);
+        }
+
+        return preferences;
+    }
+
+    private boolean isDependentBy(final Preference preference) {
+        return this.preferenceKey.isDependentBy(preference.preferenceKey);
     }
 
     public void toggleEnable() {
