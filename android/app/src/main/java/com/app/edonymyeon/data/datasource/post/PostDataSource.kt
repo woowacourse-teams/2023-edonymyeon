@@ -1,9 +1,11 @@
 package com.app.edonymyeon.data.datasource.post
 
+import com.app.edonymyeon.data.dto.request.PostEditorRequest
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
 import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.Posts
 import retrofit2.Response
+import java.io.File
 
 interface PostDataSource {
     suspend fun getPostDetail(postId: Long): Response<PostDetailResponse>
@@ -11,18 +13,15 @@ interface PostDataSource {
     suspend fun getPosts(size: Int, page: Int): Response<Posts>
 
     suspend fun savePost(
-        title: String,
-        content: String,
-        price: Int,
-        images: List<String>,
+        postEditorRequest: PostEditorRequest,
+        imageFiles: List<File>,
     ): Response<PostEditorResponse>
 
     suspend fun updatePost(
         id: Long,
-        title: String,
-        content: String,
-        price: Int,
-        images: List<String>,
+        postEditorRequest: PostEditorRequest,
+        imageUrls: List<String>,
+        imageFiles: List<File>,
     ): Response<PostEditorResponse>
 
     suspend fun getHotPosts(): Response<Posts>

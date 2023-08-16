@@ -2,22 +2,25 @@ package com.app.edonymyeon.presentation.ui.posteditor
 
 import android.app.Application
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.media.ExifInterface
 import android.net.Uri
-import android.os.Build
-import android.provider.MediaStore
 import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.loader.content.CursorLoader
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.presentation.ui.mypost.dialog.ConsumptionDialog
 import com.app.edonymyeon.presentation.uimodel.PostEditorUiModel
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
+import com.domain.edonymyeon.model.PostEditor
 import com.domain.edonymyeon.repository.PostRepository
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 
 class PostEditorViewModel(
     private val application: Application,
@@ -45,14 +48,13 @@ class PostEditorViewModel(
         _galleryImages.value = post.images.map { it.toUri().toString() }
     }
 
-    fun savePost(title: String, content: String, price: Int) {
+    fun savePost(context: Context, postEditor: PostEditor) {
         viewModelScope.launch {
             repository.savePost(
-                title,
-                content,
-                price,
-                getImagesFilepath(
-                    _galleryImages.value?.toList()?.map { Uri.parse(it) } ?: listOf(),
+                postEditor,
+                getFileFromContent(
+                    context,
+                    _galleryImages.value?.map { Uri.parse(it) } ?: emptyList(),
                 ),
             ).onSuccess {
                 _postId.value = (it as PostEditorResponse).id
@@ -62,16 +64,14 @@ class PostEditorViewModel(
         }
     }
 
-    fun updatePost(id: Long, title: String, content: String, price: Int) {
+    fun updatePost(context: Context, id: Long, postEditor: PostEditor) {
+        val uris = _galleryImages.value?.map { Uri.parse(it) } ?: emptyList()
         viewModelScope.launch {
             repository.updatePost(
                 id,
-                title,
-                content,
-                price,
-                getImagesFilepath(
-                    _galleryImages.value?.toList()?.map { Uri.parse(it) } ?: listOf(),
-                ),
+                postEditor,
+                getAbsolutePathFromHttp(uris),
+                getFileFromContent(context, uris),
             ).onSuccess {
                 _postId.value = (it as PostEditorResponse).id
             }.onFailure {
@@ -105,35 +105,41 @@ class PostEditorViewModel(
         _isUploadAble.value = title.isNotBlank()
     }
 
-    private fun getImagesFilepath(uris: List<Uri>): List<String> {
-        return uris.map { uri ->
-            getAbsolutePathFromUri(application.applicationContext, uri) ?: ""
+    private fun getFileFromContent(context: Context, uris: List<Uri>): List<File> {
+        return uris.filter { it.scheme == "content" }.map { uri ->
+            uri.getBitmapFromUri(context)?.convertResizeImage(context) ?: File("")
         }
     }
 
-    private fun getAbsolutePathFromUri(context: Context, uri: Uri): String? {
-        return when (uri.scheme) {
-            "content" -> getAbsolutePathFromContentUri(context, uri)
-            "http" -> getAbsolutePathFromHttp(uri)
-            else -> null
+    private fun getAbsolutePathFromHttp(uris: List<Uri>): List<String> {
+        return uris.filter { it.scheme == "http" }.map { uri ->
+            uri.toString()
         }
     }
 
-    private fun getAbsolutePathFromContentUri(context: Context, uri: Uri): String? {
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            context.contentResolver.query(uri, projection, null, null, null)
-        } else {
-            CursorLoader(context, uri, projection, null, null, null).loadInBackground()
+    private fun Uri.getBitmapFromUri(context: Context): Bitmap? {
+        return context.contentResolver
+            .openInputStream(this)?.use {
+            BitmapFactory.decodeStream(it)
         }
-        cursor?.use {
-            if (it.moveToFirst()) {
-                val columnIndex = it.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-                return it.getString(columnIndex)
-            }
-        }
-        return null
     }
 
-    private fun getAbsolutePathFromHttp(uri: Uri): String = uri.toString()
+    private fun Bitmap.convertResizeImage(context: Context): File {
+        val tempFile = File.createTempFile("resized_image", ".jpg", context.cacheDir)
+        val oldExifOrientation =
+            ExifInterface(tempFile.absolutePath).getAttribute(ExifInterface.TAG_ORIENTATION)
+        FileOutputStream(tempFile).use { fileOutputStream ->
+            this.compress(Bitmap.CompressFormat.JPEG, 80, fileOutputStream)
+        }
+
+        tempFile.updateExifOrientation(oldExifOrientation ?: "")
+        return tempFile
+    }
+
+    private fun File.updateExifOrientation(oldExifOrientation: String) {
+        val newExifOrientation = ExifInterface(absolutePath)
+
+        newExifOrientation.setAttribute(ExifInterface.TAG_ORIENTATION, oldExifOrientation)
+        newExifOrientation.saveAttributes()
+    }
 }
