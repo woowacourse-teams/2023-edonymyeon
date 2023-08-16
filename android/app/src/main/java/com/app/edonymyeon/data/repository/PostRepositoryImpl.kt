@@ -71,4 +71,20 @@ class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepos
             Result.failure(CustomThrowable(result.code(), result.message()))
         }
     }
+
+    override suspend fun getHotPosts(): Result<PostItems> {
+        val result = postDataSource.getHotPosts()
+        return if (result.isSuccessful && result.body() != null) {
+            Result.success(
+                PostItems(
+                    result.body()!!.post.map {
+                        it.toDomain()
+                    },
+                    result.body()!!.isLast,
+                ),
+            )
+        } else {
+            Result.failure(CustomThrowable(result.code(), result.message()))
+        }
+    }
 }

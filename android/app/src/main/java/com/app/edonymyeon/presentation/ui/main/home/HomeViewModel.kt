@@ -6,14 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.mapper.toAllPostItemUiModel
+import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.uimodel.AllPostItemUiModel
-import com.app.edonymyeon.presentation.uimodel.DateUiModel
 import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
-import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
 import com.domain.edonymyeon.repository.PostRepository
 import kotlinx.coroutines.launch
 
-class HomeViewModel(private val repository: PostRepository) : ViewModel() {
+class HomeViewModel(private val postRepository: PostRepository) : ViewModel() {
     private val _allPosts = MutableLiveData<List<AllPostItemUiModel>>()
     val allPosts: LiveData<List<AllPostItemUiModel>>
         get() = _allPosts
@@ -28,7 +27,7 @@ class HomeViewModel(private val repository: PostRepository) : ViewModel() {
 
     fun getAllPosts() {
         viewModelScope.launch {
-            repository.getPosts(ALL_POST_DEFAULT_SIZE, ALL_POST_DEFAULT_PAGE).onSuccess {
+            postRepository.getPosts(ALL_POST_DEFAULT_SIZE, ALL_POST_DEFAULT_PAGE).onSuccess {
                 _allPosts.value = it.posts.map { post ->
                     post.toAllPostItemUiModel()
                 }
@@ -40,19 +39,14 @@ class HomeViewModel(private val repository: PostRepository) : ViewModel() {
         }
     }
 
-    private val hotPostDummy = List(5) {
-        PostItemUiModel(
-            id = it.toLong(),
-            title = "title $it",
-            content = "content $it",
-            thumbnailUrl = "thumbnailUrl $it",
-            nickname = "nickname $it",
-            createdAt = DateUiModel("2023-08-09T11:24:05.91282"),
-            reactionCount = ReactionCountUiModel(
-                viewCount = it,
-                commentCount = it,
-            ),
-        )
+    fun getHotPosts() {
+        viewModelScope.launch {
+            postRepository.getHotPosts().onSuccess { post ->
+                _hotPosts.value = post.posts.map { it.toUiModel() }
+            }.onFailure {
+                it as CustomThrowable
+            }
+        }
     }
 
     companion object {
