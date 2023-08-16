@@ -87,7 +87,6 @@
             app:layout_constraintStart_toStartOf="@id/tv_post_title"
             app:layout_constraintTop_toBottomOf="@id/tv_post_title" />
 
-
         <EditText
             android:id="@+id/et_post_price"
             android:layout_width="wrap_content"
@@ -115,23 +114,6 @@
             app:layout_constraintBaseline_toBaselineOf="@+id/et_post_price"
             app:layout_constraintStart_toEndOf="@+id/et_post_price" />
 
-        <TextView
-            android:id="@+id/tv_post_category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/post_editor_post_category"
-            android:textColor="@color/gray_7c7a7a"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="@+id/tv_post_price"
-            app:layout_constraintTop_toBottomOf="@id/tv_post_price" />
-
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="@+id/et_post_title"
-            app:layout_constraintTop_toTopOf="@id/tv_post_category" />
-
         <Space
             android:id="@+id/space_category_bottom"
             android:layout_width="0dp"
@@ -139,7 +121,7 @@
             app:layout_constraintDimensionRatio="H,360:20"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_post_category" />
+            app:layout_constraintTop_toBottomOf="@id/et_post_price" />
 
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/div_post_editor_title_provider"
