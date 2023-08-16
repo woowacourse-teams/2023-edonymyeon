@@ -4,14 +4,11 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EM
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_INVALID;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
-import edonymyeon.backend.auth.application.dto.KakaoLoginRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
-import edonymyeon.backend.auth.domain.TokenGenerator;
+import edonymyeon.backend.auth.application.dto.MemberResponse;
 import edonymyeon.backend.auth.domain.ValidateType;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
@@ -21,31 +18,20 @@ import edonymyeon.backend.member.domain.Member.SocialType;
 import edonymyeon.backend.member.repository.MemberRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
 public class AuthService {
 
-    private static final String KAKAO_INFO_REQUEST_URL = "https://kapi.kakao.com/v2/user/me";
-
     private final MemberRepository memberRepository;
-
-    private final TokenGenerator tokenGenerator;
 
     public MemberId findMember(final LoginRequest loginRequest) {
         return findMember(loginRequest.email(), loginRequest.password());
     }
 
-    //todo: 비밀번호까지 조회에 사용하나?
     public MemberId findMember(final String email, final String password) {
         final Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_EMAIL_NOT_FOUND));
@@ -69,30 +55,12 @@ public class AuthService {
         return memberRepository.findByNickname(value);
     }
 
-    public KakaoLoginResponse getKakaoLoginResponse(final KakaoLoginRequest loginRequest)
-            throws JsonProcessingException {
-        final RestTemplate restTemplate = new RestTemplate();
-        final HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + loginRequest.accessToken());
-        httpHeaders.add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=utf-8");
-        final HttpEntity<Object> kakaoRequest = new HttpEntity<>(httpHeaders);
-
-        final ResponseEntity<String> exchange = restTemplate.exchange(
-                KAKAO_INFO_REQUEST_URL,
-                HttpMethod.POST,
-                kakaoRequest,
-                String.class
-        );
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(exchange.getBody(), KakaoLoginResponse.class);
-    }
-
     //todo session으로
     @Transactional
-    public String findMemberByKakao(final KakaoLoginResponse kakaoLoginResponse) {
+    public MemberResponse findMemberByKakao(final KakaoLoginResponse kakaoLoginResponse) {
         final Member member = memberRepository.findBySocialIdAndSocialType(kakaoLoginResponse.id(), SocialType.KAKAO)
                 .orElseGet(() -> joinSocialMember(kakaoLoginResponse.id(), SocialType.KAKAO));
-        return tokenGenerator.getBasicToken(member.getEmail(), member.getPassword());
+        return new MemberResponse(member.getEmail(), member.getPassword());
     }
 
     @Transactional

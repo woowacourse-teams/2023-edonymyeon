@@ -1,12 +1,13 @@
 package edonymyeon.backend.auth.ui;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import edonymyeon.backend.auth.application.AuthService;
+import edonymyeon.backend.auth.application.KakaoAuthResponseProvider;
 import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
+import edonymyeon.backend.auth.application.dto.MemberResponse;
 import edonymyeon.backend.auth.domain.TokenGenerator;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,8 @@ public class AuthController {
 
     private final AuthService authService;
 
+    private final KakaoAuthResponseProvider kakaoAuthResponseProvider;
+
     private final TokenGenerator tokenGenerator;
 
     @PostMapping("/login")
@@ -36,11 +39,11 @@ public class AuthController {
     }
 
     @PostMapping("/auth/kakao/login")
-    public ResponseEntity<KakaoLoginResponse> loginWithKakao(@RequestBody KakaoLoginRequest loginRequest)
-            throws JsonProcessingException {
-        final KakaoLoginResponse kakaoLoginResponse = authService.getKakaoLoginResponse(loginRequest);
+    public ResponseEntity<Void> loginWithKakao(@RequestBody KakaoLoginRequest loginRequest) {
+        final KakaoLoginResponse kakaoLoginResponse = kakaoAuthResponseProvider.request(loginRequest);
 
-        final String basicToken = authService.findMemberByKakao(kakaoLoginResponse);
+        final MemberResponse memberResponse = authService.findMemberByKakao(kakaoLoginResponse);
+        final String basicToken = tokenGenerator.getBasicToken(memberResponse.email(), memberResponse.password());
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, basicToken)
                 .build();

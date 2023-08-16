@@ -20,11 +20,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.auth.application.AuthService;
+import edonymyeon.backend.auth.application.KakaoAuthResponseProvider;
 import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
+import edonymyeon.backend.auth.application.dto.MemberResponse;
 import edonymyeon.backend.support.DocsTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -41,6 +43,9 @@ public class AuthControllerDocsTest extends DocsTest {
 
     @MockBean
     private AuthService authService;
+
+    @MockBean
+    private KakaoAuthResponseProvider kakaoAuthResponseProvider;
 
     public AuthControllerDocsTest(final MockMvc mockMvc,
                                   final ObjectMapper objectMapper) {
@@ -80,9 +85,10 @@ public class AuthControllerDocsTest extends DocsTest {
     void 카카오_로그인_문서화() throws Exception {
         final KakaoLoginRequest kakaoLoginRequest = new KakaoLoginRequest("accessToken!!!!!");
         final KakaoLoginResponse kakaoLoginResponse = new KakaoLoginResponse(1L);
+        final MemberResponse memberResponse = new MemberResponse("example@email.com", "password123!");
 
-        when(authService.getKakaoLoginResponse(kakaoLoginRequest)).thenReturn(kakaoLoginResponse);
-        when(authService.findMemberByKakao(kakaoLoginResponse)).thenReturn("Basic ZW1haWw4MjpwYXNzd29yZDEyMyE=");
+        when(kakaoAuthResponseProvider.request(kakaoLoginRequest)).thenReturn(kakaoLoginResponse);
+        when(authService.findMemberByKakao(kakaoLoginResponse)).thenReturn(memberResponse);
 
         final MockHttpServletRequestBuilder 로그인_요청 = post("/auth/kakao/login")
                 .contentType(MediaType.APPLICATION_JSON)
