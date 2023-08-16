@@ -19,7 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/bg_576b9e_radius_bottom_10dp"
-            app:layout_constraintDimensionRatio="H,360:135"
+            app:layout_constraintDimensionRatio="H,360:136"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -28,7 +28,7 @@
                 android:id="@+id/space_search_top"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintDimensionRatio="H,360:51"
+                app:layout_constraintDimensionRatio="H,360:52"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -40,7 +40,7 @@
                 android:background="@drawable/bg_ffffff_radius_10dp"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
-                app:layout_constraintDimensionRatio="H,315:34"
+                app:layout_constraintDimensionRatio="H,316:34"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/space_search_top"
