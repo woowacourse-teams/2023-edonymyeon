@@ -14,6 +14,7 @@ import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
@@ -116,5 +117,36 @@ public class MemberIntegrationTest extends IntegrationFixture {
                     softly.assertThat(exception.errorMessage()).isEqualTo(MEMBER_IS_DELETED.getMessage());
                 }
         );
+    }
+
+    @Test
+    void 삭제한_회원의_게시글을_조회한다() {
+        final Member member = memberTestSupport.builder()
+                .build();
+
+        final Post post = postTestSupport.builder()
+                .member(member)
+                .build();
+
+        RestAssured
+                .given()
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .delete("/withdraw");
+
+        final ExtractableResponse<Response> response = RestAssured
+                .given()
+                .when()
+                .get("/posts/" + post.getId())
+                .then()
+                .extract();
+
+        final JsonPath jsonPath = response.body()
+                .jsonPath();
+
+        assertSoftly(softly -> {
+            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softly.assertThat(jsonPath.getString("writer.nickname")).isEqualTo("Unknown");
+        });
     }
 }
