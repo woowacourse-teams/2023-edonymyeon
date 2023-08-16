@@ -28,7 +28,9 @@ import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.util.getParcelableExtraCompat
 import com.app.edonymyeon.presentation.util.makeSnackbar
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
+import com.domain.edonymyeon.model.PostEditor
 import com.google.android.material.snackbar.Snackbar
+import java.time.LocalDateTime
 
 class PostEditorActivity : AppCompatActivity() {
 
@@ -207,16 +209,11 @@ class PostEditorActivity : AppCompatActivity() {
         val postTitle = binding.etPostTitle.text.toString()
         val postContent = binding.etPostContent.text.toString().ifBlank { "" }
         val postPrice = binding.etPostPrice.text.toString().toInt()
-
+        val postEditor = PostEditor(postTitle, postContent, postPrice)
         when (originActivityKey) {
-            POST_CODE -> viewModel.savePost(postTitle, postContent, postPrice)
+            POST_CODE -> viewModel.savePost(this, postEditor)
             UPDATE_CODE -> post?.let {
-                viewModel.updatePost(
-                    it.id,
-                    postTitle,
-                    postContent,
-                    postPrice,
-                )
+                viewModel.updatePost(this, it.id, postEditor)
             }
         }
     }
@@ -282,7 +279,7 @@ class PostEditorActivity : AppCompatActivity() {
             ?.let { imageUri ->
                 val outputStream = resolver.openOutputStream(imageUri)
                 outputStream?.use { stream ->
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream)
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
                 }
                 return imageUri
             }
@@ -321,7 +318,7 @@ class PostEditorActivity : AppCompatActivity() {
         const val RESULT_RELOAD_CODE = 1001
 
         private val contentValues = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle")
+            put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle${LocalDateTime.now()}")
             put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
         }
 
