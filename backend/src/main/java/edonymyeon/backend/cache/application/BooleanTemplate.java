@@ -5,6 +5,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 @RequiredArgsConstructor
 @Component
 public class BooleanTemplate {
@@ -26,6 +28,10 @@ public class BooleanTemplate {
         redisTemplate.delete(key);
         redisTemplate.opsForValue()
                 .append(key, String.valueOf(value));
+    }
+
+    public void setExpire(String key, int expiredSeconds) {
+        redisTemplate.expire(key, expiredSeconds, TimeUnit.SECONDS);
     }
 
     public void delete(String key) {

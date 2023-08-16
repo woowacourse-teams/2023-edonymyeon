@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Component
@@ -24,9 +25,13 @@ public class LongTemplate {
         return len == 0 ? new ArrayList<>() : redisTemplate.opsForList().range(key, 0, len - 1);
     }
 
-    public void save(String postIdsKey, List<Long> hotPostIds) {
-        redisTemplate.delete(postIdsKey);
-        redisTemplate.opsForList().leftPushAll(postIdsKey, hotPostIds);
+    public void save(String key, List<Long> hotPostIds) {
+        redisTemplate.delete(key);
+        redisTemplate.opsForList().leftPushAll(key, hotPostIds);
+    }
+
+    public void setExpire(String key, int expiredSeconds) {
+        redisTemplate.expire(key, expiredSeconds, TimeUnit.SECONDS);
     }
 
     public void delete(String postIdsKey) {
