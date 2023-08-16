@@ -17,4 +17,8 @@ public class HotPostCachePolicy {
     public String getLastCacheKey(HotFindingCondition hotFindingCondition){
         return cacheKeyStrategy.getLastCacheKey(hotFindingCondition.getSize(), hotFindingCondition.getPage());
     }
+
+    public int getExpiredSeconds() {
+        return cacheKeyStrategy.getExpiredSeconds();
+    }
 }
