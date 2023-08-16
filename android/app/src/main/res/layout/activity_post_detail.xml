@@ -21,18 +21,7 @@
             android:layout_height="?attr/actionBarSize"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <CheckBox
-                android:id="@+id/action_scrap"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:background="@drawable/selector_cb_scrap"
-                android:button="@null"
-                android:checked="@{postViewModel.isScrap}" />
-
-        </androidx.appcompat.widget.Toolbar>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ScrollView
             android:layout_width="0dp"
@@ -99,9 +88,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:text="@{postViewModel.post.title}"
+                    android:textColor="@color/black_434343"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="@color/black_434343"
                     app:layout_constraintStart_toEndOf="@id/space_content_start"
                     app:layout_constraintTop_toBottomOf="@id/space_image_bottom"
                     tools:text="립스틱 살까말까 고민 중인데..." />
@@ -164,8 +153,8 @@
                     android:text="@{@string/all_price_long(postViewModel.post.price)}"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    app:layout_constraintTop_toBottomOf="@id/space_price_top"
                     app:layout_constraintStart_toEndOf="@id/space_content_start"
+                    app:layout_constraintTop_toBottomOf="@id/space_price_top"
                     tools:text="가격: 13,000원" />
 
 

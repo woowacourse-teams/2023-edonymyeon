@@ -50,7 +50,6 @@ class PostDetailViewModelTest() {
         reactionCount: ReactionCount = ReactionCount(
             viewCount = Count(3),
             commentCount = Count(0),
-            scrapCount = Count(0),
         ),
         recommendation: Recommendation,
         isScrap: Boolean = false,
