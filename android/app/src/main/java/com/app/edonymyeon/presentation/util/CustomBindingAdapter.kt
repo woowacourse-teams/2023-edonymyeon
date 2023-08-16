@@ -70,7 +70,10 @@ object CustomBindingAdapter {
         when (consumption.type) {
             "PURCHASE" ->
                 view.text =
-                    view.context.getString(R.string.my_post_purchase_text, consumption.purchasePrice)
+                    view.context.getString(
+                        R.string.my_post_purchase_text,
+                        consumption.purchasePrice,
+                    )
 
             "SAVING" -> view.text = view.context.getString(R.string.my_post_saving_text)
         }

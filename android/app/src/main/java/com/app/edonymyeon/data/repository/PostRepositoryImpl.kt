@@ -64,7 +64,8 @@ class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepos
         imageUrls: List<String>,
         imageFiles: List<File>,
     ): Result<Any> {
-        val result = postDataSource.updatePost(postId, postEditor.toDataModel(), imageUrls, imageFiles)
+        val result =
+            postDataSource.updatePost(postId, postEditor.toDataModel(), imageUrls, imageFiles)
         return if (result.isSuccessful) {
             Result.success(result.body() as PostEditorResponse)
         } else {

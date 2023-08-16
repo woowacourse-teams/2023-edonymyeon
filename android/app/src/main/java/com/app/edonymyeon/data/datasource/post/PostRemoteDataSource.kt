@@ -35,9 +35,12 @@ class PostRemoteDataSource : PostDataSource {
         imageFiles: List<File>,
     ): Response<PostEditorResponse> {
         val postEditorMap: HashMap<String, RequestBody> = hashMapOf()
-        postEditorMap["title"] = postEditorRequest.title.toRequestBody("text/plain".toMediaTypeOrNull())
-        postEditorMap["content"] = postEditorRequest.content.toRequestBody("text/plain".toMediaTypeOrNull())
-        postEditorMap["price"] = postEditorRequest.price.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        postEditorMap["title"] =
+            postEditorRequest.title.toRequestBody("text/plain".toMediaTypeOrNull())
+        postEditorMap["content"] =
+            postEditorRequest.content.toRequestBody("text/plain".toMediaTypeOrNull())
+        postEditorMap["price"] =
+            postEditorRequest.price.toString().toRequestBody("text/plain".toMediaTypeOrNull())
         val newImages = imageFiles.generateMultiPartFromFile()
 
         return postService.savePost(postEditorMap, newImages)
@@ -50,9 +53,12 @@ class PostRemoteDataSource : PostDataSource {
         imageFiles: List<File>,
     ): Response<PostEditorResponse> {
         val postEditorMap: HashMap<String, RequestBody> = hashMapOf()
-        postEditorMap["title"] = postEditorRequest.title.toRequestBody("text/plain".toMediaTypeOrNull())
-        postEditorMap["content"] = postEditorRequest.content.toRequestBody("text/plain".toMediaTypeOrNull())
-        postEditorMap["price"] = postEditorRequest.price.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        postEditorMap["title"] =
+            postEditorRequest.title.toRequestBody("text/plain".toMediaTypeOrNull())
+        postEditorMap["content"] =
+            postEditorRequest.content.toRequestBody("text/plain".toMediaTypeOrNull())
+        postEditorMap["price"] =
+            postEditorRequest.price.toString().toRequestBody("text/plain".toMediaTypeOrNull())
         val originalImages = imageUrls.generateMultiPartFromUrl()
         val newImages = imageFiles.generateMultiPartFromFile()
 
