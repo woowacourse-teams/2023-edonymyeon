@@ -61,6 +61,10 @@ class PostRemoteDataSource : PostDataSource {
         return postService.updatePost(id, postEditorMap, originalImages, images)
     }
 
+    override suspend fun getHotPosts(): Response<Posts> {
+        return postService.getHotPosts()
+    }
+
     private fun generateMultiPartFromUrl(imageUris: List<String>) =
         imageUris.filter { it.startsWith("http") }.map {
             val requestBody = it.toRequestBody("text/plain".toMediaTypeOrNull())
