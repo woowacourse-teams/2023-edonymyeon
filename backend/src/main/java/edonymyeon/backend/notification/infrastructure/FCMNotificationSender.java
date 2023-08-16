@@ -39,7 +39,7 @@ public class FCMNotificationSender implements NotificationSender {
             final OkHttpClient client = new OkHttpClient();
             final Request request = makeFCMNotificationRequest(requestBody);
             final Response response = sendFCMNotificationRequest(client, request);
-            return response.isSuccessful();
+            return Objects.equals(response.code(), HttpStatus.OK.value());
         } catch (IOException ioException) {
             throw new BusinessLogicException(NOTIFICATION_REQUEST_FAILED);
         }
