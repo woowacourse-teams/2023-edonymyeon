@@ -7,12 +7,15 @@ import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.post.application.PostConsumptionService;
 import edonymyeon.backend.post.application.dto.response.PostConsumptionResponse;
+import edonymyeon.backend.thumbs.application.event.PostDeletionEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -54,8 +57,9 @@ public class PostConsumptionServiceImpl implements PostConsumptionService {
         );
     }
 
-    @Override
-    public void deleteConsumptionByPostId(final long postId) {
-        consumptionRepository.deleteByPostId(postId);
+    @Transactional
+    @TransactionalEventListener(classes = {PostDeletionEvent.class}, phase = TransactionPhase.BEFORE_COMMIT)
+    public void deleteConsumptionByPostId(final PostDeletionEvent postDeletionEvent) {
+        consumptionRepository.deleteByPostId(postDeletionEvent.postId());
     }
 }

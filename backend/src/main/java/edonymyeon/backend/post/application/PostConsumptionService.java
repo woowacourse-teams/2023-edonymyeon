@@ -7,6 +7,4 @@ import java.util.Map;
 public interface PostConsumptionService {
 
     Map<Long, PostConsumptionResponse> findConsumptionsByPostIds(List<Long> postIds);
-
-    void deleteConsumptionByPostId(long postId);
 }

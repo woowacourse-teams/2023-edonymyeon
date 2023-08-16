@@ -18,11 +18,13 @@ import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.thumbs.application.event.PostDeletionEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,7 +43,7 @@ public class PostService {
 
     private final PostThumbsService thumbsService;
 
-    private final PostConsumptionService postConsumptionService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     private final Domain domain;
 
@@ -94,7 +96,7 @@ public class PostService {
 
         final List<PostImageInfo> postImageInfos = post.getPostImageInfos();
         final ArrayList<PostImageInfo> copyOfPostImageInfos = new ArrayList<>(postImageInfos);
-        postConsumptionService.deleteConsumptionByPostId(postId);
+        applicationEventPublisher.publishEvent(new PostDeletionEvent(post.getId()));
         thumbsService.deleteAllThumbsInPost(postId);
         postImageInfoRepository.deleteAllByPostId(postId);
         postRepository.deleteById(postId);
