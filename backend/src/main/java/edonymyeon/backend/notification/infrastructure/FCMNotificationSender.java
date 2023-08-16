@@ -13,6 +13,7 @@ import edonymyeon.backend.notification.infrastructure.FcmMessage.Message;
 import edonymyeon.backend.notification.infrastructure.FcmMessage.Notification;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -21,6 +22,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Component

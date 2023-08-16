@@ -11,7 +11,7 @@ public class Receiver {
     private final Data data;
 
     public Receiver(final Member member, final Data data) {
-        this.token = member.getDeviceToken();
+        this.token = member.getActiveDeviceToken().get();
         this.data = data;
     }
 }

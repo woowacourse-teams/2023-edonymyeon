@@ -42,7 +42,7 @@ public class NotificationService {
             return;
         }
 
-        final Receiver receiver = new Receiver(deviceToken.get(), new Data(ScreenType.POST, post.getId(), "dmd", "ds"));
+        final Receiver receiver = new Receiver(post.getMember(), new Data(ScreenType.POST, post.getId()));
         final boolean isSentSuccessfully = notificationSender.sendNotification(
                 receiver,
                 THUMBS_NOTIFICATION_TITLE.getMessage()
