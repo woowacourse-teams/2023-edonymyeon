@@ -47,7 +47,6 @@ public class Consumption extends TemporalRecord {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn
-    @OnDelete(action = OnDeleteAction.CASCADE) // post가 삭제될때 연관된 소비내역도 삭제될 수 있도록 한다.
     private Post post;
 
     @Enumerated(value = EnumType.STRING)
