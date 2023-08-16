@@ -125,8 +125,7 @@ class PostEditorViewModel(
     }
 
     private fun Uri.getBitmapFromUri(context: Context): Bitmap? {
-        return context.contentResolver
-            .openInputStream(this)?.use {
+        return context.contentResolver.openInputStream(this)?.use {
             BitmapFactory.decodeStream(it)
         }
     }
