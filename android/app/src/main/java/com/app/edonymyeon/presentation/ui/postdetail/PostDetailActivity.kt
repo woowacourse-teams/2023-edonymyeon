@@ -143,15 +143,6 @@ class PostDetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.tbPostDetail)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = ""
-
-        binding.actionScrap.setOnCheckedChangeListener { _, isChecked ->
-            if (isMyPost) {
-                binding.root.makeSnackbar(getString(R.string.post_detail_writer_cant_scrap))
-                binding.actionScrap.isChecked = false
-                return@setOnCheckedChangeListener
-            }
-            viewModel.updateScrap(isChecked)
-        }
     }
 
     private fun getPost() {
