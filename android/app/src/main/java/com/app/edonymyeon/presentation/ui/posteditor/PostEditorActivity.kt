@@ -85,8 +85,8 @@ class PostEditorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        setBinding()
-        setAppbar()
+        initBinding()
+        initAdapter()
         setAdapter()
         setObserver()
         setViewModelWithPostIfUpdate()
@@ -122,12 +122,12 @@ class PostEditorActivity : AppCompatActivity() {
         }
     }
 
-    private fun setBinding() {
+    private fun initBinding() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
     }
 
-    private fun setAppbar() {
+    private fun initAdapter() {
         setSupportActionBar(binding.tbPostEditor)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = ""
