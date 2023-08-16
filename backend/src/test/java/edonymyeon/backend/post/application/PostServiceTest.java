@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import edonymyeon.backend.consumption.repository.ConsumptionRepository;
+import edonymyeon.backend.support.ConsumptionTestSupport;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.global.exception.EdonymyeonException;
@@ -62,6 +64,8 @@ class PostServiceTest implements ImageFileCleaner {
     private final MockMultipartFileTestSupport mockMultipartFileTestSupport;
 
     private final ImageFileUploader imageFileUploader;
+
+    private final ConsumptionTestSupport consumptionTestSupport;
 
     private MemberId memberId;
 
@@ -172,6 +176,18 @@ class PostServiceTest implements ImageFileCleaner {
 
     @Nested
     class 게시글을_삭제할_때 {
+
+        @Test
+        void 연관된_소비내역도_삭제된다(@Autowired PostRepository postRepository, @Autowired ConsumptionRepository consumptionRepository) throws IOException {
+            final PostResponse postResponse = postService.createPost(memberId, getPostRequest());
+            final Post post = postRepository.findById(postResponse.id()).get();
+
+            consumptionTestSupport.builder().post(post).build();
+            assertThat(consumptionRepository.findByPostId(post.getId()).isPresent()).isTrue();
+
+            postService.deletePost(memberId, postResponse.id());
+            assertThat(consumptionRepository.findByPostId(post.getId()).isEmpty()).isTrue();
+        }
 
         @Test
         void 게시글이_삭제되면_디렉토리에_있는_이미지도_삭제된다() throws IOException {
