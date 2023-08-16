@@ -19,12 +19,15 @@ import jakarta.persistence.OneToOne;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -33,6 +36,7 @@ public class Member extends TemporalRecord {
     private static final int MAX_EMAIL_LENGTH = 30;
     private static final int MAX_PASSWORD_LENGTH = 30;
     private static final int MAX_NICKNAME_LENGTH = 20;
+    private static final String UNKNOWN = "Unknown";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,6 +54,9 @@ public class Member extends TemporalRecord {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private ProfileImageInfo profileImageInfo;
+
+    @ColumnDefault(value = "false")
+    private boolean deleted = false;
 
     public Member(final String email, final String password, final String nickname,
                   final ProfileImageInfo profileImageInfo) {
@@ -77,7 +84,8 @@ public class Member extends TemporalRecord {
     }
 
     private void validateNickName(final String nickname) {
-        if (Objects.isNull(nickname) || nickname.isBlank() || nickname.length() > MAX_NICKNAME_LENGTH) {
+        if (Objects.isNull(nickname) || nickname.isBlank() || nickname.length() > MAX_NICKNAME_LENGTH
+                || nickname.equalsIgnoreCase(UNKNOWN)) {
             throw new EdonymyeonException(MEMBER_NICKNAME_INVALID);
         }
     }
@@ -94,5 +102,20 @@ public class Member extends TemporalRecord {
             return;
         }
         throw new EdonymyeonException(MEMBER_PASSWORD_NOT_MATCH);
+    }
+
+    public void delete() {
+        this.deleted = true;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public String getNickname() {
+        if (deleted) {
+            return UNKNOWN;
+        }
+        return nickname;
     }
 }
