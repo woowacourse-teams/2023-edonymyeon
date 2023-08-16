@@ -8,7 +8,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import app.edonymyeon.databinding.ActivityMyPostBinding
+import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.datasource.profile.ProfileRemoteDataSource
+import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
 import com.app.edonymyeon.presentation.ui.mypost.adapter.MyPostAdapter
 import com.app.edonymyeon.presentation.ui.mypost.dialog.ConsumptionDialog
@@ -28,7 +30,10 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
     private lateinit var dialog: ConsumptionDialog
 
     private val viewModel: MyPostViewModel by viewModels {
-        MyPostViewModelFactory(ProfileRepositoryImpl(ProfileRemoteDataSource()))
+        MyPostViewModelFactory(
+            ProfileRepositoryImpl(ProfileRemoteDataSource()),
+            PostRepositoryImpl(PostRemoteDataSource()),
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

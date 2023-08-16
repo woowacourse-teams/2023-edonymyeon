@@ -1,5 +1,7 @@
 package edonymyeon.backend.post.application;
 
+import edonymyeon.backend.cache.application.PostCachingService;
+import edonymyeon.backend.cache.application.dto.CachedPostResponse;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.domain.Domain;
@@ -18,6 +20,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -36,6 +39,8 @@ public class PostReadService {
     private final PostThumbsService thumbsService;
 
     private final Domain domain;
+
+    private final PostCachingService postCachingService;
 
     public PostSlice<GeneralPostInfoResponse> findPostsByPagingCondition(
             final GeneralFindingCondition generalFindingCondition) {
@@ -116,7 +121,7 @@ public class PostReadService {
     }
 
     public PostSlice<GeneralPostInfoResponse> searchPosts(final String searchWord,
-                                                      final GeneralFindingCondition generalFindingCondition) {
+                                                          final GeneralFindingCondition generalFindingCondition) {
         final Specification<Post> searchResults = PostSpecification.searchBy(searchWord);
         final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
 
@@ -126,13 +131,37 @@ public class PostReadService {
     }
 
     public PostSlice<GeneralPostInfoResponse> findHotPosts(final HotFindingCondition hotFindingCondition) {
-        Slice<Post> hotPost = postRepository.findHotPosts(
-                HotPostPolicy.getFindPeriod(),
-                HotPostPolicy.VIEW_COUNT_WEIGHT,
-                HotPostPolicy.THUMBS_COUNT_WEIGHT,
-                hotFindingCondition.toPage()
-        );
+        if(postCachingService.isNotCached(hotFindingCondition)){
+            return findHotPostFromRepository(hotFindingCondition);
+        }
+        if(postCachingService.shouldRefreshCache(hotFindingCondition)){
+            return findHotPostFromRepository(hotFindingCondition);
+        }
+        return findCachedPosts(hotFindingCondition);
+    }
+
+    private PostSlice<GeneralPostInfoResponse> findCachedPosts(final HotFindingCondition hotFindingCondition) {
+        CachedPostResponse cachedHotPosts = postCachingService.findCachedPosts(hotFindingCondition);
+        List<GeneralPostInfoResponse> posts = postRepository.findByIds(cachedHotPosts.postIds())
+                .stream()
+                .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()))
+                .toList();
+        return new PostSlice<>(posts, cachedHotPosts.isLast());
+    }
+
+    private PostSlice<GeneralPostInfoResponse> findHotPostFromRepository(final HotFindingCondition hotFindingCondition) {
+        final Slice<Post> hotPost = findHotPostSliceFromRepositoryByPolicy(hotFindingCondition);
+        postCachingService.cachePosts(hotFindingCondition, hotPost);
         Slice<GeneralPostInfoResponse> hotPostSlice = hotPost.map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
         return PostSlice.from(hotPostSlice);
+    }
+
+    private Slice<Post> findHotPostSliceFromRepositoryByPolicy(final HotFindingCondition hotFindingCondition) {
+        return postRepository.findHotPosts(
+                HotPostPolicy.getFindPeriod(),
+                HotPostPolicy.getViewCountWeight(),
+                HotPostPolicy.getThumbsCountWeight(),
+                hotFindingCondition.toPage()
+        );
     }
 }

@@ -36,7 +36,6 @@
     <string name="post_detail_toolbar_menu_update">수정</string>
     <string name="post_detail_toolbar_menu_delete">삭제</string>
     <string name="post_detail_toolbar_menu_report">수정</string>
-    <string name="post_detail_writer_cant_scrap">본인이 작성한 글은 스크랩할 수 없습니다.</string>
     <string name="post_detail_writer_cant_recommend">본인이 작성한 글은 추천할 수 없습니다.</string>
     <string name="post_detail_login_required">추천 기능은 회원만 이용할 수 있습니다.</string>
 
@@ -44,6 +43,7 @@
     <string name="post_detail_dialog_title">정말로 삭제하시겠습니까?</string>
     <string name="post_detail_dialog_yes">예</string>
     <string name="post_detail_dialog_no">아니요</string>
+    <string name="post_detail_loading">로딩 중입니다</string>
 
     <!--post report dialog -->
     <string name="post_report_dialog_title">신고 사유</string>
@@ -63,8 +63,6 @@
     <string name="my_page_payment_title">월 별 소비/절약 그래프</string>
     <string name="my_page_my_post">내가 쓴 글</string>
     <string name="my_page_my_comment">댓글 단 글</string>
-    <string name="my_page_my_scrab">스크랩</string>
-    <string name="my_page_my_badge">뱃지</string>
     <string name="my_page_update_user_info">회원 정보 수정</string>
     <string name="my_page_logout">로그아웃</string>
     <string name="my_page_withdraw">회원탈퇴</string>
@@ -98,6 +96,7 @@
     <string name="post_editor_check_title_input">제목은 필수 입력 항목입니다</string>
     <string name="post_editor_snackbar_ok_message">확인</string>
     <string name="post_editor_snackbar_missing_title_message">타이틀을 작성해야만 등록이 됩니다.</string>
+    <string name="post_editor_loading_message">저장 중입니다</string>
 
     <!--item_post_editor_image-->
     <string name="item_post_editor_image_description">갤러리에서 가져온 이미지</string>
@@ -105,7 +104,6 @@
 
     <!--all_post-->
     <string name="post_all_post">전체 게시물</string>
-    <string name="post_filter_recent">최신순</string>
 
     <!--my_post-->
     <string name="my_post_page_title">내가 쓴 글</string>
