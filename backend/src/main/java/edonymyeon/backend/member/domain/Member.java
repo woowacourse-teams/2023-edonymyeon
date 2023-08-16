@@ -118,6 +118,7 @@ public class Member extends TemporalRecord {
 
     public void delete() {
         this.deleted = true;
+        this.profileImageInfo = null;
     }
 
     public boolean isDeleted() {
