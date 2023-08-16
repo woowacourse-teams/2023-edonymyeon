@@ -25,4 +25,6 @@ interface PostRepository {
         price: Int,
         images: List<String>,
     ): Result<Any>
+
+    suspend fun getHotPosts(): Result<PostItems>
 }
