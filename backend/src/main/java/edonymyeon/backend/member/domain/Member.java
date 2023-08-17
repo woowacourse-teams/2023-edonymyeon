@@ -56,8 +56,7 @@ public class Member extends TemporalRecord {
     @JoinColumn
     private ProfileImageInfo profileImageInfo;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "member_id")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
     private List<Device> devices = new ArrayList<>();
 
     public Member(
@@ -65,14 +64,16 @@ public class Member extends TemporalRecord {
             final String password,
             final String nickname,
             final ProfileImageInfo profileImageInfo,
-            final List<Device> devices
+            final List<String> deviceTokens
     ) {
         validate(email, password, nickname);
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.profileImageInfo = profileImageInfo;
-        this.devices = devices;
+        this.devices = deviceTokens.stream()
+                .map(token -> new Device(token, this))
+                .toList();
     }
 
     public Member(final Long id) {

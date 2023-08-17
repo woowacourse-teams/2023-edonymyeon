@@ -11,7 +11,6 @@ import edonymyeon.backend.auth.application.event.JoinMemberEvent;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
-import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import java.util.List;
@@ -65,7 +64,7 @@ public class AuthService {
                 joinRequest.password(),
                 joinRequest.nickname(),
                 null,
-                List.of(new Device(joinRequest.deviceToken()))
+                List.of(joinRequest.deviceToken())
         );
 
         validateDuplicateEmail(joinRequest.email());

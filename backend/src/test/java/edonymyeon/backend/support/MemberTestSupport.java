@@ -1,7 +1,6 @@
 package edonymyeon.backend.support;
 
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
-import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import java.util.List;
@@ -37,7 +36,7 @@ public class MemberTestSupport {
 
         private ProfileImageInfo profileImageInfo;
 
-        private List<Device> devices;
+        private List<String> deviceTokens;
 
         public MemberBuilder email(final String email) {
             this.email = email;
@@ -59,8 +58,8 @@ public class MemberTestSupport {
             return this;
         }
 
-        public MemberBuilder deviceToken(final List<Device> devices) {
-            this.devices = devices;
+        public MemberBuilder deviceToken(final List<String> deviceTokens) {
+            this.deviceTokens = deviceTokens;
             return this;
         }
 
@@ -71,7 +70,7 @@ public class MemberTestSupport {
                             password == null ? DEFAULT_PASSWORD : password,
                             nickname == null ? (DEFAULT_NICK_NAME + nickNameCount++) : nickname,
                             profileImageInfo == null ? profileImageInfoTestSupport.builder().build() : profileImageInfo,
-                            devices == null ? List.of(new Device(DEFAULT_DEVICE_TOKEN)) : devices
+                            deviceTokens == null ? List.of(DEFAULT_DEVICE_TOKEN) : deviceTokens
                     )
             );
         }
