@@ -14,7 +14,8 @@ import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.domain.Member.SocialType;
+import edonymyeon.backend.member.domain.SocialInfo;
+import edonymyeon.backend.member.domain.SocialInfo.SocialType;
 import edonymyeon.backend.member.repository.MemberRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -58,14 +59,15 @@ public class AuthService {
     //todo session으로
     @Transactional
     public MemberResponse findMemberByKakao(final KakaoLoginResponse kakaoLoginResponse) {
-        final Member member = memberRepository.findBySocialIdAndSocialType(kakaoLoginResponse.id(), SocialType.KAKAO)
-                .orElseGet(() -> joinSocialMember(kakaoLoginResponse.id(), SocialType.KAKAO));
+        final SocialInfo socialInfo = SocialInfo.of(SocialType.KAKAO, kakaoLoginResponse.id());
+        final Member member = memberRepository.findBySocialInfo(socialInfo)
+                .orElseGet(() -> joinSocialMember(socialInfo));
         return new MemberResponse(member.getEmail(), member.getPassword());
     }
 
     @Transactional
-    public Member joinSocialMember(final Long socialId, final SocialType socialType) {
-        final Member member = Member.of(socialId, socialType);
+    public Member joinSocialMember(final SocialInfo socialInfo) {
+        final Member member = Member.from(socialInfo);
         return memberRepository.save(member);
     }
 

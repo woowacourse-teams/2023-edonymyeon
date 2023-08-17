@@ -2,7 +2,7 @@ package edonymyeon.backend.support;
 
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.domain.Member.SocialType;
+import edonymyeon.backend.member.domain.SocialInfo;
 import edonymyeon.backend.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -37,9 +37,7 @@ public class MemberTestSupport {
 
         private ProfileImageInfo profileImageInfo;
 
-        private SocialType socialType;
-
-        private Long socialId;
+        private SocialInfo socialInfo;
 
         public MemberBuilder id(final Long id) {
             this.id = id;
@@ -66,13 +64,8 @@ public class MemberTestSupport {
             return this;
         }
 
-        public MemberBuilder socialType(final SocialType socialType) {
-            this.socialType = socialType;
-            return this;
-        }
-
-        public MemberBuilder socialId(final Long socialId) {
-            this.socialId = socialId;
+        public MemberBuilder socialInfo(final SocialInfo socialInfo) {
+            this.socialInfo = socialInfo;
             return this;
         }
 
@@ -83,8 +76,7 @@ public class MemberTestSupport {
                             email == null ? (DEFAULT_EMAIL + emailCount++) : email,
                             password == null ? DEFAULT_PASSWORD : password,
                             nickname == null ? (DEFAULT_NICK_NAME + nickNameCount++) : nickname,
-                            socialType == null ? null : socialType,
-                            socialId == null ? null : socialId,
+                            socialInfo == null ? null : socialInfo,
                             profileImageInfo == null ? profileImageInfoTestSupport.builder().build() : profileImageInfo
                     )
             );

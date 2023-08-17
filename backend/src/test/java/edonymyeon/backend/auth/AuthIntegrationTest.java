@@ -13,7 +13,8 @@ import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.auth.domain.TokenGenerator;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.domain.Member.SocialType;
+import edonymyeon.backend.member.domain.SocialInfo;
+import edonymyeon.backend.member.domain.SocialInfo.SocialType;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.RestAssured;
@@ -207,11 +208,10 @@ public class AuthIntegrationTest extends IntegrationFixture {
     @Test
     public void 카카오_로그인() {
         final Member member = memberTestSupport.builder()
-                .socialId(1L)
-                .socialType(SocialType.KAKAO)
+                .socialInfo(SocialInfo.of(SocialType.KAKAO, 1L))
                 .build();
 
-        when(kakaoAuthResponseProvider.request(any())).thenReturn(new KakaoLoginResponse(member.getSocialId()));
+        when(kakaoAuthResponseProvider.request(any())).thenReturn(new KakaoLoginResponse(member.getSocialInfo().getSocialId()));
 
         final KakaoLoginRequest kakaoLoginRequest = new KakaoLoginRequest("accessToken");
 
@@ -235,7 +235,7 @@ public class AuthIntegrationTest extends IntegrationFixture {
 
     @Test
     public void 카카오_처음_로그인시_회원가입(@Autowired MemberRepository memberRepository) {
-        final Optional<Member> 카카오_로그인전_회원 = memberRepository.findBySocialIdAndSocialType(1L, SocialType.KAKAO);
+        final Optional<Member> 카카오_로그인전_회원 = memberRepository.findBySocialInfo(SocialInfo.of(SocialType.KAKAO, 1L));
         when(kakaoAuthResponseProvider.request(any())).thenReturn(new KakaoLoginResponse(1L));
 
         final KakaoLoginRequest kakaoLoginRequest = new KakaoLoginRequest("accessToken");
@@ -247,7 +247,7 @@ public class AuthIntegrationTest extends IntegrationFixture {
                 .when()
                 .post("/auth/kakao/login");
 
-        final Optional<Member> 카카오_로그인후_회원 = memberRepository.findBySocialIdAndSocialType(1L, SocialType.KAKAO);
+        final Optional<Member> 카카오_로그인후_회원 = memberRepository.findBySocialInfo(SocialInfo.of(SocialType.KAKAO, 1L));
 
         assertSoftly(softly -> {
             softly.assertThat(카카오_로그인전_회원).isEmpty();

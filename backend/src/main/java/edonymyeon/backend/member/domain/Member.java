@@ -10,8 +10,6 @@ import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -52,10 +50,7 @@ public class Member extends TemporalRecord {
     @Column(nullable = false, unique = true)
     private String nickname;
 
-    @Enumerated(value = EnumType.STRING)
-    private SocialType socialType;
-
-    private Long socialId;
+    private SocialInfo socialInfo;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn
@@ -74,13 +69,12 @@ public class Member extends TemporalRecord {
         this.id = id;
     }
 
-    public static Member of(final Long socialId, final SocialType socialType) {
+    public static Member from(final SocialInfo socialInfo) {
         return Member.builder()
-                .socialId(socialId)
-                .socialType(socialType)
+                .socialInfo(socialInfo)
                 .email(UUID.randomUUID().toString())
                 .password(UUID.randomUUID().toString())
-                .nickname("#" + socialType.name() + UUID.randomUUID())
+                .nickname("#" + socialInfo.getSocialType().name() + UUID.randomUUID())
                 .build();
     }
 
@@ -114,10 +108,5 @@ public class Member extends TemporalRecord {
             return;
         }
         throw new EdonymyeonException(MEMBER_PASSWORD_NOT_MATCH);
-    }
-
-    public enum SocialType {
-
-        KAKAO
     }
 }
