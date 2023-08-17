@@ -31,7 +31,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest) {
-        authService.findMember(loginRequest);
+        authService.login(loginRequest);
         final String basicToken = tokenGenerator.getBasicToken(loginRequest.email(), loginRequest.password());
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, basicToken)
@@ -42,7 +42,7 @@ public class AuthController {
     public ResponseEntity<Void> loginWithKakao(@RequestBody KakaoLoginRequest loginRequest) {
         final KakaoLoginResponse kakaoLoginResponse = kakaoAuthResponseProvider.request(loginRequest);
 
-        final MemberResponse memberResponse = authService.findMemberByKakao(kakaoLoginResponse);
+        final MemberResponse memberResponse = authService.loginByKakao(kakaoLoginResponse);
         final String basicToken = tokenGenerator.getBasicToken(memberResponse.email(), memberResponse.password());
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, basicToken)

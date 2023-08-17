@@ -45,7 +45,7 @@ public class AuthDeleteServiceTest {
         when(memberRepository.findByEmail(member.getEmail()))
                 .thenReturn(Optional.of(member));
 
-        assertThatThrownBy(() -> authService.findMember(member.getEmail(), member.getPassword()))
+        assertThatThrownBy(() -> authService.login(member.getEmail(), member.getPassword()))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(MEMBER_IS_DELETED.getMessage());
     }

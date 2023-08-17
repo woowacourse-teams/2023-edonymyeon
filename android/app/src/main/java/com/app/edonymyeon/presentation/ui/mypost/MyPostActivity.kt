@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +28,13 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
         MyPostAdapter(this)
     }
 
+    private val activityLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == PostDetailActivity.RESULT_RELOAD_CODE) {
+                loadNewData()
+            }
+        }
+
     private lateinit var dialog: ConsumptionDialog
 
     private val viewModel: MyPostViewModel by viewModels {
@@ -39,11 +47,15 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        initAppbar()
-        viewModel.getMyPosts()
-        setResultScrollListener()
+        setAppbar()
+        setListener()
         setAdapter()
         setMyPostsObserver()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadNewData()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -57,13 +69,13 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
         }
     }
 
-    private fun initAppbar() {
+    private fun setAppbar() {
         setSupportActionBar(binding.tbMypost)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = ""
     }
 
-    private fun setResultScrollListener() {
+    private fun setListener() {
         binding.rvMyPost.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (viewModel.hasNextPage()) {
@@ -74,6 +86,11 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
                 }
             }
         })
+
+        binding.srlRefresh.setOnRefreshListener {
+            binding.srlRefresh.isRefreshing = false
+            loadNewData()
+        }
     }
 
     private fun setAdapter() {
@@ -86,8 +103,13 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
         }
     }
 
+    private fun loadNewData() {
+        viewModel.clearResult()
+        viewModel.getMyPosts()
+    }
+
     override fun onMyPostClick(id: Long) {
-        startActivity(PostDetailActivity.newIntent(this, id))
+        activityLauncher.launch(PostDetailActivity.newIntent(this, id))
     }
 
     override fun onPurchaseButtonClick(id: Long) {

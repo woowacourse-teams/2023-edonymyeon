@@ -141,4 +141,7 @@ dependencies {
 
     // kakao login SDK
     implementation("com.kakao.sdk:v2-user:2.10.0")
+
+    // swipeRefreshLayout
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 }
