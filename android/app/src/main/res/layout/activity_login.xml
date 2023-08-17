@@ -66,8 +66,8 @@
                 android:layout_height="0dp"
                 android:gravity="center_vertical"
                 android:text="@string/login_email"
-                android:textSize="16sp"
                 android:textColor="@color/black_000000"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@id/space_email_left"
                 app:layout_constraintDimensionRatio="W,90:32"
                 app:layout_constraintStart_toEndOf="@id/space_email_left"
@@ -115,8 +115,8 @@
                 android:layout_height="0dp"
                 android:gravity="center_vertical"
                 android:text="@string/login_password"
-                android:textSize="16sp"
                 android:textColor="@color/black_000000"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@id/space_password_left"
                 app:layout_constraintDimensionRatio="W,90:28"
                 app:layout_constraintStart_toEndOf="@id/space_password_left"
@@ -152,11 +152,12 @@
                 android:id="@+id/bt_login"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@drawable/bg_576b9e_radius_10dp"
+                android:background="@drawable/bg_576b9e_radius_6dp"
                 android:onClick="@{() -> viewModel.onLoginClick(etEmail.getText().toString(), etPassword.getText().toString())}"
+                android:stateListAnimator="@null"
                 android:text="@string/login_login"
-                android:textSize="16sp"
                 android:textColor="@color/white_ffffff"
+                android:textSize="16sp"
                 app:layout_constraintDimensionRatio="H,320:48"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -167,10 +168,33 @@
                 android:id="@+id/space_login_bottom"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:layout_constraintDimensionRatio="H,360:46"
+                app:layout_constraintDimensionRatio="H,360:14"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bt_login" />
+
+            <ImageButton
+                android:id="@+id/bt_login_kakao"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@android:color/transparent"
+                android:elevation="10dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/btn_login_kakao"
+                app:layout_constraintDimensionRatio="H,320:47"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/space_login_bottom"
+                app:layout_constraintWidth_percent="0.88" />
+
+            <Space
+                android:id="@+id/space_kakao_login_bottom"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H,360:45"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bt_login_kakao" />
 
             <Space
                 android:id="@+id/space_join_left"
@@ -178,7 +202,7 @@
                 android:layout_height="0dp"
                 app:layout_constraintDimensionRatio="H,32:28"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/space_login_bottom"
+                app:layout_constraintTop_toBottomOf="@id/space_kakao_login_bottom"
                 app:layout_constraintWidth_percent="0.091" />
 
             <TextView
@@ -187,18 +211,20 @@
                 android:layout_height="0dp"
                 android:gravity="center_vertical"
                 android:text="@string/login_suggest"
-                android:textSize="14sp"
                 android:textColor="@color/black_000000"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="@id/space_join_left"
                 app:layout_constraintDimensionRatio="W,104:28"
                 app:layout_constraintStart_toEndOf="@id/space_join_left"
-                app:layout_constraintTop_toBottomOf="@id/space_login_bottom" />
+                app:layout_constraintTop_toBottomOf="@id/space_kakao_login_bottom"
+                app:layout_constraintVertical_bias="0.0" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/bt_join"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:background="@drawable/bg_576b9e_radius_10dp"
+                android:background="@drawable/bg_576b9e_radius_6dp"
+                android:stateListAnimator="@null"
                 android:text="@string/login_join"
                 android:textColor="@color/white_ffffff"
                 android:textSize="16sp"

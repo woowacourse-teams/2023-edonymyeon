@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MyPostResponse(
-    @SerialName("email") val id: Long,
+    @SerialName("id") val id: Long,
     @SerialName("title") val title: String,
     @SerialName("image") val image: String? = null,
     @SerialName("content") val content: String,

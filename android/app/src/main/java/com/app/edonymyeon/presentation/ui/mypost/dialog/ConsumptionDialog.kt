@@ -81,6 +81,7 @@ class ConsumptionDialog(
                     binding.npYear.value,
                     binding.npMonth.value,
                 )
+
                 ConsumptionType.SAVING -> viewModel.postSavingConfirm(
                     id,
                     binding.npYear.value,

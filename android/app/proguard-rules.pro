@@ -150,3 +150,7 @@
 
 # ------- firebase -------
 -keepattributes SourceFile,LineNumberTable
+
+# ------- kakao -------
+-keep class com.kakao.sdk.**.model.* { <fields>; }
+-keep class * extends com.google.gson.TypeAdapter
