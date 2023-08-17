@@ -24,7 +24,7 @@
         </encoder>
 
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>warn-history.log.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>./logs/history/warn-history.log.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>50MB</maxFileSize>
                 <!-- 한 로그 파일이 50MB 차면 위 fileNamePattern으로 분리해 저장한다 -->
