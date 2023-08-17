@@ -4,18 +4,19 @@ import static edonymyeon.backend.notification.domain.NotificationMessage.THUMBS_
 
 import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.member.application.dto.MemberId;
-import edonymyeon.backend.notification.application.dto.NotificationsResponse;
-import edonymyeon.backend.notification.application.dto.Receiver;
 import edonymyeon.backend.notification.application.dto.Data;
+import edonymyeon.backend.notification.application.dto.NotificationResponse;
+import edonymyeon.backend.notification.application.dto.Receiver;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.notification.repository.NotificationRepository;
+import edonymyeon.backend.post.application.GeneralFindingCondition;
+import edonymyeon.backend.post.application.PostSlice;
 import edonymyeon.backend.post.domain.Post;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,10 +30,12 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
 
-    public NotificationsResponse findNotifications(MemberId memberId) {
-        final List<Notification> notifications = notificationRepository.findByMemberId(memberId.id());
-        notifications.sort(Comparator.comparing((Notification o) -> o.getCreatedAt()).reversed());
-        return NotificationsResponse.from(notifications);
+    public PostSlice<NotificationResponse> findNotifications(MemberId memberId,
+                                                             final GeneralFindingCondition findingCondition) {
+        final Slice<Notification> notificationSlice = notificationRepository.findByMemberId(memberId.id(), findingCondition.toPage());
+        final Slice<NotificationResponse> notificationResponses = notificationSlice
+                .map(NotificationResponse::from);
+        return PostSlice.from(notificationResponses);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
