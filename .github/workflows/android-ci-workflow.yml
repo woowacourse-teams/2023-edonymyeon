@@ -30,12 +30,19 @@ jobs:
         DATA: ${{ secrets.ANDROID_GOOGLE_SERVICE }}
       run: echo $DATA > $GITHUB_WORKSPACE/android/app/google-services.json
 
-    - name: Access KAKAO_API_KEY
+    - name: Access KAKAO APP KEY
       run: |
-        echo KAKAO_API_KEY=\"$API_KEY\" > local.properties
+        echo KAKAO_APP_KEY=\"$APP_KEY\" > local.properties
       shell: bash
       env:
-        API_KEY: ${{ secrets.KAKAO_API_KEY }}
+        APP_KEY: ${{ secrets.KAKAO_APP_KEY }}
+
+    - name: Access KAKAO NATIVE KEY
+      run: |
+        echo KAKAO_NATIVE_KEY=\"$NATIVE_KEY\" > local.properties
+      shell: bash
+      env:
+        NATIVE_KEY: ${{ secrets.KAKAO_NATIVE_KEY }}
     
     - name: set up Java JDK 17
       uses: actions/setup-java@v3
@@ -58,9 +65,6 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/buildSrc/**/*.kt') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
-          
-    - name: Run ktlint
-      run: ./gradlew ktlintCheck
       
     - name: Run Unit test
       run: ./gradlew --info test

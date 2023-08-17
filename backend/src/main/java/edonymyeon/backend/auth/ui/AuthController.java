@@ -42,7 +42,7 @@ public class AuthController {
     public ResponseEntity<Void> loginWithKakao(@RequestBody KakaoLoginRequest loginRequest) {
         final KakaoLoginResponse kakaoLoginResponse = kakaoAuthResponseProvider.request(loginRequest);
 
-        final MemberResponse memberResponse = authService.findMemberByKakao(kakaoLoginResponse);
+        final MemberResponse memberResponse = authService.loginByKakao(kakaoLoginResponse);
         final String basicToken = tokenGenerator.getBasicToken(memberResponse.email(), memberResponse.password());
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, basicToken)

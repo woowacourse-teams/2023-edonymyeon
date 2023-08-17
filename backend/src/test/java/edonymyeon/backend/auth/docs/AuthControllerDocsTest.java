@@ -90,7 +90,7 @@ public class AuthControllerDocsTest extends DocsTest {
         final MemberResponse memberResponse = new MemberResponse("example@email.com", "password123!");
 
         when(kakaoAuthResponseProvider.request(kakaoLoginRequest)).thenReturn(kakaoLoginResponse);
-        when(authService.findMemberByKakao(kakaoLoginResponse)).thenReturn(memberResponse);
+        when(authService.loginByKakao(kakaoLoginResponse)).thenReturn(memberResponse);
 
         final MockHttpServletRequestBuilder 로그인_요청 = post("/auth/kakao/login")
                 .contentType(MediaType.APPLICATION_JSON)
