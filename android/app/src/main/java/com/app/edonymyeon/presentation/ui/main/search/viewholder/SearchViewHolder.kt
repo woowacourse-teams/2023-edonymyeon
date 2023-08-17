@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ItemPostBinding
 import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
+import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
 
 class SearchViewHolder(parent: ViewGroup, private val onClick: (Int) -> Unit) :
     RecyclerView.ViewHolder(
@@ -21,6 +22,10 @@ class SearchViewHolder(parent: ViewGroup, private val onClick: (Int) -> Unit) :
 
     fun bind(postUiModel: PostItemUiModel) {
         binding.post = postUiModel
+        binding.prvAllPostReaction.reactionCount = ReactionCountUiModel(
+            postUiModel.reactionCount.viewCount,
+            postUiModel.reactionCount.commentCount,
+        )
         binding.executePendingBindings()
     }
 }

@@ -35,6 +35,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <ImageView
+                    android:id="@+id/iv_default_image"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:src="@drawable/ic_edonymyeon_foreground"
+                    app:layout_constraintDimensionRatio="H,360:248"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/vp_image_slider"
                     android:layout_width="0dp"
@@ -121,6 +131,7 @@
                     android:layout_height="0dp"
                     android:layout_marginStart="16dp"
                     android:text="@{postViewModel.post.writer.nickname}"
+                    android:textColor="@color/black_434343"
                     android:textSize="16sp"
                     app:layout_constraintStart_toEndOf="@id/iv_user_profile"
                     app:layout_constraintTop_toTopOf="@id/iv_user_profile"
@@ -172,6 +183,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@{postViewModel.post.content}"
+                    android:textColor="@color/black_434343"
                     android:textSize="14sp"
                     app:layout_constraintEnd_toStartOf="@id/space_content_end"
                     app:layout_constraintStart_toEndOf="@id/space_content_start"
