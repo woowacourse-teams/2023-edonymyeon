@@ -144,6 +144,11 @@
     <string name="alarm_setting_one_reaction">좋아요/싫어요 건별 알림 수신</string>
     <string name="alarm_setting_ten_reaction">좋아요/싫어요 10개당 알림 수신</string>
     <string name="alarm_setting_confirm_consumption">소비 확정여부 수신</string>
+    <string name="alarm_setting_request_alarm_permission">알림 권한을 허용해주세요.</string>
+
+    <!--alarm-->
+    <string name="alarm_title">알림</string>
+    <string name="alarm_period_explanation">최근 3개월 내  푸시 알림 내역입니다</string>
 
 
 </resources>

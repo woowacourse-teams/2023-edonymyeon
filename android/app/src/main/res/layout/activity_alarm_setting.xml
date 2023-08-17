@@ -3,18 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.app.edonymyeon.presentation.ui.alarmsetting.AlarmSettingViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context="com.app.edonymyeon.presentation.ui.alarmsetting.AlarmSettingActivity">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/tb_post"
+            android:id="@+id/tb_alarm_setting"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/blue_576b9e"
             app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/btn_back_black">
+            app:navigationIcon="@drawable/btn_back_white">
 
             <TextView
                 android:id="@+id/tv_post"
@@ -39,7 +46,7 @@
             android:textColor="@color/black_000000"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tb_post" />
+            app:layout_constraintTop_toBottomOf="@id/tb_alarm_setting" />
 
         <TextView
             android:id="@+id/tv_alarm_setting_content"
@@ -54,6 +61,8 @@
             app:layout_constraintTop_toBottomOf="@id/tv_alarm_setting_title" />
 
         <androidx.appcompat.widget.SwitchCompat
+            android:checked="@{viewModel.isPushAlarmOn()}"
+            android:onCheckedChanged="@{(buttonView, isChecked) -> viewModel.onPushAlarmSwitchEvent(isChecked)}"
             android:id="@+id/switch_alarm_setting"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -61,7 +70,7 @@
             android:thumb="@drawable/selector_switch_thumb"
             app:layout_constraintDimensionRatio="H,40:24"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tb_post"
+            app:layout_constraintTop_toBottomOf="@id/tb_alarm_setting"
             app:layout_constraintBottom_toBottomOf="@id/divider_alarm_setting"
             app:layout_constraintWidth_percent="0.11"
             app:track="@drawable/selector_switch_track" />
@@ -90,6 +99,8 @@
             app:layout_constraintTop_toBottomOf="@id/divider_alarm_setting" />
 
         <androidx.appcompat.widget.SwitchCompat
+            android:checked="@{viewModel.isOneReactionAlarmOn()}"
+            android:onCheckedChanged="@{(buttonView, isChecked) -> viewModel.onOneReactionAlarmSwitchEvent(isChecked)}"
             android:id="@+id/switch_one_reaction"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -115,6 +126,8 @@
             app:layout_constraintTop_toBottomOf="@id/tv_one_reaction_alarm_setting" />
 
         <androidx.appcompat.widget.SwitchCompat
+            android:checked="@{viewModel.isTenReactionAlarmOn()}"
+            android:onCheckedChanged="@{(buttonView, isChecked) -> viewModel.onTenReactionAlarmSwitchEvent(isChecked)}"
             android:id="@+id/switch_ten_reaction"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -140,6 +153,8 @@
             app:layout_constraintTop_toBottomOf="@id/tv_ten_reaction_alarm_setting" />
 
         <androidx.appcompat.widget.SwitchCompat
+            android:checked="@{viewModel.isConfirmConsumptionAlarmOn()}"
+            android:onCheckedChanged="@{(buttonView, isChecked) -> viewModel.onConsumptionConfirmAlarmSwitchClicked(isChecked)}"
             android:id="@+id/switch_confirm_consumption"
             android:layout_width="0dp"
             android:layout_height="0dp"
