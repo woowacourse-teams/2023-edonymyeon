@@ -56,7 +56,7 @@ public class AuthControllerDocsTest extends DocsTest {
     void 로그인_문서화() throws Exception {
         final LoginRequest request = new LoginRequest("example@example.com", "password1234!", "kj234jkn342kj");
 
-        when(authService.findMember(request)).thenReturn(any());
+        when(authService.login(request)).thenReturn(any());
 
         final MockHttpServletRequestBuilder 로그인_요청 = post("/login")
                 .contentType(MediaType.APPLICATION_JSON)

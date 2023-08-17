@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -46,5 +47,21 @@ public class Device extends TemporalRecord {
      */
     private Member getMember() {
         return member;
+    }
+
+    public boolean isDeviceTokenEqualTo(final String deviceToken) {
+        return Objects.equals(this.deviceToken, deviceToken);
+    }
+
+    public void deactivate() {
+        if (isActive) {
+            this.isActive = false;
+        }
+    }
+
+    public void activate() {
+        if (!isActive) {
+            this.isActive = true;
+        }
     }
 }

@@ -11,6 +11,7 @@ import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.auth.application.event.JoinMemberEvent;
 import edonymyeon.backend.auth.application.dto.MemberResponse;
+import edonymyeon.backend.auth.application.event.LoginEvent;
 import edonymyeon.backend.auth.domain.ValidateType;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
@@ -32,20 +33,25 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private final ApplicationEventPublisher publisher;
+
     private final MemberRepository memberRepository;
 
-    public MemberId findMember(final LoginRequest loginRequest) {
-        return findMember(loginRequest.email(), loginRequest.password());
+    public MemberId login(final LoginRequest loginRequest) {
+        final Member member = authenticateMember(loginRequest.email(), loginRequest.password());
+
+        publisher.publishEvent(new LoginEvent(member, loginRequest.deviceToken()));
+
+        return new ActiveMemberId(member.getId());
     }
 
-    public MemberId findMember(final String email, final String password) {
+    public Member authenticateMember(final String email, final String password) {
         final Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_EMAIL_NOT_FOUND));
         member.checkPassword(password);
         if (member.isDeleted()) {
             throw new EdonymyeonException(MEMBER_IS_DELETED);
         }
-        return new ActiveMemberId(member.getId());
+        return member;
     }
 
     public DuplicateCheckResponse checkDuplicate(final String target, final String value) {

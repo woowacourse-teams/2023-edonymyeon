@@ -31,7 +31,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest) {
-        authService.findMember(loginRequest);
+        authService.login(loginRequest);
         final String basicToken = tokenGenerator.getBasicToken(loginRequest.email(), loginRequest.password());
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, basicToken)
