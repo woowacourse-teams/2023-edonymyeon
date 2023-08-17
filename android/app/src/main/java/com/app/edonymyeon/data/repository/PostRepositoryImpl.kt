@@ -4,9 +4,12 @@ import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.datasource.post.PostDataSource
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
 import com.app.edonymyeon.data.dto.response.PostEditorResponse
+import com.app.edonymyeon.mapper.toDataModel
 import com.app.edonymyeon.mapper.toDomain
+import com.domain.edonymyeon.model.PostEditor
 import com.domain.edonymyeon.model.PostItems
 import com.domain.edonymyeon.repository.PostRepository
+import java.io.File
 
 class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepository {
     override suspend fun getPostDetail(postId: Long): Result<Any> {
@@ -44,12 +47,10 @@ class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepos
     }
 
     override suspend fun savePost(
-        title: String,
-        content: String,
-        price: Int,
-        images: List<String>,
+        postEditor: PostEditor,
+        images: List<File>,
     ): Result<Any> {
-        val result = postDataSource.savePost(title, content, price, images)
+        val result = postDataSource.savePost(postEditor.toDataModel(), images)
         return if (result.isSuccessful) {
             Result.success(result.body() as PostEditorResponse)
         } else {
@@ -59,12 +60,12 @@ class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepos
 
     override suspend fun updatePost(
         postId: Long,
-        title: String,
-        content: String,
-        price: Int,
-        images: List<String>,
+        postEditor: PostEditor,
+        imageUrls: List<String>,
+        imageFiles: List<File>,
     ): Result<Any> {
-        val result = postDataSource.updatePost(postId, title, content, price, images)
+        val result =
+            postDataSource.updatePost(postId, postEditor.toDataModel(), imageUrls, imageFiles)
         return if (result.isSuccessful) {
             Result.success(result.body() as PostEditorResponse)
         } else {

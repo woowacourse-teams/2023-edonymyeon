@@ -6,6 +6,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/gray_f5f5f5"
         tools:context="com.app.edonymyeon.presentation.ui.mypost.MyPostActivity">
 
         <androidx.appcompat.widget.Toolbar
