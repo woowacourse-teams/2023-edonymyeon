@@ -38,13 +38,16 @@ public class AuthService {
 
     public MemberId login(final LoginRequest loginRequest) {
         final Member member = authenticateMember(loginRequest.email(), loginRequest.password());
-
         publisher.publishEvent(new LoginEvent(member, loginRequest.deviceToken()));
-
         return new ActiveMemberId(member.getId());
     }
 
-    public Member authenticateMember(final String email, final String password) {
+    public MemberId login(final String email, final String password) {
+        final Member member = authenticateMember(email, password);
+        return new ActiveMemberId(member.getId());
+    }
+
+    private Member authenticateMember(final String email, final String password) {
         final Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_EMAIL_NOT_FOUND));
         member.checkPassword(password);

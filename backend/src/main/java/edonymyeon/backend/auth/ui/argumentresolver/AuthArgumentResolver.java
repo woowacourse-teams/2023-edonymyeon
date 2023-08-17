@@ -53,7 +53,7 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
             throw new EdonymyeonException(AUTHORIZATION_EMPTY);
         }
 
-        return authService.authenticateMember(email, password);
+        return authService.login(email, password);
     }
 
     private static String[] getCredentials(final String authorization) {
