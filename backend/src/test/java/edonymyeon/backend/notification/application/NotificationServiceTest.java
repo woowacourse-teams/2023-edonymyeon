@@ -35,14 +35,12 @@ class NotificationServiceTest extends IntegrationFixture {
     }
 
     @Test
-    void 알림_전송에_실패했다면_알림을_저장하지_않는다(@Autowired NotificationRepository notificationRepository) {
-        when(notificationSender.sendNotification(any(), any())).thenReturn(false);
-
+    void 알림_전송에_실패해도_기록으로_남는다(@Autowired NotificationRepository notificationRepository) {
         final Post post = postTestSupport.builder().build();
-        assertThatThrownBy(() -> notificationService.sendThumbsNotificationToWriter(post))
-                .isInstanceOf(BusinessLogicException.class);
+        org.assertj.core.api.Assertions.assertThatCode(() -> notificationService.sendThumbsNotificationToWriter(post))
+                .doesNotThrowAnyException();
 
-        assertThat(notificationRepository.findAll()).hasSize(0);
+        assertThat(notificationRepository.findAll()).hasSize(1);
     }
 
     @Test

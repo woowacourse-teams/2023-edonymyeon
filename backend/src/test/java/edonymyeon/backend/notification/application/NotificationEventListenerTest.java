@@ -79,12 +79,12 @@ class NotificationEventListenerTest extends IntegrationFixture {
         thumbsService.thumbsUp(new ActiveMemberId(member.getId()), post.getId());
 
         assertThat(notificationRepository.findAll())
-                .as("알림은 저장되지 않았지만")
-                .hasSize(0);
+                .as("알림도 저장하고")
+                .hasSize(1);
 
         final List<Thumbs> thumbs = thumbsRepository.findByPostId(post.getId());
         assertThat(thumbs)
-                .as("따봉은 정상적으로 저장되어야 한다.")
+                .as("따봉도 정상적으로 저장되어야 한다.")
                 .hasSize(1);
     }
 }

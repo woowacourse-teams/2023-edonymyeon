@@ -35,16 +35,22 @@ public class FCMNotificationSender implements NotificationSender {
     private final ObjectMapper objectMapper;
 
     @Override
-    public boolean sendNotification(final Receiver receiver, final String title) {
+    public void sendNotification(final Receiver receiver, final String title) {
         try {
             final String requestBody = makeFCMNotificationRequestBody(receiver.getToken(), title, receiver.getData());
             final OkHttpClient client = new OkHttpClient();
             final Request request = makeFCMNotificationRequest(requestBody);
             final Response response = sendFCMNotificationRequest(client, request);
-            return Objects.equals(response.code(), HttpStatus.OK.value());
+            if (!isSentSuccessfully(response)) {
+                throw new BusinessLogicException(NOTIFICATION_REQUEST_FAILED);
+            }
         } catch (IOException ioException) {
             throw new BusinessLogicException(NOTIFICATION_REQUEST_FAILED);
         }
+    }
+
+    private static boolean isSentSuccessfully(final Response response) {
+        return Objects.equals(response.code(), HttpStatus.OK.value());
     }
 
     private Response sendFCMNotificationRequest(final OkHttpClient client, final Request request)

@@ -44,15 +44,19 @@ public class NotificationService {
         }
 
         final Receiver receiver = new Receiver(post.getMember(), new Data(ScreenType.POST, post.getId()));
-        final boolean isSentSuccessfully = notificationSender.sendNotification(
-                receiver,
-                THUMBS_NOTIFICATION_TITLE.getMessage()
-        );
-
-        if (!isSentSuccessfully) {
-            throw new BusinessLogicException(NOTIFICATION_REQUEST_FAILED);
+        try {
+            notificationSender.sendNotification(
+                    receiver,
+                    THUMBS_NOTIFICATION_TITLE.getMessage()
+            );
+        } catch (BusinessLogicException e) {
+            log.error("알림 전송에 실패했습니다.", e);
         }
 
+        saveNotification(post);
+    }
+
+    private void saveNotification(final Post post) {
         final Notification notification = new Notification(
                 post.getMember(),
                 THUMBS_NOTIFICATION_TITLE.getMessage(),
