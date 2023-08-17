@@ -38,7 +38,6 @@ public class AuthService {
         return findMember(loginRequest.email(), loginRequest.password());
     }
 
-    //todo: 비밀번호까지 조회에 사용하나?
     public MemberId findMember(final String email, final String password) {
         final Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_EMAIL_NOT_FOUND));
