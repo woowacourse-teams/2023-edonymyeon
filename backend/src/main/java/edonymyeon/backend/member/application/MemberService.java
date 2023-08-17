@@ -15,6 +15,7 @@ import edonymyeon.backend.member.repository.MemberRepository;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
@@ -75,5 +76,13 @@ public class MemberService {
     @Transactional
     public void removeConfirm(final MemberId memberId, final Long postId) {
         memberConsumptionService.removeConfirm(memberId, postId);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void activateDevice(final Member member, final String deviceToken) {
+        if (member.isActiveDevice(deviceToken)) {
+            return;
+        }
+        member.activateDevice(deviceToken);
     }
 }

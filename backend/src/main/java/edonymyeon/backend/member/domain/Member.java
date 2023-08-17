@@ -24,7 +24,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -169,5 +168,30 @@ public class Member extends TemporalRecord {
             return UNKNOWN;
         }
         return nickname;
+    }
+
+    public boolean isActiveDevice(final String deviceToken) {
+        final Optional<Device> device = this.devices.stream()
+                .filter(dev -> dev.isDeviceTokenEqualTo(deviceToken))
+                .findAny();
+        return device.map(Device::isActive).orElse(false);
+    }
+
+    public void activateDevice(final String deviceToken) {
+        this.devices.forEach(Device::deactivate);
+
+        if (isNewDevice(deviceToken)) {
+            this.devices.add(new Device(deviceToken, this));
+            return;
+        }
+
+        this.devices.stream()
+                .filter(dev -> dev.isDeviceTokenEqualTo(deviceToken))
+                .findAny()
+                .ifPresent(Device::activate);
+    }
+
+    private boolean isNewDevice(final String deviceToken) {
+        return this.devices.stream().noneMatch(device -> device.isDeviceTokenEqualTo(deviceToken));
     }
 }

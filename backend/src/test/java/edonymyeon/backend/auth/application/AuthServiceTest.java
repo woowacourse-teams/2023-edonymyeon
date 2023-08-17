@@ -7,6 +7,8 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
 import edonymyeon.backend.auth.application.dto.JoinRequest;
+import edonymyeon.backend.auth.application.dto.LoginRequest;
+import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.setting.application.SettingService;
 import edonymyeon.backend.support.IntegrationTest;
@@ -29,6 +31,9 @@ class AuthServiceTest {
 
     @SpyBean
     private SettingService settingService;
+
+    @SpyBean
+    private MemberService memberService;
 
     @Autowired
     private AuthService authService;
@@ -53,5 +58,15 @@ class AuthServiceTest {
         authService.joinMember(
                 new JoinRequest("test@gmail.com", "@testPassword234", "testNickname", "testDeviceToken"));
         verify(settingService, atLeastOnce()).initializeSettings(any());
+    }
+
+    @Test
+    void 로그인_이후_디바이스_교체_작업을_수행한다() {
+        doNothing().when(memberService).activateDevice(any(), any());
+
+        authService.joinMember(
+                new JoinRequest("test@gmail.com", "@testPassword234", "testNickname", "testDeviceToken"));
+        authService.login(new LoginRequest("test@gmail.com", "@testPassword234", "testToken"));
+        verify(memberService, atLeastOnce()).activateDevice(any(), any());
     }
 }

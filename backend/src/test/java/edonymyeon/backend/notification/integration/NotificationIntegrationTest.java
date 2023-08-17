@@ -9,6 +9,7 @@ import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
+import edonymyeon.backend.post.application.PostSlice;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.application.ThumbsService;
 import io.restassured.RestAssured;
@@ -42,9 +43,10 @@ public class NotificationIntegrationTest extends IntegrationFixture implements I
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .extract()
-                .as(NotificationsResponse.class);
+                .as(PostSlice.class);
 
-        assertThat(알림목록_조회결과.notifications()).hasSize(2);
+        assertThat(알림목록_조회결과.getContent()).hasSize(2);
+        assertThat(알림목록_조회결과.isLast()).isTrue();
     }
 
     @Test
