@@ -17,14 +17,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import java.util.Objects;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -33,6 +37,7 @@ public class Member extends TemporalRecord {
     private static final int MAX_EMAIL_LENGTH = 30;
     private static final int MAX_PASSWORD_LENGTH = 30;
     private static final int MAX_NICKNAME_LENGTH = 20;
+    private static final String UNKNOWN = "Unknown";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,9 +52,14 @@ public class Member extends TemporalRecord {
     @Column(nullable = false, unique = true)
     private String nickname;
 
+    private SocialInfo socialInfo;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private ProfileImageInfo profileImageInfo;
+
+    @ColumnDefault(value = "false")
+    private boolean deleted = false;
 
     public Member(final String email, final String password, final String nickname,
                   final ProfileImageInfo profileImageInfo) {
@@ -62,6 +72,15 @@ public class Member extends TemporalRecord {
 
     public Member(final Long id) {
         this.id = id;
+    }
+
+    public static Member from(final SocialInfo socialInfo) {
+        return Member.builder()
+                .socialInfo(socialInfo)
+                .email(UUID.randomUUID().toString())
+                .password(UUID.randomUUID().toString())
+                .nickname("#" + socialInfo.getSocialType().name() + UUID.randomUUID())
+                .build();
     }
 
     private void validate(final String email, final String password, final String nickname) {
@@ -77,7 +96,8 @@ public class Member extends TemporalRecord {
     }
 
     private void validateNickName(final String nickname) {
-        if (Objects.isNull(nickname) || nickname.isBlank() || nickname.length() > MAX_NICKNAME_LENGTH) {
+        if (Objects.isNull(nickname) || nickname.isBlank() || nickname.length() > MAX_NICKNAME_LENGTH
+                || nickname.equalsIgnoreCase(UNKNOWN)) {
             throw new EdonymyeonException(MEMBER_NICKNAME_INVALID);
         }
     }
@@ -94,5 +114,21 @@ public class Member extends TemporalRecord {
             return;
         }
         throw new EdonymyeonException(MEMBER_PASSWORD_NOT_MATCH);
+    }
+
+    public void withdraw() {
+        this.deleted = true;
+        this.profileImageInfo = null;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public String getNickname() {
+        if (deleted) {
+            return UNKNOWN;
+        }
+        return nickname;
     }
 }

@@ -1,18 +1,23 @@
-package edonymyeon.backend.member;
+package edonymyeon.backend.member.integration;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_IS_DELETED;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import edonymyeon.backend.support.IntegrationFixture;
+import edonymyeon.backend.auth.application.dto.LoginRequest;
+import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
 import edonymyeon.backend.member.application.dto.response.MyPageResponse;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.List;
-import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
@@ -75,9 +80,73 @@ public class MemberIntegrationTest extends IntegrationFixture {
         final var jsonPath = response.body().jsonPath();
         final List<MyPostResponse> content = jsonPath.getList("content", MyPostResponse.class);
 
-        SoftAssertions.assertSoftly(softly -> {
+        assertSoftly(softly -> {
             softly.assertThat(content.size()).isEqualTo(3);
             softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        });
+    }
+
+    @Test
+    void 삭제된_회원이_로그인시_오류발생() {
+        final Member member = memberTestSupport.builder()
+                .build();
+
+        RestAssured
+                .given()
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .delete("/withdraw");
+
+        final LoginRequest request = new LoginRequest(member.getEmail(), member.getPassword());
+
+        final ExtractableResponse<Response> response = RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(request)
+                .when()
+                .post("/login")
+                .then()
+                .extract();
+        final ExceptionResponse exception = response.body()
+                .as(ExceptionResponse.class);
+
+        assertSoftly(
+                softly -> {
+                    softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+                    softly.assertThat(exception.errorCode()).isEqualTo(MEMBER_IS_DELETED.getCode());
+                    softly.assertThat(exception.errorMessage()).isEqualTo(MEMBER_IS_DELETED.getMessage());
+                }
+        );
+    }
+
+    @Test
+    void 삭제한_회원의_게시글을_조회한다() {
+        final Member member = memberTestSupport.builder()
+                .build();
+
+        final Post post = postTestSupport.builder()
+                .member(member)
+                .build();
+
+        RestAssured
+                .given()
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .delete("/withdraw");
+
+        final ExtractableResponse<Response> response = RestAssured
+                .given()
+                .when()
+                .get("/posts/" + post.getId())
+                .then()
+                .extract();
+
+        final JsonPath jsonPath = response.body()
+                .jsonPath();
+
+        assertSoftly(softly -> {
+            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+            softly.assertThat(jsonPath.getString("writer.nickname")).isEqualTo("Unknown");
         });
     }
 }
