@@ -140,20 +140,26 @@ public class PostReadService {
         return findCachedPosts(hotFindingCondition);
     }
 
-    private PostSlice<GeneralPostInfoResponse> findCachedPosts(final HotFindingCondition hotFindingCondition) {
-        CachedPostResponse cachedHotPosts = postCachingService.findCachedPosts(hotFindingCondition);
-        List<GeneralPostInfoResponse> posts = postRepository.findByIds(cachedHotPosts.postIds())
-                .stream()
-                .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()))
-                .toList();
-        return new PostSlice<>(posts, cachedHotPosts.isLast());
-    }
-
     private PostSlice<GeneralPostInfoResponse> findHotPostFromRepository(final HotFindingCondition hotFindingCondition) {
         final Slice<Post> hotPost = findHotPostSliceFromRepositoryByPolicy(hotFindingCondition);
         postCachingService.cachePosts(hotFindingCondition, hotPost);
         Slice<GeneralPostInfoResponse> hotPostSlice = hotPost.map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
         return PostSlice.from(hotPostSlice);
+    }
+
+    private PostSlice<GeneralPostInfoResponse> findCachedPosts(final HotFindingCondition hotFindingCondition) {
+        CachedPostResponse cachedHotPosts = postCachingService.findCachedPosts(hotFindingCondition);
+        List<Post> hotPostsInRepository = postRepository.findByIds(cachedHotPosts.postIds());
+
+        if(cachedHotPosts.size() != hotPostsInRepository.size()){
+            return findHotPostFromRepository(hotFindingCondition);
+        }
+
+        List<GeneralPostInfoResponse> posts = postRepository.findByIds(cachedHotPosts.postIds())
+                .stream()
+                .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()))
+                .toList();
+        return new PostSlice<>(posts, cachedHotPosts.isLast());
     }
 
     private Slice<Post> findHotPostSliceFromRepositoryByPolicy(final HotFindingCondition hotFindingCondition) {
