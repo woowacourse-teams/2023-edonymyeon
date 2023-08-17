@@ -2,6 +2,7 @@ package edonymyeon.backend.notification.domain;
 
 import edonymyeon.backend.global.domain.TemporalRecord;
 import edonymyeon.backend.member.domain.Member;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -34,6 +35,7 @@ public class Notification extends TemporalRecord {
 
     private Long postId;
 
+    @Column(name = "is_read")
     private boolean read;
 
     public Notification(final Member member, final String title, final ScreenType screenType, final Long postId) {

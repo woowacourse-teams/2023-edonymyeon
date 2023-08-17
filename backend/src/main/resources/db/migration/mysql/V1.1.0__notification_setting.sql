@@ -1,20 +1,20 @@
 CREATE TABLE device
 (
     is_active    BOOLEAN NOT NULL,
-    created_at   TIMESTAMP(6),
+    created_at   DATETIME(6),
     id           BIGINT AUTO_INCREMENT PRIMARY KEY,
     member_id    BIGINT,
-    modified_at  TIMESTAMP(6),
+    modified_at  DATETIME(6),
     device_token VARCHAR(255)
 );
 
 CREATE TABLE notification
 (
-    read        BOOLEAN NOT NULL,
-    created_at  TIMESTAMP(6),
+    is_read     BOOLEAN NOT NULL,
+    created_at  DATETIME(6),
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
     member_id   BIGINT  NOT NULL,
-    modified_at TIMESTAMP(6),
+    modified_at DATETIME(6),
     post_id     BIGINT,
     screen_type VARCHAR(255) CHECK (screen_type IN ('POST', 'MYPOST')),
     title       VARCHAR(255)
