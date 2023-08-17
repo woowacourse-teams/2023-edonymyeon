@@ -8,7 +8,7 @@ import static org.mockito.Mockito.verify;
 
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.preference.application.PreferenceService;
+import edonymyeon.backend.setting.application.SettingService;
 import edonymyeon.backend.support.IntegrationTest;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -28,14 +28,14 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 class AuthServiceTest {
 
     @SpyBean
-    private PreferenceService preferenceService;
+    private SettingService settingService;
 
     @Autowired
     private AuthService authService;
 
     @Test
     void 회원가입시_사용한_디바이스_정보를_함께_저장한다(@Autowired EntityManager entityManager) {
-        doNothing().when(preferenceService).initializeMemberPreference(any());
+        doNothing().when(settingService).initializeSettings(any());
 
         authService.joinMember(
                 new JoinRequest("test@gmail.com", "@testPassword234", "testNickname", "testDeviceToken"));
@@ -48,10 +48,10 @@ class AuthServiceTest {
 
     @Test
     void 회원가입_이후_설정초기화_작업을_수행한다() {
-        doNothing().when(preferenceService).initializeMemberPreference(any());
+        doNothing().when(settingService).initializeSettings(any());
 
         authService.joinMember(
                 new JoinRequest("test@gmail.com", "@testPassword234", "testNickname", "testDeviceToken"));
-        verify(preferenceService, atLeastOnce()).initializeMemberPreference(any());
+        verify(settingService, atLeastOnce()).initializeSettings(any());
     }
 }

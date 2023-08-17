@@ -1,4 +1,4 @@
-package edonymyeon.backend.preference.domain;
+package edonymyeon.backend.setting.domain;
 
 import lombok.RequiredArgsConstructor;
 

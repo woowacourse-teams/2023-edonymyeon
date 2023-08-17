@@ -1,4 +1,4 @@
-package edonymyeon.backend.preference.application;
+package edonymyeon.backend.setting.application;
 
 import edonymyeon.backend.auth.application.event.JoinMemberEvent;
 import lombok.RequiredArgsConstructor;
@@ -7,12 +7,12 @@ import org.springframework.transaction.event.TransactionalEventListener;
 
 @RequiredArgsConstructor
 @Component
-public class PreferenceEventListener {
+public class SettingEventListener {
 
-    private final PreferenceService preferenceService;
+    private final SettingService settingService;
 
     @TransactionalEventListener
-    public void initializePreferenceAfterJoining(JoinMemberEvent event) {
-        preferenceService.initializeMemberPreference(event.member());
+    public void initializeSettingsAfterJoining(JoinMemberEvent event) {
+        settingService.initializeSettings(event.member());
     }
 }
