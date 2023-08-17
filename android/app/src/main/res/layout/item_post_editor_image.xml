@@ -33,7 +33,7 @@
             android:id="@+id/iv_post_gallery_image_remove"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_margin="4dp"
             android:contentDescription="@string/item_post_editor_image_delete_description"
             android:src="@drawable/btn_delete"
             app:layout_constraintEnd_toEndOf="parent"
