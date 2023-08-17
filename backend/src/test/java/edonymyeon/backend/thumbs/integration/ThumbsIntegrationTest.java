@@ -4,13 +4,13 @@ import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +45,10 @@ public class ThumbsIntegrationTest extends IntegrationFixture {
     }
 
     @BeforeEach
+    void 사전작업() {
+        테스트_실행전_두_회원의_가입과_게시글_작성을_실행한다();
+    }
+
     void 테스트_실행전_두_회원의_가입과_게시글_작성을_실행한다() {
         postWriter = registerMember();
         otherMember = registerMember();

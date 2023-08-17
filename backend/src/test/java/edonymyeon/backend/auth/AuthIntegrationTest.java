@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import edonymyeon.backend.auth.application.KakaoAuthResponseProvider;
+import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginRequest;
@@ -120,7 +121,7 @@ public class AuthIntegrationTest extends IntegrationFixture {
 
     @Test
     public void 회원가입_성공() {
-        final JoinRequest request = new JoinRequest("email@naver.com", "password123!", "kerrobabo");
+        final JoinRequest request = new JoinRequest("email@naver.com", "password123!", "kerrobabo", "unknownDevice");
 
         final ExtractableResponse<Response> response = RestAssured
                 .given()
@@ -142,7 +143,7 @@ public class AuthIntegrationTest extends IntegrationFixture {
                 .email(duplicatedEmail)
                 .build();
 
-        final JoinRequest request = new JoinRequest(duplicatedEmail, "password123!", "kerrobabo");
+        final JoinRequest request = new JoinRequest(duplicatedEmail, "password123!", "kerrobabo", "unknownDevice");
 
         final ExtractableResponse<Response> response = RestAssured
                 .given()
@@ -164,7 +165,7 @@ public class AuthIntegrationTest extends IntegrationFixture {
                 .nickname(duplicatedNickname)
                 .build();
 
-        final JoinRequest request = new JoinRequest("foxbabo", "password123!", duplicatedNickname);
+        final JoinRequest request = new JoinRequest("foxbabo", "password123!", duplicatedNickname, "unknownDevice");
 
         final ExtractableResponse<Response> response = RestAssured
                 .given()
@@ -183,8 +184,8 @@ public class AuthIntegrationTest extends IntegrationFixture {
         final Member member = memberTestSupport.builder()
                 .build();
 
-        final LoginRequest request = new LoginRequest(member.getEmail(), member.getPassword());
-
+        final LoginRequest request = new LoginRequest(member.getEmail(), member.getPassword(), "unknownDevice");
+        System.out.println("request = " + request);
         final ExtractableResponse<Response> response = RestAssured
                 .given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

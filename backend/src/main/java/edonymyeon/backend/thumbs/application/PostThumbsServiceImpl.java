@@ -21,6 +21,7 @@ public class PostThumbsServiceImpl implements PostThumbsService {
 
     private final ThumbsRepository thumbsRepository;
 
+    @Override
     public AllThumbsInPostResponse findAllThumbsInPost(final Long postId) {
         AllThumbsInPost allThumbsInPost = AllThumbsInPost.from(thumbsRepository.findByPostId(postId));
 
@@ -28,6 +29,7 @@ public class PostThumbsServiceImpl implements PostThumbsService {
                 allThumbsInPost.getDownCount());
     }
 
+    @Override
     public ThumbsStatusInPostResponse findThumbsStatusInPost(final MemberId memberId, final Long postId) {
         if (Objects.equals(memberId.id(), AnonymousMemberId.ANONYMOUS_MEMBER_ID)) {
             return new ThumbsStatusInPostResponse(false, false);
@@ -43,6 +45,7 @@ public class PostThumbsServiceImpl implements PostThumbsService {
     }
 
     @Transactional
+    @Override
     public void deleteAllThumbsInPost(final Long postId) {
         thumbsRepository.deleteAllByPostId(postId);
     }

@@ -97,7 +97,7 @@ public class MemberIntegrationTest extends IntegrationFixture {
                 .when()
                 .delete("/withdraw");
 
-        final LoginRequest request = new LoginRequest(member.getEmail(), member.getPassword());
+        final LoginRequest request = new LoginRequest(member.getEmail(), member.getPassword(), "werwe");
 
         final ExtractableResponse<Response> response = RestAssured
                 .given()

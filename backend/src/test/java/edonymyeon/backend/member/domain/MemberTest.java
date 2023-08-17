@@ -6,6 +6,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PA
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -20,7 +21,7 @@ class MemberTest {
     @Test
     public void 이메일이_30자_초과이면_예외발생() {
         final String invalidEmail = "i".repeat(31);
-        assertThatThrownBy(() -> new Member(invalidEmail, "password", "nickname", null))
+        assertThatThrownBy(() -> new Member(invalidEmail, "password", "nickname", null, List.of()))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(MEMBER_EMAIL_INVALID.getMessage());
     }
@@ -28,7 +29,7 @@ class MemberTest {
     @Test
     public void 이메일이_공백이면_예외발생() {
         final String invalidEmail = "   ";
-        assertThatThrownBy(() -> new Member(invalidEmail, "password", "nickname", null))
+        assertThatThrownBy(() -> new Member(invalidEmail, "password", "nickname", null, List.of()))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(MEMBER_EMAIL_INVALID.getMessage());
     }
@@ -36,7 +37,7 @@ class MemberTest {
     @Test
     public void 비밀번호가_8자_미만이면_예외발생() {
         final String invalidPassword = "i".repeat(7);
-        assertThatThrownBy(() -> new Member("email", invalidPassword, "nickname", null))
+        assertThatThrownBy(() -> new Member("email", invalidPassword, "nickname", null, List.of()))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(MEMBER_PASSWORD_INVALID.getMessage());
     }
@@ -44,7 +45,7 @@ class MemberTest {
     @Test
     public void 비밀번호가_30자_초과이면_예외발생() {
         final String invalidPassword = "i".repeat(31);
-        assertThatThrownBy(() -> new Member("email", invalidPassword, "nickname", null))
+        assertThatThrownBy(() -> new Member("email", invalidPassword, "nickname", null, List.of()))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(MEMBER_PASSWORD_INVALID.getMessage());
     }
@@ -52,7 +53,7 @@ class MemberTest {
     @ValueSource(strings = {"abcd1234", "!@#1234", "abcd!@#"})
     @ParameterizedTest(name = "{index}. password: {0}")
     public void 비밀번호가_영문_숫자_특수문자가_포함되지_않으면_예외발생(String invalidPassword) {
-        Assertions.assertThatThrownBy(() -> new Member("email", invalidPassword, "nickname", null))
+        Assertions.assertThatThrownBy(() -> new Member("email", invalidPassword, "nickname", null, List.of()))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(MEMBER_PASSWORD_INVALID.getMessage());
     }
@@ -60,7 +61,7 @@ class MemberTest {
     @Test
     public void 닉네임이_20자_초과이면_예외발생() {
         final String invalidNickname = "i".repeat(21);
-        assertThatThrownBy(() -> new Member("email", "password", invalidNickname, null))
+        assertThatThrownBy(() -> new Member("email", "password", invalidNickname, null, List.of()))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(MEMBER_NICKNAME_INVALID.getMessage());
     }
@@ -68,7 +69,7 @@ class MemberTest {
     @Test
     public void 닉네임이_공백이면_예외발생() {
         final String invalidNickname = "   ";
-        assertThatThrownBy(() -> new Member(invalidNickname, "password", "nickname", null))
+        assertThatThrownBy(() -> new Member(invalidNickname, "password", "nickname", null, List.of()))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(MEMBER_EMAIL_INVALID.getMessage());
     }

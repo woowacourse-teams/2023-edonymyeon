@@ -1,30 +1,39 @@
 package edonymyeon.backend.post.integration;
 
-import edonymyeon.backend.support.IntegrationFixture;
+import static edonymyeon.backend.global.exception.ExceptionInformation.AUTHORIZATION_EMPTY;
+import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_DOMAIN_INVALID;
+import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_STORE_NAME_INVALID;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_IMAGE_COUNT_INVALID;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
+import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.when;
+
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.integration.steps.MemberConsumptionSteps;
+import edonymyeon.backend.notification.application.NotificationSender;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.PostReadService;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
+import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.assertj.core.api.SoftAssertions;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import static edonymyeon.backend.global.exception.ExceptionInformation.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class PostIntegrationTest extends IntegrationFixture implements ImageFileCleaner {
@@ -401,7 +410,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
                 new ActiveMemberId(작성자가_아닌_사람.getId()));
 
         assertThat(게시글_상세_조회_결과.statusCode()).isEqualTo(200);
-        SoftAssertions.assertSoftly(
+        assertSoftly(
                 softAssertions -> {
                     softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getLong("id")).isEqualTo(게시글.id());
                     softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getString("title"))

@@ -1,9 +1,11 @@
 package edonymyeon.backend.support;
 
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
+import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.domain.SocialInfo;
 import edonymyeon.backend.member.repository.MemberRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +41,7 @@ public class MemberTestSupport {
 
         private SocialInfo socialInfo;
 
-        private boolean deleted = false;
+        private Boolean deleted;
 
         public MemberBuilder id(final Long id) {
             this.id = id;
@@ -85,7 +87,8 @@ public class MemberTestSupport {
                             nickname == null ? (DEFAULT_NICK_NAME + nickNameCount++) : nickname,
                             socialInfo == null ? null : socialInfo,
                             profileImageInfo == null ? profileImageInfoTestSupport.builder().build() : profileImageInfo,
-                            deleted
+                            List.of("wwafdfawd"),
+                            deleted == null ? false : deleted
                     )
             );
         }

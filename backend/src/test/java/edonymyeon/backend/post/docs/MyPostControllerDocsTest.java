@@ -15,7 +15,6 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edonymyeon.backend.support.DocsTest;
 import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.member.domain.Member;
@@ -26,6 +25,7 @@ import edonymyeon.backend.post.application.PostSlice;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.application.dto.response.PostConsumptionResponse;
 import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.support.DocsTest;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -44,14 +44,12 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 @SuppressWarnings("NonAsciiCharacters")
 public class MyPostControllerDocsTest extends DocsTest {
 
-    @MockBean
-    private MyPostService myPostService;
-
-    @MockBean
-    private MemberRepository memberRepository;
-
     @Autowired
     private final Domain domain;
+    @MockBean
+    private MyPostService myPostService;
+    @MockBean
+    private MemberRepository memberRepository;
 
     public MyPostControllerDocsTest(final MockMvc mockMvc,
                                     final ObjectMapper objectMapper,
@@ -64,7 +62,7 @@ public class MyPostControllerDocsTest extends DocsTest {
     void 내_게시글_조회_문서화() throws Exception {
         final GeneralFindingCondition findingCondition = GeneralFindingCondition.builder().build();
 
-        Member 회원 = new Member("example@example.com", "password11234!", "testNickname", null);
+        Member 회원 = new Member("example@example.com", "password11234!", "testNickname", null, List.of());
         회원_레포지토리를_모킹한다(회원);
 
         final Post 게시글1 = new Post(1L, "제목1", "내용1", 1000L, 회원, PostImageInfos.create(), 0);
