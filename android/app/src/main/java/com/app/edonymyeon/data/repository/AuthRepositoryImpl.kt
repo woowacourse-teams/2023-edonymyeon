@@ -3,6 +3,7 @@ package com.app.edonymyeon.data.repository
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.datasource.auth.AuthDataSource
 import com.app.edonymyeon.data.dto.LoginDataModel
+import com.app.edonymyeon.data.dto.request.LogoutRequest
 import com.app.edonymyeon.data.dto.request.TokenRequest
 import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
 import com.app.edonymyeon.mapper.toDataModel
@@ -63,6 +64,16 @@ class AuthRepositoryImpl(
             val json = errorResponse?.let { JSONObject(it) }
             val errorMessage = json?.getString("errorMessage") ?: ""
             Result.failure(CustomThrowable(result.code(), errorMessage))
+        }
+    }
+
+    override suspend fun logout(): Result<Unit> {
+        val result = authRemoteDataSource.logout(LogoutRequest())
+        return if (result.isSuccessful) {
+            authLocalDataSource.setAuthToken("")
+            Result.success(Unit)
+        } else {
+            Result.failure(CustomThrowable(result.code(), result.message()))
         }
     }
 }

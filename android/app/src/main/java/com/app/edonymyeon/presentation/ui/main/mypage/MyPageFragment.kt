@@ -10,12 +10,12 @@ import androidx.fragment.app.viewModels
 import app.edonymyeon.R
 import app.edonymyeon.databinding.FragmentMyPageBinding
 import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
+import com.app.edonymyeon.data.datasource.auth.AuthRemoteDataSource
 import com.app.edonymyeon.data.datasource.consumptions.ConsumptionsRemoteDataSource
 import com.app.edonymyeon.data.datasource.profile.ProfileRemoteDataSource
+import com.app.edonymyeon.data.repository.AuthRepositoryImpl
 import com.app.edonymyeon.data.repository.ConsumptionsRepositoryImpl
 import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
-import com.app.edonymyeon.data.service.client.RetrofitClient
-import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.presentation.ui.alarmsetting.AlarmSettingActivity
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
 import com.app.edonymyeon.presentation.ui.main.MainActivity
@@ -36,6 +36,10 @@ class MyPageFragment : Fragment() {
         MyPageViewModelFactory(
             ProfileRepositoryImpl(ProfileRemoteDataSource()),
             ConsumptionsRepositoryImpl(ConsumptionsRemoteDataSource()),
+            AuthRepositoryImpl(
+                AuthLocalDataSource(),
+                AuthRemoteDataSource(),
+            ),
         )
     }
 
@@ -67,6 +71,12 @@ class MyPageFragment : Fragment() {
                 resources.getFont(R.font.nanumsquare),
             ),
         )
+        viewModel.isLogoutSuccess.observe(viewLifecycleOwner) {
+            if (it) {
+                (activity as MainActivity).refreshActivity()
+                viewModel.clearToken()
+            }
+        }
     }
 
     override fun onResume() {
@@ -150,9 +160,7 @@ class MyPageFragment : Fragment() {
     }
 
     private fun logout() {
-        PreferenceUtil.setValue(AuthLocalDataSource.USER_ACCESS_TOKEN, null)
-        RetrofitClient.getInstance().clearAccessToken()
-        (activity as MainActivity).refreshActivity()
+        viewModel.logout()
     }
 
     private fun navigateToMyPost() {

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
+import com.app.edonymyeon.data.service.client.RetrofitClient
 import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
@@ -15,6 +16,7 @@ import com.app.edonymyeon.presentation.uimodel.NicknameUiModel
 import com.app.edonymyeon.presentation.uimodel.WriterUiModel
 import com.domain.edonymyeon.model.ConsumptionStatistics
 import com.domain.edonymyeon.model.Writer
+import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.ConsumptionsRepository
 import com.domain.edonymyeon.repository.ProfileRepository
 import kotlinx.coroutines.launch
@@ -22,6 +24,7 @@ import kotlinx.coroutines.launch
 class MyPageViewModel(
     private val profileRepository: ProfileRepository,
     private val consumptionsRepository: ConsumptionsRepository,
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
     private val _profile = MutableLiveData<WriterUiModel>()
     val profile: LiveData<WriterUiModel>
@@ -41,16 +44,18 @@ class MyPageViewModel(
     fun getMonthLists(): List<String> =
         _consumptions.value?.toDomain()?.monthRange?.yearMonthList ?: emptyList()
 
+    private val _isLogoutSuccess: MutableLiveData<Boolean> = MutableLiveData()
+    val isLogoutSuccess: LiveData<Boolean>
+        get() = _isLogoutSuccess
+
     fun getUserProfile() {
         viewModelScope.launch {
-            profileRepository.getProfile()
-                .onSuccess {
-                    it as Writer
-                    _profile.value = it.toUiModel()
-                }
-                .onFailure {
-                    it as CustomThrowable
-                }
+            profileRepository.getProfile().onSuccess {
+                it as Writer
+                _profile.value = it.toUiModel()
+            }.onFailure {
+                it as CustomThrowable
+            }
         }
     }
 
@@ -61,15 +66,23 @@ class MyPageViewModel(
 
     fun setConsumptions(period: Int) {
         viewModelScope.launch {
-            consumptionsRepository.getConsumptions(period)
-                .onSuccess {
-                    it as ConsumptionStatistics
-                    _consumptions.value = it.toUiModel()
-                    _consumptionOnThisMonth.value = it.consumptionAmounts.last().toUiModel()
-                }
-                .onFailure {
-                    it as CustomThrowable
-                }
+            consumptionsRepository.getConsumptions(period).onSuccess {
+                it as ConsumptionStatistics
+                _consumptions.value = it.toUiModel()
+                _consumptionOnThisMonth.value = it.consumptionAmounts.last().toUiModel()
+            }.onFailure {
+                it as CustomThrowable
+            }
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            authRepository.logout().onSuccess {
+                _isLogoutSuccess.value = true
+            }.onFailure {
+                it as CustomThrowable
+            }
         }
     }
 
@@ -80,5 +93,10 @@ class MyPageViewModel(
                     it as CustomThrowable
                 }
         }
+    }
+
+    fun clearToken() {
+        PreferenceUtil.setValue(AuthLocalDataSource.USER_ACCESS_TOKEN, null)
+        RetrofitClient.getInstance().clearAccessToken()
     }
 }
