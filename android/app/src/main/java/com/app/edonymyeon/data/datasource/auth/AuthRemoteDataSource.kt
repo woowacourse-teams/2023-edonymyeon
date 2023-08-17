@@ -1,6 +1,7 @@
 package com.app.edonymyeon.data.datasource.auth
 
 import com.app.edonymyeon.data.dto.LoginDataModel
+import com.app.edonymyeon.data.dto.request.TokenRequest
 import com.app.edonymyeon.data.dto.request.UserRegistrationRequest
 import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
 import com.app.edonymyeon.data.service.AuthService
@@ -26,7 +27,7 @@ class AuthRemoteDataSource : AuthDataSource.Remote {
         return authService.login(loginDataModel)
     }
 
-    override suspend fun loginByKakao(accessToken: String): Response<Unit> {
+    override suspend fun loginByKakao(accessToken: TokenRequest): Response<Unit> {
         return authService.loginByKakao(accessToken)
     }
 }

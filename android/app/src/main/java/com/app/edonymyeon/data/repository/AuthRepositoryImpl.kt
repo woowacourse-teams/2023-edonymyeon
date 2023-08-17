@@ -3,6 +3,7 @@ package com.app.edonymyeon.data.repository
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.datasource.auth.AuthDataSource
 import com.app.edonymyeon.data.dto.LoginDataModel
+import com.app.edonymyeon.data.dto.request.TokenRequest
 import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
 import com.app.edonymyeon.mapper.toDataModel
 import com.domain.edonymyeon.model.UserRegistration
@@ -29,6 +30,7 @@ class AuthRepositoryImpl(
         value: String,
     ): Result<Boolean> {
         val result = authRemoteDataSource.checkDuplicate(target, value)
+
         return if (result.isSuccessful) {
             Result.success((result.body() ?: AuthDuplicateResponse(false)).isUnique)
         } else {
@@ -38,6 +40,7 @@ class AuthRepositoryImpl(
 
     override suspend fun login(email: String, password: String): Result<Unit> {
         val result = authRemoteDataSource.login(LoginDataModel(email, password))
+
         return if (result.isSuccessful) {
             authLocalDataSource.setAuthToken(result.headers()["Authorization"] as String)
             Result.success(result.body() ?: Unit)
@@ -50,7 +53,8 @@ class AuthRepositoryImpl(
     }
 
     override suspend fun loginByKakao(accessToken: String): Result<Unit> {
-        val result = authRemoteDataSource.loginByKakao(accessToken)
+        val result = authRemoteDataSource.loginByKakao(TokenRequest(accessToken))
+
         return if (result.isSuccessful) {
             authLocalDataSource.setAuthToken(result.headers()["Authorization"] as String)
             Result.success(result.body() ?: Unit)

@@ -1,6 +1,7 @@
 package com.app.edonymyeon.data.datasource.auth
 
 import com.app.edonymyeon.data.dto.LoginDataModel
+import com.app.edonymyeon.data.dto.request.TokenRequest
 import com.app.edonymyeon.data.dto.request.UserRegistrationRequest
 import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
 import retrofit2.Response
@@ -17,7 +18,7 @@ interface AuthDataSource {
             loginDataModel: LoginDataModel,
         ): Response<Unit>
 
-        suspend fun loginByKakao(accessToken: String): Response<Unit>
+        suspend fun loginByKakao(accessToken: TokenRequest): Response<Unit>
 
         suspend fun signUp(userRegistrationRequest: UserRegistrationRequest): Response<Unit>
         suspend fun checkDuplicate(target: String, value: String): Response<AuthDuplicateResponse>
