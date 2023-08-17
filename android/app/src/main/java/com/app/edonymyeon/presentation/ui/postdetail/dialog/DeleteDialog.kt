@@ -20,12 +20,12 @@ class DeleteDialog(
         savedInstanceState: Bundle?,
     ): View {
         binding = DialogConfirmDeletePostBinding.inflate(inflater, container, false)
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         binding.btnDialogNo.setOnClickListener { dismiss() }
         binding.btnDialogYes.setOnClickListener { onPositiveButtonClick() }

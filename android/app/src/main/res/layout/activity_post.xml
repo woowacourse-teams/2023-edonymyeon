@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
-            android:layout_marginBottom="83dp"
+            android:layout_marginBottom="84dp"
             android:src="@drawable/ic_write_post"
             app:tint="@color/white_ffffff"
             app:backgroundTint="@color/blue_576b9e"
