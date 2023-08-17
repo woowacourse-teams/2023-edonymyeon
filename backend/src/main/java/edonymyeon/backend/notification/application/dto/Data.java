@@ -1,5 +1,6 @@
-package edonymyeon.backend.notification.domain;
+package edonymyeon.backend.notification.application.dto;
 
+import edonymyeon.backend.notification.domain.ScreenType;
 import lombok.Getter;
 
 @Getter

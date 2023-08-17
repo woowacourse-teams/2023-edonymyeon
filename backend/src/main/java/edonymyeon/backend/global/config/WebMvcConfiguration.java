@@ -2,7 +2,7 @@ package edonymyeon.backend.global.config;
 
 import edonymyeon.backend.auth.ui.argumentresolver.AuthArgumentResolver;
 import edonymyeon.backend.logging.LoggingInterceptor;
-import edonymyeon.backend.notification.application.NotificationInterceptor;
+import edonymyeon.backend.notification.ui.NotificationInterceptor;
 import edonymyeon.backend.post.ui.argumentresolver.HotPostSizingArgumentResolver;
 import edonymyeon.backend.post.ui.argumentresolver.PostPagingArgumentResolver;
 import java.util.List;

@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.notification.application.NotificationSender;
-import edonymyeon.backend.notification.application.Receiver;
-import edonymyeon.backend.notification.domain.Data;
+import edonymyeon.backend.notification.application.dto.Receiver;
+import edonymyeon.backend.notification.application.dto.Data;
 import edonymyeon.backend.notification.infrastructure.FcmMessage.Message;
 import edonymyeon.backend.notification.infrastructure.FcmMessage.Notification;
 import java.io.IOException;
@@ -30,11 +30,11 @@ import org.springframework.stereotype.Component;
 public class FCMNotificationSender implements NotificationSender {
 
     public static final String FIREBASE_ADMIN_KEY_PATH = "firebase/edonymyeon-firebase.json";
-    private final String API_URL = "https://fcm.googleapis.com/v1/projects/edonymyeon-5c344/messages:send";
+    private static final String API_URL = "https://fcm.googleapis.com/v1/projects/edonymyeon-5c344/messages:send";
 
     private final ObjectMapper objectMapper;
 
-    private static boolean isSentSuccessfully(final Response response) {
+    private boolean isSentSuccessfully(final Response response) {
         return Objects.equals(response.code(), HttpStatus.OK.value());
     }
 
@@ -53,9 +53,27 @@ public class FCMNotificationSender implements NotificationSender {
         }
     }
 
-    private Response sendFCMNotificationRequest(final OkHttpClient client, final Request request)
-            throws IOException {
-        return client.newCall(request).execute();
+    private String makeFCMNotificationRequestBody(String targetToken, String title, Data data)
+            throws JsonProcessingException {
+        final FcmMessage fcmMessage = buildFcmMessage(targetToken, title, data);
+        return objectMapper.writeValueAsString(fcmMessage);
+    }
+
+    private FcmMessage buildFcmMessage(final String targetToken, final String title, final Data data) {
+        return FcmMessage.builder()
+                .validateOnly(false)
+                .message(buildMessage(targetToken, title, data)
+                ).build();
+    }
+
+    private Message buildMessage(final String targetToken, final String title, final Data data) {
+        return Message.builder()
+                .notification(Notification.builder()
+                        .title(title)
+                        .build())
+                .data(data)
+                .token(targetToken)
+                .build();
     }
 
     private Request makeFCMNotificationRequest(final String message) throws IOException {
@@ -69,21 +87,6 @@ public class FCMNotificationSender implements NotificationSender {
                 .build();
     }
 
-    private String makeFCMNotificationRequestBody(String targetToken, String title, Data data)
-            throws JsonProcessingException {
-        final FcmMessage fcmMessage = FcmMessage.builder()
-                .validateOnly(false)
-                .message(Message.builder()
-                        .notification(Notification.builder()
-                                .title(title)
-                                .build())
-                        .data(data)
-                        .token(targetToken)
-                        .build()
-                ).build();
-        return objectMapper.writeValueAsString(fcmMessage);
-    }
-
     private String getFCMAccessToken() throws IOException {
         final GoogleCredentials googleCredentials = GoogleCredentials
                 .fromStream(new ClassPathResource(FIREBASE_ADMIN_KEY_PATH).getInputStream())
@@ -91,5 +94,10 @@ public class FCMNotificationSender implements NotificationSender {
 
         googleCredentials.refreshIfExpired();
         return googleCredentials.getAccessToken().getTokenValue();
+    }
+
+    private Response sendFCMNotificationRequest(final OkHttpClient client, final Request request)
+            throws IOException {
+        return client.newCall(request).execute();
     }
 }

@@ -45,6 +45,7 @@ public class PostThumbsServiceImpl implements PostThumbsService {
     }
 
     @Transactional
+    @Override
     public void deleteAllThumbsInPost(final Long postId) {
         thumbsRepository.deleteAllByPostId(postId);
     }

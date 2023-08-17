@@ -1,5 +1,6 @@
-package edonymyeon.backend.notification.application;
+package edonymyeon.backend.notification.ui;
 
+import edonymyeon.backend.notification.application.NotificationService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Objects;

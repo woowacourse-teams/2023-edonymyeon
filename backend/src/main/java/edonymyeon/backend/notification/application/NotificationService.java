@@ -5,7 +5,8 @@ import static edonymyeon.backend.notification.domain.NotificationMessage.THUMBS_
 import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.notification.application.dto.NotificationsResponse;
-import edonymyeon.backend.notification.domain.Data;
+import edonymyeon.backend.notification.application.dto.Receiver;
+import edonymyeon.backend.notification.application.dto.Data;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.notification.repository.NotificationRepository;

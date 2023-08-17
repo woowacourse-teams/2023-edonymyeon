@@ -1,6 +1,6 @@
 package edonymyeon.backend.notification.infrastructure;
 
-import edonymyeon.backend.notification.domain.Data;
+import edonymyeon.backend.notification.application.dto.Data;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
