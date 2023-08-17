@@ -34,11 +34,11 @@ public class AuthService {
     private final ApplicationEventPublisher publisher;
     private final MemberRepository memberRepository;
 
-    public MemberId findMember(final LoginRequest loginRequest) {
-        return findMember(loginRequest.email(), loginRequest.password());
+    public MemberId login(final LoginRequest loginRequest) {
+        return login(loginRequest.email(), loginRequest.password());
     }
 
-    public MemberId findMember(final String email, final String password) {
+    public MemberId login(final String email, final String password) {
         final Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_EMAIL_NOT_FOUND));
         member.checkPassword(password);
@@ -66,10 +66,13 @@ public class AuthService {
 
     //todo session으로
     @Transactional
-    public MemberResponse findMemberByKakao(final KakaoLoginResponse kakaoLoginResponse) {
+    public MemberResponse loginByKakao(final KakaoLoginResponse kakaoLoginResponse) {
         final SocialInfo socialInfo = SocialInfo.of(SocialType.KAKAO, kakaoLoginResponse.id());
         final Member member = memberRepository.findBySocialInfo(socialInfo)
                 .orElseGet(() -> joinSocialMember(socialInfo));
+        if (member.isDeleted()) {
+            throw new EdonymyeonException(MEMBER_IS_DELETED);
+        }
         return new MemberResponse(member.getEmail(), member.getPassword());
     }
 
