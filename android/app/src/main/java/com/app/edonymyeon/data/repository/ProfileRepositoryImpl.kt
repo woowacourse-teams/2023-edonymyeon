@@ -72,4 +72,16 @@ class ProfileRepositoryImpl(private val profileDataSource: ProfileDataSource) : 
             Result.failure(CustomThrowable(result.code(), errorMessage))
         }
     }
+
+    override suspend fun withdraw(): Result<Unit> {
+        val result = profileDataSource.withdraw()
+        return if (result.isSuccessful) {
+            Result.success(result.body() ?: Unit)
+        } else {
+            val errorResponse = result.errorBody()?.string()
+            val json = errorResponse?.let { JSONObject(it) }
+            val errorMessage = json?.getString("errorMessage") ?: ""
+            Result.failure(CustomThrowable(result.code(), errorMessage))
+        }
+    }
 }

@@ -71,4 +71,13 @@ class MyPageViewModel(
                 }
         }
     }
+
+    fun withdraw() {
+        viewModelScope.launch {
+            profileRepository.withdraw()
+                .onFailure {
+                    it as CustomThrowable
+                }
+        }
+    }
 }

@@ -38,4 +38,8 @@ class ProfileRemoteDataSource : ProfileDataSource {
     override suspend fun getProfile(): Response<ProfileResponse> {
         return profileService.getProfile()
     }
+
+    override suspend fun withdraw(): Response<Unit> {
+        return profileService.withdraw()
+    }
 }
