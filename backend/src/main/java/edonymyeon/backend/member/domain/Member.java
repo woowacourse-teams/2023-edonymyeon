@@ -116,7 +116,7 @@ public class Member extends TemporalRecord {
         throw new EdonymyeonException(MEMBER_PASSWORD_NOT_MATCH);
     }
 
-    public void delete() {
+    public void withdraw() {
         this.deleted = true;
         this.profileImageInfo = null;
     }

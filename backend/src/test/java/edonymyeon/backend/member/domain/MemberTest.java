@@ -77,7 +77,7 @@ class MemberTest {
     public void 삭제하면_닉네임은_Unknown() {
         final Member member = new Member();
         final String previousNickname = member.getNickname();
-        member.delete();
+        member.withdraw();
         Assertions.assertThat(member.getNickname()).isNotEqualTo(previousNickname);
     }
 }
