@@ -119,7 +119,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
     @Test
     void 게시글을_수정한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of());
+        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of(), false);
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이);
         final PostImageInfo 유지하는_이미지_정보 = new PostImageInfo("stay.jpg", 게시글);
         final PostImageInfo 삭제될_이미지_정보 = new PostImageInfo("delete.jpg", 게시글);
@@ -181,7 +181,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
     @Test
     void 게시글을_삭제한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of());
+        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of(), false);
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이);
 
         회원_레포지토리를_모킹한다(글쓴이);
@@ -211,7 +211,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
     @Test
     void 게시글을_전체_조회한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of());
+        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of(), false);
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0);
 
         회원_레포지토리를_모킹한다(글쓴이);
@@ -239,7 +239,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     void 게시글을_검색한다() throws Exception {
         final GeneralFindingCondition findingCondition = GeneralFindingCondition.builder().build();
 
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of());
+        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of(), false);
         final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), 0);
 
         회원_레포지토리를_모킹한다(글쓴이);
@@ -289,7 +289,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     void 핫_게시글을_조회한다() throws Exception {
         final HotFindingCondition findingCondition = HotFindingCondition.builder().build();
 
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of());
+        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of(), false);
         final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), 0);
 
         회원_레포지토리를_모킹한다(글쓴이);
@@ -331,7 +331,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
     @Test
     void 게시글을_상세_조회한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of());
+        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of(), false);
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0);
 
         회원_레포지토리를_모킹한다(글쓴이);

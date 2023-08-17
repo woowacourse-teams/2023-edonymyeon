@@ -18,6 +18,7 @@ import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.util.ReflectionUtils;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -58,11 +60,16 @@ public class ThumbsControllerDocsTest {
     }
 
     void 회원_두명_가입하고_글쓰기_모킹() {
-        글쓴이 = new Member("email", "password", "nickname", null, null, List.of());
+        글쓴이 = new Member("email", "password123!", "nickname", null, List.of());
+        final Field 글쓴이idField = ReflectionUtils.findField(Member.class, "id");
+        ReflectionUtils.makeAccessible(글쓴이idField);
+        ReflectionUtils.setField(글쓴이idField, 글쓴이, 1L);
+
         when(memberRepository.findByEmail(글쓴이.getEmail())).thenReturn(Optional.of(글쓴이));
         when(memberRepository.findById(글쓴이.getId())).thenReturn(Optional.of(글쓴이));
 
-        반응_하는_사람 = new Member("email2", "password2", "nickname2", null, null, List.of());
+        반응_하는_사람 = new Member("email2", "password123!", "nickname2", null, List.of());
+        ReflectionUtils.setField(글쓴이idField, 반응_하는_사람, 2L);
         when(memberRepository.findByEmail(반응_하는_사람.getEmail())).thenReturn(
                 Optional.of(반응_하는_사람));
         when(memberRepository.findById(반응_하는_사람.getId())).thenReturn(Optional.of(반응_하는_사람));

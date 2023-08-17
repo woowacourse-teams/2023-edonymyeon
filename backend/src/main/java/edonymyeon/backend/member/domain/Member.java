@@ -24,12 +24,14 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 @Getter
+//@AllArgsConstructor
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -77,13 +79,31 @@ public class Member extends TemporalRecord {
         this.password = password;
         this.nickname = nickname;
         this.profileImageInfo = profileImageInfo;
+        this.devices = deviceTokens.stream()
+                .map(token -> new Device(token, this))
+                .toList();
+    }
+
+    public Member(final Long id, final String email, final String password, final String nickname,
+                  final SocialInfo socialInfo,
+                  final ProfileImageInfo profileImageInfo, final List<String> deviceTokens, final boolean deleted) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.socialInfo = socialInfo;
+        this.profileImageInfo = profileImageInfo;
+        this.devices = deviceTokens.stream()
+                .map(token -> new Device(token, this))
+                .toList();
+        this.deleted = deleted;
     }
 
     public Member(final Long id) {
         this.id = id;
     }
 
-    private Member(final String email, final String password, final String nickname, final SocialInfo socialInfo) {
+    public Member(final String email, final String password, final String nickname, final SocialInfo socialInfo) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;

@@ -27,6 +27,7 @@ import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.support.DocsTest;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -73,7 +74,7 @@ public class MemberControllerDocsTest extends DocsTest {
 
     @Test
     void 구매_확정한다() throws Exception {
-        final Member 회원 = new Member("email", "password", "nickname", null, null, List.of());
+        final Member 회원 = new Member("email", "password123!", "nickname", null, List.of());
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 회원);
         final Consumption 소비 = Consumption.of(게시글, SAVING, null, 2023, 7);
 
@@ -112,7 +113,7 @@ public class MemberControllerDocsTest extends DocsTest {
 
     @Test
     void 절약_확정한다() throws Exception {
-        final Member 회원 = new Member("email", "password", "nickname", null, null, List.of());
+        final Member 회원 = new Member("email", "password123!", "nickname", null, List.of());
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 회원);
         final Consumption 소비 = Consumption.of(게시글, SAVING, null, 2023, 7);
 
@@ -150,7 +151,7 @@ public class MemberControllerDocsTest extends DocsTest {
 
     @Test
     void 확정을_취소한다() throws Exception {
-        final Member 회원 = new Member("email", "password", "nickname", null, null, List.of());
+        final Member 회원 = new Member("email", "password123!", "nickname", null, List.of());
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 회원);
         final Consumption 소비 = Consumption.of(게시글, SAVING, null, 2023, 7);
 
@@ -180,12 +181,7 @@ public class MemberControllerDocsTest extends DocsTest {
 
     @Test
     void 회원_탈퇴한다() throws Exception {
-        final Member 회원 = Member.builder()
-                .id(1L)
-                .email("email@email.com")
-                .password("password123!")
-                .nickname("nickname")
-                .build();
+        final Member 회원 = new Member("email@email.com", "password123!", "nickname", null);
 
         회원_레포지토리를_모킹한다(회원);
         when(memberRepository.findById(회원.getId())).thenReturn(Optional.of(회원));

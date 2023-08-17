@@ -54,7 +54,7 @@ public class ConsumptionControllerDocsTest extends DocsTest {
 
     @Test
     void 특정기간의_소비금액을_확인한다() throws Exception {
-        final Member 회원 = new Member(1L, "email@email.com", "password123!", "nickname", null, null, List.of());
+        final Member 회원 = new Member(1L, "email@email.com", "password123!", "nickname", null, null, List.of(), false);
         final RecentConsumptionsResponse response = new RecentConsumptionsResponse(
                 "2023-08",
                 "2023-08",
