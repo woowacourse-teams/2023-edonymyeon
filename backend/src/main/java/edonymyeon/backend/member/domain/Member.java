@@ -112,11 +112,8 @@ public class Member extends TemporalRecord {
     }
 
     public Optional<String> getActiveDeviceToken() {
-        for (Device device : devices) {
-            if (device.isActive()) {
-                return Optional.of(device.getDeviceToken());
-            }
-        }
-        return Optional.empty();
+        return devices.stream().filter(Device::isActive)
+                .map(Device::getDeviceToken)
+                .findAny();
     }
 }

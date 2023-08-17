@@ -13,7 +13,7 @@ class PreferenceTest {
     void 설정_항목을_체크하여_OnOff할_수_있다() {
         final Member member = new Member(1L, "test@gmail.com", "password123", "nickName", null, null);
         final Preference preference
-                = new Preference(member, PreferenceKey.NOTIFICATION_PER_THUMB, Collections.emptyList(),
+                = new Preference(member, PreferenceType.NOTIFICATION_PER_THUMB, Collections.emptyList(),
                 EnableStatus.ENABLED);
 
         preference.toggleEnable();
@@ -25,11 +25,11 @@ class PreferenceTest {
     void 상위_항목을_disable하는_경우_하위_항목도_함께_disable된다() {
         final Member member = new Member(1L, "test@gmail.com", "password123", "nickName", null, null);
 
-        final Preference 하위항목1 = new Preference(member, PreferenceKey.NOTIFICATION_PER_THUMB, Collections.emptyList(),
+        final Preference 하위항목1 = new Preference(member, PreferenceType.NOTIFICATION_PER_THUMB, Collections.emptyList(),
                 EnableStatus.ENABLED);
-        final Preference 하위항목2 = new Preference(member, PreferenceKey.NOTIFICATION_PER_10, Collections.emptyList(),
+        final Preference 하위항목2 = new Preference(member, PreferenceType.NOTIFICATION_PER_10, Collections.emptyList(),
                 EnableStatus.ENABLED);
-        final Preference 상위항목 = new Preference(member, PreferenceKey.NOTIFICATION_THUMB, List.of(하위항목1, 하위항목2),
+        final Preference 상위항목 = new Preference(member, PreferenceType.NOTIFICATION_THUMB, List.of(하위항목1, 하위항목2),
                 EnableStatus.ENABLED);
         assertThat(하위항목1.isEnabled()).isTrue();
         assertThat(하위항목2.isEnabled()).isTrue();
@@ -44,11 +44,11 @@ class PreferenceTest {
     void 상위_항목에_의해_disable된_항목이_상위_항목에_의해_다시_activated된_경우_이전의_설정을_다시_복구한다() {
         final Member member = new Member(1L, "test@gmail.com", "password123", "nickName", null, null);
 
-        final Preference 하위항목1 = new Preference(member, PreferenceKey.NOTIFICATION_PER_THUMB, Collections.emptyList(),
+        final Preference 하위항목1 = new Preference(member, PreferenceType.NOTIFICATION_PER_THUMB, Collections.emptyList(),
                 EnableStatus.ENABLED);
-        final Preference 하위항목2 = new Preference(member, PreferenceKey.NOTIFICATION_PER_10, Collections.emptyList(),
+        final Preference 하위항목2 = new Preference(member, PreferenceType.NOTIFICATION_PER_10, Collections.emptyList(),
                 EnableStatus.DISABLED);
-        final Preference 상위항목 = new Preference(member, PreferenceKey.NOTIFICATION_THUMB, List.of(하위항목1, 하위항목2),
+        final Preference 상위항목 = new Preference(member, PreferenceType.NOTIFICATION_THUMB, List.of(하위항목1, 하위항목2),
                 EnableStatus.ENABLED);
         assertThat(하위항목1.isEnabled()).isTrue();
         assertThat(하위항목2.isEnabled()).isFalse();

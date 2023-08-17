@@ -28,7 +28,7 @@ public class Preference {
     private Member member;
 
     @Enumerated(EnumType.STRING)
-    private PreferenceKey preferenceKey;
+    private PreferenceType preferenceType;
 
     @ManyToMany
     @JoinTable(name = "preferences_dependent_preferences",
@@ -39,18 +39,18 @@ public class Preference {
 
     private EnableStatus enabled;
 
-    public Preference(final Member member, final PreferenceKey preferenceKey,
+    public Preference(final Member member, final PreferenceType preferenceType,
                       final List<Preference> dependentPreferences, final EnableStatus enabled) {
         this.member = member;
-        this.preferenceKey = preferenceKey;
+        this.preferenceType = preferenceType;
         this.dependentPreferences = dependentPreferences;
         this.enabled = enabled;
     }
 
     public static List<Preference> makeInitializedPreferences(Member member) {
-        ArrayList<Preference> preferences = new ArrayList<>();
-        for (PreferenceKey preferenceKey : PreferenceKey.values()) {
-            preferences.add(new Preference(member, preferenceKey, new ArrayList<>(), EnableStatus.DISABLED));
+        List<Preference> preferences = new ArrayList<>();
+        for (PreferenceType preferenceType : PreferenceType.values()) {
+            preferences.add(new Preference(member, preferenceType, new ArrayList<>(), EnableStatus.DISABLED));
         }
 
         for (Preference preference : preferences) {
@@ -64,7 +64,7 @@ public class Preference {
     }
 
     private boolean isDependentBy(final Preference preference) {
-        return this.preferenceKey.isDependentBy(preference.preferenceKey);
+        return this.preferenceType.isDependentBy(preference.preferenceType);
     }
 
     public void toggleEnable() {

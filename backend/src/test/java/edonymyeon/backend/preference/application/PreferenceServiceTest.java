@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.preference.domain.Preference;
-import edonymyeon.backend.preference.domain.PreferenceKey;
+import edonymyeon.backend.preference.domain.PreferenceType;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.support.IntegrationTest;
 import jakarta.persistence.EntityManager;
@@ -22,18 +22,18 @@ class PreferenceServiceTest extends IntegrationFixture {
     private final PreferenceService preferenceService;
 
     private static void 설정_간_의존성을_검사한다(final Preference preference) {
-        final PreferenceKey preferenceKey = getPreferenceKey(preference);
+        final PreferenceType preferenceType = getPreferenceKey(preference);
         final List<Preference> dependentPreferences = getDependentPreferences(preference);
         for (Preference dependentPreference : dependentPreferences) {
-            final PreferenceKey dependentPreferenceKey = getPreferenceKey(dependentPreference);
-            assertThat(dependentPreferenceKey.isDependentBy(preferenceKey)).isTrue();
+            final PreferenceType dependentPreferenceType = getPreferenceKey(dependentPreference);
+            assertThat(dependentPreferenceType.isDependentBy(preferenceType)).isTrue();
         }
     }
 
-    private static PreferenceKey getPreferenceKey(final Preference preference) {
-        final Field preferenceKeyField = ReflectionUtils.findField(Preference.class, "preferenceKey");
+    private static PreferenceType getPreferenceKey(final Preference preference) {
+        final Field preferenceKeyField = ReflectionUtils.findField(Preference.class, "preferenceType");
         ReflectionUtils.makeAccessible(preferenceKeyField);
-        return (PreferenceKey) ReflectionUtils.getField(preferenceKeyField, preference);
+        return (PreferenceType) ReflectionUtils.getField(preferenceKeyField, preference);
     }
 
     private static List<Preference> getDependentPreferences(final Preference preference) {
@@ -59,7 +59,7 @@ class PreferenceServiceTest extends IntegrationFixture {
         final List<Preference> preferences = findPreferencesByMember(entityManager, member);
 
         assertThat(preferences)
-                .as("존재하는 설정 항목의 개수만큼 초기화한다.").hasSize(PreferenceKey.values().length);
+                .as("존재하는 설정 항목의 개수만큼 초기화한다.").hasSize(PreferenceType.values().length);
 
         for (Preference preference : preferences) {
             설정_간_의존성을_검사한다(preference);
