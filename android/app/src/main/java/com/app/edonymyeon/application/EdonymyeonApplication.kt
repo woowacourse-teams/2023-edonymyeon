@@ -16,7 +16,7 @@ class EdonymyeonApplication : Application() {
         RetrofitClient.getInstance().updateAccessToken(
             PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN),
         )
-        KakaoSdk.init(this, "$KAKAO_APP_KEY")
+        KakaoSdk.init(this, KAKAO_APP_KEY)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
     }
 }
