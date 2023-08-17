@@ -1,0 +1,46 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+  endpoint:
+    prometheus:
+      enabled: 'true'
+spring:
+  flyway:
+    enabled: 'true'
+    baseline-on-migrate: 'true'
+    locations: classpath:db/migration/mysql
+    url: ${MYSQL_ADDRESS}
+    user: ${MYSQL_FLYWAY_USERNAME}
+    password: ${MYSQL_FLYWAY_PASSWORD}
+  sql:
+    init:
+      data-locations: classpath:data.sql
+      mode: never
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    database: mysql
+    defer-datasource-initialization: 'false'
+    open-in-view: 'false'
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: ${MYSQL_PASSWORD}
+    username: ${MYSQL_USERNAME}
+    url: ${MYSQL_ADDRESS}
+  data:
+    redis:
+      host: localhost
+      port: '6379'
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 200MB
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: 'true'
+file:
+  dir: /home/ubuntu/2023-edonymyeon/resources/
+domain: http://edonymyeon.site/images/
