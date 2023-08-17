@@ -5,13 +5,17 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_IS
 import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP_ALREADY_EXIST;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
+import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.notification.application.NotificationSender;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
@@ -24,11 +28,11 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-@IntegrationTest
-class ThumbsUpServiceTest {
+class ThumbsUpServiceTest extends IntegrationFixture {
 
     private final ThumbsService thumbsService;
 
@@ -36,14 +40,16 @@ class ThumbsUpServiceTest {
 
     private final PostService postService;
 
-    private final MemberTestSupport memberTestSupport;
-
     private Member postWriter;
 
     private PostResponse postResponse;
 
     @BeforeEach
-    public void 회원가입과_게시글쓰기를_한다() {
+    void 사전작업() {
+        회원가입과_게시글쓰기를_한다();
+    }
+
+    void 회원가입과_게시글쓰기를_한다() {
         postWriter = registerMember();
         PostRequest postRequest = new PostRequest(
                 "title",

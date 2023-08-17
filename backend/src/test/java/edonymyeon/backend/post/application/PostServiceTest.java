@@ -4,10 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.consumption.repository.ConsumptionRepository;
-import edonymyeon.backend.support.ConsumptionTestSupport;
-import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.TestConfig;
+import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.ImageFileUploader;
@@ -24,6 +22,8 @@ import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.application.dto.SpecificPostInfoResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.support.ConsumptionTestSupport;
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.MockMultipartFileTestSupport;
 import jakarta.persistence.EntityManager;
@@ -69,6 +69,22 @@ class PostServiceTest implements ImageFileCleaner {
 
     private MemberId memberId;
 
+    private static Post getFetchedPostWithPostImageInfos(final EntityManager entityManager, final PostResponse post) {
+        return entityManager
+                .createQuery(
+                        "select p from Post p left join fetch p.postImageInfos.postImageInfos where p.id = :postId",
+                        Post.class)
+                .setParameter("postId", post.id())
+                .getSingleResult();
+    }
+
+    private static List<PostImageInfo> getImageInfos(final EntityManager entityManager, final PostResponse post) {
+        return entityManager
+                .createQuery("select pi from PostImageInfo pi where pi.post.id = :postId", PostImageInfo.class)
+                .setParameter("postId", post.id())
+                .getResultList();
+    }
+
     @BeforeEach
     public void setUp() {
         Member member = memberTestSupport.builder()
@@ -93,7 +109,7 @@ class PostServiceTest implements ImageFileCleaner {
 
     @Test
     void 작성자의_프로필_사진이_없더라도_상세조회가_가능하다() throws IOException {
-        final Member member = new Member("anonymous@gmail.com", "password123!", "엘렐레", null);
+        final Member member = new Member("anonymous@gmail.com", "password123!", "엘렐레", null, List.of());
         memberRepository.save(member);
 
         final ActiveMemberId memberId = new ActiveMemberId(member.getId());
@@ -383,20 +399,5 @@ class PostServiceTest implements ImageFileCleaner {
                 );
             }
         }
-    }
-
-    private static Post getFetchedPostWithPostImageInfos(final EntityManager entityManager, final PostResponse post) {
-        return entityManager
-                .createQuery("select p from Post p left join fetch p.postImageInfos.postImageInfos where p.id = :postId",
-                        Post.class)
-                .setParameter("postId", post.id())
-                .getSingleResult();
-    }
-
-    private static List<PostImageInfo> getImageInfos(final EntityManager entityManager, final PostResponse post) {
-        return entityManager
-                .createQuery("select pi from PostImageInfo pi where pi.post.id = :postId", PostImageInfo.class)
-                .setParameter("postId", post.id())
-                .getResultList();
     }
 }

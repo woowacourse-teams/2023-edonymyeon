@@ -7,11 +7,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Post(
-    val id: Long,
-    val title: String,
-    val image: String?,
-    val content: String,
+    @SerialName("id") val id: Long,
+    @SerialName("title") val title: String,
+    @SerialName("image") val image: String?,
+    @SerialName("content") val content: String,
     @SerialName("writer") val writer: WriterNickNameDataModel,
-    val createdAt: String,
+    @SerialName("createdAt") val createdAt: String,
     @SerialName("reactionCount") val reactionCount: ReactionCountDataModel,
 )

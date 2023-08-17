@@ -2,7 +2,6 @@ package edonymyeon.backend.post.repository;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.member.application.dto.AnonymousMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -10,8 +9,10 @@ import edonymyeon.backend.post.application.HotFindingCondition;
 import edonymyeon.backend.post.application.PostReadService;
 import edonymyeon.backend.post.domain.HotPostPolicy;
 import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.PostTestSupport;
 import edonymyeon.backend.support.ThumbsUpPostTestSupport;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,8 +34,8 @@ class PostRepositoryTest {
     private final ThumbsUpPostTestSupport thumbsPostTestSupport;
 
     private final PostTestSupport postTestSupport;
-    
-    private final Pageable page = HotFindingCondition.of(0,5).toPage();
+
+    private final Pageable page = HotFindingCondition.of(0, 5).toPage();
 
     private Member member;
 
@@ -44,7 +45,8 @@ class PostRepositoryTest {
                 "email",
                 "password123!",
                 "nickname",
-                null
+                null,
+                List.of()
         );
         memberRepository.save(member);
     }

@@ -14,11 +14,14 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.thumbs.application.event.ThumbsDownEvent;
+import edonymyeon.backend.thumbs.application.event.ThumbsUpEvent;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +29,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @Service
 public class ThumbsService {
+
+    private final ApplicationEventPublisher publisher;
 
     private final ThumbsRepository thumbsRepository;
 
@@ -43,11 +48,14 @@ public class ThumbsService {
         if (postThumbs.isEmpty()) {
             Thumbs thumbs = new Thumbs(post, loginMember, ThumbsType.UP);
             thumbsRepository.save(thumbs);
+            publisher.publishEvent(new ThumbsUpEvent(post));
             return;
         }
 
         Thumbs thumbs = postThumbs.get();
         thumbs.up();
+
+        publisher.publishEvent(new ThumbsUpEvent(post));
     }
 
     private Member findMemberById(final MemberId memberId) {
@@ -76,11 +84,14 @@ public class ThumbsService {
         if (postThumbs.isEmpty()) {
             Thumbs thumbs = new Thumbs(post, loginMember, ThumbsType.DOWN);
             thumbsRepository.save(thumbs);
+            publisher.publishEvent(new ThumbsDownEvent(post));
             return;
         }
 
         Thumbs thumbs = postThumbs.get();
         thumbs.down();
+
+        publisher.publishEvent(new ThumbsDownEvent(post));
     }
 
     @Transactional

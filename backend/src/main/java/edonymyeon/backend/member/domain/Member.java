@@ -8,6 +8,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PA
 import edonymyeon.backend.global.domain.TemporalRecord;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,12 +16,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,8 +32,6 @@ import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Member extends TemporalRecord {
@@ -58,29 +60,60 @@ public class Member extends TemporalRecord {
     @JoinColumn
     private ProfileImageInfo profileImageInfo;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
+    private List<Device> devices = new ArrayList<>();
+
     @ColumnDefault(value = "false")
     private boolean deleted = false;
 
-    public Member(final String email, final String password, final String nickname,
-                  final ProfileImageInfo profileImageInfo) {
+    public Member(
+            final String email,
+            final String password,
+            final String nickname,
+            final ProfileImageInfo profileImageInfo,
+            final List<String> deviceTokens
+    ) {
         validate(email, password, nickname);
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.profileImageInfo = profileImageInfo;
+        this.devices = deviceTokens.stream()
+                .map(token -> new Device(token, this))
+                .toList();
+    }
+
+    public Member(final Long id, final String email, final String password, final String nickname,
+                  final SocialInfo socialInfo,
+                  final ProfileImageInfo profileImageInfo, final List<String> deviceTokens, final boolean deleted) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.socialInfo = socialInfo;
+        this.profileImageInfo = profileImageInfo;
+        this.devices = deviceTokens.stream()
+                .map(token -> new Device(token, this))
+                .toList();
+        this.deleted = deleted;
     }
 
     public Member(final Long id) {
         this.id = id;
     }
 
+    public Member(final String email, final String password, final String nickname, final SocialInfo socialInfo) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.socialInfo = socialInfo;
+    }
+
     public static Member from(final SocialInfo socialInfo) {
-        return Member.builder()
-                .socialInfo(socialInfo)
-                .email(UUID.randomUUID().toString())
-                .password(UUID.randomUUID().toString())
-                .nickname("#" + socialInfo.getSocialType().name() + UUID.randomUUID())
-                .build();
+        return new Member(UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                "#" + socialInfo.getSocialType().name() + UUID.randomUUID(),
+                socialInfo);
     }
 
     private void validate(final String email, final String password, final String nickname) {
@@ -114,6 +147,12 @@ public class Member extends TemporalRecord {
             return;
         }
         throw new EdonymyeonException(MEMBER_PASSWORD_NOT_MATCH);
+    }
+
+    public Optional<String> getActiveDeviceToken() {
+        return devices.stream().filter(Device::isActive)
+                .map(Device::getDeviceToken)
+                .findAny();
     }
 
     public void withdraw() {

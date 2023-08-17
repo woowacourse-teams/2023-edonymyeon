@@ -6,10 +6,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class MyPostResponse(
-    val id: Long,
-    val title: String,
-    val image: String? = null,
-    val content: String,
-    val createdAt: String,
+    @SerialName("email") val id: Long,
+    @SerialName("title") val title: String,
+    @SerialName("image") val image: String? = null,
+    @SerialName("content") val content: String,
+    @SerialName("createdAt") val createdAt: String,
     @SerialName("consumption") val consumption: ConsumptionDataModel,
 )

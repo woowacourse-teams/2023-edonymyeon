@@ -1,12 +1,17 @@
 package edonymyeon.backend.support;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.notification.application.NotificationSender;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.io.File;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -34,12 +39,16 @@ public class IntegrationFixture {
     @Autowired
     protected ConsumptionTestSupport consumptionTestSupport;
 
+    @MockBean
+    private NotificationSender notificationSender;
+
     @LocalServerPort
     private int port;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        알림전송기능을_모킹한다();
     }
 
     protected Member 사용자를_하나_만든다() {
@@ -70,6 +79,10 @@ public class IntegrationFixture {
                 .get("/posts/" + 게시글_id)
                 .then()
                 .extract();
+    }
+
+    private void 알림전송기능을_모킹한다() {
+        doNothing().when(notificationSender).sendNotification(any(), any());
     }
 }
 

@@ -9,6 +9,7 @@ import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
+import edonymyeon.backend.auth.application.event.JoinMemberEvent;
 import edonymyeon.backend.auth.application.dto.MemberResponse;
 import edonymyeon.backend.auth.domain.ValidateType;
 import edonymyeon.backend.global.exception.EdonymyeonException;
@@ -18,8 +19,10 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.domain.SocialInfo;
 import edonymyeon.backend.member.domain.SocialInfo.SocialType;
 import edonymyeon.backend.member.repository.MemberRepository;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthService {
 
+    private final ApplicationEventPublisher publisher;
     private final MemberRepository memberRepository;
 
     public MemberId findMember(final LoginRequest loginRequest) {
@@ -82,13 +86,16 @@ public class AuthService {
                 joinRequest.email(),
                 joinRequest.password(),
                 joinRequest.nickname(),
-                null
+                null,
+                List.of(joinRequest.deviceToken())
         );
 
         validateDuplicateEmail(joinRequest.email());
         validateDuplicateNickname(joinRequest.nickname());
 
         memberRepository.save(member);
+
+        publisher.publishEvent(new JoinMemberEvent(member));
     }
 
     private void validateDuplicateEmail(final String email) {
