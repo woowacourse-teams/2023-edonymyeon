@@ -1,4 +1,4 @@
-package edonymyeon.backend.auth.application;
+package edonymyeon.backend.auth.domain;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;

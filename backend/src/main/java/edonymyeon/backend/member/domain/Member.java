@@ -17,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import java.util.Objects;
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,6 +52,8 @@ public class Member extends TemporalRecord {
     @Column(nullable = false, unique = true)
     private String nickname;
 
+    private SocialInfo socialInfo;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private ProfileImageInfo profileImageInfo;
@@ -69,6 +72,15 @@ public class Member extends TemporalRecord {
 
     public Member(final Long id) {
         this.id = id;
+    }
+
+    public static Member from(final SocialInfo socialInfo) {
+        return Member.builder()
+                .socialInfo(socialInfo)
+                .email(UUID.randomUUID().toString())
+                .password(UUID.randomUUID().toString())
+                .nickname("#" + socialInfo.getSocialType().name() + UUID.randomUUID())
+                .build();
     }
 
     private void validate(final String email, final String password, final String nickname) {

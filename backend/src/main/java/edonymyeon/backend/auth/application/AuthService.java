@@ -7,11 +7,16 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NI
 
 import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
+import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
+import edonymyeon.backend.auth.application.dto.MemberResponse;
+import edonymyeon.backend.auth.domain.ValidateType;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.domain.SocialInfo;
+import edonymyeon.backend.member.domain.SocialInfo.SocialType;
 import edonymyeon.backend.member.repository.MemberRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +34,6 @@ public class AuthService {
         return findMember(loginRequest.email(), loginRequest.password());
     }
 
-    //todo: 비밀번호까지 조회에 사용하나?
     public MemberId findMember(final String email, final String password) {
         final Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_EMAIL_NOT_FOUND));
@@ -54,6 +58,21 @@ public class AuthService {
             return memberRepository.findByEmail(value);
         }
         return memberRepository.findByNickname(value);
+    }
+
+    //todo session으로
+    @Transactional
+    public MemberResponse findMemberByKakao(final KakaoLoginResponse kakaoLoginResponse) {
+        final SocialInfo socialInfo = SocialInfo.of(SocialType.KAKAO, kakaoLoginResponse.id());
+        final Member member = memberRepository.findBySocialInfo(socialInfo)
+                .orElseGet(() -> joinSocialMember(socialInfo));
+        return new MemberResponse(member.getEmail(), member.getPassword());
+    }
+
+    @Transactional
+    public Member joinSocialMember(final SocialInfo socialInfo) {
+        final Member member = Member.from(socialInfo);
+        return memberRepository.save(member);
     }
 
     // todo: 비밀번호 암호화
