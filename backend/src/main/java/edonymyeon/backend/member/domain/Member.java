@@ -22,14 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.SimpleTimeZone;
 import java.util.UUID;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
@@ -40,6 +38,7 @@ public class Member extends TemporalRecord {
     private static final int MAX_EMAIL_LENGTH = 30;
     private static final int MAX_PASSWORD_LENGTH = 30;
     private static final int MAX_NICKNAME_LENGTH = 20;
+    private static final String UNKNOWN = "Unknown";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -63,6 +62,9 @@ public class Member extends TemporalRecord {
     @OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST)
     private List<Device> devices = new ArrayList<>();
 
+    @ColumnDefault(value = "false")
+    private boolean deleted = false;
+
     public Member(
             final String email,
             final String password,
@@ -75,27 +77,6 @@ public class Member extends TemporalRecord {
         this.password = password;
         this.nickname = nickname;
         this.profileImageInfo = profileImageInfo;
-        this.devices = deviceTokens.stream()
-                .map(token -> new Device(token, this))
-                .toList();
-    }
-
-    public Member(final Long id,
-                  final String email,
-                  final String password,
-                  final String nickname,
-                  final SocialInfo socialInfo,
-                  final ProfileImageInfo profileImageInfo,
-                  final List<String> deviceTokens) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-        this.socialInfo = socialInfo;
-        this.profileImageInfo = profileImageInfo;
-        this.devices = deviceTokens.stream()
-                .map(token -> new Device(token, this))
-                .toList();
     }
 
     public Member(final Long id) {
@@ -129,7 +110,8 @@ public class Member extends TemporalRecord {
     }
 
     private void validateNickName(final String nickname) {
-        if (Objects.isNull(nickname) || nickname.isBlank() || nickname.length() > MAX_NICKNAME_LENGTH) {
+        if (Objects.isNull(nickname) || nickname.isBlank() || nickname.length() > MAX_NICKNAME_LENGTH
+                || nickname.equalsIgnoreCase(UNKNOWN)) {
             throw new EdonymyeonException(MEMBER_NICKNAME_INVALID);
         }
     }
@@ -152,5 +134,21 @@ public class Member extends TemporalRecord {
         return devices.stream().filter(Device::isActive)
                 .map(Device::getDeviceToken)
                 .findAny();
+    }
+
+    public void withdraw() {
+        this.deleted = true;
+        this.profileImageInfo = null;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public String getNickname() {
+        if (deleted) {
+            return UNKNOWN;
+        }
+        return nickname;
     }
 }

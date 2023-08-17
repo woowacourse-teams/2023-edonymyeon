@@ -73,7 +73,7 @@ public class MemberControllerDocsTest extends DocsTest {
 
     @Test
     void 구매_확정한다() throws Exception {
-        final Member 회원 = new Member(1L, "email", "password", "nickname", null, null, List.of());
+        final Member 회원 = new Member("email", "password", "nickname", null, null, List.of());
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 회원);
         final Consumption 소비 = Consumption.of(게시글, SAVING, null, 2023, 7);
 
@@ -112,7 +112,7 @@ public class MemberControllerDocsTest extends DocsTest {
 
     @Test
     void 절약_확정한다() throws Exception {
-        final Member 회원 = new Member(1L, "email", "password", "nickname", null, null, List.of());
+        final Member 회원 = new Member("email", "password", "nickname", null, null, List.of());
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 회원);
         final Consumption 소비 = Consumption.of(게시글, SAVING, null, 2023, 7);
 
@@ -150,7 +150,7 @@ public class MemberControllerDocsTest extends DocsTest {
 
     @Test
     void 확정을_취소한다() throws Exception {
-        final Member 회원 = new Member(1L, "email", "password", "nickname", null, null, List.of());
+        final Member 회원 = new Member("email", "password", "nickname", null, null, List.of());
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 회원);
         final Consumption 소비 = Consumption.of(게시글, SAVING, null, 2023, 7);
 
@@ -175,6 +175,32 @@ public class MemberControllerDocsTest extends DocsTest {
 
         this.mockMvc.perform(확정_취소_요청)
                 .andExpect(status().isOk())
+                .andDo(문서화);
+    }
+
+    @Test
+    void 회원_탈퇴한다() throws Exception {
+        final Member 회원 = Member.builder()
+                .id(1L)
+                .email("email@email.com")
+                .password("password123!")
+                .nickname("nickname")
+                .build();
+
+        회원_레포지토리를_모킹한다(회원);
+        when(memberRepository.findById(회원.getId())).thenReturn(Optional.of(회원));
+
+        final MockHttpServletRequestBuilder 회원_탈퇴_요청 = delete("/withdraw")
+                .header(HttpHeaders.AUTHORIZATION, "Basic "
+                        + Base64.getEncoder()
+                        .encodeToString((회원.getEmail() + ":" + 회원.getPassword()).getBytes()));
+
+        final RestDocumentationResultHandler 문서화 = document("withdraw",
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")));
+
+        this.mockMvc.perform(회원_탈퇴_요청)
+                .andExpect(status().isNoContent())
                 .andDo(문서화);
     }
 }

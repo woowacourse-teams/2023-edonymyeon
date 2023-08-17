@@ -58,11 +58,11 @@ public class ThumbsControllerDocsTest {
     }
 
     void 회원_두명_가입하고_글쓰기_모킹() {
-        글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of());
+        글쓴이 = new Member("email", "password", "nickname", null, null, List.of());
         when(memberRepository.findByEmail(글쓴이.getEmail())).thenReturn(Optional.of(글쓴이));
         when(memberRepository.findById(글쓴이.getId())).thenReturn(Optional.of(글쓴이));
 
-        반응_하는_사람 = new Member(2L, "email2", "password2", "nickname2", null, null, List.of());
+        반응_하는_사람 = new Member("email2", "password2", "nickname2", null, null, List.of());
         when(memberRepository.findByEmail(반응_하는_사람.getEmail())).thenReturn(
                 Optional.of(반응_하는_사람));
         when(memberRepository.findById(반응_하는_사람.getId())).thenReturn(Optional.of(반응_하는_사람));

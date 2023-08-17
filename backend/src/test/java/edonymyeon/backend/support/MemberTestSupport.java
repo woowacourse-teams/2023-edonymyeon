@@ -43,6 +43,8 @@ public class MemberTestSupport {
 
         private SocialInfo socialInfo;
 
+        private boolean deleted = false;
+
         public MemberBuilder id(final Long id) {
             this.id = id;
             return this;
@@ -78,6 +80,11 @@ public class MemberTestSupport {
             return this;
         }
 
+        public MemberBuilder deleted(final boolean deleted) {
+            this.deleted = deleted;
+            return this;
+        }
+
         public Member build() {
             return memberRepository.save(
                     new Member(
@@ -86,8 +93,7 @@ public class MemberTestSupport {
                             password == null ? DEFAULT_PASSWORD : password,
                             nickname == null ? (DEFAULT_NICK_NAME + nickNameCount++) : nickname,
                             socialInfo == null ? null : socialInfo,
-                            profileImageInfo == null ? profileImageInfoTestSupport.builder().build() : profileImageInfo,
-                            deviceTokens == null ? List.of(DEFAULT_DEVICE_TOKEN) : deviceTokens
+                            profileImageInfo == null ? profileImageInfoTestSupport.builder().build() : profileImageInfo
                     )
             );
         }
