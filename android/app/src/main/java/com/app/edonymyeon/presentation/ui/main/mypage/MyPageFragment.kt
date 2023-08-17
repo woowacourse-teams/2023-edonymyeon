@@ -19,6 +19,7 @@ import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
 import com.app.edonymyeon.presentation.ui.main.MainActivity
 import com.app.edonymyeon.presentation.ui.main.mypage.chart.LineChartManager
+import com.app.edonymyeon.presentation.ui.main.mypage.dialog.WithdrawDialog
 import com.app.edonymyeon.presentation.ui.mypost.MyPostActivity
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import com.github.mikephil.charting.data.Entry
@@ -34,6 +35,12 @@ class MyPageFragment : Fragment() {
             ProfileRepositoryImpl(ProfileRemoteDataSource()),
             ConsumptionsRepositoryImpl(ConsumptionsRemoteDataSource()),
         )
+    }
+
+    private val withdrawDialog: WithdrawDialog by lazy {
+        WithdrawDialog {
+            withdrawDialog.dismiss()
+        }
     }
 
     override fun onCreateView(
@@ -76,10 +83,11 @@ class MyPageFragment : Fragment() {
         binding.tvRequiredLogin.isVisible = false
         binding.btnLogin.isVisible = false
         binding.tvLogout.isVisible = true
+        binding.tvWithdraw.isVisible = true
         binding.tvLogout.setOnClickListener { logout() }
         binding.tvMyPost.setOnClickListener { navigateToMyPost() }
         binding.tvUpdateUserInfo.setOnClickListener { }
-
+        binding.tvWithdraw.setOnClickListener { showDialog() }
         viewModel.getUserProfile()
         viewModel.setConsumptions(PERIOD_MONTH)
 
@@ -89,6 +97,7 @@ class MyPageFragment : Fragment() {
     private fun setViewForNotLogin() {
         binding.chartMyPayment.isVisible = false
         binding.tvLogout.isVisible = false
+        binding.tvWithdraw.isVisible = false
         binding.btnLogin.setOnClickListener { navigateToLogin() }
         binding.tvMyPost.setOnClickListener { makeLoginSnackbar() }
         binding.tvUpdateUserInfo.setOnClickListener { makeLoginSnackbar() }
@@ -145,6 +154,10 @@ class MyPageFragment : Fragment() {
 
     private fun navigateToLogin() {
         startActivity(LoginActivity.newIntent(requireContext()))
+    }
+
+    private fun showDialog() {
+        withdrawDialog.show(requireActivity().supportFragmentManager, "WithdrawDialog")
     }
 
     companion object {

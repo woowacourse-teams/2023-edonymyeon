@@ -18,10 +18,13 @@ import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.thumbs.application.event.PostDeletionEvent;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +42,8 @@ public class PostService {
     private final MemberRepository memberRepository;
 
     private final PostThumbsService thumbsService;
+
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     private final Domain domain;
 
@@ -90,10 +95,12 @@ public class PostService {
         checkWriter(member, post);
 
         final List<PostImageInfo> postImageInfos = post.getPostImageInfos();
+        final ArrayList<PostImageInfo> copyOfPostImageInfos = new ArrayList<>(postImageInfos);
+        applicationEventPublisher.publishEvent(new PostDeletionEvent(post.getId()));
         thumbsService.deleteAllThumbsInPost(postId);
         postImageInfoRepository.deleteAllByPostId(postId);
         postRepository.deleteById(postId);
-        postImageInfos.forEach(imageFileUploader::removeFile);
+        copyOfPostImageInfos.forEach(imageFileUploader::removeFile);
     }
 
     private Post findPostById(final Long postId) {
@@ -121,11 +128,13 @@ public class PostService {
 
         final List<String> imageStoreNames = convertUrlToStoreName(request.originalImages());
         final List<PostImageInfo> deletedImagesOfPost = post.findImagesToDelete(imageStoreNames);
+        final ArrayList<PostImageInfo> copyOfDeletedImagesOfPost = new ArrayList<>(deletedImagesOfPost);
+
         post.removePostImageInfos(deletedImagesOfPost);
         postImageInfoRepository.deleteAll(deletedImagesOfPost);
 
         if (isImagesEmpty(request.newImages())) {
-            deletedImagesOfPost.forEach(imageFileUploader::removeFile);
+            copyOfDeletedImagesOfPost.forEach(imageFileUploader::removeFile);
             return new PostResponse(postId);
         }
 

@@ -19,7 +19,6 @@ fun Post.toDomain(): PostItem = PostItem(
     reactionCount = ReactionCount(
         Count(reactionCount.viewCount),
         Count(reactionCount.commentCount),
-        Count(reactionCount.scrapCount),
     ),
 )
 
@@ -33,7 +32,6 @@ fun PostItem.toUiModel(): PostItemUiModel = PostItemUiModel(
     reactionCount = ReactionCountUiModel(
         reactionCount.viewCount.value,
         reactionCount.commentCount.value,
-        reactionCount.scrapCount.value,
     ),
 )
 

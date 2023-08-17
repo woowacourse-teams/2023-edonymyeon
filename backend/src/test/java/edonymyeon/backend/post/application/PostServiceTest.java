@@ -4,6 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import edonymyeon.backend.consumption.repository.ConsumptionRepository;
+import edonymyeon.backend.support.ConsumptionTestSupport;
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
@@ -23,6 +26,7 @@ import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.MockMultipartFileTestSupport;
+import jakarta.persistence.EntityManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,26 +36,17 @@ import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.TestConstructor.AutowireMode;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-@Transactional
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-@DisplayNameGeneration(ReplaceUnderscores.class)
-@TestConstructor(autowireMode = AutowireMode.ALL)
 @Import(TestConfig.class)
-@SpringBootTest
+@IntegrationTest
 class PostServiceTest implements ImageFileCleaner {
 
     private static final Pattern 이미지_UUID_와_확장자_형식 = Pattern.compile("test-inserting\\d+\\.(png|jpg)");
@@ -69,6 +64,8 @@ class PostServiceTest implements ImageFileCleaner {
     private final MockMultipartFileTestSupport mockMultipartFileTestSupport;
 
     private final ImageFileUploader imageFileUploader;
+
+    private final ConsumptionTestSupport consumptionTestSupport;
 
     private MemberId memberId;
 
@@ -179,6 +176,18 @@ class PostServiceTest implements ImageFileCleaner {
 
     @Nested
     class 게시글을_삭제할_때 {
+
+        @Test
+        void 연관된_소비내역도_삭제된다(@Autowired PostRepository postRepository, @Autowired ConsumptionRepository consumptionRepository) throws IOException {
+            final PostResponse postResponse = postService.createPost(memberId, getPostRequest());
+            final Post post = postRepository.findById(postResponse.id()).get();
+
+            consumptionTestSupport.builder().post(post).build();
+            assertThat(consumptionRepository.findByPostId(post.getId()).isPresent()).isTrue();
+
+            postService.deletePost(memberId, postResponse.id());
+            assertThat(consumptionRepository.findByPostId(post.getId()).isEmpty()).isTrue();
+        }
 
         @Test
         void 게시글이_삭제되면_디렉토리에_있는_이미지도_삭제된다() throws IOException {
@@ -295,7 +304,7 @@ class PostServiceTest implements ImageFileCleaner {
             }
 
             @Test
-            void 이미지를_추가할_수_있다(@Autowired PostRepository postRepository) throws IOException {
+            void 이미지를_추가할_수_있다(@Autowired EntityManager entityManager) throws IOException {
                 // given
                 final PostResponse 게시글_생성_결과 = postService.createPost(memberId, 이미지가_없는_요청);
                 final SpecificPostInfoResponse 게시글_상세조회_결과 = postReadService.findSpecificPost(게시글_생성_결과.id(), memberId);
@@ -313,13 +322,13 @@ class PostServiceTest implements ImageFileCleaner {
                 postService.updatePost(memberId, 게시글_생성_결과.id(), request);
 
                 // then
-                final Post findPost = postRepository.findById(게시글_생성_결과.id()).get();
+                final Post findPost = getFetchedPostWithPostImageInfos(entityManager, 게시글_생성_결과);
                 assertThat(findPost.getPostImageInfos().size()).isEqualTo(
                         request.newImages().size() + request.originalImages().size());
             }
 
             @Test
-            void 이미지를_전부_삭제할_수_있다(@Autowired PostRepository postRepository) {
+            void 이미지를_전부_삭제할_수_있다(@Autowired EntityManager entityManager) {
                 // given
                 final PostResponse post = postService.createPost(memberId, 이미지가_2개_있는_요청);
 
@@ -334,12 +343,12 @@ class PostServiceTest implements ImageFileCleaner {
                 postService.updatePost(memberId, post.id(), 이미지가_없는_요청);
 
                 // then
-                final Post findPost = postRepository.findById(post.id()).get();
+                final Post findPost = getFetchedPostWithPostImageInfos(entityManager, post);
                 assertThat(findPost.getPostImageInfos().size()).isEqualTo(0);
             }
 
             @Test
-            void 이미지를_바꿀_수_있다(@Autowired PostRepository postRepository) throws IOException {
+            void 이미지를_바꿀_수_있다(@Autowired EntityManager entityManager) throws IOException {
                 //given
                 final MockMultipartFile 바꾸기_전_이미지 = mockMultipartFileTestSupport.builder().buildImagesForCreatePost();
                 final PostRequest 게시글_생성_요청 = new PostRequest(
@@ -349,7 +358,8 @@ class PostServiceTest implements ImageFileCleaner {
                         List.of(바꾸기_전_이미지)
                 );
                 final PostResponse post = postService.createPost(memberId, 게시글_생성_요청);
-                final PostImageInfo 바꾸기_전_이미지_정보 = postRepository.findById(post.id()).get().getPostImageInfos().get(0);
+                final PostImageInfo 바꾸기_전_이미지_정보 = getImageInfos(entityManager, post)
+                        .get(0);
 
                 // when
                 final MockMultipartFile 바꾼_후_이미지 = mockMultipartFileTestSupport.builder().buildImagesForUpdatePost();
@@ -363,7 +373,7 @@ class PostServiceTest implements ImageFileCleaner {
                 postService.updatePost(memberId, post.id(), 게시글_수정_요청);
 
                 // then
-                final Post findPost = postRepository.findById(post.id()).get();
+                final Post findPost = getFetchedPostWithPostImageInfos(entityManager, post);
                 final PostImageInfo 바꾼_후_이미지_정보 = findPost.getPostImageInfos().get(0);
 
                 assertSoftly(softly -> {
@@ -373,5 +383,20 @@ class PostServiceTest implements ImageFileCleaner {
                 );
             }
         }
+    }
+
+    private static Post getFetchedPostWithPostImageInfos(final EntityManager entityManager, final PostResponse post) {
+        return entityManager
+                .createQuery("select p from Post p left join fetch p.postImageInfos.postImageInfos where p.id = :postId",
+                        Post.class)
+                .setParameter("postId", post.id())
+                .getSingleResult();
+    }
+
+    private static List<PostImageInfo> getImageInfos(final EntityManager entityManager, final PostResponse post) {
+        return entityManager
+                .createQuery("select pi from PostImageInfo pi where pi.post.id = :postId", PostImageInfo.class)
+                .setParameter("postId", post.id())
+                .getResultList();
     }
 }

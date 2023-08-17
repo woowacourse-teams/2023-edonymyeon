@@ -37,16 +37,16 @@ class PostDetailViewModel(
     val reactionCount: LiveData<ReactionCountUiModel>
         get() = _reactionCount
 
-    private val _isScrap = MutableLiveData<Boolean>()
-    val isScrap: LiveData<Boolean>
-        get() = _isScrap
-
     private val _isRecommendationRequestDone = MutableLiveData<Boolean>(true)
     val isRecommendationRequestDone: LiveData<Boolean>
         get() = _isRecommendationRequestDone
 
     val isLogin: Boolean
         get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
+
+    private val _isLoadingSuccess = MutableLiveData<Boolean>(false)
+    val isLoadingSuccess: LiveData<Boolean>
+        get() = _isLoadingSuccess
 
     fun getPostDetail(postId: Long) {
         viewModelScope.launch {
@@ -55,10 +55,11 @@ class PostDetailViewModel(
                     it as Post
                     _recommendation.value = it.recommendation.toUiModel()
                     _reactionCount.value = it.reactionCount.toUiModel()
-                    _isScrap.value = it.isScrap
                     _post.value = it.toUiModel()
+                    _isLoadingSuccess.value = true
                 }.onFailure {
                     it as CustomThrowable
+                    _isLoadingSuccess.value = false
                 }
         }
     }
@@ -177,23 +178,6 @@ class PostDetailViewModel(
                     when (it.code) {
                     }
                 }
-        }
-    }
-
-    fun updateScrap(isChecked: Boolean) {
-        if (_post.value?.isWriter == true) return
-        if (_isScrap.value == true && isChecked) return
-        val oldReactionCount = _reactionCount.value?.toDomain() ?: return
-
-        _isScrap.value = isChecked
-        _reactionCount.value = if (isChecked) {
-            oldReactionCount.copy(
-                scrapCount = oldReactionCount.scrapCount.increase(),
-            ).toUiModel()
-        } else {
-            oldReactionCount.copy(
-                scrapCount = oldReactionCount.scrapCount.decrease(),
-            ).toUiModel()
         }
     }
 }
