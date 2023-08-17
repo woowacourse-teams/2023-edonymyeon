@@ -38,8 +38,7 @@ android {
             localProperties.getProperty("KAKAO_APP_KEY"),
         )
 
-        manifestPlaceholders["KAKAO_NATIVE_KEY"] =
-            localProperties.getProperty("KAKAO_NATIVE_KEY")
+        manifestPlaceholders["KAKAO_NATIVE_KEY"] = localProperties.getProperty("KAKAO_NATIVE_KEY")
     }
 
     buildTypes {
