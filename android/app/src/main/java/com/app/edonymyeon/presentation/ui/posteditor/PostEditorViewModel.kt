@@ -104,13 +104,13 @@ class PostEditorViewModel(
     }
 
     private fun getFileFromContent(uris: List<Uri>): List<File> {
-        return uris.filter { it.scheme == "content" }.map { uri ->
+        return uris.filter { it.scheme == PREFIX_CONTENT }.map { uri ->
             processAndAdjustImage(uri)
         }
     }
 
     private fun getAbsolutePathFromHttp(uris: List<Uri>): List<String> {
-        return uris.filter { it.scheme == "http" }.map { uri ->
+        return uris.filter { it.scheme == PREFIX_HTTP }.map { uri ->
             uri.toString()
         }
     }
@@ -143,8 +143,12 @@ class PostEditorViewModel(
             exif.getAttribute(ExifInterface.TAG_ORIENTATION)?.let {
                 val newExif = ExifInterface(absolutePath)
                 newExif.setAttribute(ExifInterface.TAG_ORIENTATION, it)
-                newExif.saveAttributes()
             }
         }
+    }
+
+    companion object {
+        private const val PREFIX_HTTP = "http"
+        private const val PREFIX_CONTENT = "content"
     }
 }
