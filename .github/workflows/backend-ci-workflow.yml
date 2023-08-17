@@ -28,6 +28,12 @@ jobs:
         with:
           java-version: '17'
           distribution: 'corretto'
+          
+      - name: Install redis
+        run: sudo apt-get install -y redis-tools redis-server
+        
+      - name: Verify that redis is up
+        run: redis-cli ping
 
       - name: Gradle 명령 실행을 위한 권한을 부여합니다
         run: chmod +x gradlew
