@@ -1,5 +1,6 @@
 package com.app.edonymyeon.data.dto.request
 
+import com.app.edonymyeon.data.service.fcm.FCMToken
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -12,5 +13,5 @@ data class UserRegistrationRequest(
     @SerialName("nickname")
     val nickname: String,
     @SerialName("deviceToken")
-    val deviceToken: String,
+    val deviceToken: String = FCMToken.getFCMToken() ?: "",
 )

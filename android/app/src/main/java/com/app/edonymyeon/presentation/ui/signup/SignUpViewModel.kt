@@ -9,6 +9,7 @@ import com.domain.edonymyeon.model.Nickname
 import com.domain.edonymyeon.model.Password
 import com.domain.edonymyeon.model.UserRegistration
 import com.domain.edonymyeon.repository.AuthRepository
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.launch
 
 class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() {
@@ -32,6 +33,8 @@ class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() 
 
     fun signUp(email: String, password: String, nickname: String) {
         viewModelScope.launch {
+            FirebaseMessaging.getInstance().token.result
+
             authRepository.signUp(
                 UserRegistration(
                     Email.create(email),
