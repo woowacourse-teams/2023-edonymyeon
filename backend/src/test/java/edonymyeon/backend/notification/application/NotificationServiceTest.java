@@ -22,18 +22,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-@IntegrationTest
 class NotificationServiceTest extends IntegrationFixture {
 
     private final NotificationService notificationService;
-
-    @MockBean
-    private FCMNotificationSender notificationSender;
-
-    @BeforeEach
-    void 알림전송기능을_모킹한다() {
-        when(notificationSender.sendNotification(any(), any())).thenReturn(true);
-    }
 
     @Test
     void 알림을_성공적으로_전송한_이후에는_알림_내역을_저장한다(@Autowired NotificationRepository notificationRepository) {

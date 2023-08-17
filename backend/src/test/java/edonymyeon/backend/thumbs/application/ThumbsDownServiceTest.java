@@ -17,6 +17,7 @@ import edonymyeon.backend.notification.application.NotificationSender;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.thumbs.domain.Thumbs;
@@ -31,8 +32,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-@IntegrationTest
-public class ThumbsDownServiceTest {
+public class ThumbsDownServiceTest extends IntegrationFixture {
 
     private final ThumbsService thumbsService;
 
@@ -40,23 +40,13 @@ public class ThumbsDownServiceTest {
 
     private final PostService postService;
 
-    private final MemberTestSupport memberTestSupport;
-
     private Member postWriter;
 
     private PostResponse postResponse;
 
-    @MockBean
-    private NotificationSender notificationSender;
-
     @BeforeEach
     void 사전작업() {
         회원가입과_게시글쓰기를_한다();
-        알림전송기능을_모킹한다();
-    }
-
-    void 알림전송기능을_모킹한다() {
-        when(notificationSender.sendNotification(any(), any())).thenReturn(true);
     }
 
     public void 회원가입과_게시글쓰기를_한다() {

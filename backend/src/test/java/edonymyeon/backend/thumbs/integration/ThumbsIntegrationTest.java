@@ -3,23 +3,19 @@ package edonymyeon.backend.thumbs.integration;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
-import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.notification.application.NotificationSender;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -40,9 +36,6 @@ public class ThumbsIntegrationTest extends IntegrationFixture {
 
     private Long postId;
 
-    @MockBean
-    private NotificationSender notificationSender;
-
     private Member registerMember() {
         Member member = memberTestSupport.builder()
                 .build();
@@ -53,12 +46,7 @@ public class ThumbsIntegrationTest extends IntegrationFixture {
 
     @BeforeEach
     void 사전작업() {
-        알림전송기능을_모킹한다();
         테스트_실행전_두_회원의_가입과_게시글_작성을_실행한다();
-    }
-
-    void 알림전송기능을_모킹한다() {
-        when(notificationSender.sendNotification(any(), any())).thenReturn(true);
     }
 
     void 테스트_실행전_두_회원의_가입과_게시글_작성을_실행한다() {

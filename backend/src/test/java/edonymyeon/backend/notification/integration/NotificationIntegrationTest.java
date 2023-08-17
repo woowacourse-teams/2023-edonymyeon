@@ -27,18 +27,9 @@ import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-@IntegrationTest
 public class NotificationIntegrationTest extends IntegrationFixture implements ImageFileCleaner {
 
     private final ThumbsService thumbsService;
-
-    @MockBean
-    private FCMNotificationSender notificationSender;
-
-    @BeforeEach
-    void 알림전송기능을_모킹한다() {
-        when(notificationSender.sendNotification(any(), any())).thenReturn(true);
-    }
 
     @Test
     void 사용자가_받은_알림_목록을_조회한다() {

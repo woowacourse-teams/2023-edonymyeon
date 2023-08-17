@@ -28,19 +28,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
 @SuppressWarnings("NonAsciiCharacters")
-@IntegrationTest
 @RequiredArgsConstructor
 @RunWith(MockitoJUnitRunner.class)
 class NotificationEventListenerTest extends IntegrationFixture {
 
-    private final MemberTestSupport memberTestSupport;
-
-    private final PostTestSupport postTestSupport;
-
     private final ThumbsService thumbsService;
-
-    @MockBean
-    private NotificationSender notificationSender;
 
     @SpyBean
     private NotificationEventListener notificationEventListener;
@@ -62,8 +54,6 @@ class NotificationEventListenerTest extends IntegrationFixture {
             @Autowired NotificationRepository notificationRepository,
             @Autowired ThumbsRepository thumbsRepository
     ) {
-        when(notificationSender.sendNotification(any(), any())).thenReturn(true);
-
         final Member member = 사용자를_하나_만든다();
         final Post post = postTestSupport.builder().build();
         thumbsService.thumbsUp(new ActiveMemberId(member.getId()), post.getId());
@@ -84,8 +74,6 @@ class NotificationEventListenerTest extends IntegrationFixture {
             @Autowired NotificationRepository notificationRepository,
             @Autowired ThumbsRepository thumbsRepository
     ) {
-        when(notificationSender.sendNotification(any(), any())).thenReturn(false);
-
         final Member member = 사용자를_하나_만든다();
         final Post post = postTestSupport.builder().build();
         thumbsService.thumbsUp(new ActiveMemberId(member.getId()), post.getId());

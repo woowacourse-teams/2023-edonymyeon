@@ -8,6 +8,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
@@ -31,8 +32,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-@IntegrationTest
-class ThumbsUpServiceTest {
+class ThumbsUpServiceTest extends IntegrationFixture {
 
     private final ThumbsService thumbsService;
 
@@ -40,23 +40,13 @@ class ThumbsUpServiceTest {
 
     private final PostService postService;
 
-    private final MemberTestSupport memberTestSupport;
-
-    @MockBean
-    private NotificationSender notificationSender;
-
     private Member postWriter;
 
     private PostResponse postResponse;
 
     @BeforeEach
     void 사전작업() {
-        알림전송기능을_모킹한다();
         회원가입과_게시글쓰기를_한다();
-    }
-
-    void 알림전송기능을_모킹한다() {
-        when(notificationSender.sendNotification(any(), any())).thenReturn(true);
     }
 
     void 회원가입과_게시글쓰기를_한다() {

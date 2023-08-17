@@ -41,14 +41,6 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
     @Value("${domain}")
     private String domain;
 
-    @MockBean
-    private NotificationSender notificationSender;
-
-    @BeforeEach
-    void 알림전송기능을_모킹한다() {
-        when(notificationSender.sendNotification(any(), any())).thenReturn(true);
-    }
-
     @Test
     void 사진을_첨부해서_게시글_작성_가능하다() {
         final Member 작성자 = 사용자를_하나_만든다();
