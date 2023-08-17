@@ -29,6 +29,13 @@ jobs:
       env:
         DATA: ${{ secrets.ANDROID_GOOGLE_SERVICE }}
       run: echo $DATA > $GITHUB_WORKSPACE/android/app/google-services.json
+
+    - name: Access KAKAO_API_KEY
+      run: |
+        echo EXAMPLE_API_KEY=\"$API_KEY\" > local.properties
+      shell: bash
+      env:
+        API_KEY: ${{ secrets.KAKAO_API_KEY }}
     
     - name: set up Java JDK 17
       uses: actions/setup-java@v3
