@@ -1,7 +1,6 @@
 package com.app.edonymyeon.presentation.ui.posteditor
 
 import android.app.Application
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.ExifInterface
@@ -48,12 +47,11 @@ class PostEditorViewModel(
         _galleryImages.value = post.images.map { it.toUri().toString() }
     }
 
-    fun savePost(context: Context, postEditor: PostEditor) {
+    fun savePost(postEditor: PostEditor) {
         viewModelScope.launch {
             repository.savePost(
                 postEditor,
                 getFileFromContent(
-                    context,
                     _galleryImages.value?.map { Uri.parse(it) } ?: emptyList(),
                 ),
             ).onSuccess {
@@ -64,14 +62,14 @@ class PostEditorViewModel(
         }
     }
 
-    fun updatePost(context: Context, id: Long, postEditor: PostEditor) {
+    fun updatePost(id: Long, postEditor: PostEditor) {
         val uris = _galleryImages.value?.map { Uri.parse(it) } ?: emptyList()
         viewModelScope.launch {
             repository.updatePost(
                 id,
                 postEditor,
                 getAbsolutePathFromHttp(uris),
-                getFileFromContent(context, uris),
+                getFileFromContent(uris),
             ).onSuccess {
                 _postId.value = (it as PostEditorResponse).id
             }.onFailure {
@@ -105,9 +103,9 @@ class PostEditorViewModel(
         _isUploadAble.value = title.isNotBlank()
     }
 
-    private fun getFileFromContent(context: Context, uris: List<Uri>): List<File> {
+    private fun getFileFromContent(uris: List<Uri>): List<File> {
         return uris.filter { it.scheme == "content" }.map { uri ->
-            processAndAdjustImage(context, uri)
+            processAndAdjustImage(uri)
         }
     }
 
@@ -117,21 +115,21 @@ class PostEditorViewModel(
         }
     }
 
-    private fun processAndAdjustImage(context: Context, uri: Uri): File {
-        val bitmap = uri.getBitmapFromUri(context)
-        val file = bitmap?.convertResizeImage(context)
-        file?.updateExifOrientation(context, uri)
+    private fun processAndAdjustImage(uri: Uri): File {
+        val bitmap = uri.getBitmapFromUri()
+        val file = bitmap?.convertResizeImage()
+        file?.updateExifOrientation(uri)
         return file ?: File("")
     }
 
-    private fun Uri.getBitmapFromUri(context: Context): Bitmap? {
-        return context.contentResolver.openInputStream(this)?.use {
+    private fun Uri.getBitmapFromUri(): Bitmap? {
+        return application.contentResolver.openInputStream(this)?.use {
             BitmapFactory.decodeStream(it)
         }
     }
 
-    private fun Bitmap.convertResizeImage(context: Context): File {
-        val tempFile = File.createTempFile("resized_image", ".jpg", context.cacheDir)
+    private fun Bitmap.convertResizeImage(): File {
+        val tempFile = File.createTempFile("resized_image", ".jpg", application.cacheDir)
 
         FileOutputStream(tempFile).use { fileOutputStream ->
             this.compress(Bitmap.CompressFormat.JPEG, 80, fileOutputStream)
@@ -139,8 +137,8 @@ class PostEditorViewModel(
         return tempFile
     }
 
-    private fun File.updateExifOrientation(context: Context, uri: Uri) {
-        context.contentResolver.openInputStream(uri)?.use {
+    private fun File.updateExifOrientation(uri: Uri) {
+        application.contentResolver.openInputStream(uri)?.use {
             val exif = ExifInterface(it)
             exif.getAttribute(ExifInterface.TAG_ORIENTATION)?.let {
                 val newExif = ExifInterface(absolutePath)

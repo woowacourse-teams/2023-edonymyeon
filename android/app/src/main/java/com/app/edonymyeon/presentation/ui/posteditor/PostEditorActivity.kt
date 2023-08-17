@@ -211,9 +211,9 @@ class PostEditorActivity : AppCompatActivity() {
         val postPrice = binding.etPostPrice.text.toString().toInt()
         val postEditor = PostEditor(postTitle, postContent, postPrice)
         when (originActivityKey) {
-            POST_CODE -> viewModel.savePost(this, postEditor)
+            POST_CODE -> viewModel.savePost(postEditor)
             UPDATE_CODE -> post?.let {
-                viewModel.updatePost(this, it.id, postEditor)
+                viewModel.updatePost(it.id, postEditor)
             }
         }
     }
