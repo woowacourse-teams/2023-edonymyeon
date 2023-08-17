@@ -1,4 +1,4 @@
-package edonymyeon.backend.preference.application;
+package edonymyeon.backend.preference.repository;
 
 import edonymyeon.backend.preference.domain.Preference;
 import org.springframework.data.jpa.repository.JpaRepository;

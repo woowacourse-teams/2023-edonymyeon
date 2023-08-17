@@ -1,4 +1,4 @@
-package edonymyeon.backend.notification.application;
+package edonymyeon.backend.notification.repository;
 
 import edonymyeon.backend.notification.domain.Notification;
 import java.util.List;

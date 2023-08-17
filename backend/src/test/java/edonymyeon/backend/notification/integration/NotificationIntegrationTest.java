@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.notification.application.NotificationRepository;
+import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.notification.application.dto.NotificationsResponse;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.ScreenType;

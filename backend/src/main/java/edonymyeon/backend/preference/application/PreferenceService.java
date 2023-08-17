@@ -2,6 +2,7 @@ package edonymyeon.backend.preference.application;
 
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.preference.domain.Preference;
+import edonymyeon.backend.preference.repository.PreferenceRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

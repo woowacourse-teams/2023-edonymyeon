@@ -9,6 +9,7 @@ import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.notification.infrastructure.FCMNotificationSender;
+import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.support.IntegrationTest;

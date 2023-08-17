@@ -9,6 +9,7 @@ import edonymyeon.backend.notification.application.dto.NotificationsResponse;
 import edonymyeon.backend.notification.domain.Data;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.ScreenType;
+import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.post.domain.Post;
 import java.util.Comparator;
 import java.util.List;
