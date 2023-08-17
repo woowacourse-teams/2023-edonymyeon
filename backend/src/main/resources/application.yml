@@ -1,6 +1,3 @@
 spring:
-  config:
-    activate:
-      on-profile: prod-test
   profiles:
-    active: prod-test
+    active: prod

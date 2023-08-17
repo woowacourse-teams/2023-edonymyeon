@@ -1,8 +1,9 @@
-#MYSQL_ADDRESS=jdbc:mysql://localhost:3306/edonymyeon
-#MYSQL_USERNAME=
-#MYSQL_PASSWORD=
-#MYSQL_FLYWAY_USERNAME=
-#MYSQL_FLYWAY_PASSWORD=
+#MYSQL_ADDRESS: jdbc:mysql://localhost:3306/edonymyeon
+#MYSQL_USERNAME:
+#MYSQL_PASSWORD:
+#MYSQL_FLYWAY_USERNAME:
+#MYSQL_FLYWAY_PASSWORD:
+domain: http://localhost:8080/images/
 
 management:
   endpoints:
