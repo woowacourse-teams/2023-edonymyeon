@@ -81,19 +81,19 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:hint="@string/dialog_input_price_hint"
+            android:importantForAutofill="no"
             android:inputType="number"
+            android:onTextChanged="@{viewModel.setPurchasePriceTextChanged}"
+            android:text="@{viewModel.price}"
             android:textColor="@color/gray_434343"
             android:textSize="16sp"
-            android:text="@{viewModel.price}"
-            android:onTextChanged="@{viewModel.setPurchasePriceTextChanged}"
             android:visibility="@{type == ConsumptionType.PURCHASE ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toTopOf="@id/space_price_bottom"
             app:layout_constraintEnd_toStartOf="@id/tv_price_unit"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/space_price_top"
-            app:layout_constraintWidth_percent="0.55"
-            android:importantForAutofill="no" />
+            app:layout_constraintWidth_percent="0.55" />
 
         <TextView
             android:id="@+id/tv_price_unit"

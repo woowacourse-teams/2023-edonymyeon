@@ -51,8 +51,8 @@
                     android:id="@+id/tv_my_page_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/my_page_title"
                     android:fontFamily="@font/dohyeon"
+                    android:text="@string/my_page_title"
                     android:textColor="@color/black_000000"
                     android:textSize="28sp"
                     app:layout_constraintStart_toEndOf="@id/space_my_page_title_start"
@@ -151,9 +151,9 @@
                     android:layout_height="wrap_content"
                     android:text="@string/all_price_unit"
                     android:textColor="@color/gray_434343"
-                    app:layout_constraintStart_toEndOf="@id/tv_my_saving"
+                    android:textSize="14sp"
                     app:layout_constraintBaseline_toBaselineOf="@id/tv_saving_title"
-                    android:textSize="14sp"/>
+                    app:layout_constraintStart_toEndOf="@id/tv_my_saving" />
 
                 <TextView
                     android:id="@+id/tv_my_purchase"
@@ -173,8 +173,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/all_price_unit"
                     android:textColor="@color/gray_434343"
-                    app:layout_constraintStart_toEndOf="@id/tv_my_purchase"
-                    app:layout_constraintBaseline_toBaselineOf="@id/tv_purchase_title"/>
+                    app:layout_constraintBaseline_toBaselineOf="@id/tv_purchase_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_my_purchase" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_login"
