@@ -36,11 +36,11 @@ class PostRemoteDataSource : PostDataSource {
     ): Response<PostEditorResponse> {
         val postEditorMap: HashMap<String, RequestBody> = hashMapOf()
         postEditorMap["title"] =
-            postEditorRequest.title.toRequestBody("text/plain".toMediaTypeOrNull())
+            postEditorRequest.title.createRequestBody()
         postEditorMap["content"] =
-            postEditorRequest.content.toRequestBody("text/plain".toMediaTypeOrNull())
+            postEditorRequest.content.createRequestBody()
         postEditorMap["price"] =
-            postEditorRequest.price.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+            postEditorRequest.price.toString().createRequestBody()
         val newImages = imageFiles.generateMultiPartFromFile()
 
         return postService.savePost(postEditorMap, newImages)
@@ -54,11 +54,11 @@ class PostRemoteDataSource : PostDataSource {
     ): Response<PostEditorResponse> {
         val postEditorMap: HashMap<String, RequestBody> = hashMapOf()
         postEditorMap["title"] =
-            postEditorRequest.title.toRequestBody("text/plain".toMediaTypeOrNull())
+            postEditorRequest.title.createRequestBody()
         postEditorMap["content"] =
-            postEditorRequest.content.toRequestBody("text/plain".toMediaTypeOrNull())
+            postEditorRequest.content.createRequestBody()
         postEditorMap["price"] =
-            postEditorRequest.price.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+            postEditorRequest.price.toString().createRequestBody()
         val originalImages = imageUrls.generateMultiPartFromUrl()
         val newImages = imageFiles.generateMultiPartFromFile()
 
@@ -71,7 +71,7 @@ class PostRemoteDataSource : PostDataSource {
 
     private fun List<String>.generateMultiPartFromUrl() =
         this.map {
-            val requestBody = it.toRequestBody("text/plain".toMediaTypeOrNull())
+            val requestBody = it.createRequestBody()
             MultipartBody.Part.createFormData("originalImages", null, requestBody)
         }
 
@@ -80,4 +80,6 @@ class PostRemoteDataSource : PostDataSource {
             val requestFile = imgFile.asRequestBody("image/*".toMediaTypeOrNull())
             MultipartBody.Part.createFormData("newImages", imgFile.name, requestFile)
         }
+
+    private fun String.createRequestBody() = this.toRequestBody("text/plain".toMediaTypeOrNull())
 }
