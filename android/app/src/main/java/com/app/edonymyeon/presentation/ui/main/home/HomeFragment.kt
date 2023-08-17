@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
@@ -19,6 +20,7 @@ import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 
 class HomeFragment : Fragment() {
+
     private val binding: FragmentHomeBinding by lazy {
         FragmentHomeBinding.inflate(layoutInflater)
     }
@@ -37,9 +39,11 @@ class HomeFragment : Fragment() {
 
     private val hotPostAdapter by lazy {
         HotPostAdapter { id ->
-            PostDetailActivity.newIntent(requireContext(), id)
+            requireContext().startActivity(PostDetailActivity.newIntent(requireContext(), id))
         }
     }
+
+    private var isIndicatorSet = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,10 +58,10 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setObserver()
+        setPosts()
         setAllPostAdapter()
         setHotPostAdapter()
         setListener()
-        viewModel.getAllPosts()
     }
 
     override fun onResume() {
@@ -76,9 +80,18 @@ class HomeFragment : Fragment() {
             allPostAdapter.setAllPosts(it)
         }
         viewModel.hotPosts.observe(viewLifecycleOwner) {
+            binding.clHotPostNotContent.isVisible = it.isEmpty()
             hotPostAdapter.setHotPosts(it)
-            setImageIndicators()
+            if (!isIndicatorSet) {
+                setImageIndicators()
+                isIndicatorSet = true
+            }
         }
+    }
+
+    private fun setPosts() {
+        viewModel.getAllPosts()
+        viewModel.getHotPosts()
     }
 
     private fun setAllPostAdapter() {
@@ -137,7 +150,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun refreshAndScrollToTop() {
-        viewModel.getAllPosts()
+        setPosts()
         viewModel.allPostSuccess.observe(viewLifecycleOwner) {
             binding.rvAllPost.smoothScrollToPosition(TOP_POSITION)
         }

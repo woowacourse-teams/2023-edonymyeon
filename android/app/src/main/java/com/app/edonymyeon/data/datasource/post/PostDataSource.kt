@@ -22,6 +22,8 @@ interface PostDataSource {
         title: String,
         content: String,
         price: Int,
-        Images: List<String>,
+        images: List<String>,
     ): Response<PostEditorResponse>
+
+    suspend fun getHotPosts(): Response<Posts>
 }

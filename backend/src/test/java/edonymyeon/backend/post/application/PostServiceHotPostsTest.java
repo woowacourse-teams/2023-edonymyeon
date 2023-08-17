@@ -1,9 +1,10 @@
 package edonymyeon.backend.post.application;
 
 import edonymyeon.backend.CacheConfig;
-import edonymyeon.backend.cache.application.BooleanTemplate;
-import edonymyeon.backend.cache.application.LongTemplate;
+import edonymyeon.backend.cache.application.HotPostsRedisRepository;
+import edonymyeon.backend.cache.application.PostCachingService;
 import edonymyeon.backend.cache.util.HotPostCachePolicy;
+import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.PostTestSupport;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Import;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -21,36 +23,27 @@ public class PostServiceHotPostsTest {
 
     private final HotPostCachePolicy hotPostCachePolicy;
 
-    private final LongTemplate longTemplate;
-
-    private final BooleanTemplate booleanTemplate;
-
     private final PostTestSupport postTestSupport;
 
     private final PostReadService postReadService;
+
+    private final PostCachingService postCachingService;
+
+    private final HotPostsRedisRepository hotPostsRedisRepository;
 
     private final HotFindingCondition findingCondition = HotFindingCondition.builder().build();
 
     private String postIdsCacheKey;
 
-    private String isLastCacheKey;
-
     @BeforeEach
     void 새글을_두개_등록하고_남아있는_캐시를_삭제한다() {
-        postIdsCacheKey = hotPostCachePolicy.getPostIdsCacheKey(findingCondition);
-        isLastCacheKey = hotPostCachePolicy.getLastCacheKey(findingCondition);
-
-        longTemplate.delete(postIdsCacheKey);
-        booleanTemplate.delete(isLastCacheKey);
+        postIdsCacheKey = hotPostCachePolicy.getKey(findingCondition);
+        hotPostsRedisRepository.deleteById(postIdsCacheKey);
     }
 
     @Test
     void 테스트용_키가_제대로_생성되는지_확인한다() {
-        assertSoftly(softly -> {
-                    softly.assertThat(postIdsCacheKey).contains("TEST-HOT", "SIZE=" + findingCondition.getSize(), "PAGE=" + findingCondition.getPage());
-                    softly.assertThat(isLastCacheKey).contains("TEST-HOT", "LAST", "SIZE=" + findingCondition.getSize(), "PAGE=" + findingCondition.getPage());
-                }
-        );
+        assertThat(postIdsCacheKey).contains("TEST", "SIZE=" + findingCondition.getSize(), "PAGE=" + findingCondition.getPage());
     }
 
     @Test
@@ -58,12 +51,12 @@ public class PostServiceHotPostsTest {
         postTestSupport.builder().build();
         postTestSupport.builder().build();
 
-        var hotPosts = postReadService.findHotPosts(findingCondition).getContent();
+        var hotPosts = postReadService.findHotPosts(findingCondition);
 
         assertSoftly(softly -> {
-                    softly.assertThat(hotPosts).hasSize(2);
-                    softly.assertThat(longTemplate.hasCache(postIdsCacheKey)).isTrue();
-                    softly.assertThat(booleanTemplate.hasCache(isLastCacheKey)).isTrue();
+                    softly.assertThat(hotPosts.getContent()).hasSize(2);
+                    softly.assertThat(hotPosts.isLast()).isTrue();
+                    softly.assertThat(hotPostsRedisRepository.existsById(postIdsCacheKey)).isTrue();
                 }
         );
     }
@@ -84,14 +77,37 @@ public class PostServiceHotPostsTest {
     }
 
     @Test
-    void 최근_글이_없으면_캐싱에_저장하지_않고_빈리스트가_조회된다() {
-        var hotPosts = postReadService.findHotPosts(findingCondition).getContent();
+    void 캐싱이_만료되면_새로운_내역으로_조회되는지_확인한다() throws InterruptedException {
+        // given
+        postTestSupport.builder().build();
 
+        PostSlice<GeneralPostInfoResponse> hotPosts1 = postReadService.findHotPosts(findingCondition);
+        assertThat(hotPosts1.getContent().size()).isEqualTo(1);
+
+        // when
+        Thread.sleep(3500);
+        assertThat(postCachingService.shouldRefreshCache(findingCondition)).isTrue();
+
+        postTestSupport.builder().build();
+        postTestSupport.builder().build();
+        postTestSupport.builder().build();
+        postTestSupport.builder().build();
+        postTestSupport.builder().build();
+
+        // then
+        PostSlice<GeneralPostInfoResponse> hotPosts = postReadService.findHotPosts(findingCondition);
         assertSoftly(softly -> {
-                    softly.assertThat(hotPosts).isEmpty();
-                    softly.assertThat(longTemplate.hasCache(postIdsCacheKey)).isFalse();
-                    softly.assertThat(booleanTemplate.hasCache(isLastCacheKey)).isFalse();
+                    softly.assertThat(hotPosts.getContent().size()).isEqualTo(5);
+                    softly.assertThat(hotPosts.isLast()).isFalse();
                 }
         );
+
+    }
+
+    @Test
+    void 최근_글이_없으면_빈리스트가_조회된다() {
+        var hotPosts = postReadService.findHotPosts(findingCondition).getContent();
+
+        assertThat(hotPosts).isEmpty();
     }
 }

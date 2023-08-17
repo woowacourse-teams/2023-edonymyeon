@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.viewpager2.widget.ViewPager2
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostDetailBinding
@@ -20,6 +21,7 @@ import com.app.edonymyeon.data.datasource.report.ReportRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.data.repository.RecommendRepositoryImpl
 import com.app.edonymyeon.data.repository.ReportRepositoryImpl
+import com.app.edonymyeon.presentation.common.dialog.LoadingDialog
 import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
@@ -56,6 +58,10 @@ class PostDetailActivity : AppCompatActivity() {
             startActivity(PostActivity.newIntent(this))
             finish()
         }
+    }
+
+    private val loadingDialog: LoadingDialog by lazy {
+        LoadingDialog(getString(R.string.post_detail_loading))
     }
 
     private val isMyPost: Boolean
@@ -143,15 +149,6 @@ class PostDetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.tbPostDetail)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = ""
-
-        binding.actionScrap.setOnCheckedChangeListener { _, isChecked ->
-            if (isMyPost) {
-                binding.root.makeSnackbar(getString(R.string.post_detail_writer_cant_scrap))
-                binding.actionScrap.isChecked = false
-                return@setOnCheckedChangeListener
-            }
-            viewModel.updateScrap(isChecked)
-        }
     }
 
     private fun getPost() {
@@ -159,9 +156,21 @@ class PostDetailActivity : AppCompatActivity() {
     }
 
     private fun setObserver() {
+        viewModel.isLoadingSuccess.observe(this) { isLoadingSuccess ->
+            if (!isLoadingSuccess) {
+                if (!loadingDialog.isAdded) {
+                    loadingDialog.show(supportFragmentManager, "loadingDialog")
+                }
+            } else {
+                loadingDialog.dismiss()
+            }
+        }
         viewModel.post.observe(this) {
-            setImageSlider(it)
-            setImageIndicators()
+            if (it.images.isNotEmpty()) {
+                binding.ivDefaultImage.isVisible = false
+                setImageSlider(it)
+                setImageIndicators()
+            }
         }
 
         viewModel.reactionCount.observe(this) {

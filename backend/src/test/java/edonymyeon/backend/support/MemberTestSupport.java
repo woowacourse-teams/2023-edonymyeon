@@ -2,6 +2,7 @@ package edonymyeon.backend.support;
 
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.domain.SocialInfo;
 import edonymyeon.backend.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,8 @@ public class MemberTestSupport {
 
     public final class MemberBuilder {
 
+        private Long id;
+
         private String email;
 
         private String password;
@@ -33,6 +36,15 @@ public class MemberTestSupport {
         private String nickname;
 
         private ProfileImageInfo profileImageInfo;
+
+        private SocialInfo socialInfo;
+
+        private boolean deleted = false;
+
+        public MemberBuilder id(final Long id) {
+            this.id = id;
+            return this;
+        }
 
         public MemberBuilder email(final String email) {
             this.email = email;
@@ -54,13 +66,26 @@ public class MemberTestSupport {
             return this;
         }
 
+        public MemberBuilder socialInfo(final SocialInfo socialInfo) {
+            this.socialInfo = socialInfo;
+            return this;
+        }
+
+        public MemberBuilder deleted(final boolean deleted) {
+            this.deleted = deleted;
+            return this;
+        }
+
         public Member build() {
             return memberRepository.save(
                     new Member(
+                            id == null ? null : id,
                             email == null ? (DEFAULT_EMAIL + emailCount++) : email,
                             password == null ? DEFAULT_PASSWORD : password,
                             nickname == null ? (DEFAULT_NICK_NAME + nickNameCount++) : nickname,
-                            profileImageInfo == null ? profileImageInfoTestSupport.builder().build() : profileImageInfo
+                            socialInfo == null ? null : socialInfo,
+                            profileImageInfo == null ? profileImageInfoTestSupport.builder().build() : profileImageInfo,
+                            deleted
                     )
             );
         }

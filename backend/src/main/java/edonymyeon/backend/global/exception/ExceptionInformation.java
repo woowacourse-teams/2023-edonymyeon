@@ -11,6 +11,8 @@ public enum ExceptionInformation {
     // ___: 요청 오류
     REQUEST_PARAMETER_NOT_EXIST(1, "필수 쿼리 파라미터가 비었습니다."),
     REQUEST_FILE_SIZE_TOO_LARGE(2, "첨부 파일의 용량이 제한을 초과하였습니다."),
+    CACHE_NOT_FOUND(100, "캐싱된 값이 없습니다."),
+
 
     // 클래스이름_필드명_틀린내용
     // 1___: 인증 관련
@@ -36,6 +38,7 @@ public enum ExceptionInformation {
     MEMBER_NICKNAME_INVALID(3003, "회원 닉네임이 잘못되었습니다."),
     MEMBER_EMAIL_DUPLICATE(3004, "이미 존재하는 이메일입니다."),
     MEMBER_NICKNAME_DUPLICATE(3005, "이미 존재하는 닉네임입니다."),
+    MEMBER_IS_DELETED(3006, "삭제된 회원입니다."),
 
     // 4___: 추천 관련
     THUMBS_UP_ALREADY_EXIST(4000, "이미 추천된 게시글 입니다."),

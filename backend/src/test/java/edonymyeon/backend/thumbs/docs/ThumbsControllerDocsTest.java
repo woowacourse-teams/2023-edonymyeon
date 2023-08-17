@@ -10,11 +10,11 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
@@ -53,11 +53,21 @@ public class ThumbsControllerDocsTest {
 
     @BeforeEach
     void 회원_두명_가입하고_글쓰기_모킹() {
-        글쓴이 = new Member(1L, "email", "password", "nickname", null);
+        글쓴이 = Member.builder()
+                .id(1L)
+                .email("email@email.com")
+                .password("password123!")
+                .nickname("nickname")
+                .build();
         when(memberRepository.findByEmail(글쓴이.getEmail())).thenReturn(Optional.of(글쓴이));
         when(memberRepository.findById(글쓴이.getId())).thenReturn(Optional.of(글쓴이));
 
-        반응_하는_사람 = new Member(2L, "email2", "password2", "nickname2", null);
+        반응_하는_사람 = Member.builder()
+                .id(2L)
+                .email("email2@email.com")
+                .password("password123!")
+                .nickname("nickname2")
+                .build();
         when(memberRepository.findByEmail(반응_하는_사람.getEmail())).thenReturn(
                 Optional.of(반응_하는_사람));
         when(memberRepository.findById(반응_하는_사람.getId())).thenReturn(Optional.of(반응_하는_사람));
