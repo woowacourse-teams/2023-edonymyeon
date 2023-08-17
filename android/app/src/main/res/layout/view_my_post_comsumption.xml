@@ -47,7 +47,7 @@
             android:id="@+id/tv_my_page_consumption_not_purchase"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_d9d9d9_radius_6dp"
+            android:background="@drawable/bg_d9d9d9_radius_10dp"
             android:gravity="center_horizontal|center_vertical"
             android:onClick="@{() -> listener.onSavingButtonClick(postId)}"
             android:padding="4dp"
