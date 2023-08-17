@@ -73,7 +73,7 @@ public class MemberControllerDocsTest extends DocsTest {
 
     @Test
     void 구매_확정한다() throws Exception {
-        final Member 회원 = new Member(1L, "email", "password", "nickname", null, List.of());
+        final Member 회원 = new Member(1L, "email", "password", "nickname", null, null, List.of());
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 회원);
         final Consumption 소비 = Consumption.of(게시글, SAVING, null, 2023, 7);
 
@@ -112,7 +112,7 @@ public class MemberControllerDocsTest extends DocsTest {
 
     @Test
     void 절약_확정한다() throws Exception {
-        final Member 회원 = new Member(1L, "email", "password", "nickname", null, List.of());
+        final Member 회원 = new Member(1L, "email", "password", "nickname", null, null, List.of());
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 회원);
         final Consumption 소비 = Consumption.of(게시글, SAVING, null, 2023, 7);
 
@@ -150,7 +150,7 @@ public class MemberControllerDocsTest extends DocsTest {
 
     @Test
     void 확정을_취소한다() throws Exception {
-        final Member 회원 = new Member(1L, "email", "password", "nickname", null, List.of());
+        final Member 회원 = new Member(1L, "email", "password", "nickname", null, null, List.of());
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 회원);
         final Consumption 소비 = Consumption.of(게시글, SAVING, null, 2023, 7);
 

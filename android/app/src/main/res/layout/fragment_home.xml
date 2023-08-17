@@ -32,7 +32,7 @@
                     android:id="@+id/space_title_top"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    app:layout_constraintDimensionRatio="H,360:23"
+                    app:layout_constraintDimensionRatio="H,360:24"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -50,7 +50,7 @@
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/space_title_top"
-                    app:layout_constraintWidth_percent="0.1305" />
+                    app:layout_constraintWidth_percent="0.14" />
 
                 <TextView
                     android:id="@+id/tv_title"
@@ -102,10 +102,34 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginHorizontal="16dp"
-                    app:layout_constraintDimensionRatio="H,316:120"
+                    app:layout_constraintDimensionRatio="H,316:136"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/space_hot_post_top" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cl_hot_post_not_content"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:background="@drawable/bg_ffffff_radius_15"
+                    app:layout_constraintDimensionRatio="H,316:136"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/space_hot_post_top">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/home_hot_post_not_content"
+                        android:textColor="@color/black_434343"
+                        android:textSize="22sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <Space
                     android:id="@+id/space_hot_post_bottom"
@@ -193,7 +217,7 @@
                     android:elevation="4dp"
                     android:paddingVertical="17dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintDimensionRatio="H,311:389"
+                    app:layout_constraintDimensionRatio="H,312:384"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/space_all_post_title_bottom"

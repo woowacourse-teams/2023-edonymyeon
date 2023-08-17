@@ -19,11 +19,15 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edonymyeon.backend.support.DocsTest;
 import edonymyeon.backend.auth.application.AuthService;
+import edonymyeon.backend.auth.application.KakaoAuthResponseProvider;
 import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
+import edonymyeon.backend.auth.application.dto.KakaoLoginRequest;
+import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
+import edonymyeon.backend.auth.application.dto.MemberResponse;
+import edonymyeon.backend.support.DocsTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -39,6 +43,9 @@ public class AuthControllerDocsTest extends DocsTest {
 
     @MockBean
     private AuthService authService;
+
+    @MockBean
+    private KakaoAuthResponseProvider kakaoAuthResponseProvider;
 
     public AuthControllerDocsTest(final MockMvc mockMvc,
                                   final ObjectMapper objectMapper) {
@@ -66,6 +73,38 @@ public class AuthControllerDocsTest extends DocsTest {
         };
 
         final RestDocumentationResultHandler 문서화 = document("login",
+                preprocessRequest(prettyPrint()),
+                requestFields(로그인_요청_파라미터),
+                responseHeaders(응답_헤더)
+        );
+
+        mockMvc.perform(로그인_요청)
+                .andExpect(status().isOk())
+                .andDo(문서화);
+    }
+
+    @Test
+    void 카카오_로그인_문서화() throws Exception {
+        final KakaoLoginRequest kakaoLoginRequest = new KakaoLoginRequest("accessToken!!!!!");
+        final KakaoLoginResponse kakaoLoginResponse = new KakaoLoginResponse(1L);
+        final MemberResponse memberResponse = new MemberResponse("example@email.com", "password123!");
+
+        when(kakaoAuthResponseProvider.request(kakaoLoginRequest)).thenReturn(kakaoLoginResponse);
+        when(authService.findMemberByKakao(kakaoLoginResponse)).thenReturn(memberResponse);
+
+        final MockHttpServletRequestBuilder 로그인_요청 = post("/auth/kakao/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(kakaoLoginRequest));
+
+        final FieldDescriptor[] 로그인_요청_파라미터 = {
+                fieldWithPath("accessToken").description("카카오 액세스 토큰")
+        };
+
+        final HeaderDescriptor[] 응답_헤더 = {
+                headerWithName("Authorization").description("basic Auth 토큰 값")
+        };
+
+        final RestDocumentationResultHandler 문서화 = document("kakao-login",
                 preprocessRequest(prettyPrint()),
                 requestFields(로그인_요청_파라미터),
                 responseHeaders(응답_헤더)

@@ -12,14 +12,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.notification.application.NotificationService;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,9 +47,6 @@ public class ThumbsControllerDocsTest {
     @MockBean
     private ThumbsRepository thumbsRepository;
 
-    @MockBean
-    private NotificationService notificationService;
-
     private Member 글쓴이;
     private Member 반응_하는_사람;
     private Post 글;
@@ -62,11 +57,11 @@ public class ThumbsControllerDocsTest {
     }
 
     void 회원_두명_가입하고_글쓰기_모킹() {
-        글쓴이 = new Member(1L, "email", "password", "nickname", null, List.of());
+        글쓴이 = new Member(1L, "email", "password", "nickname", null, null, null);
         when(memberRepository.findByEmail(글쓴이.getEmail())).thenReturn(Optional.of(글쓴이));
         when(memberRepository.findById(글쓴이.getId())).thenReturn(Optional.of(글쓴이));
 
-        반응_하는_사람 = new Member(2L, "email2", "password2", "nickname2", null, List.of());
+        반응_하는_사람 = new Member(2L, "email2", "password2", "nickname2", null, null, null);
         when(memberRepository.findByEmail(반응_하는_사람.getEmail())).thenReturn(
                 Optional.of(반응_하는_사람));
         when(memberRepository.findById(반응_하는_사람.getId())).thenReturn(Optional.of(반응_하는_사람));

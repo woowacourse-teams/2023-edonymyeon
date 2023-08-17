@@ -9,3 +9,6 @@ operation::validate-join[snippets='query-parameters,http-request,response-fields
 
 === 로그인
 operation::login[snippets='request-fields,http-request,response-headers,http-response']
+
+=== 카카오 로그인
+operation::kakao-login[snippets='request-fields,http-request,response-headers,http-response']
