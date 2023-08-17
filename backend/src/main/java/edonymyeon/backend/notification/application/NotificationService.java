@@ -1,6 +1,5 @@
 package edonymyeon.backend.notification.application;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.NOTIFICATION_REQUEST_FAILED;
 import static edonymyeon.backend.notification.domain.NotificationMessage.THUMBS_NOTIFICATION_TITLE;
 
 import edonymyeon.backend.global.exception.BusinessLogicException;
