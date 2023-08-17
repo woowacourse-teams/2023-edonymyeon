@@ -39,8 +39,8 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun login(email: String, password: String): Result<Unit> {
-        val result = authRemoteDataSource.login(LoginDataModel(email, password))
+    override suspend fun login(email: String, password: String, deviceToken: String): Result<Unit> {
+        val result = authRemoteDataSource.login(LoginDataModel(email, password, deviceToken))
 
         return if (result.isSuccessful) {
             authLocalDataSource.setAuthToken(result.headers()["Authorization"] as String)
@@ -67,8 +67,8 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun logout(): Result<Unit> {
-        val result = authRemoteDataSource.logout(LogoutRequest())
+    override suspend fun logout(deviceToken: String): Result<Unit> {
+        val result = authRemoteDataSource.logout(LogoutRequest(deviceToken))
         return if (result.isSuccessful) {
             authLocalDataSource.setAuthToken("")
             Result.success(Unit)

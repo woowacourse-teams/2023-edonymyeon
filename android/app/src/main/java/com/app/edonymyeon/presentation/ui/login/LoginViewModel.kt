@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
+import com.app.edonymyeon.data.service.fcm.FCMToken
 import com.domain.edonymyeon.repository.AuthRepository
 import kotlinx.coroutines.launch
 
@@ -28,15 +29,18 @@ class LoginViewModel(private val repository: AuthRepository) :
     }
 
     private fun login(email: String, password: String) {
-        viewModelScope.launch {
-            repository.login(
-                email,
-                password,
-            ).onSuccess {
-                _isSuccess.value = true
-            }.onFailure {
-                _isSuccess.value = false
-                _errorMessage.postValue((it as CustomThrowable).message)
+        FCMToken.getFCMToken {
+            viewModelScope.launch {
+                repository.login(
+                    email,
+                    password,
+                    it ?: "",
+                ).onSuccess {
+                    _isSuccess.value = true
+                }.onFailure {
+                    _isSuccess.value = false
+                    _errorMessage.postValue((it as CustomThrowable).message)
+                }
             }
         }
     }

@@ -4,12 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.edonymyeon.data.service.fcm.FCMToken
 import com.domain.edonymyeon.model.Email
 import com.domain.edonymyeon.model.Nickname
 import com.domain.edonymyeon.model.Password
 import com.domain.edonymyeon.model.UserRegistration
 import com.domain.edonymyeon.repository.AuthRepository
-import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.launch
 
 class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() {
@@ -32,19 +32,20 @@ class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() 
     val isSignUpSuccess: LiveData<Boolean> get() = _isSignUpSuccess
 
     fun signUp(email: String, password: String, nickname: String) {
-        viewModelScope.launch {
-            FirebaseMessaging.getInstance().token.result
-
-            authRepository.signUp(
-                UserRegistration(
-                    Email.create(email),
-                    Password.create(password),
-                    Nickname.create(nickname),
-                ),
-            ).onSuccess {
-                _isSignUpSuccess.value = true
-            }.onFailure {
-                _isSignUpSuccess.value = false
+        FCMToken.getFCMToken {
+            viewModelScope.launch {
+                authRepository.signUp(
+                    UserRegistration(
+                        Email.create(email),
+                        Password.create(password),
+                        Nickname.create(nickname),
+                        it ?: "",
+                    ),
+                ).onSuccess {
+                    _isSignUpSuccess.value = true
+                }.onFailure {
+                    _isSignUpSuccess.value = false
+                }
             }
         }
     }

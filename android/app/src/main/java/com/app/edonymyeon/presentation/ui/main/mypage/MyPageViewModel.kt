@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.data.service.client.RetrofitClient
+import com.app.edonymyeon.data.service.fcm.FCMToken
 import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
@@ -77,11 +78,13 @@ class MyPageViewModel(
     }
 
     fun logout() {
-        viewModelScope.launch {
-            authRepository.logout().onSuccess {
-                _isLogoutSuccess.value = true
-            }.onFailure {
-                it as CustomThrowable
+        FCMToken.getFCMToken {
+            viewModelScope.launch {
+                authRepository.logout(it ?: "").onSuccess {
+                    _isLogoutSuccess.value = true
+                }.onFailure {
+                    it as CustomThrowable
+                }
             }
         }
     }

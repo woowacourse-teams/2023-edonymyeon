@@ -71,7 +71,8 @@ class LoginViewModelTest {
         // given
         val email = "sehozzang@nate.com"
         val password = "seho123"
-        coEvery { authRepository.login(email, password) } returns Result.success(Unit)
+        val deviceToken = "deviceToken"
+        coEvery { authRepository.login(email, password, deviceToken) } returns Result.success(Unit)
 
         // when
         viewModel.onLoginClick(email, password)
@@ -85,11 +86,13 @@ class LoginViewModelTest {
         // given
         val email = "sehozzang@nate.com"
         val password = "seho123"
+        val deviceToken = "deviceToken"
         val errorMessage = "로그인에 실패했습니다"
         coEvery {
             authRepository.login(
                 email,
                 password,
+                deviceToken,
             )
         } returns Result.failure(CustomThrowable(400, errorMessage))
 
