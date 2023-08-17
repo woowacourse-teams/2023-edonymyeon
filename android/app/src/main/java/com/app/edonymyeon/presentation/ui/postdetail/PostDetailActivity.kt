@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.viewpager2.widget.ViewPager2
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostDetailBinding
@@ -174,8 +175,11 @@ class PostDetailActivity : AppCompatActivity() {
             }
         }
         viewModel.post.observe(this) {
-            setImageSlider(it)
-            setImageIndicators()
+            if (it.images.isNotEmpty()) {
+                binding.ivDefaultImage.isVisible = false
+                setImageSlider(it)
+                setImageIndicators()
+            }
         }
 
         viewModel.reactionCount.observe(this) {

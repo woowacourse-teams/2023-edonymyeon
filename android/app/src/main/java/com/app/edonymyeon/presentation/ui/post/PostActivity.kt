@@ -88,7 +88,7 @@ class PostActivity : AppCompatActivity() {
     }
 
     private fun setListener() {
-        binding.ivPostNew.setOnClickListener {
+        binding.fabPostNew.setOnClickListener {
             if (viewModel.isLogin) {
                 navigateToPostEditor()
             } else {

@@ -16,6 +16,7 @@ class SearchViewModel(private val searchRepository: SearchRepository) : ViewMode
 
     private val _searchResult = MutableLiveData<List<PostItemUiModel>>()
     val searchResult: LiveData<List<PostItemUiModel>> get() = _searchResult
+
     fun getSearchResult(query: String) {
         viewModelScope.launch {
             searchRepository.getSearchResult(query, currentPage.value)

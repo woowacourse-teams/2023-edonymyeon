@@ -50,7 +50,7 @@
             android:layout_marginEnd="10dp"
             android:descendantFocusability="blocksDescendants"
             android:theme="@style/NumberPickerStyle"
-            app:layout_constraintDimensionRatio="h, 63:124"
+            app:layout_constraintDimensionRatio="h, 64:124"
             app:layout_constraintEnd_toStartOf="@id/np_month"
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +62,7 @@
             android:layout_height="0dp"
             android:descendantFocusability="blocksDescendants"
             android:theme="@style/NumberPickerStyle"
-            app:layout_constraintDimensionRatio="h, 63:124"
+            app:layout_constraintDimensionRatio="h, 64:124"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/np_year"
             app:layout_constraintTop_toTopOf="@id/np_year" />
@@ -114,7 +114,7 @@
             android:id="@+id/space_price_bottom"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="360: 40"
+            app:layout_constraintDimensionRatio="360:40"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/et_consumption_price" />
@@ -148,7 +148,7 @@
             android:id="@+id/space_dialog_bottom"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="360: 20"
+            app:layout_constraintDimensionRatio="360:20"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/btn_dialog_ok" />
