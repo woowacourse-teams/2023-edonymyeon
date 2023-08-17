@@ -68,7 +68,6 @@ public class ThumbsControllerDocsTest {
                 .password("password123!")
                 .nickname("nickname2")
                 .build();
-
         when(memberRepository.findByEmail(반응_하는_사람.getEmail())).thenReturn(
                 Optional.of(반응_하는_사람));
         when(memberRepository.findById(반응_하는_사람.getId())).thenReturn(Optional.of(반응_하는_사람));
