@@ -16,12 +16,12 @@ public class NotificationInterceptor implements HandlerInterceptor {
     private final NotificationService notificationService;
 
     @Override
-    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler)
-            throws Exception {
+    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response,
+                             final Object handler) {
 
         final String notificationIdentifier = request.getParameter(NOTIFICATION_IDENTIFIER_KEY);
         if (Objects.nonNull(notificationIdentifier)) {
-            notificationService.markNotificationAsRead(notificationIdentifier);
+            notificationService.markNotificationAsRead(Long.valueOf(notificationIdentifier));
         }
 
         return true;

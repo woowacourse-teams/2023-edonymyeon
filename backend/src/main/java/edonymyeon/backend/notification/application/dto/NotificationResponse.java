@@ -3,7 +3,7 @@ package edonymyeon.backend.notification.application.dto;
 import edonymyeon.backend.notification.domain.Notification;
 
 public record NotificationResponse(
-        String id,
+        Long id,
         String title,
         String navigateTo,
         Long postId,

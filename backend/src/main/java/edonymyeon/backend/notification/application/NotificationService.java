@@ -42,7 +42,10 @@ public class NotificationService {
             return;
         }
 
-        final Receiver receiver = new Receiver(post.getMember(), new Data(ScreenType.POST, post.getId()));
+        final Long notificationId = saveNotification(post);
+
+        final Receiver receiver = new Receiver(post.getMember(),
+                new Data(notificationId, ScreenType.POST, post.getId()));
         try {
             notificationSender.sendNotification(
                     receiver,
@@ -51,22 +54,20 @@ public class NotificationService {
         } catch (BusinessLogicException e) {
             log.error("알림 전송에 실패했습니다.", e);
         }
-
-        saveNotification(post);
     }
 
-    private void saveNotification(final Post post) {
+    private Long saveNotification(final Post post) {
         final Notification notification = new Notification(
                 post.getMember(),
                 THUMBS_NOTIFICATION_TITLE.getMessage(),
                 ScreenType.POST,
                 post.getId()
         );
-        notificationRepository.save(notification);
+        return notificationRepository.save(notification).getId();
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void markNotificationAsRead(final String notificationId) {
+    public void markNotificationAsRead(final Long notificationId) {
         final Optional<Notification> notification = notificationRepository.findById(notificationId);
         notification.ifPresent(Notification::markAsRead);
     }
