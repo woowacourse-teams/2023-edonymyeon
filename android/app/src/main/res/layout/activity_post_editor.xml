@@ -39,7 +39,7 @@
             android:id="@+id/space_title_top"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="H, 360:15"
+            app:layout_constraintDimensionRatio="H, 360:16"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tb_post_editor" />
@@ -59,7 +59,7 @@
             android:id="@+id/et_post_title"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="87dp"
+            android:layout_marginStart="84dp"
             android:layout_marginEnd="20dp"
             android:autofillHints="no"
             android:background="@android:color/transparent"
@@ -70,7 +70,7 @@
             android:text="@{viewModel.postEditor.title}"
             android:textColor="@color/gray_434343"
             android:textColorHint="@color/gray_615f5f"
-            android:textSize="13sp"
+            android:textSize="14sp"
             app:layout_constraintBaseline_toBaselineOf="@+id/tv_post_title"
             app:layout_constraintDimensionRatio="254:14"
             app:layout_constraintEnd_toEndOf="parent"
@@ -99,7 +99,7 @@
             android:text="@{viewModel.postEditor.price}"
             android:textColor="@color/gray_434343"
             android:textColorHint="@color/gray_615f5f"
-            android:textSize="13sp"
+            android:textSize="14sp"
             app:layout_constraintBaseline_toBaselineOf="@+id/tv_post_price"
             app:layout_constraintStart_toStartOf="@+id/et_post_title" />
 
@@ -109,7 +109,7 @@
             android:layout_marginStart="2dp"
             android:text="@string/all_price_unit"
             android:textColor="@color/black_000000"
-            android:textSize="13sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintBaseline_toBaselineOf="@+id/et_post_price"
             app:layout_constraintStart_toEndOf="@+id/et_post_price" />
@@ -171,7 +171,7 @@
                     android:text="@{viewModel.postEditor.content}"
                     android:textColor="@color/gray_434343"
                     android:textColorHint="@color/gray_615f5f"
-                    android:textSize="15sp"
+                    android:textSize="18sp"
                     app:layout_constraintTop_toTopOf="@id/cl_post_content_images" />
 
                 <Space
@@ -219,24 +219,28 @@
 
         <ImageView
             android:id="@+id/iv_post_camera"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginStart="20dp"
             android:contentDescription="@string/post_editor_camera_description"
             android:src="@drawable/btn_camera"
             app:layout_constraintBottom_toTopOf="@id/space_gallery_bottom"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintDimensionRatio="H, 1:1"
+            app:layout_constraintWidth_percent="0.08"/>
 
         <ImageView
             android:id="@+id/iv_post_gallery"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_marginStart="10dp"
             android:contentDescription="@string/post_editor_gallery_description"
             android:src="@drawable/btn_gallery"
             app:layout_constraintBottom_toBottomOf="@id/iv_post_camera"
             app:layout_constraintStart_toEndOf="@id/iv_post_camera"
-            app:layout_constraintTop_toTopOf="@id/iv_post_camera" />
+            app:layout_constraintTop_toTopOf="@id/iv_post_camera"
+            app:layout_constraintDimensionRatio="H, 1:1"
+            app:layout_constraintWidth_percent="0.06" />
 
         <Space
             android:id="@+id/space_gallery_bottom"

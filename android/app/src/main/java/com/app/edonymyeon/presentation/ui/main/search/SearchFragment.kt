@@ -60,6 +60,7 @@ class SearchFragment : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 viewModel.clearResult()
                 viewModel.getSearchResult(query ?: "")
+                binding.searchView.clearFocus()
                 return true
             }
 
@@ -89,7 +90,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun setFocusChangeListener() {
-        binding.searchView.setOnFocusChangeListener { v, hasFocus ->
+        binding.searchView.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 binding.searchView.isIconified = false
             }
