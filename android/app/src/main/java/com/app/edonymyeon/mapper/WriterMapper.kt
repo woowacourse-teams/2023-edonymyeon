@@ -7,7 +7,7 @@ import com.domain.edonymyeon.model.Writer
 fun Writer.toUiModel(): WriterUiModel {
     return WriterUiModel(
         id = id,
-        nickname = nickname,
+        _nickname = nickname,
         profileImage = profileImage,
     )
 }
