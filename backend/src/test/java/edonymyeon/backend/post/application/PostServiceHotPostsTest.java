@@ -5,6 +5,7 @@ import edonymyeon.backend.cache.application.HotPostsRedisRepository;
 import edonymyeon.backend.cache.application.PostCachingService;
 import edonymyeon.backend.cache.util.HotPostCachePolicy;
 import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
+import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.PostTestSupport;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,8 @@ public class PostServiceHotPostsTest {
     private final PostTestSupport postTestSupport;
 
     private final PostReadService postReadService;
+
+    private final PostRepository postRepository;
 
     private final PostCachingService postCachingService;
 
@@ -101,7 +104,45 @@ public class PostServiceHotPostsTest {
                     softly.assertThat(hotPosts.isLast()).isFalse();
                 }
         );
+    }
 
+    @Test
+    void 캐싱된_게시글이_삭제되면_새로운_게시글이_조회된다() {
+        // given
+        postTestSupport.builder().build();
+        postTestSupport.builder().build();
+        var 삭제할_게시글 = postTestSupport.builder().build();
+        postTestSupport.builder().build();
+        postTestSupport.builder().build();
+        var 여섯번째로_작성된_게시글 = postTestSupport.builder().build();
+
+        var 삭제_전_조회한_핫게시글 = postReadService.findHotPosts(findingCondition)
+                .getContent()
+                .stream()
+                .map(GeneralPostInfoResponse::id)
+                .toList();
+        assertSoftly(softly -> {
+                    softly.assertThat(삭제_전_조회한_핫게시글.contains(삭제할_게시글.getId())).isTrue();
+                    softly.assertThat(삭제_전_조회한_핫게시글.size()).isEqualTo(5);
+                    softly.assertThat(삭제_전_조회한_핫게시글.contains(여섯번째로_작성된_게시글.getId())).isFalse();
+                }
+        );
+
+        // when
+        postRepository.deleteById(삭제할_게시글.getId());
+        var 핫게시글을_삭제하고_난_뒤에_조회한_핫게시글 = postReadService.findHotPosts(findingCondition)
+                .getContent()
+                .stream()
+                .map(GeneralPostInfoResponse::id)
+                .toList();
+
+        // then
+        assertSoftly(softly -> {
+                    softly.assertThat(핫게시글을_삭제하고_난_뒤에_조회한_핫게시글.contains(삭제할_게시글.getId())).isFalse();
+                    softly.assertThat(핫게시글을_삭제하고_난_뒤에_조회한_핫게시글.size()).isEqualTo(5);
+                    softly.assertThat(핫게시글을_삭제하고_난_뒤에_조회한_핫게시글.contains(여섯번째로_작성된_게시글.getId())).isTrue();
+                }
+        );
     }
 
     @Test
