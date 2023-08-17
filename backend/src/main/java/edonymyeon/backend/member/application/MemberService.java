@@ -46,7 +46,7 @@ public class MemberService {
             imageFileUploader.removeFile(member.getProfileImageInfo());
         }
 
-        member.delete();
+        member.withdraw();
         memberRepository.save(member);
     }
 
