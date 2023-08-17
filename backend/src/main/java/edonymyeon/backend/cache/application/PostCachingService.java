@@ -31,22 +31,22 @@ public class PostCachingService {
 
     public boolean shouldRefreshCache(final HotFindingCondition hotFindingCondition) {
         CachedHotPost cachedHotPost = hotPostsRedisRepository.findById(hotPostPolicy.getKey(hotFindingCondition))
-                .orElseThrow(()-> new EdonymyeonException(CACHE_NOT_FOUND));
+                .orElseThrow(() -> new EdonymyeonException(CACHE_NOT_FOUND));
         return cachedHotPost.shouldRefresh(hotPostPolicy.getExpiredSeconds());
     }
 
     public CachedPostResponse findCachedPosts(HotFindingCondition hotFindingCondition) {
         CachedHotPost cachedHotPost = hotPostsRedisRepository.findById(hotPostPolicy.getKey(hotFindingCondition))
-                .orElseThrow(()-> new EdonymyeonException(CACHE_NOT_FOUND));
+                .orElseThrow(() -> new EdonymyeonException(CACHE_NOT_FOUND));
         return new CachedPostResponse(cachedHotPost.getPostIds(), cachedHotPost.isLast());
     }
 
     public void cachePosts(final HotFindingCondition hotFindingCondition, final Slice<Post> hotPost) {
-        Optional<CachedHotPost> hotPostsFromCache = hotPostsRedisRepository.findById(hotPostPolicy.getKey(hotFindingCondition));
-
         final List<Long> hotPostIds = hotPost.stream()
                 .map(Post::getId)
                 .toList();
+
+        Optional<CachedHotPost> hotPostsFromCache = hotPostsRedisRepository.findById(hotPostPolicy.getKey(hotFindingCondition));
 
         if (hotPostsFromCache.isEmpty()) {
             saveHotPost(hotFindingCondition, hotPost, hotPostIds);
@@ -54,10 +54,8 @@ public class PostCachingService {
         }
 
         CachedHotPost cachedHotPost = hotPostsFromCache.get();
-        if(cachedHotPost.shouldRefresh(hotPostPolicy.getExpiredSeconds())){
-            cachedHotPost.refreshData(hotPostIds, hotPost.isLast());
-            hotPostsRedisRepository.save(cachedHotPost);
-        }
+        cachedHotPost.refreshData(hotPostIds, hotPost.isLast());
+        hotPostsRedisRepository.save(cachedHotPost);
     }
 
     private void saveHotPost(HotFindingCondition hotFindingCondition, Slice<Post> hotPost, List<Long> hotPostIds) {
