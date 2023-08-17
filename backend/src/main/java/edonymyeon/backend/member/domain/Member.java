@@ -8,6 +8,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PA
 import edonymyeon.backend.global.domain.TemporalRecord;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,8 +21,10 @@ import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import lombok.AccessLevel;
+import java.util.Optional;
+import java.util.SimpleTimeZone;
 import java.util.UUID;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -30,8 +33,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Member extends TemporalRecord {
@@ -79,17 +80,40 @@ public class Member extends TemporalRecord {
                 .toList();
     }
 
+    public Member(final Long id,
+                  final String email,
+                  final String password,
+                  final String nickname,
+                  final SocialInfo socialInfo,
+                  final ProfileImageInfo profileImageInfo,
+                  final List<String> deviceTokens) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.socialInfo = socialInfo;
+        this.profileImageInfo = profileImageInfo;
+        this.devices = deviceTokens.stream()
+                .map(token -> new Device(token, this))
+                .toList();
+    }
+
     public Member(final Long id) {
         this.id = id;
     }
 
+    private Member(final String email, final String password, final String nickname, final SocialInfo socialInfo) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.socialInfo = socialInfo;
+    }
+
     public static Member from(final SocialInfo socialInfo) {
-        return Member.builder()
-                .socialInfo(socialInfo)
-                .email(UUID.randomUUID().toString())
-                .password(UUID.randomUUID().toString())
-                .nickname("#" + socialInfo.getSocialType().name() + UUID.randomUUID())
-                .build();
+        return new Member(UUID.randomUUID().toString(),
+                UUID.randomUUID().toString(),
+                "#" + socialInfo.getSocialType().name() + UUID.randomUUID(),
+                socialInfo);
     }
 
     private void validate(final String email, final String password, final String nickname) {

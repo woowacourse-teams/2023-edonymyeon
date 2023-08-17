@@ -85,10 +85,9 @@ public class MemberTestSupport {
                             email == null ? (DEFAULT_EMAIL + emailCount++) : email,
                             password == null ? DEFAULT_PASSWORD : password,
                             nickname == null ? (DEFAULT_NICK_NAME + nickNameCount++) : nickname,
+                            socialInfo == null ? null : socialInfo,
                             profileImageInfo == null ? profileImageInfoTestSupport.builder().build() : profileImageInfo,
                             deviceTokens == null ? List.of(DEFAULT_DEVICE_TOKEN) : deviceTokens
-                            socialInfo == null ? null : socialInfo,
-                            profileImageInfo == null ? profileImageInfoTestSupport.builder().build() : profileImageInfo
                     )
             );
         }
