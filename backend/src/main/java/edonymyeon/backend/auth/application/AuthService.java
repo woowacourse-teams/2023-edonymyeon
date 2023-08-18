@@ -78,13 +78,15 @@ public class AuthService {
 
     //todo session으로
     @Transactional
-    public MemberResponse loginByKakao(final KakaoLoginResponse kakaoLoginResponse) {
+    public MemberResponse loginByKakao(final KakaoLoginResponse kakaoLoginResponse, final String deviceToken) {
         final SocialInfo socialInfo = SocialInfo.of(SocialType.KAKAO, kakaoLoginResponse.id());
         final Member member = memberRepository.findBySocialInfo(socialInfo)
                 .orElseGet(() -> joinSocialMember(socialInfo));
         if (member.isDeleted()) {
             throw new EdonymyeonException(MEMBER_IS_DELETED);
         }
+
+        publisher.publishEvent(new LoginEvent(member, deviceToken));
         return new MemberResponse(member.getEmail(), member.getPassword());
     }
 

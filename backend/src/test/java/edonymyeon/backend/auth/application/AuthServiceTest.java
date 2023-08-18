@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
+import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.auth.application.dto.LogoutRequest;
 import edonymyeon.backend.member.application.MemberService;
@@ -77,6 +78,15 @@ class AuthServiceTest {
         authService.joinMember(
                 new JoinRequest("test@gmail.com", "@testPassword234", "testNickname", "testDeviceToken"));
         authService.login(new LoginRequest("test@gmail.com", "@testPassword234", "testToken"));
+        verify(memberService, atLeastOnce()).activateDevice(any(), any());
+    }
+
+    @Test
+    void 소셜로그인_이후에도_디바이스_교체_작업을_수행한다() {
+        doNothing().when(memberService).activateDevice(any(), any());
+
+        authService.loginByKakao(new KakaoLoginResponse(1L), "testDeviceToken");
+
         verify(memberService, atLeastOnce()).activateDevice(any(), any());
     }
 

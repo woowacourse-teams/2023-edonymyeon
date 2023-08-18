@@ -214,7 +214,7 @@ public class AuthIntegrationTest extends IntegrationFixture {
 
         when(kakaoAuthResponseProvider.request(any())).thenReturn(new KakaoLoginResponse(member.getSocialInfo().getSocialId()));
 
-        final KakaoLoginRequest kakaoLoginRequest = new KakaoLoginRequest("accessToken");
+        final KakaoLoginRequest kakaoLoginRequest = new KakaoLoginRequest("accessToken", "testDeviceToken");
 
         final ExtractableResponse<Response> response = RestAssured
                 .given()
@@ -239,7 +239,7 @@ public class AuthIntegrationTest extends IntegrationFixture {
         final Optional<Member> 카카오_로그인전_회원 = memberRepository.findBySocialInfo(SocialInfo.of(SocialType.KAKAO, 1L));
         when(kakaoAuthResponseProvider.request(any())).thenReturn(new KakaoLoginResponse(1L));
 
-        final KakaoLoginRequest kakaoLoginRequest = new KakaoLoginRequest("accessToken");
+        final KakaoLoginRequest kakaoLoginRequest = new KakaoLoginRequest("accessToken", "testDeviceToken");
 
         RestAssured
                 .given()

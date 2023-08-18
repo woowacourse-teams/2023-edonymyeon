@@ -1,5 +1,5 @@
 package edonymyeon.backend.auth.application.dto;
 
-public record KakaoLoginRequest(String accessToken) {
+public record KakaoLoginRequest(String accessToken, String deviceToken) {
 
 }

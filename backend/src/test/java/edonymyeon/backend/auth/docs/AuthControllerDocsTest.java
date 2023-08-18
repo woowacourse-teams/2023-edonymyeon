@@ -85,19 +85,20 @@ public class AuthControllerDocsTest extends DocsTest {
 
     @Test
     void 카카오_로그인_문서화() throws Exception {
-        final KakaoLoginRequest kakaoLoginRequest = new KakaoLoginRequest("accessToken!!!!!");
+        final KakaoLoginRequest kakaoLoginRequest = new KakaoLoginRequest("accessToken!!!!!", "deviceToken");
         final KakaoLoginResponse kakaoLoginResponse = new KakaoLoginResponse(1L);
         final MemberResponse memberResponse = new MemberResponse("example@email.com", "password123!");
 
         when(kakaoAuthResponseProvider.request(kakaoLoginRequest)).thenReturn(kakaoLoginResponse);
-        when(authService.loginByKakao(kakaoLoginResponse)).thenReturn(memberResponse);
+        when(authService.loginByKakao(kakaoLoginResponse, kakaoLoginRequest.deviceToken())).thenReturn(memberResponse);
 
         final MockHttpServletRequestBuilder 로그인_요청 = post("/auth/kakao/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(kakaoLoginRequest));
 
         final FieldDescriptor[] 로그인_요청_파라미터 = {
-                fieldWithPath("accessToken").description("카카오 액세스 토큰")
+                fieldWithPath("accessToken").description("카카오 액세스 토큰"),
+                fieldWithPath("deviceToken").description("로그인 시 사용한 디바이스의 식별자")
         };
 
         final HeaderDescriptor[] 응답_헤더 = {
