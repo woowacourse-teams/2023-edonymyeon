@@ -21,6 +21,7 @@ import com.app.edonymyeon.presentation.ui.main.MainActivity
 import com.app.edonymyeon.presentation.ui.main.mypage.chart.LineChartManager
 import com.app.edonymyeon.presentation.ui.main.mypage.dialog.WithdrawDialog
 import com.app.edonymyeon.presentation.ui.mypost.MyPostActivity
+import com.app.edonymyeon.presentation.uimodel.NicknameUiModel
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -104,7 +105,7 @@ class MyPageFragment : Fragment() {
         binding.tvMyPost.setOnClickListener { makeLoginSnackbar() }
         binding.tvUpdateUserInfo.setOnClickListener { makeLoginSnackbar() }
 
-        viewModel.setNoUserState(getString(R.string.my_page_required_login))
+        viewModel.setNoUserState(NicknameUiModel(getString(R.string.my_page_required_login)))
     }
 
     private fun makeLoginSnackbar() {

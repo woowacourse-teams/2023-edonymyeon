@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -35,13 +34,6 @@ class PostDetailActivity : AppCompatActivity() {
     private val id: Long by lazy {
         intent.getLongExtra(KEY_POST_ID, -1)
     }
-
-    private val activityLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == PostEditorActivity.RESULT_RELOAD_CODE) {
-                viewModel.getPostDetail(result.data?.getLongExtra(KEY_POST_ID, 0) ?: 0)
-            }
-        }
 
     private val binding: ActivityPostDetailBinding by lazy {
         ActivityPostDetailBinding.inflate(layoutInflater)
@@ -102,7 +94,7 @@ class PostDetailActivity : AppCompatActivity() {
 
             R.id.action_update -> {
                 val post = viewModel.post.value ?: return false
-                activityLauncher.launch(
+                startActivity(
                     PostEditorActivity.newIntent(
                         this,
                         post,
@@ -119,7 +111,6 @@ class PostDetailActivity : AppCompatActivity() {
             }
 
             android.R.id.home -> {
-                setResult(RESULT_RELOAD_CODE, Intent().putExtra(KEY_POST_ID, id))
                 finish()
                 true
             }
@@ -266,7 +257,6 @@ class PostDetailActivity : AppCompatActivity() {
 
     companion object {
         const val KEY_POST_ID = "key_post_id"
-        const val RESULT_RELOAD_CODE = 2002
         fun newIntent(context: Context, postId: Long): Intent {
             return Intent(context, PostDetailActivity::class.java).putExtra(KEY_POST_ID, postId)
         }

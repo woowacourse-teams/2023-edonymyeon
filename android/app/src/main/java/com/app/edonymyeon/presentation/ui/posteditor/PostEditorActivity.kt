@@ -22,7 +22,7 @@ import app.edonymyeon.databinding.ActivityPostEditorBinding
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.presentation.common.dialog.LoadingDialog
-import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity.Companion.KEY_POST_ID
+import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import com.app.edonymyeon.presentation.ui.posteditor.adapter.PostEditorImagesAdapter
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.util.getParcelableExtraCompat
@@ -157,11 +157,8 @@ class PostEditorActivity : AppCompatActivity() {
         }
 
         viewModel.postId.observe(this) {
-            setResult(
-                RESULT_RELOAD_CODE,
-                Intent().putExtra(KEY_POST_ID, viewModel.postId.value ?: -1),
-            )
-            finish()
+            setResult(RESULT_RELOAD_CODE)
+            navigateToDetail()
         }
         viewModel.galleryImages.observe(this) { images ->
             adapter.setImages(images)
@@ -302,10 +299,10 @@ class PostEditorActivity : AppCompatActivity() {
         return true
     }
 
-    /*private fun navigateToDetail() {
+    private fun navigateToDetail() {
         startActivity(PostDetailActivity.newIntent(this, viewModel.postId.value ?: -1))
         finish()
-    }*/
+    }
 
     private fun hideKeyboard() {
         val imm: InputMethodManager =

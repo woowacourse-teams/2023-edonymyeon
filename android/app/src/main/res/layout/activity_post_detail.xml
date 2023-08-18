@@ -132,7 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_marginStart="16dp"
-                    android:text="@{postViewModel.post.writer.nickname}"
+                    android:text="@{postViewModel.post.writer.nickname.toString()}"
                     android:textColor="@color/black_434343"
                     android:textSize="16sp"
                     app:layout_constraintStart_toEndOf="@id/iv_user_profile"
