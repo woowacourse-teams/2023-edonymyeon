@@ -51,6 +51,7 @@ public class FCMNotificationSender implements NotificationSender {
             log.info("FCM 요청 발송 시작 - {}", requestBody);
             final OkHttpClient client = new OkHttpClient();
             final Request request = makeFCMNotificationRequest(requestBody);
+            log.info("FCM 요청 발송 시작 - {}", request.body().toString());
             final Response response = sendFCMNotificationRequest(client, request);
             if (!isSentSuccessfully(response)) {
                 throw new BusinessLogicException(NOTIFICATION_REQUEST_FAILED);
