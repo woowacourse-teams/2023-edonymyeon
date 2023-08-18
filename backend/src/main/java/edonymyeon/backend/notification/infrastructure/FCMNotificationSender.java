@@ -48,6 +48,7 @@ public class FCMNotificationSender implements NotificationSender {
     public void sendNotification(final Receiver receiver, final String title) {
         try {
             final String requestBody = makeFCMNotificationRequestBody(receiver.getToken(), title, receiver.getData());
+            log.info("FCM 요청 발송 시작 - {}", requestBody);
             final OkHttpClient client = new OkHttpClient();
             final Request request = makeFCMNotificationRequest(requestBody);
             final Response response = sendFCMNotificationRequest(client, request);
