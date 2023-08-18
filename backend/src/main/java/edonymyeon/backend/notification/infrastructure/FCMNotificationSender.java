@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -25,6 +26,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class FCMNotificationSender implements NotificationSender {
@@ -34,8 +36,12 @@ public class FCMNotificationSender implements NotificationSender {
 
     private final ObjectMapper objectMapper;
 
-    private boolean isSentSuccessfully(final Response response) {
-        return Objects.equals(response.code(), HttpStatus.OK.value());
+    private boolean isSentSuccessfully(final Response response) throws IOException {
+        final boolean isSuccessful = Objects.equals(response.code(), HttpStatus.OK.value());
+        if (!isSuccessful) {
+            log.error("FCM 알림 발송 실패 - {}", response.body().string());
+        }
+        return isSuccessful;
     }
 
     @Override
@@ -49,6 +55,7 @@ public class FCMNotificationSender implements NotificationSender {
                 throw new BusinessLogicException(NOTIFICATION_REQUEST_FAILED);
             }
         } catch (IOException ioException) {
+            log.error("FCM 알림 발송 도중 IOException 발생", ioException);
             throw new BusinessLogicException(NOTIFICATION_REQUEST_FAILED);
         }
     }
