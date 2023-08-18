@@ -9,9 +9,10 @@ import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
-import edonymyeon.backend.auth.application.event.JoinMemberEvent;
 import edonymyeon.backend.auth.application.dto.MemberResponse;
+import edonymyeon.backend.auth.application.event.JoinMemberEvent;
 import edonymyeon.backend.auth.application.event.LoginEvent;
+import edonymyeon.backend.auth.application.event.LogoutEvent;
 import edonymyeon.backend.auth.domain.ValidateType;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
@@ -23,10 +24,12 @@ import edonymyeon.backend.member.repository.MemberRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
@@ -120,5 +123,9 @@ public class AuthService {
         if (memberRepository.findByNickname(nickname).isPresent()) {
             throw new EdonymyeonException(MEMBER_NICKNAME_INVALID);
         }
+    }
+
+    public void logout(String deviceToken) {
+        publisher.publishEvent(new LogoutEvent(deviceToken));
     }
 }

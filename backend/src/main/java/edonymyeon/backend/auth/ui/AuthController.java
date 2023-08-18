@@ -7,10 +7,16 @@ import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
+import edonymyeon.backend.auth.application.dto.LogoutRequest;
 import edonymyeon.backend.auth.application.dto.MemberResponse;
 import edonymyeon.backend.auth.domain.TokenGenerator;
+import edonymyeon.backend.global.exception.BusinessLogicException;
+import edonymyeon.backend.global.exception.ExceptionInformation;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class AuthController {
@@ -60,5 +67,18 @@ public class AuthController {
     public ResponseEntity<Void> join(@RequestBody JoinRequest joinRequest) {
         authService.joinMember(joinRequest);
         return ResponseEntity.created(URI.create("/login")).build();
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestBody LogoutRequest logoutRequest, HttpServletRequest request) {
+        try {
+            request.logout();
+        } catch (ServletException e) {
+            log.error("로그아웃 실패", e);
+            throw new BusinessLogicException(ExceptionInformation.LOGOUT_FAILED);
+        }
+
+        authService.logout(logoutRequest.deviceToken());
+        return ResponseEntity.ok().build();
     }
 }
