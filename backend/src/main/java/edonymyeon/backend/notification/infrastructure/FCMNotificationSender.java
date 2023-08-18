@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FCMNotificationSender implements NotificationSender {
 
-    public static final String FIREBASE_ADMIN_KEY_PATH = "src/main/resources/firebase/edonymyeon-firebase.json";
+    public static final String FIREBASE_ADMIN_KEY_PATH = "/firebase/edonymyeon-firebase.json";
     private static final String API_URL = "https://fcm.googleapis.com/v1/projects/edonymyeon-5c344/messages:send";
 
     private final ObjectMapper objectMapper;
@@ -50,6 +50,7 @@ public class FCMNotificationSender implements NotificationSender {
             final String requestBody = makeFCMNotificationRequestBody(receiver.getToken(), title, receiver.getData());
             final OkHttpClient client = new OkHttpClient();
             final Request request = makeFCMNotificationRequest(requestBody);
+            log.info("FCM 요청 발송 시작 - {}", request.body().toString());
             final Response response = sendFCMNotificationRequest(client, request);
             if (!isSentSuccessfully(response)) {
                 throw new BusinessLogicException(NOTIFICATION_REQUEST_FAILED);
