@@ -12,5 +12,5 @@ data class UserRegistrationRequest(
     @SerialName("nickname")
     val nickname: String,
     @SerialName("deviceToken")
-    val deviceToken: String = "",
+    val deviceToken: String?,
 )

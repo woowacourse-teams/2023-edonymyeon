@@ -3,6 +3,7 @@ package com.app.edonymyeon.presentation.ui.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
@@ -44,6 +45,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateByIntent() {
+        Log.d("testToken", intent.extras?.getString("click_action").toString() + "this2")
         when (intent.extras?.getString("click_action")) {
             "POST" -> {
                 val postId = intent.extras?.getLong("postId")

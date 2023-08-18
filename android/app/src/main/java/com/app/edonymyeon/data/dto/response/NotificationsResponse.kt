@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NotificationsResponse(
-    @SerialName("notifications")
+    @SerialName("content")
     val notification: List<NotificationDataModel>,
     @SerialName("last")
     val isLast: Boolean,

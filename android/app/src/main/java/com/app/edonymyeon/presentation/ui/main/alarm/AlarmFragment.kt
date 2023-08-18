@@ -11,6 +11,9 @@ import app.edonymyeon.R
 import app.edonymyeon.databinding.FragmentAlarmBinding
 import com.app.edonymyeon.data.datasource.notification.NotificationRemoteDataSource
 import com.app.edonymyeon.data.repository.NotificationRepositoryImpl
+import com.app.edonymyeon.presentation.ui.main.alarm.adapter.AlarmAdapter
+import com.app.edonymyeon.presentation.ui.mypost.MyPostActivity
+import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class AlarmFragment : Fragment() {
@@ -24,6 +27,28 @@ class AlarmFragment : Fragment() {
                 NotificationRemoteDataSource(),
             ),
         )
+    }
+
+    private val adapter: AlarmAdapter by lazy {
+        AlarmAdapter(onClick = {
+            when (it.navigateTo) {
+                "POST" -> {
+                    navigateToPostDetail(it.postId)
+                }
+
+                "MYPOST" -> {
+                    navigateToMyPost()
+                }
+            }
+        })
+    }
+
+    private fun navigateToMyPost() {
+        startActivity(MyPostActivity.newIntent(requireContext()))
+    }
+
+    private fun navigateToPostDetail(postId: Long) {
+        startActivity(PostDetailActivity.newIntent(context = requireContext(), postId = postId))
     }
 
     override fun onCreateView(
@@ -51,7 +76,9 @@ class AlarmFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setObserver()
         setListener()
+        binding.rvAlarmList.adapter = adapter
         viewModel.checkLogin()
+        viewModel.getAlarmList()
     }
 
     private fun setListener() {
@@ -88,6 +115,7 @@ class AlarmFragment : Fragment() {
             notificationList.observe(viewLifecycleOwner) {
                 binding.srlAlarmList.isRefreshing = false
                 setAlarmOffIcon()
+                adapter.setAllPosts(it)
             }
         }
     }

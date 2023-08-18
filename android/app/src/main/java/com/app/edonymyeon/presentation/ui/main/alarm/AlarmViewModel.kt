@@ -3,11 +3,13 @@ package com.app.edonymyeon.presentation.ui.main.alarm
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.uimodel.NotificationUiModel
 import com.domain.edonymyeon.model.Page
 import com.domain.edonymyeon.repository.NotificationRepository
+import kotlinx.coroutines.launch
 
 class AlarmViewModel(
     private val notificationRepository: NotificationRepository,
@@ -26,13 +28,17 @@ class AlarmViewModel(
     }
 
     fun getAlarmList() {
-        val result = notificationRepository.getNotifications()
-        if (result.isSuccess) {
-            _notificationList.value = result.getOrNull()?.notifications?.map {
-                it.toUiModel()
+        viewModelScope.launch {
+            val result = notificationRepository.getNotifications(PAGE_SIZE, currentPage.value)
+            if (result.isSuccess) {
+                _notificationList.value =
+                    notificationList.value.orEmpty() +
+                    result.getOrNull()?.notifications?.map {
+                        it.toUiModel()
+                    }.orEmpty()
+                currentPage = currentPage.increasePage()
+                isLastPage = result.getOrNull()?.isLast ?: true
             }
-            currentPage = currentPage.increasePage()
-            isLastPage = result.getOrNull()?.isLast ?: true
         }
     }
 
@@ -43,5 +49,9 @@ class AlarmViewModel(
 
     fun hasNextPage(): Boolean {
         return !isLastPage
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 20
     }
 }

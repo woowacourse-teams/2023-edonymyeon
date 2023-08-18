@@ -8,8 +8,8 @@ import com.domain.edonymyeon.repository.NotificationRepository
 
 class NotificationRepositoryImpl(private val notificationDataSource: NotificationDataSource) :
     NotificationRepository {
-    override fun getNotifications(): Result<Notifications> {
-        val result = notificationDataSource.getNotifications()
+    override suspend fun getNotifications(size: Int, page: Int): Result<Notifications> {
+        val result = notificationDataSource.getNotifications(size, page)
         return if (result.isSuccessful && result.body() != null) {
             Result.success(result.body()!!.toDomain())
         } else {

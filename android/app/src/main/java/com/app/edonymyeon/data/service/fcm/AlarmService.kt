@@ -36,6 +36,7 @@ class AlarmService : FirebaseMessagingService() {
         CoroutineScope(Dispatchers.Main).launch {
             alarmOn.value = true
         }
+        Log.d("testToken", "message: ${message.data["click_action"]}" + "this1")
 
         val intent = when (message.data["click_action"].toString()) {
             "POST" -> {

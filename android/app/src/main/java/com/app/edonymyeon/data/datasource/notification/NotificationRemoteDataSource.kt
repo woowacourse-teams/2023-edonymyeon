@@ -9,7 +9,7 @@ class NotificationRemoteDataSource : NotificationDataSource {
     private val notificationService: NotificationService =
         RetrofitClient.getInstance().create(NotificationService::class.java)
 
-    override fun getNotifications(): Response<NotificationsResponse> {
-        return notificationService.getNotifications()
+    override suspend fun getNotifications(size: Int, page: Int): Response<NotificationsResponse> {
+        return notificationService.getNotifications(size, page)
     }
 }

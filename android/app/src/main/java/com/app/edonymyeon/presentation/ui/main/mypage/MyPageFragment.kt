@@ -16,7 +16,6 @@ import com.app.edonymyeon.data.datasource.profile.ProfileRemoteDataSource
 import com.app.edonymyeon.data.repository.AuthRepositoryImpl
 import com.app.edonymyeon.data.repository.ConsumptionsRepositoryImpl
 import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
-import com.app.edonymyeon.presentation.ui.alarmsetting.AlarmSettingActivity
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
 import com.app.edonymyeon.presentation.ui.main.MainActivity
 import com.app.edonymyeon.presentation.ui.main.mypage.chart.LineChartManager
@@ -26,6 +25,7 @@ import com.app.edonymyeon.presentation.uimodel.NicknameUiModel
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
+import com.google.android.material.snackbar.Snackbar
 
 class MyPageFragment : Fragment() {
     private val binding: FragmentMyPageBinding by lazy {
@@ -168,7 +168,8 @@ class MyPageFragment : Fragment() {
     }
 
     private fun navigateToAlarmSetting() {
-        startActivity(AlarmSettingActivity.newIntent(requireContext()))
+        Snackbar.make(binding.root, "준비중입니다.", Snackbar.LENGTH_SHORT).show()
+//        startActivity(AlarmSettingActivity.newIntent(requireContext()))
     }
 
     private fun navigateToLogin() {

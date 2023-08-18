@@ -4,5 +4,5 @@ import com.app.edonymyeon.data.dto.response.NotificationsResponse
 import retrofit2.Response
 
 interface NotificationDataSource {
-    fun getNotifications(): Response<NotificationsResponse>
+    suspend fun getNotifications(size: Int, page: Int): Response<NotificationsResponse>
 }
