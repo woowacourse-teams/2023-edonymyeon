@@ -101,7 +101,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="18dp"
                     android:layout_marginBottom="10dp"
-                    android:text="@{viewModel.profile.nickname}"
+                    android:text="@{viewModel.profile.nickname.toString()}"
                     android:textColor="@color/gray_434343"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toTopOf="@id/tv_saving_title"
