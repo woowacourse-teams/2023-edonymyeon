@@ -245,7 +245,7 @@
                     android:id="@+id/space_payment_title_bottom"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    app:layout_constraintDimensionRatio="H,336:18"
+                    app:layout_constraintDimensionRatio="H,335:18"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_my_payment_title" />
@@ -303,7 +303,7 @@
                     android:textColor="@color/black_000000"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toTopOf="@id/tv_update_user_info"
-                    app:layout_constraintDimensionRatio="H, 336:48"
+                    app:layout_constraintDimensionRatio="H,336:48"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -318,11 +318,26 @@
                     android:text="@string/my_page_update_user_info"
                     android:textColor="@color/black_000000"
                     android:textSize="14sp"
-                    app:layout_constraintBottom_toTopOf="@id/tv_logout"
-                    app:layout_constraintDimensionRatio="H, 336:48"
+                    app:layout_constraintBottom_toTopOf="@id/tv_update_alarm_setting"
+                    app:layout_constraintDimensionRatio="H,336:48"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_my_post"
+                    app:layout_constraintWidth_percent="0.87" />
+
+                <TextView
+                    android:id="@+id/tv_update_alarm_setting"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/my_page_alarm_setting"
+                    android:textColor="@color/black_000000"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toTopOf="@id/tv_logout"
+                    app:layout_constraintDimensionRatio="H,336:48"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_update_user_info"
                     app:layout_constraintWidth_percent="0.87" />
 
                 <TextView
@@ -337,7 +352,7 @@
                     app:layout_constraintDimensionRatio="H, 336:48"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_update_user_info"
+                    app:layout_constraintTop_toBottomOf="@id/tv_update_alarm_setting"
                     app:layout_constraintWidth_percent="0.87" />
 
                 <TextView

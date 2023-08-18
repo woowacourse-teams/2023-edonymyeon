@@ -2,8 +2,7 @@ package com.app.edonymyeon.data.datasource.auth
 
 import com.app.edonymyeon.data.util.PreferenceUtil
 
-class AuthLocalDataSource :
-    AuthDataSource.Local {
+class AuthLocalDataSource : AuthDataSource.Local {
 
     override fun getAuthToken(): String? {
         return PreferenceUtil.getValue(USER_ACCESS_TOKEN)

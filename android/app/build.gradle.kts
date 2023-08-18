@@ -150,4 +150,10 @@ dependencies {
 
     // swipeRefreshLayout
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    // firebase cloud messaging
+    implementation("com.google.firebase:firebase-messaging-ktx:23.2.1")
+
+    // swipeRefreshLayout
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 }

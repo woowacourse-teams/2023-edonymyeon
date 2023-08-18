@@ -9,6 +9,7 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:name="com.app.edonymyeon.application.EdonymyeonApplication"
@@ -22,25 +23,29 @@
         android:theme="@style/Theme.Edonymyeon"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
+        <activity
+            android:name="com.app.edonymyeon.presentation.ui.alarmsetting.AlarmSettingActivity"
+            android:exported="false" />
         <activity
             android:name="com.app.edonymyeon.presentation.ui.login.LoginActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name="com.app.edonymyeon.presentation.ui.signup.SignUpActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize" />
-
         <activity
             android:name="com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity"
-            android:exported="true" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="POST" />
+                <category android:name="android.intent.category.DEFAULT" />
 
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity"
             android:exported="true" />
-
         <activity
             android:name="com.app.edonymyeon.presentation.ui.main.MainActivity"
             android:exported="true">
@@ -49,14 +54,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.app.edonymyeon.presentation.ui.mypost.MyPostActivity"
-            android:exported="true" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="MYPOST" />
+                <category android:name="android.intent.category.DEFAULT" />
 
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.app.edonymyeon.presentation.ui.post.PostActivity"
             android:exported="true" />
+
+        <service
+            android:name="com.app.edonymyeon.data.service.fcm.AlarmService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"

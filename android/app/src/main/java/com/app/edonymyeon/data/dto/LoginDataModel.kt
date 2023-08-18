@@ -7,4 +7,5 @@ import kotlinx.serialization.Serializable
 data class LoginDataModel(
     @SerialName("email") val email: String,
     @SerialName("password") val password: String,
+    @SerialName("deviceToken") val deviceToken: String,
 )

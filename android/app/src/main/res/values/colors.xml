@@ -14,4 +14,9 @@
     <color name="gray_434343">#434343</color>
     <color name="gray_615f5f">#615F5F</color>
     <color name="gray_d9d9d9">#d9d9d9</color>
+    <color name="gray_666666">#666666</color>
+    <color name="purple_cdc9e8">#CDC9E8</color>
+    <color name="purple_6200ee">#6200EE</color>
+    <color name="white_d7d9ea">#D7D9EA</color>
+    <color name="purple_d9c2fb">#D9C2FB</color>
 </resources>

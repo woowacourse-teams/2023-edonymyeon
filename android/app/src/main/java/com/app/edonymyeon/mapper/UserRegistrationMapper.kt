@@ -8,5 +8,6 @@ fun UserRegistration.toDataModel(): UserRegistrationRequest {
         email = email.value,
         password = password.value,
         nickname = nickname.value,
+        deviceToken = deviceToken,
     )
 }
