@@ -46,14 +46,17 @@ class LoginViewModel(private val repository: AuthRepository) :
     }
 
     fun loginByKakao(accessToken: String) {
-        viewModelScope.launch {
-            repository.loginByKakao(
-                accessToken,
-            ).onSuccess {
-                _isSuccess.value = true
-            }.onFailure {
-                _isSuccess.value = false
-                _errorMessage.postValue((it as CustomThrowable).message)
+        FCMToken.getFCMToken {
+            viewModelScope.launch {
+                repository.loginByKakao(
+                    accessToken,
+                    it.orEmpty(),
+                ).onSuccess {
+                    _isSuccess.value = true
+                }.onFailure {
+                    _isSuccess.value = false
+                    _errorMessage.postValue((it as CustomThrowable).message)
+                }
             }
         }
     }

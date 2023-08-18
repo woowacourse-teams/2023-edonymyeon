@@ -53,8 +53,8 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun loginByKakao(accessToken: String): Result<Unit> {
-        val result = authRemoteDataSource.loginByKakao(TokenRequest(accessToken))
+    override suspend fun loginByKakao(accessToken: String, deviceToken: String): Result<Unit> {
+        val result = authRemoteDataSource.loginByKakao(TokenRequest(accessToken, deviceToken))
 
         return if (result.isSuccessful) {
             authLocalDataSource.setAuthToken(result.headers()["Authorization"] as String)
