@@ -5,15 +5,15 @@ import lombok.Getter;
 
 @Getter
 public class Data {
-    private Long notificationId;
+    private String notificationId;
     private String navigateTo;
-    private Long postId;
-    private boolean read;
+    private String postId;
+    private String read;
 
     public Data(final Long notificationId, final ScreenType navigateTo, final Long postId) {
-        this.notificationId = notificationId;
+        this.notificationId = String.valueOf(notificationId);
         this.navigateTo = navigateTo.name();
-        this.postId = postId;
-        this.read = false;
+        this.postId = String.valueOf(postId);
+        this.read = "false";
     }
 }
