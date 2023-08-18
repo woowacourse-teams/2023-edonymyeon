@@ -84,10 +84,11 @@ public class MemberService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void activateDevice(final Member member, final String deviceToken) {
-        if (member.isActiveDevice(deviceToken)) {
+        final Member rePersistedMember = memberRepository.save(member);
+        if (rePersistedMember.isActiveDevice(deviceToken)) {
             return;
         }
-        member.activateDevice(deviceToken);
+        rePersistedMember.activateDevice(deviceToken);
     }
 
     @Transactional
