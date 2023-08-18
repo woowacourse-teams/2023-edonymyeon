@@ -38,6 +38,12 @@ android {
             localProperties.getProperty("KAKAO_APP_KEY"),
         )
 
+        buildConfigField(
+            "String",
+            "APP_BASE_URL",
+            localProperties.getProperty("APP_BASE_URL"),
+        )
+
         manifestPlaceholders["KAKAO_NATIVE_KEY"] = localProperties.getProperty("KAKAO_NATIVE_KEY")
     }
 
