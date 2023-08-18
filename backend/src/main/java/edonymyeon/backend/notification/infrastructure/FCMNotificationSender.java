@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FCMNotificationSender implements NotificationSender {
 
-    public static final String FIREBASE_ADMIN_KEY_PATH = "src/main/resources/firebase/edonymyeon-firebase.json";
+    public static final String FIREBASE_ADMIN_KEY_PATH = "/firebase/edonymyeon-firebase.json";
     private static final String API_URL = "https://fcm.googleapis.com/v1/projects/edonymyeon-5c344/messages:send";
 
     private final ObjectMapper objectMapper;
