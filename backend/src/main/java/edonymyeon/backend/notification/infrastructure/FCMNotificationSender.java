@@ -7,10 +7,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.notification.application.NotificationSender;
-import edonymyeon.backend.notification.application.dto.Receiver;
 import edonymyeon.backend.notification.application.dto.Data;
+import edonymyeon.backend.notification.application.dto.Receiver;
 import edonymyeon.backend.notification.infrastructure.FcmMessage.Message;
 import edonymyeon.backend.notification.infrastructure.FcmMessage.Notification;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -21,7 +22,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -33,8 +34,9 @@ public class FCMNotificationSender implements NotificationSender {
 
     public static final String FIREBASE_ADMIN_KEY_PATH = "/firebase/edonymyeon-firebase.json";
     private static final String API_URL = "https://fcm.googleapis.com/v1/projects/edonymyeon-5c344/messages:send";
-
     private final ObjectMapper objectMapper;
+    @Value("${file.firebaseTokenDir}")
+    private String firebaseTokenDirectory;
 
     private boolean isSentSuccessfully(final Response response) throws IOException {
         final boolean isSuccessful = Objects.equals(response.code(), HttpStatus.OK.value());
@@ -98,7 +100,7 @@ public class FCMNotificationSender implements NotificationSender {
 
     private String getFCMAccessToken() throws IOException {
         final GoogleCredentials googleCredentials = GoogleCredentials
-                .fromStream(new ClassPathResource(FIREBASE_ADMIN_KEY_PATH).getInputStream())
+                .fromStream(new FileInputStream(firebaseTokenDirectory))
                 .createScoped(List.of("https://www.googleapis.com/auth/cloud-platform"));
 
         googleCredentials.refreshIfExpired();
