@@ -14,17 +14,13 @@ import edonymyeon.backend.auth.application.event.JoinMemberEvent;
 import edonymyeon.backend.auth.application.event.LoginEvent;
 import edonymyeon.backend.auth.application.event.LogoutEvent;
 import edonymyeon.backend.auth.domain.ValidateType;
-import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.domain.SocialInfo;
 import edonymyeon.backend.member.domain.SocialInfo.SocialType;
 import edonymyeon.backend.member.repository.MemberRepository;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -129,14 +125,7 @@ public class AuthService {
         }
     }
 
-    public void logout(HttpServletRequest request, String deviceToken) {
-        try {
-            request.logout();
-        } catch (ServletException e) {
-            log.error("로그아웃 실패", e);
-            throw new BusinessLogicException(ExceptionInformation.LOGOUT_FAILED);
-        }
-
+    public void logout(String deviceToken) {
         publisher.publishEvent(new LogoutEvent(deviceToken));
     }
 }
