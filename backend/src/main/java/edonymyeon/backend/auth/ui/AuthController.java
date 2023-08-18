@@ -7,8 +7,10 @@ import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
+import edonymyeon.backend.auth.application.dto.LogoutRequest;
 import edonymyeon.backend.auth.application.dto.MemberResponse;
 import edonymyeon.backend.auth.domain.TokenGenerator;
+import jakarta.servlet.http.HttpServletRequest;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -60,5 +62,11 @@ public class AuthController {
     public ResponseEntity<Void> join(@RequestBody JoinRequest joinRequest) {
         authService.joinMember(joinRequest);
         return ResponseEntity.created(URI.create("/login")).build();
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestBody LogoutRequest logoutRequest, HttpServletRequest request) {
+        authService.logout(request, logoutRequest.deviceToken());
+        return ResponseEntity.ok().build();
     }
 }

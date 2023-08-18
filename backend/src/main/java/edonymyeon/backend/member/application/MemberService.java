@@ -10,9 +10,11 @@ import edonymyeon.backend.member.application.dto.YearMonthDto;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.application.dto.response.MyPageResponse;
+import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -22,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @Service
 public class MemberService {
+
+    private final DeviceRepository deviceRepository;
 
     private final MemberRepository memberRepository;
 
@@ -84,5 +88,11 @@ public class MemberService {
             return;
         }
         member.activateDevice(deviceToken);
+    }
+
+    @Transactional
+    public void deactivateDevice(final String deviceToken) {
+        final Optional<Device> device = deviceRepository.findByDeviceToken(deviceToken);
+        device.ifPresent(Device::deactivate);
     }
 }

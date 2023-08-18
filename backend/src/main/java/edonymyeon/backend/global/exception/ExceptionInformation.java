@@ -20,6 +20,7 @@ public enum ExceptionInformation {
     MEMBER_PASSWORD_NOT_MATCH(1512, "회원의 비밀번호가 일치하지 않습니다."),
     AUTHORIZATION_EMPTY(1523, "인증 정보가 없습니다."),
     ILLEGAL_ARGUMENT_TYPE(1524, "잘못된 타입의 요청입니다."),
+    LOGOUT_FAILED(1525, "로그아웃에 실패하였습니다."),
 
     // 2___: 게시글 관련
     POST_ID_NOT_FOUND(2000, "존재하지 않는 게시글입니다."),
@@ -64,7 +65,7 @@ public enum ExceptionInformation {
     CONSUMPTION_PERIOD_MONTH_ILLEGAL(6548, "해당 기간의 소비 금액은 조회할 수 없습니다."),
 
     // 9___: 어드민 페이지 관련
-    LOGGING_TYPE_NOT_EXISTS(9001,"존재하지 않는 로그 타입입니다."),
+    LOGGING_TYPE_NOT_EXISTS(9001, "존재하지 않는 로그 타입입니다."),
     ABUSING_TYPE_NOT_FOUND(9100, "존재하지 않는 리포팅 분류입니다."),
     NOTIFICATION_REQUEST_FAILED(9200, "알림 발송 요청에 실패했습니다.");
 
