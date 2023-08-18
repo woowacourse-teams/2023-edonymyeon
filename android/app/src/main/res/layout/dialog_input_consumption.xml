@@ -35,7 +35,7 @@
             android:id="@+id/tv_dialog_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/dialog_consumption_title"
+            android:text = "@{type == ConsumptionType.PURCHASE ? @string/dialog_purchase_title : @string/dialog_saving_title}"
             android:textColor="@color/blue_576b9e"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"

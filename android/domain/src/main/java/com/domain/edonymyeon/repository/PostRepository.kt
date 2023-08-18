@@ -1,16 +1,16 @@
 package com.domain.edonymyeon.repository
 
+import com.domain.edonymyeon.model.PostEditor
 import com.domain.edonymyeon.model.PostItems
+import java.io.File
 
 interface PostRepository {
     suspend fun getPostDetail(postId: Long): Result<Any>
     suspend fun deletePost(postId: Long): Result<Any>
 
     suspend fun savePost(
-        title: String,
-        content: String,
-        price: Int,
-        images: List<String>,
+        postEditor: PostEditor,
+        images: List<File>,
     ): Result<Any>
 
     suspend fun getPosts(
@@ -20,10 +20,9 @@ interface PostRepository {
 
     suspend fun updatePost(
         id: Long,
-        title: String,
-        content: String,
-        price: Int,
-        images: List<String>,
+        postEditor: PostEditor,
+        imageUrls: List<String>,
+        imageFiles: List<File>,
     ): Result<Any>
 
     suspend fun getHotPosts(): Result<PostItems>

@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AuthDuplicateResponse(
-    @SerialName("email") val isUnique: Boolean,
+    @SerialName("isUnique") val isUnique: Boolean,
 )

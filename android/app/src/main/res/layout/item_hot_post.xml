@@ -67,11 +67,11 @@
             android:id="@+id/space_content_bottom"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/tv_hot_post_writer_createdAt"
             app:layout_constraintDimensionRatio="H,360:16"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_hot_post_content"
-            app:layout_constraintBottom_toTopOf="@id/tv_hot_post_writer_createdAt"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_hot_post_content" />
 
         <TextView
             android:id="@+id/tv_hot_post_writer_createdAt"
@@ -80,9 +80,9 @@
             android:text="@{@string/all_writer_createdAt(post.nickname, post.createdAt)}"
             android:textColor="@color/gray_615f5f"
             android:textSize="11sp"
+            app:layout_constraintBottom_toTopOf="@id/space_reaction_top"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/space_content_bottom"
-            app:layout_constraintBottom_toTopOf="@id/space_reaction_top"
             tools:text="이리내 | 5일 전" />
 
         <Space
@@ -107,11 +107,11 @@
             android:id="@+id/space"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="H,360:12"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/prv_hot_post_reaction"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/prv_hot_post_reaction" />
 
         <ImageView
             imgUrlCenterCrop="@{post.thumbnailUrl}"

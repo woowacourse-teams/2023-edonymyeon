@@ -11,6 +11,7 @@ import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.uimodel.ConsumptionAmountUiModel
 import com.app.edonymyeon.presentation.uimodel.ConsumptionStatisticsUiModel
+import com.app.edonymyeon.presentation.uimodel.NicknameUiModel
 import com.app.edonymyeon.presentation.uimodel.WriterUiModel
 import com.domain.edonymyeon.model.ConsumptionStatistics
 import com.domain.edonymyeon.model.Writer
@@ -53,7 +54,7 @@ class MyPageViewModel(
         }
     }
 
-    fun setNoUserState(defaultNickname: String) {
+    fun setNoUserState(defaultNickname: NicknameUiModel) {
         _profile.value = WriterUiModel(0L, defaultNickname, null)
         _consumptionOnThisMonth.value = ConsumptionAmountUiModel(0, 0)
     }
@@ -66,6 +67,15 @@ class MyPageViewModel(
                     _consumptions.value = it.toUiModel()
                     _consumptionOnThisMonth.value = it.consumptionAmounts.last().toUiModel()
                 }
+                .onFailure {
+                    it as CustomThrowable
+                }
+        }
+    }
+
+    fun withdraw() {
+        viewModelScope.launch {
+            profileRepository.withdraw()
                 .onFailure {
                     it as CustomThrowable
                 }

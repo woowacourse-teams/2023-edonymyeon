@@ -1,6 +1,7 @@
 package com.app.edonymyeon.data.service
 
 import com.app.edonymyeon.data.dto.LoginDataModel
+import com.app.edonymyeon.data.dto.request.TokenRequest
 import com.app.edonymyeon.data.dto.request.UserRegistrationRequest
 import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
 import retrofit2.Response
@@ -22,5 +23,10 @@ interface AuthService {
     @POST("/login")
     suspend fun login(
         @Body loginDataModel: LoginDataModel,
+    ): Response<Unit>
+
+    @POST("/auth/kakao/login")
+    suspend fun loginByKakao(
+        @Body accessToken: TokenRequest,
     ): Response<Unit>
 }

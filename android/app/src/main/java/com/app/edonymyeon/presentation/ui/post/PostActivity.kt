@@ -62,6 +62,7 @@ class PostActivity : AppCompatActivity() {
     private fun setPostAdapter() {
         val postAdapter = PostAdapter(onClick = { postId ->
             startActivity(PostDetailActivity.newIntent(this, postId))
+            finish()
         })
         binding.rvPost.adapter = postAdapter
         setObserver(postAdapter)

@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-kapt")
@@ -7,6 +9,9 @@ plugins {
     id("com.google.firebase.crashlytics")
     kotlin("plugin.serialization") version "1.8.21"
 }
+
+val localProperties = Properties()
+localProperties.load(project.rootProject.file("local.properties").inputStream())
 
 android {
     namespace = "app.edonymyeon"
@@ -20,6 +25,26 @@ android {
         versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            "String",
+            "KAKAO_NATIVE_KEY",
+            localProperties.getProperty("KAKAO_NATIVE_KEY"),
+        )
+
+        buildConfigField(
+            "String",
+            "KAKAO_APP_KEY",
+            localProperties.getProperty("KAKAO_APP_KEY"),
+        )
+
+        buildConfigField(
+            "String",
+            "APP_BASE_URL",
+            localProperties.getProperty("APP_BASE_URL"),
+        )
+
+        manifestPlaceholders["KAKAO_NATIVE_KEY"] = localProperties.getProperty("KAKAO_NATIVE_KEY")
     }
 
     buildTypes {
@@ -119,6 +144,9 @@ dependencies {
     // firebase crashlytics & analytics
     implementation("com.google.firebase:firebase-crashlytics-ktx")
     implementation("com.google.firebase:firebase-analytics-ktx")
+
+    // kakao login SDK
+    implementation("com.kakao.sdk:v2-user:2.10.0")
 
     // swipeRefreshLayout
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")

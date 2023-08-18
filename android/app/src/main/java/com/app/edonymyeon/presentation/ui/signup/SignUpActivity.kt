@@ -18,12 +18,7 @@ class SignUpActivity : AppCompatActivity() {
     private val viewModel: SignUpViewModel by viewModels {
         SignUpViewModelFactory(
             AuthRepositoryImpl(
-                AuthLocalDataSource.getInstance(
-                    getSharedPreferences(
-                        AuthLocalDataSource.AUTH_INFO,
-                        MODE_PRIVATE,
-                    ),
-                ),
+                AuthLocalDataSource(),
                 AuthRemoteDataSource(),
             ),
         )

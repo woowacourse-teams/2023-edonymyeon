@@ -41,6 +41,19 @@ class LoginViewModel(private val repository: AuthRepository) :
         }
     }
 
+    fun loginByKakao(accessToken: String) {
+        viewModelScope.launch {
+            repository.loginByKakao(
+                accessToken,
+            ).onSuccess {
+                _isSuccess.value = true
+            }.onFailure {
+                _isSuccess.value = false
+                _errorMessage.postValue((it as CustomThrowable).message)
+            }
+        }
+    }
+
     companion object {
         private const val LOGIN_ENABLE_ERROR_MESSAGE = "이메일과 패스워드는 필수 입력항목입니다."
     }

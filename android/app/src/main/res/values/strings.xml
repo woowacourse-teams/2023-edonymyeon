@@ -117,7 +117,8 @@
     <string name="my_post_saving_text">절약확정</string>
 
     <!--my_post_dialog-->
-    <string name="dialog_consumption_title">소비/절약 내역을 입력하세요</string>
+    <string name="dialog_purchase_title">구매 금액과 날짜를 입력해주세요</string>
+    <string name="dialog_saving_title">절약을 결심한 날짜를 입력해주세요</string>
     <string name="dialog_consumption_cancel">취소</string>
     <string name="dialog_consumption_ok">확인</string>
     <string name="dialog_input_price_hint">금액입력</string>

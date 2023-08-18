@@ -1,5 +1,6 @@
 package com.app.edonymyeon.data.datasource.post
 
+import com.app.edonymyeon.data.dto.request.PostEditorRequest
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
 import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.Posts
@@ -30,51 +31,55 @@ class PostRemoteDataSource : PostDataSource {
     }
 
     override suspend fun savePost(
-        title: String,
-        content: String,
-        price: Int,
-        imageUris: List<String>,
+        postEditorRequest: PostEditorRequest,
+        imageFiles: List<File>,
     ): Response<PostEditorResponse> {
-        val images = generateMultiPartFromUri(imageUris)
         val postEditorMap: HashMap<String, RequestBody> = hashMapOf()
-        postEditorMap["title"] = title.toRequestBody("text/plain".toMediaTypeOrNull())
-        postEditorMap["content"] = content.toRequestBody("text/plain".toMediaTypeOrNull())
-        postEditorMap["price"] = price.toString().toRequestBody("text/plain".toMediaTypeOrNull())
+        postEditorMap["title"] =
+            postEditorRequest.title.createRequestBody()
+        postEditorMap["content"] =
+            postEditorRequest.content.createRequestBody()
+        postEditorMap["price"] =
+            postEditorRequest.price.toString().createRequestBody()
+        val newImages = imageFiles.generateMultiPartFromFile()
 
-        return postService.savePost(postEditorMap, images)
+        return postService.savePost(postEditorMap, newImages)
     }
 
     override suspend fun updatePost(
         id: Long,
-        title: String,
-        content: String,
-        price: Int,
-        imageUris: List<String>,
+        postEditorRequest: PostEditorRequest,
+        imageUrls: List<String>,
+        imageFiles: List<File>,
     ): Response<PostEditorResponse> {
-        val images = generateMultiPartFromUri(imageUris)
         val postEditorMap: HashMap<String, RequestBody> = hashMapOf()
-        postEditorMap["title"] = title.toRequestBody("text/plain".toMediaTypeOrNull())
-        postEditorMap["content"] = content.toRequestBody("text/plain".toMediaTypeOrNull())
-        postEditorMap["price"] = price.toString().toRequestBody("text/plain".toMediaTypeOrNull())
-        val originalImages = generateMultiPartFromUrl(imageUris)
+        postEditorMap["title"] =
+            postEditorRequest.title.createRequestBody()
+        postEditorMap["content"] =
+            postEditorRequest.content.createRequestBody()
+        postEditorMap["price"] =
+            postEditorRequest.price.toString().createRequestBody()
+        val originalImages = imageUrls.generateMultiPartFromUrl()
+        val newImages = imageFiles.generateMultiPartFromFile()
 
-        return postService.updatePost(id, postEditorMap, originalImages, images)
+        return postService.updatePost(id, postEditorMap, originalImages, newImages)
     }
 
     override suspend fun getHotPosts(): Response<Posts> {
         return postService.getHotPosts()
     }
 
-    private fun generateMultiPartFromUrl(imageUris: List<String>) =
-        imageUris.filter { it.startsWith("http") }.map {
-            val requestBody = it.toRequestBody("text/plain".toMediaTypeOrNull())
+    private fun List<String>.generateMultiPartFromUrl() =
+        this.map {
+            val requestBody = it.createRequestBody()
             MultipartBody.Part.createFormData("originalImages", null, requestBody)
         }
 
-    private fun generateMultiPartFromUri(imageUris: List<String>) =
-        imageUris.filter { it.startsWith("http").not() }.map { imageUri ->
-            val file = File(imageUri)
-            val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-            MultipartBody.Part.createFormData("newImages", file.name, requestFile)
+    private fun List<File>.generateMultiPartFromFile() =
+        this.map { imgFile ->
+            val requestFile = imgFile.asRequestBody("image/*".toMediaTypeOrNull())
+            MultipartBody.Part.createFormData("newImages", imgFile.name, requestFile)
         }
+
+    private fun String.createRequestBody() = this.toRequestBody("text/plain".toMediaTypeOrNull())
 }

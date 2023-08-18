@@ -20,4 +20,5 @@ interface ProfileDataSource {
 
     suspend fun deleteConfirm(id: Long): Response<Unit>
     suspend fun getProfile(): Response<ProfileResponse>
+    suspend fun withdraw(): Response<Unit>
 }

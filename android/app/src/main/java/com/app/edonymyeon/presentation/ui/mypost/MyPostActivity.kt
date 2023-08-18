@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -27,13 +26,6 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
     private val adapter: MyPostAdapter by lazy {
         MyPostAdapter(this)
     }
-
-    private val activityLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == PostDetailActivity.RESULT_RELOAD_CODE) {
-                loadNewData()
-            }
-        }
 
     private lateinit var dialog: ConsumptionDialog
 
@@ -109,7 +101,7 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
     }
 
     override fun onMyPostClick(id: Long) {
-        activityLauncher.launch(PostDetailActivity.newIntent(this, id))
+        startActivity(PostDetailActivity.newIntent(this, id))
     }
 
     override fun onPurchaseButtonClick(id: Long) {
