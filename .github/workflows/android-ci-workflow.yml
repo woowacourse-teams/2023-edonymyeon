@@ -25,10 +25,16 @@ jobs:
     - name: Create file
       run: cat $GITHUB_WORKSPACE/androidandroid/app/google-services.json | base64
 
-    - name: Putting data
+    - name: Putting google data
       env:
         DATA: ${{ secrets.ANDROID_GOOGLE_SERVICE }}
       run: echo $DATA > $GITHUB_WORKSPACE/android/app/google-services.json
+
+    - name: Add URL
+      env:
+        BASE_URL: ${{ secrets.APP_BASE_URL }}
+      run: |
+        echo APP_BASE_URL=\"BASE_URL\" >> ./local.properties
 
     - name: Access KAKAO KEY
       env:
