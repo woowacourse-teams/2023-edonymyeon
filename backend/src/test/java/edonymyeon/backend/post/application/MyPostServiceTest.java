@@ -13,6 +13,7 @@ import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.application.dto.response.PostConsumptionResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -25,6 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.util.ReflectionUtils;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -47,7 +49,10 @@ class MyPostServiceTest {
         final GeneralFindingCondition findingCondition = GeneralFindingCondition.builder().build();
         final Pageable pageable = findingCondition.toPage();
 
-        final Member 작성자 = new Member(1L);
+        final Member 작성자 = new Member("test@gmail.com", "password", "nickName", null);
+        final Field memberIdField = ReflectionUtils.findField(Member.class, "id");
+        ReflectionUtils.makeAccessible(memberIdField);
+        ReflectionUtils.setField(memberIdField, 작성자, 1L);
 
         final List<Post> 게시글_목록 = 임의_게시글_목록(작성자);
         Slice<Post> 임의_반환_게시글_목록 = new SliceImpl<>(게시글_목록, pageable, true);

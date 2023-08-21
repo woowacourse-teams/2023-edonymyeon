@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.domain.TestMemberBuilder;
 import edonymyeon.backend.notification.application.NotificationSender;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -25,7 +26,7 @@ public class IntegrationFixture {
     protected ProfileImageInfoTestSupport profileImageInfoTestSupport;
 
     @Autowired
-    protected MemberTestSupport memberTestSupport;
+    protected TestMemberBuilder memberTestSupport;
 
     @Autowired
     protected PostTestSupport postTestSupport;

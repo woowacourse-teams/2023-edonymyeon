@@ -1,27 +1,29 @@
-package edonymyeon.backend.support;
+package edonymyeon.backend.member.domain;
 
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
-import edonymyeon.backend.member.domain.Device;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.domain.SocialInfo;
 import edonymyeon.backend.member.repository.MemberRepository;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ReflectionUtils;
 
 @RequiredArgsConstructor
 @Component
-public class MemberTestSupport {
+public class TestMemberBuilder {
 
     private static final String DEFAULT_EMAIL = "email";
+
     private static final String DEFAULT_PASSWORD = "password123!";
+
     private static final String DEFAULT_NICK_NAME = "nickName";
+
     private static int emailCount = 1;
+
     private static int nickNameCount = 1;
 
     private final MemberRepository memberRepository;
-
-    private final ProfileImageInfoTestSupport profileImageInfoTestSupport;
 
     public MemberBuilder builder() {
         return new MemberBuilder();
@@ -37,11 +39,13 @@ public class MemberTestSupport {
 
         private String nickname;
 
-        private ProfileImageInfo profileImageInfo;
-
         private SocialInfo socialInfo;
 
-        private Boolean deleted;
+        private ProfileImageInfo profileImageInfo;
+
+        private List<Device> devices;
+
+        private boolean deleted = false;
 
         public MemberBuilder id(final Long id) {
             this.id = id;
@@ -63,13 +67,18 @@ public class MemberTestSupport {
             return this;
         }
 
+        public MemberBuilder socialInfo(final SocialInfo socialInfo) {
+            this.socialInfo = socialInfo;
+            return this;
+        }
+
         public MemberBuilder profileImageInfo(final ProfileImageInfo profileImageInfo) {
             this.profileImageInfo = profileImageInfo;
             return this;
         }
 
-        public MemberBuilder socialInfo(final SocialInfo socialInfo) {
-            this.socialInfo = socialInfo;
+        public MemberBuilder devices(final List<Device> devices) {
+            this.devices = devices;
             return this;
         }
 
@@ -79,18 +88,27 @@ public class MemberTestSupport {
         }
 
         public Member build() {
-            return memberRepository.save(
-                    new Member(
-                            id == null ? null : id,
-                            email == null ? (DEFAULT_EMAIL + emailCount++) : email,
-                            password == null ? DEFAULT_PASSWORD : password,
-                            nickname == null ? (DEFAULT_NICK_NAME + nickNameCount++) : nickname,
-                            socialInfo == null ? null : socialInfo,
-                            profileImageInfo == null ? profileImageInfoTestSupport.builder().build() : profileImageInfo,
-                            List.of("wwafdfawd"),
-                            deleted == null ? false : deleted
-                    )
-            );
+            final Member member = new Member();
+            setField(member, "id", this.id, null);
+            setField(member, "email", this.email, DEFAULT_EMAIL + emailCount++);
+            setField(member, "password", this.password, DEFAULT_PASSWORD);
+            setField(member, "nickname", this.nickname, DEFAULT_NICK_NAME + nickNameCount++);
+            setField(member, "socialInfo", this.socialInfo, null);
+            setField(member, "profileImageInfo", this.profileImageInfo, null);
+            setField(member, "devices", this.devices, List.of(new Device("testToken", member)));
+            setField(member, "deleted", this.deleted, false);
+            return memberRepository.save(member);
+        }
+
+        private void setField(final Member member, final String fieldName, final Object value, final Object orElse) {
+            final Field field = ReflectionUtils.findField(Member.class, fieldName);
+            ReflectionUtils.makeAccessible(field);
+            if (value != null) {
+                ReflectionUtils.setField(field, member, value);
+                return;
+            }
+            ReflectionUtils.setField(field, member, orElse);
         }
     }
+
 }

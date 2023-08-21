@@ -3,7 +3,6 @@ package edonymyeon.backend.consumption.integration;
 import static edonymyeon.backend.consumption.integration.steps.ConsumptionSteps.특정_기간의_소비금액을_확인한다;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.domain.ConsumptionType;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
@@ -11,6 +10,7 @@ import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.ConsumptionTestSupport;
+import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.time.LocalDate;

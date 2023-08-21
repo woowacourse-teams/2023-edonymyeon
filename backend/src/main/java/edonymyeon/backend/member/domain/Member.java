@@ -97,10 +97,6 @@ public class Member extends TemporalRecord {
         this.deleted = deleted;
     }
 
-    public Member(final Long id) {
-        this.id = id;
-    }
-
     public Member(final String email, final String password, final String nickname, final SocialInfo socialInfo) {
         this.email = email;
         this.password = password;
@@ -193,5 +189,9 @@ public class Member extends TemporalRecord {
 
     private boolean isNewDevice(final String deviceToken) {
         return this.devices.stream().noneMatch(device -> device.isDeviceTokenEqualTo(deviceToken));
+    }
+
+    public boolean hasId(final Long memberId) {
+        return Objects.equals(this.id, memberId);
     }
 }

@@ -14,10 +14,10 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import edonymyeon.backend.member.domain.TestMemberBuilder;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
-import edonymyeon.backend.support.MemberTestSupport;
 import jakarta.servlet.http.Part;
 import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class PostCreationDocsTest implements ImageFileCleaner {
 
     private final MockMvc mockMvc;
 
-    private final MemberTestSupport memberTestSupport;
+    private final TestMemberBuilder memberTestSupport;
 
     @Test
     void 게시글을_생성한다() throws Exception {

@@ -3,15 +3,15 @@ package edonymyeon.backend.consumption.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.domain.ConsumptionType;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.YearMonthDto;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.domain.TestMemberBuilder;
 import edonymyeon.backend.post.domain.Post;
-import edonymyeon.backend.support.MemberTestSupport;
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.PostTestSupport;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -25,13 +25,13 @@ class MemberConsumptionServiceImplTest {
 
     private final ConsumptionRepository consumptionRepository;
 
-    private final MemberTestSupport memberTestSupport;
+    private final TestMemberBuilder testMemberBuilder;
 
     private final PostTestSupport postTestSupport;
 
     @Test
     void 절약_확정시_게시글에_저장된_금액이_절약_금액이_된다() {
-        final Member 글쓴이 = memberTestSupport.builder()
+        final Member 글쓴이 = testMemberBuilder.builder()
                 .build();
         final Post 게시글 = postTestSupport.builder()
                 .member(글쓴이)
@@ -56,7 +56,7 @@ class MemberConsumptionServiceImplTest {
 
     @Test
     void 구매_확정시_입력받은_금액이_구매_금액이_된다() {
-        final Member 글쓴이 = memberTestSupport.builder()
+        final Member 글쓴이 = testMemberBuilder.builder()
                 .build();
         final Post 게시글 = postTestSupport.builder()
                 .member(글쓴이)

@@ -14,6 +14,7 @@ import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.domain.TestMemberBuilder;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.dto.PostModificationRequest;
@@ -24,7 +25,6 @@ import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.support.ConsumptionTestSupport;
 import edonymyeon.backend.support.IntegrationTest;
-import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.MockMultipartFileTestSupport;
 import jakarta.persistence.EntityManager;
 import java.io.File;
@@ -59,7 +59,7 @@ class PostServiceTest implements ImageFileCleaner {
 
     private final MemberRepository memberRepository;
 
-    private final MemberTestSupport memberTestSupport;
+    private final TestMemberBuilder memberTestSupport;
 
     private final MockMultipartFileTestSupport mockMultipartFileTestSupport;
 

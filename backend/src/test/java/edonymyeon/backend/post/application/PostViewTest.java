@@ -2,6 +2,7 @@ package edonymyeon.backend.post.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import edonymyeon.backend.member.domain.TestMemberBuilder;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
@@ -10,7 +11,6 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
-import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.PostTestSupport;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +27,7 @@ public class PostViewTest implements ImageFileCleaner {
 
     private final PostTestSupport postTestSupport;
 
-    private final MemberTestSupport memberTestSupport;
+    private final TestMemberBuilder memberTestSupport;
 
     private final PostRepository postRepository;
 

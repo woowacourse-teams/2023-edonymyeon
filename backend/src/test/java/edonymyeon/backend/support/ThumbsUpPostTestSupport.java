@@ -1,6 +1,7 @@
 package edonymyeon.backend.support;
 
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.domain.TestMemberBuilder;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
@@ -16,7 +17,7 @@ public class ThumbsUpPostTestSupport {
 
     private final PostTestSupport postTestSupport;
 
-    private final MemberTestSupport memberTestSupport;
+    private final TestMemberBuilder memberTestSupport;
 
     public ThumbsBuilder builder() {
         return new ThumbsBuilder();

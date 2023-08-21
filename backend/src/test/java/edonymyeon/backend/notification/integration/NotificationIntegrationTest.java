@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.notification.application.dto.NotificationsResponse;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.ScreenType;
@@ -27,7 +28,7 @@ public class NotificationIntegrationTest extends IntegrationFixture implements I
     private final ThumbsService thumbsService;
 
     @Test
-    void 사용자가_받은_알림_목록을_조회한다() {
+    void 사용자가_받은_알림_목록을_조회한다(@Autowired MemberRepository memberRepository, @Autowired NotificationRepository notificationRepository) {
         final var 글쓴이 = 사용자를_하나_만든다();
         final var 열람인 = 사용자를_하나_만든다();
         final var 열람인2 = 사용자를_하나_만든다();
