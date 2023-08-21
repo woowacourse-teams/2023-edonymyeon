@@ -10,6 +10,7 @@ import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.domain.TestMemberBuilder;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.dto.request.PostModificationRequest;
