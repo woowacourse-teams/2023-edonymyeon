@@ -51,6 +51,8 @@ class PostServiceTest implements ImageFileCleaner {
 
     private static final Pattern 이미지_UUID_와_확장자_형식 = Pattern.compile("test-inserting\\d+\\.(png|jpg)");
 
+    private final TestMemberBuilder testMemberBuilder;
+
     private final PostImageInfoRepository postImageInfoRepository;
 
     private final PostService postService;
@@ -109,7 +111,11 @@ class PostServiceTest implements ImageFileCleaner {
 
     @Test
     void 작성자의_프로필_사진이_없더라도_상세조회가_가능하다() throws IOException {
-        final Member member = new Member("anonymous@gmail.com", "password123!", "엘렐레", null, List.of());
+        final Member member = testMemberBuilder.builder()
+                .email("anonymous@gmail.com")
+                .password("password123!")
+                .nickname("nickname")
+                .buildWithoutSaving();
         memberRepository.save(member);
 
         final ActiveMemberId memberId = new ActiveMemberId(member.getId());

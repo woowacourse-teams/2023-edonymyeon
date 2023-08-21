@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.domain.TestMemberBuilder;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.MyPostService;
@@ -46,8 +47,12 @@ public class MyPostControllerDocsTest extends DocsTest {
 
     @Autowired
     private final Domain domain;
+
+    TestMemberBuilder testMemberBuilder = new TestMemberBuilder(null);
+
     @MockBean
     private MyPostService myPostService;
+
     @MockBean
     private MemberRepository memberRepository;
 
@@ -62,7 +67,11 @@ public class MyPostControllerDocsTest extends DocsTest {
     void 내_게시글_조회_문서화() throws Exception {
         final GeneralFindingCondition findingCondition = GeneralFindingCondition.builder().build();
 
-        Member 회원 = new Member("example@example.com", "password11234!", "testNickname", null, List.of());
+        final Member 회원 = testMemberBuilder.builder()
+                .email("example@example.com")
+                .password("password11234!")
+                .nickname("testNickname")
+                .buildWithoutSaving();
         회원_레포지토리를_모킹한다(회원);
 
         final Post 게시글1 = new Post(1L, "제목1", "내용1", 1000L, 회원, PostImageInfos.create(), 0);

@@ -3,6 +3,7 @@ package edonymyeon.backend.consumption.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.domain.TestMemberBuilder;
 import edonymyeon.backend.post.domain.Post;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,9 +17,16 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings("NonAsciiCharacters")
 class ConsumptionsPerMonthTest {
 
+    private final TestMemberBuilder testMemberBuilder = new TestMemberBuilder(null);
+
     @Test
     void 소비내역을_달별로_분류한다() {
-        final Member 회원 = new Member("email", "password123!", "nickname", null, List.of());
+        final Member 회원 = testMemberBuilder.builder()
+                .email("email")
+                .password("password123!")
+                .nickname("nickname")
+                .buildWithoutSaving();
+
         final Post 게시글1 = new Post("title", "content", 1_000L, 회원);
         final Post 게시글2 = new Post("title", "content", 2_000L, 회원);
 
@@ -50,7 +58,6 @@ class ConsumptionsPerMonthTest {
 
     @Test
     void 소비내역이_없을_경우_구매금액의합은_0_절약금액의합도_0() {
-        final Member 회원 = new Member("email", "password123!", "nickname", null, List.of());
         List<Consumption> consumptions = new ArrayList<>();
 
         final List<ConsumptionsPerMonth> 두달_소비금액 = ConsumptionsPerMonth.of(

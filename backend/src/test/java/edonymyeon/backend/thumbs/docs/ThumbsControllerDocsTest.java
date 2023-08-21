@@ -11,6 +11,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.domain.TestMemberBuilder;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
@@ -18,8 +19,6 @@ import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
-import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +29,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.util.ReflectionUtils;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -40,6 +38,8 @@ import org.springframework.util.ReflectionUtils;
 public class ThumbsControllerDocsTest {
 
     private final MockMvc mockMvc;
+
+    private final TestMemberBuilder testMemberBuilder;
 
     @MockBean
     private MemberRepository memberRepository;
@@ -60,16 +60,23 @@ public class ThumbsControllerDocsTest {
     }
 
     void 회원_두명_가입하고_글쓰기_모킹() {
-        글쓴이 = new Member("email", "password123!", "nickname", null, List.of());
-        final Field 글쓴이idField = ReflectionUtils.findField(Member.class, "id");
-        ReflectionUtils.makeAccessible(글쓴이idField);
-        ReflectionUtils.setField(글쓴이idField, 글쓴이, 1L);
+        글쓴이 = testMemberBuilder.builder()
+                .id(1L)
+                .email("email")
+                .password("password123!")
+                .nickname("nickname")
+                .buildWithoutSaving();
 
         when(memberRepository.findByEmail(글쓴이.getEmail())).thenReturn(Optional.of(글쓴이));
         when(memberRepository.findById(글쓴이.getId())).thenReturn(Optional.of(글쓴이));
 
-        반응_하는_사람 = new Member("email2", "password123!", "nickname2", null, List.of());
-        ReflectionUtils.setField(글쓴이idField, 반응_하는_사람, 2L);
+        반응_하는_사람 = testMemberBuilder.builder()
+                .id(2L)
+                .email("email2")
+                .password("password123!")
+                .nickname("nickname2")
+                .buildWithoutSaving();
+
         when(memberRepository.findByEmail(반응_하는_사람.getEmail())).thenReturn(
                 Optional.of(반응_하는_사람));
         when(memberRepository.findById(반응_하는_사람.getId())).thenReturn(Optional.of(반응_하는_사람));

@@ -4,6 +4,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.member.application.dto.AnonymousMemberId;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.domain.TestMemberBuilder;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.HotFindingCondition;
 import edonymyeon.backend.post.application.PostReadService;
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
@@ -25,9 +27,9 @@ import org.springframework.data.domain.Slice;
 @IntegrationTest
 class PostRepositoryTest {
 
-    private final PostRepository postRepository;
+    private final TestMemberBuilder testMemberBuilder;
 
-    private final MemberRepository memberRepository;
+    private final PostRepository postRepository;
 
     private final PostReadService postReadService;
 
@@ -41,14 +43,11 @@ class PostRepositoryTest {
 
     @BeforeEach
     public void setUp() {
-        member = new Member(
-                "email",
-                "password123!",
-                "nickname",
-                null,
-                List.of()
-        );
-        memberRepository.save(member);
+        member = testMemberBuilder.builder()
+                .email("email")
+                .password("password123!")
+                .nickname("nickname")
+                .build();
     }
 
     @Test
