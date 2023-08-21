@@ -100,6 +100,19 @@ public class TestMemberBuilder {
             return memberRepository.save(member);
         }
 
+        public Member buildWithoutSaving() {
+            final Member member = new Member();
+            setField(member, "id", this.id, null);
+            setField(member, "email", this.email, DEFAULT_EMAIL + emailCount++);
+            setField(member, "password", this.password, DEFAULT_PASSWORD);
+            setField(member, "nickname", this.nickname, DEFAULT_NICK_NAME + nickNameCount++);
+            setField(member, "socialInfo", this.socialInfo, null);
+            setField(member, "profileImageInfo", this.profileImageInfo, null);
+            setField(member, "devices", this.devices, List.of(new Device("testToken", member)));
+            setField(member, "deleted", this.deleted, false);
+            return member;
+        }
+
         private void setField(final Member member, final String fieldName, final Object value, final Object orElse) {
             final Field field = ReflectionUtils.findField(Member.class, fieldName);
             ReflectionUtils.makeAccessible(field);

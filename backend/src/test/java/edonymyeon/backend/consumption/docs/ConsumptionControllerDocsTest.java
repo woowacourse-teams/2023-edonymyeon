@@ -15,6 +15,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edonymyeon.backend.member.domain.TestMemberBuilder;
 import edonymyeon.backend.support.DocsTest;
 import edonymyeon.backend.consumption.application.ConsumptionService;
 import edonymyeon.backend.consumption.application.dto.ConsumptionPriceResponse;
@@ -32,6 +33,8 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 @SuppressWarnings("NonAsciiCharacters")
 public class ConsumptionControllerDocsTest extends DocsTest {
+
+    private final TestMemberBuilder testMemberBuilder = new TestMemberBuilder(null);
 
     @MockBean
     private ConsumptionService consumptionService;
@@ -54,7 +57,12 @@ public class ConsumptionControllerDocsTest extends DocsTest {
 
     @Test
     void 특정기간의_소비금액을_확인한다() throws Exception {
-        final Member 회원 = new Member(1L, "email@email.com", "password123!", "nickname", null, null, List.of(), false);
+        final Member 회원 = testMemberBuilder.builder()
+                .id(1L)
+                .email("email@email.com")
+                .password("password123!")
+                .nickname("nickname")
+                .buildWithoutSaving();
         final RecentConsumptionsResponse response = new RecentConsumptionsResponse(
                 "2023-08",
                 "2023-08",

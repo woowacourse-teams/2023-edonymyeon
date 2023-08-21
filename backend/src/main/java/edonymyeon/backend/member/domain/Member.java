@@ -82,21 +82,6 @@ public class Member extends TemporalRecord {
                 .toList();
     }
 
-    public Member(final Long id, final String email, final String password, final String nickname,
-                  final SocialInfo socialInfo,
-                  final ProfileImageInfo profileImageInfo, final List<String> deviceTokens, final boolean deleted) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-        this.socialInfo = socialInfo;
-        this.profileImageInfo = profileImageInfo;
-        this.devices = deviceTokens.stream()
-                .map(token -> new Device(token, this))
-                .toList();
-        this.deleted = deleted;
-    }
-
     public Member(final String email, final String password, final String nickname, final SocialInfo socialInfo) {
         this.email = email;
         this.password = password;
