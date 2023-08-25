@@ -6,18 +6,18 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import edonymyeon.backend.auth.application.KakaoAuthResponseProvider;
+import edonymyeon.backend.auth.domain.TokenGenerator;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
-import edonymyeon.backend.auth.domain.TokenGenerator;
+import edonymyeon.backend.auth.domain.BasicTokenGenerator;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.domain.SocialInfo;
 import edonymyeon.backend.member.domain.SocialInfo.SocialType;
 import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -225,12 +225,12 @@ public class AuthIntegrationTest extends IntegrationFixture {
                 .then()
                 .extract();
 
-        TokenGenerator tokenGenerator = new TokenGenerator();
+        TokenGenerator tokenGenerator = new BasicTokenGenerator();
 
         assertSoftly(softly -> {
             softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             softly.assertThat(response.header(HttpHeaders.AUTHORIZATION))
-                    .isEqualTo(tokenGenerator.getBasicToken(member.getEmail(), member.getPassword()));
+                    .isEqualTo(tokenGenerator.getToken(member.getEmail(), member.getPassword()));
         });
     }
 

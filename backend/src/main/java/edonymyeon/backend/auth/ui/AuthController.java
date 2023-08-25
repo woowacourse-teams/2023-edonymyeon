@@ -9,6 +9,7 @@ import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.auth.application.dto.LogoutRequest;
 import edonymyeon.backend.auth.application.dto.MemberResponse;
+import edonymyeon.backend.auth.domain.BasicTokenGenerator;
 import edonymyeon.backend.auth.domain.TokenGenerator;
 import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
@@ -39,7 +40,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody LoginRequest loginRequest) {
         authService.login(loginRequest);
-        final String basicToken = tokenGenerator.getBasicToken(loginRequest.email(), loginRequest.password());
+        final String basicToken = tokenGenerator.getToken(loginRequest.email(), loginRequest.password());
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, basicToken)
                 .build();
@@ -50,7 +51,7 @@ public class AuthController {
         final KakaoLoginResponse kakaoLoginResponse = kakaoAuthResponseProvider.request(loginRequest);
 
         final MemberResponse memberResponse = authService.loginByKakao(kakaoLoginResponse, loginRequest.deviceToken());
-        final String basicToken = tokenGenerator.getBasicToken(memberResponse.email(), memberResponse.password());
+        final String basicToken = tokenGenerator.getToken(memberResponse.email(), memberResponse.password());
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, basicToken)
                 .build();
