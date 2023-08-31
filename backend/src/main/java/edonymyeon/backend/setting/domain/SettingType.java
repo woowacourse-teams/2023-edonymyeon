@@ -60,4 +60,8 @@ public class SettingType {
     public boolean hasSameWeight(final SettingType settingType) {
         return Objects.equals(this.weight, settingType.weight);
     }
+
+    public boolean isPrimary() {
+        return Objects.equals(this.category, Category.ALL);
+    }
 }

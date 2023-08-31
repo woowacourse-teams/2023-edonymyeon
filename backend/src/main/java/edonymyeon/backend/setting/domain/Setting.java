@@ -64,4 +64,8 @@ public class Setting {
     public boolean hasSameWeight(final Setting setting) {
         return settingType.hasSameWeight(setting.settingType);
     }
+
+    public boolean isPrimary() {
+        return settingType.isPrimary();
+    }
 }

@@ -49,6 +49,15 @@ public class SettingService {
         final List<Setting> settings = settingRepository.findByMemberId(member.getId());
         deactivateSameWeights(setting, settings);
         activateHighestWeight(setting, settings);
+        activatePrimary(settings);
+    }
+
+    private static void activatePrimary(final List<Setting> settings) {
+        for (Setting set : settings) {
+            if (set.isPrimary()) {
+                set.activate();
+            }
+        }
     }
 
     private static void activateHighestWeight(final Setting setting, final List<Setting> settings) {
@@ -73,6 +82,15 @@ public class SettingService {
         final List<Setting> settings = settingRepository.findByMemberId(member.getId());
         deactivateHavingLowerWeight(setting, settings);
         deactivateHighest(setting, settings);
+        checkPrimaryDeactivated(setting, settings);
+    }
+
+    private static void checkPrimaryDeactivated(final Setting setting, final List<Setting> settings) {
+        if (setting.isPrimary()) {
+            for (Setting set : settings) {
+                set.deactivate();
+            }
+        }
     }
 
     private static void deactivateHighest(final Setting setting, final List<Setting> settings) {
