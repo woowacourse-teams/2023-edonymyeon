@@ -2,9 +2,12 @@ package edonymyeon.backend.post.application;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Slice;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class PostSlice<T> {
 
