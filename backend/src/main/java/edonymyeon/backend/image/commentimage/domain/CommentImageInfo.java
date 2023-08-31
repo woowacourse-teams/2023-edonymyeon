@@ -15,8 +15,12 @@ public class CommentImageInfo extends ImageInfo {
     @ColumnDefault("false")
     private boolean deleted;
 
-    public CommentImageInfo(final String storeName) {
+    private CommentImageInfo(final String storeName) {
         super(storeName);
+    }
+
+    public static CommentImageInfo from(final ImageInfo imageInfo) {
+        return new CommentImageInfo(imageInfo.getStoreName());
     }
 
     public void delete() {
