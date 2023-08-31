@@ -39,6 +39,9 @@ public class IntegrationFixture {
     @Autowired
     protected ConsumptionTestSupport consumptionTestSupport;
 
+    @Autowired
+    protected CommentTestSupport commentTestSupport;
+
     @MockBean
     private NotificationSender notificationSender;
 
