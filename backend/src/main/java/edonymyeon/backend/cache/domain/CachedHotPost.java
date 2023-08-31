@@ -1,4 +1,4 @@
-package edonymyeon.backend.cache.application.domain;
+package edonymyeon.backend.cache.domain;
 
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
