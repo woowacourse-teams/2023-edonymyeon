@@ -108,6 +108,32 @@ public class PostServiceHotPostsTest {
     }
 
     @Test
+    void 빈_캐싱이_만료되면_새로운_내역으로_조회되는지_확인한다() throws InterruptedException {
+        // given
+        var 빈_핫게시글 = postReadService.findHotPosts(findingCondition).getContent();
+        assertThat(빈_핫게시글.isEmpty()).isTrue();
+
+        // when
+        Thread.sleep(3500);
+        assertThat(postCachingService.shouldRefreshCache(findingCondition)).isTrue();
+
+        Post 새로운_게시글 = postTestSupport.builder().build();
+
+        // then
+        var 만료_후_조회한_핫_게시글 = postReadService.findHotPosts(findingCondition)
+                .getContent()
+                .stream()
+                .map(GeneralPostInfoResponse::id)
+                .toList();
+
+        assertSoftly(softly -> {
+                    softly.assertThat(만료_후_조회한_핫_게시글.size()).isEqualTo(1);
+                    softly.assertThat(만료_후_조회한_핫_게시글.contains(새로운_게시글.getId())).isTrue();
+                }
+        );
+    }
+
+    @Test
     void 캐싱된_게시글이_삭제되면_새로운_게시글이_조회된다() {
         // given
         postTestSupport.builder().build();
@@ -149,7 +175,13 @@ public class PostServiceHotPostsTest {
     @Test
     void 최근_글이_없으면_빈리스트가_조회된다() {
         var hotPosts = postReadService.findHotPosts(findingCondition).getContent();
+        assertThat(hotPosts).isEmpty();
+    }
 
+    @Test
+    void 빈_핫게시글이_캐싱_되어있다면_빈리스트가_조회된다() {
+        postReadService.findHotPosts(findingCondition);
+        var hotPosts = postReadService.findHotPosts(findingCondition).getContent();
         assertThat(hotPosts).isEmpty();
     }
 }
