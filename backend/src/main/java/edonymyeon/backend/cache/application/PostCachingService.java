@@ -1,6 +1,6 @@
 package edonymyeon.backend.cache.application;
 
-import edonymyeon.backend.cache.application.domain.CachedHotPost;
+import edonymyeon.backend.cache.domain.CachedHotPost;
 import edonymyeon.backend.cache.application.dto.CachedPostResponse;
 import edonymyeon.backend.cache.util.HotPostCachePolicy;
 import edonymyeon.backend.global.exception.EdonymyeonException;
