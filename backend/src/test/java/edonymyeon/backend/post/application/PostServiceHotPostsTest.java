@@ -1,0 +1,154 @@
+package edonymyeon.backend.post.application;
+
+import edonymyeon.backend.CacheConfig;
+import edonymyeon.backend.cache.application.HotPostsRedisRepository;
+import edonymyeon.backend.cache.application.PostCachingService;
+import edonymyeon.backend.cache.util.HotPostCachePolicy;
+import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
+import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.support.IntegrationTest;
+import edonymyeon.backend.support.PostTestSupport;
+import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.Import;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
+@SuppressWarnings("NonAsciiCharacters")
+@Import(CacheConfig.class)
+@RequiredArgsConstructor
+@IntegrationTest
+public class PostServiceHotPostsTest {
+
+    private final HotPostCachePolicy hotPostCachePolicy;
+
+    private final PostTestSupport postTestSupport;
+
+    private final PostReadService postReadService;
+
+    private final PostRepository postRepository;
+
+    private final PostCachingService postCachingService;
+
+    private final HotPostsRedisRepository hotPostsRedisRepository;
+
+    private final HotFindingCondition findingCondition = HotFindingCondition.builder().build();
+
+    private String postIdsCacheKey;
+
+    @BeforeEach
+    void 새글을_두개_등록하고_남아있는_캐시를_삭제한다() {
+        postIdsCacheKey = hotPostCachePolicy.getKey(findingCondition);
+        hotPostsRedisRepository.deleteById(postIdsCacheKey);
+    }
+
+    @Test
+    void 테스트용_키가_제대로_생성되는지_확인한다() {
+        assertThat(postIdsCacheKey).contains("TEST", "SIZE=" + findingCondition.getSize(), "PAGE=" + findingCondition.getPage());
+    }
+
+    @Test
+    void 캐시가_존재하지_않아도_조회되고_새로_캐싱한다() {
+        postTestSupport.builder().build();
+        postTestSupport.builder().build();
+
+        var hotPosts = postReadService.findHotPosts(findingCondition);
+
+        assertSoftly(softly -> {
+                    softly.assertThat(hotPosts.getContent()).hasSize(2);
+                    softly.assertThat(hotPosts.isLast()).isTrue();
+                    softly.assertThat(hotPostsRedisRepository.existsById(postIdsCacheKey)).isTrue();
+                }
+        );
+    }
+
+    @Test
+    void 캐싱이_되어있으면_조회된다() {
+        postTestSupport.builder().build();
+        postTestSupport.builder().build();
+
+        var hotPosts = postReadService.findHotPosts(findingCondition).getContent();
+        var hotPostFromCache = postReadService.findHotPosts(findingCondition).getContent();
+
+        assertSoftly(softly -> {
+                    softly.assertThat(hotPosts.size()).isEqualTo(hotPostFromCache.size());
+                    softly.assertThat(hotPosts).containsAll(hotPostFromCache);
+                }
+        );
+    }
+
+    @Test
+    void 캐싱이_만료되면_새로운_내역으로_조회되는지_확인한다() throws InterruptedException {
+        // given
+        postTestSupport.builder().build();
+
+        PostSlice<GeneralPostInfoResponse> hotPosts1 = postReadService.findHotPosts(findingCondition);
+        assertThat(hotPosts1.getContent().size()).isEqualTo(1);
+
+        // when
+        Thread.sleep(3500);
+        assertThat(postCachingService.shouldRefreshCache(findingCondition)).isTrue();
+
+        postTestSupport.builder().build();
+        postTestSupport.builder().build();
+        postTestSupport.builder().build();
+        postTestSupport.builder().build();
+        postTestSupport.builder().build();
+
+        // then
+        PostSlice<GeneralPostInfoResponse> hotPosts = postReadService.findHotPosts(findingCondition);
+        assertSoftly(softly -> {
+                    softly.assertThat(hotPosts.getContent().size()).isEqualTo(5);
+                    softly.assertThat(hotPosts.isLast()).isFalse();
+                }
+        );
+    }
+
+    @Test
+    void 캐싱된_게시글이_삭제되면_새로운_게시글이_조회된다() {
+        // given
+        postTestSupport.builder().build();
+        postTestSupport.builder().build();
+        var 삭제할_게시글 = postTestSupport.builder().build();
+        postTestSupport.builder().build();
+        postTestSupport.builder().build();
+        var 여섯번째로_작성된_게시글 = postTestSupport.builder().build();
+
+        var 삭제_전_조회한_핫게시글 = postReadService.findHotPosts(findingCondition)
+                .getContent()
+                .stream()
+                .map(GeneralPostInfoResponse::id)
+                .toList();
+        assertSoftly(softly -> {
+                    softly.assertThat(삭제_전_조회한_핫게시글.contains(삭제할_게시글.getId())).isTrue();
+                    softly.assertThat(삭제_전_조회한_핫게시글.size()).isEqualTo(5);
+                    softly.assertThat(삭제_전_조회한_핫게시글.contains(여섯번째로_작성된_게시글.getId())).isFalse();
+                }
+        );
+
+        // when
+        postRepository.deleteById(삭제할_게시글.getId());
+        var 핫게시글을_삭제하고_난_뒤에_조회한_핫게시글 = postReadService.findHotPosts(findingCondition)
+                .getContent()
+                .stream()
+                .map(GeneralPostInfoResponse::id)
+                .toList();
+
+        // then
+        assertSoftly(softly -> {
+                    softly.assertThat(핫게시글을_삭제하고_난_뒤에_조회한_핫게시글.contains(삭제할_게시글.getId())).isFalse();
+                    softly.assertThat(핫게시글을_삭제하고_난_뒤에_조회한_핫게시글.size()).isEqualTo(5);
+                    softly.assertThat(핫게시글을_삭제하고_난_뒤에_조회한_핫게시글.contains(여섯번째로_작성된_게시글.getId())).isTrue();
+                }
+        );
+    }
+
+    @Test
+    void 최근_글이_없으면_빈리스트가_조회된다() {
+        var hotPosts = postReadService.findHotPosts(findingCondition).getContent();
+
+        assertThat(hotPosts).isEmpty();
+    }
+}

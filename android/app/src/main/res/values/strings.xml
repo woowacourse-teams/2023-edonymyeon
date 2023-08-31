@@ -1,0 +1,154 @@
+<resources>
+    <string name="app_name">이돈이면</string>
+
+    <!-- common -->
+    <string name="all_price_long">가격: %,d원</string>
+    <string name="all_price">%,d</string>
+    <string name="all_price_title">가격</string>
+    <string name="all_price_unit">원</string>
+    <string name="all_required_login">로그인이 필요한 서비스입니다.</string>
+    <string name="all_writer_createdAt">%s | %s</string>
+
+    <!-- login   -->
+    <string name="login_title">로그인</string>
+    <string name="login_email">이메일</string>
+    <string name="login_password">비밀번호</string>
+    <string name="login_login">로그인</string>
+    <string name="login_suggest">아이디가 없나요?</string>
+    <string name="login_join">회원가입</string>
+    <string name="login_logo_description">로그인 로고</string>
+    <string name="login_check_logininfo_input">이메일과 비밀번호는 필수 입력사항입니다.</string>
+
+    <!-- bottom navigation title    -->
+    <string name="bottom_navigation_home_title">홈</string>
+    <string name="bottom_navigation_search_title">검색</string>
+    <string name="bottom_navigation_category_title">카테고리</string>
+    <string name="bottom_navigation_alarm_title">알림</string>
+    <string name="bottom_navigation_my_page_title">마이 페이지</string>
+    <string name="all_preparing_page">준비중인 페이지입니다</string>
+
+    <!-- home fragment   -->
+    <string name="home_edonymyeon">이돈이면</string>
+    <string name="home_hot_post">HOT 게시물</string>
+    <string name="home_all_post">전체 게시글</string>
+    <string name="home_hot_post_not_content">이번 주 핫 게시글이 없습니다</string>
+
+    <!-- post detail -->
+    <string name="post_detail_toolbar_menu_update">수정</string>
+    <string name="post_detail_toolbar_menu_delete">삭제</string>
+    <string name="post_detail_toolbar_menu_report">수정</string>
+    <string name="post_detail_writer_cant_recommend">본인이 작성한 글은 추천할 수 없습니다.</string>
+    <string name="post_detail_login_required">추천 기능은 회원만 이용할 수 있습니다.</string>
+
+    <!-- post detail dialog -->
+    <string name="post_detail_dialog_title">정말로 삭제하시겠습니까?</string>
+    <string name="post_detail_dialog_yes">예</string>
+    <string name="post_detail_dialog_no">아니요</string>
+    <string name="post_detail_loading">로딩 중입니다</string>
+
+    <!--post report dialog -->
+    <string name="post_report_dialog_title">신고 사유</string>
+    <string name="post_report_dialog_description">허위신고일 경우, 신고자의 서비스 활동이 제한 될 수 있으니 신중하게 신고해 주세요</string>
+    <string name="post_report_dialog_input_reason">신고 사유를 입력하세요.</string>
+    <string name="post_report_dialog_cancel">취소</string>
+    <string name="post_report_dialog_report">신고</string>
+    <string name="post_report_dialog_report_profit">영리목적/홍보성</string>
+    <string name="post_report_dialog_report_privacy">개인정보 노출</string>
+    <string name="post_report_dialog_report_obscene">음란성/선정성</string>
+    <string name="post_report_dialog_report_abuse">욕설/인신공격</string>
+    <string name="post_report_dialog_report_repeat">같은 내용 반복(도배)</string>
+    <string name="post_report_dialog_report_etc">기타</string>
+
+    <!-- my page   -->
+    <string name="my_page_title">마이페이지</string>
+    <string name="my_page_payment_title">월 별 소비/절약 그래프</string>
+    <string name="my_page_my_post">내가 쓴 글</string>
+    <string name="my_page_my_comment">댓글 단 글</string>
+    <string name="my_page_update_user_info">회원 정보 수정</string>
+    <string name="my_page_alarm_setting">푸시 알람 설정</string>
+    <string name="my_page_logout">로그아웃</string>
+    <string name="my_page_withdraw">회원탈퇴</string>
+    <string name="my_page_login">로그인</string>
+    <string name="my_page_saving_title">절약금액:</string>
+    <string name="my_page_purchase_title">소비금액:</string>
+    <string name="my_page_required_login">로그인해주세요</string>
+    <string name="my_page_graph_saving">절약금액</string>
+    <string name="my_page_graph_purchase">소비금액\t\t\t\t(단위 1,000원)</string>
+    <string name="my_page_price">%,d원</string>
+    <string name="my_page_loading_data">데이터를 불러오고 있습니다.</string>
+
+    <!-- withdraw dialog-->
+    <string name="withdraw_dialog_content">탈퇴 버튼 선택 시, 계정은\n삭제되며 복구되지 않습니다.</string>
+    <string name="withdraw_dialog_title">정말 탈퇴하실건가요?</string>
+    <string name="withdraw_dialog_ok">탈퇴</string>
+    <string name="withdraw_dialog_cancel">남을래요</string>
+
+    <!--post_editor-->
+    <string name="post_editor_page_title">글쓰기</string>
+    <string name="post_editor_post_title">제목</string>
+    <string name="post_editor_post_title_hint">제목을 입력하세요</string>
+    <string name="post_editor_price_hint">가격을 입력하세요</string>
+    <string name="post_editor_post_category">카테코리</string>
+    <string name="post_editor_camera_description">사진 찍는 버튼</string>
+    <string name="post_editor_gallery_description">갤러리에서 이미지 고르는 버튼</string>
+    <string name="post_editor_content_hint">내용을 입력하세요</string>
+    <string name="post_editor_page_write">등록</string>
+    <string name="post_editor_image_limit_message">사진은 10장까지 선택 가능합니다</string>
+    <string name="post_editor_check_permission">권한 허용 필요</string>
+    <string name="post_editor_check_title_input">제목은 필수 입력 항목입니다</string>
+    <string name="post_editor_snackbar_ok_message">확인</string>
+    <string name="post_editor_snackbar_missing_title_message">타이틀을 작성해야만 등록이 됩니다.</string>
+    <string name="post_editor_loading_message">저장 중입니다</string>
+
+    <!--item_post_editor_image-->
+    <string name="item_post_editor_image_description">갤러리에서 가져온 이미지</string>
+    <string name="item_post_editor_image_delete_description">이미지 삭제 버튼</string>
+
+    <!--all_post-->
+    <string name="post_all_post">전체 게시물</string>
+
+    <!--my_post-->
+    <string name="my_post_page_title">내가 쓴 글</string>
+    <string name="my_post_consumption_purchase">샀어요</string>
+    <string name="my_post_consumption_not_purchase">안샀어요</string>
+    <string name="my_post_consumption_cancel">확정취소</string>
+    <string name="my_post_consumption_date">확정일자: %d년 %d월</string>
+    <string name="my_post_createdAt">%s</string>
+    <string name="my_post_purchase_text">%,d원 구매확정</string>
+    <string name="my_post_saving_text">절약확정</string>
+
+    <!--my_post_dialog-->
+    <string name="dialog_purchase_title">구매 금액과 날짜를 입력해주세요</string>
+    <string name="dialog_saving_title">절약을 결심한 날짜를 입력해주세요</string>
+    <string name="dialog_consumption_cancel">취소</string>
+    <string name="dialog_consumption_ok">확인</string>
+    <string name="dialog_input_price_hint">금액입력</string>
+    <string name="dialog_input_price_error_message">입력될 수 있는 금액 초과</string>
+
+    <!--sign_up-->
+    <string name="sign_up_nickname">닉네임</string>
+    <string name="sign_up_email">이메일</string>
+    <string name="sign_up_matching_password">일치</string>
+    <string name="sign_up_available">사용가능</string>
+    <string name="sign_up_unavailable">사용불가</string>
+    <string name="sign_up_verify_password">비밀번호 확인</string>
+    <string name="sign_up_password">비밀번호</string>
+    <string name="sign_up_verify_duplication">중복확인</string>
+    <string name="sign_up_nickname_policy">* 1~20자 이내로 가능합니다</string>
+    <string name="sign_up_password_policy">* 8~30자, 알파벳, 숫자, 특수기호\n 모두 1개 이상 포함되어야 합니다.</string>
+
+    <!--alarm_setting-->
+    <string name="alarm_setting_tool_bar_title">푸시 알림 설정</string>
+    <string name="alarm_setting_title">푸시 알림 수신</string>
+    <string name="alarm_setting_content">해제하면 푸시 알림을 수신할 수 없습니다.</string>
+    <string name="alarm_setting_one_reaction">좋아요/싫어요 건별 알림 수신</string>
+    <string name="alarm_setting_ten_reaction">좋아요/싫어요 10개당 알림 수신</string>
+    <string name="alarm_setting_confirm_consumption">소비 확정여부 수신</string>
+    <string name="alarm_setting_request_alarm_permission">알림 권한을 허용해주세요.</string>
+
+    <!--alarm-->
+    <string name="alarm_title">알림</string>
+    <string name="alarm_period_explanation">최근 3개월 내  푸시 알림 내역입니다</string>
+
+
+</resources>

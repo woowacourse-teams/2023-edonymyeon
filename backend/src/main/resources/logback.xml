@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <include resource="console-error-appender.xml" />
+    <include resource="console-warn-appender.xml" />
+    <include resource="console-info-appender.xml" />
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <root level="INFO">
+        <springProfile name="!prod">
+            <appender-ref ref="CONSOLE" />
+        </springProfile>
+    </root>
+
+    <root level="INFO">
+        <springProfile name="prod">
+            <appender-ref ref="INFO"/>
+            <appender-ref ref="ERROR"/>
+            <appender-ref ref="WARN"/>
+        </springProfile>
+    </root>
+</configuration>

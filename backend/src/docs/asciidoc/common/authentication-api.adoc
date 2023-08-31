@@ -1,0 +1,14 @@
+[[authentication-api]]
+== 인증
+
+=== 회원가입
+operation::join[snippets='request-fields,http-request,http-response']
+
+=== 회원가입 시 이메일, 닉네임 중복 확인
+operation::validate-join[snippets='query-parameters,http-request,response-fields,http-response']
+
+=== 로그인
+operation::login[snippets='request-fields,http-request,response-headers,http-response']
+
+=== 카카오 로그인
+operation::kakao-login[snippets='request-fields,http-request,response-headers,http-response']

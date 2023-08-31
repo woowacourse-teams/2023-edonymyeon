@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bottom_menu_search"
+        android:icon="@drawable/ic_bottom_nav_search"
+        android:title="@string/bottom_navigation_search_title" />
+
+    <item
+        android:id="@+id/bottom_menu_home"
+        android:icon="@drawable/ic_bottom_nav_home"
+        android:title="@string/bottom_navigation_home_title" />
+
+    <item
+        android:id="@+id/bottom_menu_alarm"
+        android:icon="@drawable/ic_bottom_nav_alarm_off"
+        android:title="@string/bottom_navigation_alarm_title" />
+
+    <item
+        android:id="@+id/bottom_menu_my_page"
+        android:icon="@drawable/ic_bottom_nav_my_page"
+        android:title="@string/bottom_navigation_my_page_title" />
+</menu>

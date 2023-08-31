@@ -1,0 +1,30 @@
+[[mypage-api]]
+== 마이페이지
+
+=== 회원 정보 조회
+
+=== 내가 쓴 글 조회
+
+operation::my-posts[snippets='request-headers,query-parameters,http-request,response-fields,http-response']
+
+=== 회원 정보 수정
+
+=== 최근 1개월/6개월 간 절약/소비 금액 확인
+
+operation::recent-consumptions[snippets='request-headers,query-parameters,http-request,http-response']
+
+=== 구매 확정
+
+operation::purchase-confirm[snippets='request-headers,path-parameters,request-fields,http-request,http-response']
+
+=== 절약 확정
+
+operation::saving-confirm[snippets='request-headers,path-parameters,request-fields,http-request,http-response']
+
+=== 확정 취소
+
+operation::confirm-remove[snippets='request-headers,path-parameters,http-request,http-response']
+
+=== 회원 탈퇴
+
+operation::withdraw[snippets='request-headers,http-request,http-response']

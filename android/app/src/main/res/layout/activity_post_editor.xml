@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.app.edonymyeon.presentation.ui.posteditor.PostEditorViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_post_editor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray_f5f5f5"
+        tools:context="com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/tb_post_editor"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/blue_576b9e"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/btn_back_white">
+
+            <TextView
+                android:id="@+id/tb_post_editor_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|center_horizontal"
+                android:text="@string/post_editor_page_title"
+                android:textColor="@color/white_ffffff"
+                android:textSize="20sp" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <Space
+            android:id="@+id/space_title_top"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H, 360:16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tb_post_editor" />
+
+        <TextView
+            android:id="@+id/tv_post_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="@string/post_editor_post_title"
+            android:textColor="@color/gray_7c7a7a"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/space_title_top" />
+
+        <EditText
+            android:id="@+id/et_post_title"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="84dp"
+            android:layout_marginEnd="20dp"
+            android:autofillHints="no"
+            android:background="@android:color/transparent"
+            android:gravity="center_vertical"
+            android:hint="@string/post_editor_post_title_hint"
+            android:inputType="text"
+            android:maxLength="30"
+            android:text="@{viewModel.postEditor.title}"
+            android:textColor="@color/gray_434343"
+            android:textColorHint="@color/gray_615f5f"
+            android:textSize="14sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tv_post_title"
+            app:layout_constraintDimensionRatio="254:14"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_post_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/all_price_title"
+            android:textColor="@color/gray_7c7a7a"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@id/tv_post_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_post_title" />
+
+        <EditText
+            android:id="@+id/et_post_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autofillHints="no"
+            android:background="@android:color/transparent"
+            android:hint="@string/post_editor_price_hint"
+            android:inputType="number"
+            android:onTextChanged="@{viewModel.checkPriceValidate}"
+            android:text="@{viewModel.postEditor.price}"
+            android:textColor="@color/gray_434343"
+            android:textColorHint="@color/gray_615f5f"
+            android:textSize="14sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tv_post_price"
+            app:layout_constraintStart_toStartOf="@+id/et_post_title" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:text="@string/all_price_unit"
+            android:textColor="@color/black_000000"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@+id/et_post_price"
+            app:layout_constraintStart_toEndOf="@+id/et_post_price" />
+
+        <Space
+            android:id="@+id/space_category_bottom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,360:20"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_post_price" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/div_post_editor_title_provider"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/blue_576b9e"
+            app:layout_constraintDimensionRatio="H,360:0.5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/space_category_bottom"
+            app:layout_constraintWidth_percent="0.944" />
+
+        <Space
+            android:id="@+id/space_content_top"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,360:20"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/div_post_editor_title_provider" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nsv_post_content_images"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/space_content_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/space_content_top"
+            app:layout_constraintWidth_percent="0.888">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_post_content_images"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/et_post_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="no"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/post_editor_content_hint"
+                    android:inputType="textMultiLine"
+                    android:maxLength="3000"
+                    android:text="@{viewModel.postEditor.content}"
+                    android:textColor="@color/gray_434343"
+                    android:textColorHint="@color/gray_615f5f"
+                    android:textSize="18sp"
+                    app:layout_constraintTop_toTopOf="@id/cl_post_content_images" />
+
+                <Space
+                    android:id="@+id/space_content_between"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="H,360:10"
+                    app:layout_constraintTop_toBottomOf="@id/et_post_content" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_post_editor_images"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintTop_toBottomOf="@id/space_content_between"
+                    tools:listitem="@layout/item_post_editor_image" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <Space
+            android:id="@+id/space_content_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/div_post_editor_content_provider"
+            app:layout_constraintDimensionRatio="H, 360:10" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/div_post_editor_content_provider"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/blue_576b9e"
+            app:layout_constraintBottom_toTopOf="@id/space_gallery_top"
+            app:layout_constraintDimensionRatio="H,360:0.5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_percent="0.944" />
+
+        <Space
+            android:id="@+id/space_gallery_top"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/iv_post_camera"
+            app:layout_constraintDimensionRatio="H, 360:10" />
+
+        <ImageView
+            android:id="@+id/iv_post_camera"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="20dp"
+            android:contentDescription="@string/post_editor_camera_description"
+            android:src="@drawable/btn_camera"
+            app:layout_constraintBottom_toTopOf="@id/space_gallery_bottom"
+            app:layout_constraintDimensionRatio="H, 1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_percent="0.08" />
+
+        <ImageView
+            android:id="@+id/iv_post_gallery"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            android:contentDescription="@string/post_editor_gallery_description"
+            android:src="@drawable/btn_gallery"
+            app:layout_constraintBottom_toBottomOf="@id/iv_post_camera"
+            app:layout_constraintDimensionRatio="H, 1:1"
+            app:layout_constraintStart_toEndOf="@id/iv_post_camera"
+            app:layout_constraintTop_toTopOf="@id/iv_post_camera"
+            app:layout_constraintWidth_percent="0.06" />
+
+        <Space
+            android:id="@+id/space_gallery_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="H,360:10" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="listener"
+            type="com.app.edonymyeon.presentation.ui.mypost.listener.MyPostClickListener" />
+
+        <variable
+            name="post"
+            type="com.app.edonymyeon.presentation.uimodel.MyPostUiModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_item"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_ffffff_radius_10dp"
+            android:elevation="4dp"
+            android:onClick="@{() -> listener.onMyPostClick(post.id)}"
+            android:paddingVertical="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.93">
+
+            <TextView
+                android:id="@+id/tv_my_post_consumption_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginEnd="10dp"
+                android:text="@{@string/my_post_consumption_date(post.consumption.year, post.consumption.month)}"
+                android:textColor="@color/gray_434343"
+                android:textSize="10sp"
+                android:visibility="@{post.consumption.type.equals(`NONE`) ? View.GONE : View.VISIBLE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="SmallSp"
+                tools:text="확정일자: 2023년 6월" />
+
+            <TextView
+                android:id="@+id/tv_my_post_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="16dp"
+                android:ellipsize="end"
+                android:lines="1"
+                android:maxLines="1"
+                android:text="@{post.title}"
+                android:textColor="@color/black_434343"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.68"
+                tools:text="골프 용품 사고싶은데 어떻게 할까요?" />
+
+            <TextView
+                android:id="@+id/tv_my_post_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:lineSpacingExtra="2sp"
+                android:lines="2"
+                android:maxLines="2"
+                android:text="@{post.content}"
+                android:textColor="@color/black_434343"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="@id/tv_my_post_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_my_post_title"
+                app:layout_constraintWidth_percent="0.68"
+                tools:ignore="SmallSp"
+                tools:text="안녕하세요. 골린이입니다! 지금 이 골프채를 사고 싶은데 사는게 맞을까요? 혹시 더 합리적으로 살 수 있다면 알려주세요.." />
+
+            <TextView
+                android:id="@+id/tv_my_post_name_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="10dp"
+                android:lines="1"
+                android:text="@{@string/my_post_createdAt(post.createdAt.toString())}"
+                android:textColor="@color/gray_615f5f"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_my_post_title"
+                tools:text="1일전" />
+
+            <Space
+                android:id="@+id/space_date_bottom"
+                android:layout_width="0dp"
+                android:layout_height="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_my_post_thumb_nail" />
+
+            <ImageView
+                android:id="@+id/iv_my_post_thumb_nail"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:scaleType="centerCrop"
+                app:imgUrlFitCenter="@{post.image}"
+                app:layout_constraintBottom_toTopOf="@id/space_date_bottom"
+                app:layout_constraintDimensionRatio="H,50:40"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_my_post_content"
+                app:layout_constraintTop_toBottomOf="@id/tv_my_post_consumption_date"
+                app:layout_constraintWidth_percent="0.16"
+                tools:src="@drawable/ic_launcher_background" />
+
+            <include
+                android:id="@+id/cv_my_post_consumption"
+                layout="@layout/view_my_post_comsumption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:visibility="@{post.consumption.type.equals(`NONE`) ? View.VISIBLE: View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/space_date_bottom"
+                bind:listener="@{listener}"
+                bind:postId="@{post.id}" />
+
+            <include
+                android:id="@+id/cv_my_post_consumption_cancel"
+                layout="@layout/view_my_post_consumption_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:visibility="@{post.consumption.type.equals(`NONE`) ? View.GONE: View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/space_date_bottom"
+                bind:consumption="@{post.consumption}"
+                bind:listener="@{listener}"
+                bind:postId="@{post.id}" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,360:20"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cl_item" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

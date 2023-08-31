@@ -1,0 +1,385 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.app.edonymyeon.presentation.ui.main.mypage.MyPageViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/gray_f5f5f5">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_user_info"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/bg_ffffff_radius_bottom_15"
+                android:elevation="4dp"
+                app:layout_constraintDimensionRatio="H,360:178"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <Space
+                    android:id="@+id/space_my_page_title_top"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="H,360:16"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Space
+                    android:id="@+id/space_my_page_title_start"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio=""
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/space_my_page_title_top"
+                    app:layout_constraintWidth_percent="0.052" />
+
+                <TextView
+                    android:id="@+id/tv_my_page_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/dohyeon"
+                    android:text="@string/my_page_title"
+                    android:textColor="@color/black_000000"
+                    android:textSize="28sp"
+                    app:layout_constraintStart_toEndOf="@id/space_my_page_title_start"
+                    app:layout_constraintTop_toBottomOf="@id/space_my_page_title_top" />
+
+                <Space
+                    android:id="@+id/space_my_page_title_bottom"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="H,360:30"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_my_page_title" />
+
+                <Space
+                    android:id="@+id/space_my_page_profile_start"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/space_my_page_title_bottom"
+                    app:layout_constraintWidth_percent="0.08" />
+
+                <Space
+                    android:id="@+id/space_my_page_profile_end"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/space_my_page_title_bottom"
+                    app:layout_constraintWidth_percent="0.05" />
+
+                <ImageView
+                    android:id="@+id/iv_profile"
+                    imgUrlCircleCrop="@{viewModel.profile.profileImage}"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@drawable/bg_stroke_576b9e_oval"
+                    app:layout_constraintDimensionRatio="H,1:1"
+                    app:layout_constraintStart_toEndOf="@id/space_my_page_profile_start"
+                    app:layout_constraintTop_toBottomOf="@id/space_my_page_title_bottom"
+                    app:layout_constraintWidth_percent="0.2"
+                    tools:src="@drawable/ic_launcher_background" />
+
+                <TextView
+                    android:id="@+id/tv_nickname"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="18dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@{viewModel.profile.nickname.toString()}"
+                    android:textColor="@color/gray_434343"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toTopOf="@id/tv_saving_title"
+                    app:layout_constraintEnd_toStartOf="@id/space_my_page_profile_end"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@id/iv_profile"
+                    app:layout_constraintTop_toTopOf="@id/iv_profile"
+                    tools:text="케로피" />
+
+                <TextView
+                    android:id="@+id/tv_saving_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_page_saving_title"
+                    android:textColor="@color/blue_576b9e"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toTopOf="@id/tv_purchase_title"
+                    app:layout_constraintStart_toStartOf="@id/tv_nickname"
+                    app:layout_constraintTop_toBottomOf="@id/tv_nickname" />
+
+                <TextView
+                    android:id="@+id/tv_purchase_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_page_purchase_title"
+                    android:textColor="@color/blue_576b9e"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_profile"
+                    app:layout_constraintStart_toStartOf="@id/tv_nickname"
+                    app:layout_constraintTop_toBottomOf="@id/tv_saving_title" />
+
+                <TextView
+                    android:id="@+id/tv_my_saving"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@{@string/all_price(viewModel.consumptionOnThisMonth.saving)}"
+                    android:textColor="@color/gray_434343"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_saving_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_saving_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_saving_title"
+                    tools:text="15,000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all_price_unit"
+                    android:textColor="@color/gray_434343"
+                    android:textSize="14sp"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tv_saving_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_my_saving" />
+
+                <TextView
+                    android:id="@+id/tv_my_purchase"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@{@string/all_price(viewModel.consumptionOnThisMonth.purchase)}"
+                    android:textColor="@color/gray_434343"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_purchase_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_purchase_title"
+                    app:layout_constraintTop_toTopOf="@id/tv_purchase_title"
+                    tools:text="15,000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/all_price_unit"
+                    android:textColor="@color/gray_434343"
+                    app:layout_constraintBaseline_toBaselineOf="@id/tv_purchase_title"
+                    app:layout_constraintStart_toEndOf="@id/tv_my_purchase" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_login"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@drawable/bg_576b9e_radius_15dp"
+                    android:text="@string/my_page_login"
+                    android:textColor="@color/white_ffffff"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@id/iv_profile"
+                    app:layout_constraintDimensionRatio="H, 3:2"
+                    app:layout_constraintEnd_toStartOf="@id/space_my_page_profile_end"
+                    app:layout_constraintTop_toTopOf="@id/iv_profile"
+                    app:layout_constraintWidth_percent="0.2" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Space
+                android:id="@+id/space_my_payment_top"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H,360:18"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cl_user_info" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_payment"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/bg_ffffff_radius_15"
+                android:elevation="4dp"
+                app:layout_constraintDimensionRatio="H,336:232"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/space_my_payment_top"
+                app:layout_constraintWidth_percent="0.93">
+
+                <Space
+                    android:id="@+id/space_payment_title_top"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="H,336:18"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Space
+                    android:id="@+id/space_graph_start"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/space_payment_title_bottom"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.05" />
+
+                <TextView
+                    android:id="@+id/tv_my_payment_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_page_payment_title"
+                    android:textColor="@color/black_000000"
+                    android:textSize="18sp"
+                    app:layout_constraintStart_toEndOf="@id/space_graph_start"
+                    app:layout_constraintTop_toBottomOf="@id/space_payment_title_top" />
+
+                <Space
+                    android:id="@+id/space_payment_title_bottom"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="H,335:18"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_my_payment_title" />
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/chart_my_payment"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintDimensionRatio="H,302:144"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/space_payment_title_bottom"
+                    app:layout_constraintWidth_percent="0.9" />
+
+                <TextView
+                    android:id="@+id/tv_required_login"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:text="@string/all_required_login"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="H, 194:24"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_my_payment_title" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Space
+                android:id="@+id/space_graph_bottom"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H, 360:18"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cl_payment" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_bottom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_ffffff_radius_15"
+                android:elevation="4dp"
+                android:paddingVertical="15dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/space_graph_bottom"
+                app:layout_constraintWidth_percent="0.93">
+
+                <TextView
+                    android:id="@+id/tv_my_post"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/my_page_my_post"
+                    android:textColor="@color/black_000000"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toTopOf="@id/tv_update_user_info"
+                    app:layout_constraintDimensionRatio="H,336:48"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed"
+                    app:layout_constraintWidth_percent="0.87" />
+
+                <TextView
+                    android:id="@+id/tv_update_user_info"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/my_page_update_user_info"
+                    android:textColor="@color/black_000000"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toTopOf="@id/tv_update_alarm_setting"
+                    app:layout_constraintDimensionRatio="H,336:48"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_my_post"
+                    app:layout_constraintWidth_percent="0.87" />
+
+                <TextView
+                    android:id="@+id/tv_update_alarm_setting"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/my_page_alarm_setting"
+                    android:textColor="@color/black_000000"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toTopOf="@id/tv_logout"
+                    app:layout_constraintDimensionRatio="H,336:48"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_update_user_info"
+                    app:layout_constraintWidth_percent="0.87" />
+
+                <TextView
+                    android:id="@+id/tv_logout"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/my_page_logout"
+                    android:textColor="@color/black_000000"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toTopOf="@id/tv_withdraw"
+                    app:layout_constraintDimensionRatio="H, 336:48"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_update_alarm_setting"
+                    app:layout_constraintWidth_percent="0.87" />
+
+                <TextView
+                    android:id="@+id/tv_withdraw"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/my_page_withdraw"
+                    android:textColor="@color/black_000000"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintDimensionRatio="H, 336:48"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_logout"
+                    app:layout_constraintWidth_percent="0.87" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Space
+                android:id="@+id/space_bottom"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H, 360:16"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cl_bottom" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

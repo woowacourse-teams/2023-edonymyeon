@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.app.edonymyeon.presentation.ui.signup.SignUpViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context="com.app.edonymyeon.presentation.ui.auth.LoginActivity">
+
+            <Space
+                android:id="@+id/space_logo_top"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H,360:90"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/iv_logo"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:src="@drawable/ic_edonymyeon_logo"
+                app:layout_constraintDimensionRatio="H,153:148"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/space_logo_top"
+                app:layout_constraintWidth_percent="0.45" />
+
+            <Space
+                android:id="@+id/space_logo_bottom"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H,360:42"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_logo" />
+
+            <Space
+                android:id="@+id/space_email_left"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H,32:28"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/space_logo_bottom"
+                app:layout_constraintWidth_percent="0.091" />
+
+            <TextView
+                android:id="@+id/tv_email"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center_vertical"
+                android:text="@string/login_email"
+                android:textColor="@color/black_000000"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@id/space_email_left"
+                app:layout_constraintDimensionRatio="W,90:28"
+                app:layout_constraintStart_toEndOf="@id/space_email_left"
+                app:layout_constraintTop_toBottomOf="@id/space_logo_bottom" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_email"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@{viewModel.isEmailValid() ? @drawable/bg_stroke_579e78_radius_10dp : @drawable/bg_stroke_ba3030_radius_10dp}"
+                app:layout_constraintDimensionRatio="H,320:40"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_email"
+                app:layout_constraintWidth_percent="0.88">
+
+                <EditText
+                    android:id="@+id/et_email"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:autofillHints="emailAddress"
+                    android:background="@null"
+                    android:ellipsize="end"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:onTextChanged="@{viewModel.onEmailTextChanged}"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="4dp"
+                    android:textColor="@color/black_000000"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.8" />
+
+                <TextView
+                    android:id="@+id/tv_email_check"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:fontFamily="@font/dohyeon"
+                    android:gravity="center"
+                    android:text="@string/sign_up_verify_duplication"
+                    android:textColor="@color/black_434343"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/et_email"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Space
+                android:id="@+id/space_nickname_top"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H,360:14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cl_email" />
+
+            <Space
+                android:id="@+id/space_nickname_left"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H,32:28"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/space_nickname_top"
+                app:layout_constraintWidth_percent="0.091" />
+
+            <TextView
+                android:id="@+id/tv_nickname"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center_vertical"
+                android:text="@string/sign_up_nickname"
+                android:textColor="@color/black_000000"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@id/space_nickname_left"
+                app:layout_constraintDimensionRatio="W,90:28"
+                app:layout_constraintStart_toEndOf="@id/space_nickname_left"
+                app:layout_constraintTop_toBottomOf="@id/space_nickname_top" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="@string/sign_up_nickname_policy"
+                android:textColor="@color/black_000000"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
+                app:layout_constraintEnd_toEndOf="@id/cl_nickname"
+                app:layout_constraintTop_toTopOf="@id/tv_nickname" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_nickname"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@{viewModel.isNicknameValid() ? @drawable/bg_stroke_579e78_radius_10dp : @drawable/bg_stroke_ba3030_radius_10dp}"
+                app:layout_constraintDimensionRatio="H,320:40"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_nickname"
+                app:layout_constraintWidth_percent="0.88">
+
+                <EditText
+                    android:id="@+id/et_nickname"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:autofillHints="emailAddress"
+                    android:background="@null"
+                    android:ellipsize="end"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:onTextChanged="@{viewModel.onNicknameTextChanged}"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="4dp"
+                    android:textColor="@color/black_000000"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.8" />
+
+                <TextView
+                    android:id="@+id/tv_nickname_check"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:text="@string/sign_up_verify_duplication"
+                    android:textColor="@color/black_434343"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/et_nickname"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Space
+                android:id="@+id/space_password_top"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H,360:14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cl_nickname" />
+
+            <Space
+                android:id="@+id/space_password_left"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H,32:28"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/space_password_top"
+                app:layout_constraintWidth_percent="0.091" />
+
+            <TextView
+                android:id="@+id/tv_password"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center_vertical"
+                android:text="@string/sign_up_password"
+                android:textColor="@color/black_000000"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@id/space_password_left"
+                app:layout_constraintDimensionRatio="W,90:28"
+                app:layout_constraintStart_toEndOf="@id/space_password_left"
+                app:layout_constraintTop_toBottomOf="@id/space_password_top" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:text="@string/sign_up_password_policy"
+                android:textColor="@color/black_000000"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_password"
+                app:layout_constraintEnd_toEndOf="@id/cl_password"
+                app:layout_constraintTop_toTopOf="@id/tv_password" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/tv_password"
+                app:layout_constraintStart_toEndOf="@id/tv_password"
+                app:layout_constraintTop_toTopOf="@id/tv_password" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_password"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@{viewModel.isPasswordValid() ? @drawable/bg_stroke_579e78_radius_10dp : @drawable/bg_stroke_ba3030_radius_10dp}"
+                app:layout_constraintDimensionRatio="H,320:40"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_password"
+                app:layout_constraintWidth_percent="0.88">
+
+                <EditText
+                    android:id="@+id/et_password"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:autofillHints="emailAddress"
+                    android:background="@null"
+                    android:ellipsize="end"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:onTextChanged="@{viewModel.onPasswordTextChanged}"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="4dp"
+                    android:textColor="@color/black_000000"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.8" />
+
+                <TextView
+                    android:id="@+id/tv_password_check"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:text="@{viewModel.isPasswordValid ? @string/sign_up_available : @string/sign_up_unavailable}"
+                    android:textColor="@color/black_434343"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/et_password"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Space
+                android:id="@+id/space_password_verify_top"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H,360:14"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cl_password" />
+
+            <Space
+                android:id="@+id/space_password_verify_left"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H,32:28"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/space_password_verify_top"
+                app:layout_constraintWidth_percent="0.091" />
+
+            <TextView
+                android:id="@+id/tv_password_verify"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center_vertical"
+                android:text="@string/sign_up_verify_password"
+                android:textColor="@color/black_000000"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@id/space_password_verify_left"
+                app:layout_constraintDimensionRatio="W,90:28"
+                app:layout_constraintStart_toEndOf="@id/space_password_verify_left"
+                app:layout_constraintTop_toBottomOf="@id/space_password_verify_top" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_password_verify"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@{viewModel.isPasswordCheckValid() ?  @drawable/bg_stroke_579e78_radius_10dp : @drawable/bg_stroke_ba3030_radius_10dp}"
+                app:layout_constraintDimensionRatio="H,320:40"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_password_verify"
+                app:layout_constraintWidth_percent="0.88">
+
+                <EditText
+                    android:id="@+id/et_password_verify"
+                    onPasswordCheckTextChanged="@{(text) -> viewModel.onPasswordCheckTextChanged(text, etPassword.getText().toString())}"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:autofillHints="emailAddress"
+                    android:background="@null"
+                    android:ellipsize="end"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="4dp"
+                    android:textColor="@color/black_000000"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintWidth_percent="0.8" />
+
+                <TextView
+                    android:id="@+id/tv_password_verify_check"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:text="@string/sign_up_matching_password"
+                    android:textColor="@color/black_434343"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/et_password_verify"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <Space
+                android:id="@+id/space_password_verify_bottom"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H,360:66"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cl_password_verify" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/bt_join"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@{viewModel.isSignUpAble() ? @drawable/bg_576b9e_radius_6dp : @drawable/bg_d9d9d9_radius_10dp}"
+                android:clickable="@{viewModel.isSignUpAble}"
+                android:stateListAnimator="@null"
+                android:text="@string/login_join"
+                android:textColor="@color/white_ffffff"
+                android:textSize="16sp"
+                app:layout_constraintDimensionRatio="H,320:48"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/space_password_verify_bottom"
+                app:layout_constraintWidth_percent="0.88" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintDimensionRatio="H,360:48"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bt_join" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</layout>

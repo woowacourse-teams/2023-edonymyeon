@@ -1,0 +1,94 @@
+name: Android CI
+
+on:
+  push:
+    branches: 
+      - "dev"
+    paths: 'android/**'
+  pull_request:
+    branches:
+      - "dev"
+    paths: 'android/**'
+ 
+jobs:      
+  build:
+
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: android
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Create file
+      run: cat $GITHUB_WORKSPACE/androidandroid/app/google-services.json | base64
+
+    - name: Putting google data
+      env:
+        DATA: ${{ secrets.ANDROID_GOOGLE_SERVICE }}
+      run: echo $DATA > $GITHUB_WORKSPACE/android/app/google-services.json
+
+    - name: Add URL
+      env:
+        BASE_URL: ${{ secrets.APP_BASE_URL }}
+      run: |
+        echo APP_BASE_URL=\"BASE_URL\" >> ./local.properties
+
+    - name: Access KAKAO KEY
+      env:
+        APP_KEY: ${{ secrets.KAKAO_APP_KEY }}
+        NATIVE_KEY: ${{ secrets.KAKAO_NATIVE_KEY }}
+      run: |
+        echo KAKAO_APP_KEY=\"APP_KEY\" >> ./local.properties
+        echo KAKAO_NATIVE_KEY=\"NATIVE_KEY\" >> ./local.properties
+        
+    - name: set up Java JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: gradle
+
+    # Gradle wrapper 파일 실행 권한
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    # Gradle 캐싱: 빌드 시간과 네트워크 통신을 줄이기 위해 의존성 패키지들을 캐싱하여 재사용
+    - name: Cache Gradle packages
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper      
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties', '**/buildSrc/**/*.kt') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+      
+    - name: Run Unit test
+      run: ./gradlew --info test
+      
+    - name: Publish Unit test results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: always()
+      with:
+          files: '**/build/test-results/test/TEST-*.xml'
+      
+    - name: Notify Slack
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        author_name: Android Build Failure Notification
+        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ANDROID_CI_WEBHOOK_URL }} # required
+      if: failure() 
+
+    # Gradle 캐시 제거
+    - name: Cleanup Gradle Cache
+      if: always()
+      run: |
+        rm -f ~/.gradle/caches/modules-2/modules-2.lock
+        rm -f ~/.gradle/caches/modules-2/gc.properties
+    
