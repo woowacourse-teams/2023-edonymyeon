@@ -1,6 +1,9 @@
 package edonymyeon.backend.comment.domain;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.COMMENT_MEMBER_NOT_SAME;
+
 import edonymyeon.backend.global.domain.TemporalRecord;
+import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.commentimage.domain.CommentImageInfo;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.domain.Post;
@@ -64,6 +67,15 @@ public class Comment extends TemporalRecord {
     public void delete() {
         this.deleted = true;
         // todo: 댓글 사진이 신고 당했을 경우를 대비해서 댓글 사진도 soft delete로 진행
-        this.commentImageInfo.delete();
+        if(this.commentImageInfo != null) {
+            this.commentImageInfo.delete();
+        }
+    }
+
+    public void checkWriter(final Long memberId) {
+        // todo: 여우의 PR 반영해서 member 비교하는거 고치기
+        if (!member.getId().equals(memberId)) {
+            throw new EdonymyeonException(COMMENT_MEMBER_NOT_SAME);
+        }
     }
 }

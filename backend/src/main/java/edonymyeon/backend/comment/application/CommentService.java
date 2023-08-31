@@ -58,4 +58,12 @@ public class CommentService {
         commentImageInfoRepository.save(commentImageInfo);
         return commentImageInfo;
     }
+
+    @Transactional
+    public void deleteComment(final MemberId memberId, final Long postId, final Long commentId) {
+        final Comment comment = commentRepository.findByIdAndPostId(commentId, postId)
+                .orElseThrow(() -> new EdonymyeonException(ExceptionInformation.COMMENT_ID_NOT_FOUND));
+        comment.checkWriter(memberId.id());
+        comment.delete();
+    }
 }

@@ -68,7 +68,8 @@ public class IntegrationFixture {
 
     protected long 응답의_location헤더에서_id를_추출한다(final ExtractableResponse<Response> 게시글_생성_요청_결과) {
         final String location = 게시글_생성_요청_결과.header("location");
-        return Long.parseLong(location.split("/")[2]);
+        final String[] split = location.split("/");
+        return Long.parseLong(split[split.length - 1]);
     }
 
     protected ExtractableResponse<Response> 게시글_하나를_상세_조회한다(final Member 열람인, final long 게시글_id) {
