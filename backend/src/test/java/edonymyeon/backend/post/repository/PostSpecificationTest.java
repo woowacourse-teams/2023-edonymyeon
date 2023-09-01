@@ -1,17 +1,18 @@
 package edonymyeon.backend.post.repository;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
-import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.PostTestSupport;
-import java.util.Arrays;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.data.jpa.domain.Specification;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -55,6 +56,19 @@ public class PostSpecificationTest {
         List<Post> all = postRepository.findAll(searchedBy);
 
         assertThat(all.size()).isEqualTo(1);
+    }
+
+    @Test
+    void 빈_검색어를_검색하면_빈_값이_나온다() {
+        postTestSupport.builder()
+                .title("ecec")
+                .content("I use EnGlish and KoRean")
+                .build();
+
+        Specification<Post> searchedBy = PostSpecification.searchBy("");
+        List<Post> all = postRepository.findAll(searchedBy);
+
+        assertThat(all.size()).isEqualTo(0);
     }
 }
 
