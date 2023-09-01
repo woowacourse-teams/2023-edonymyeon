@@ -3,12 +3,15 @@ package com.app.edonymyeon.presentation.ui.postdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -47,6 +50,13 @@ class PostDetailActivity : AppCompatActivity() {
         )
     }
 
+    private val pickGalleryImage =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                setGalleryImages(it.data)
+            }
+        }
+
     private val reportDialog: ReportDialog by lazy {
         ReportDialog(id, viewModel)
     }
@@ -76,6 +86,7 @@ class PostDetailActivity : AppCompatActivity() {
         setViewByLoginStatus()
         getPost()
         setObserver()
+        setListener()
         setRecommendationCheckedListener()
     }
 
@@ -198,6 +209,19 @@ class PostDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun setListener() {
+        binding.ivPostGallery.setOnClickListener { navigateToGallery() }
+        binding.cvContentImage.ivPostGalleryImageRemove.setOnClickListener {
+            binding.clGalleryImage.visibility = View.GONE
+        }
+    }
+
+    private fun navigateToGallery() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+        pickGalleryImage.launch(intent)
+    }
+
     private fun setRecommendationCheckedListener() {
         binding.cbUp.setOnCheckedChangeListener { _, isChecked ->
             if (invalidateRecommendation(binding.cbUp)) return@setOnCheckedChangeListener
@@ -266,6 +290,13 @@ class PostDetailActivity : AppCompatActivity() {
             } else {
                 indicatorView.setImageResource(R.drawable.ic_bcc4d8_indicator_focus_off)
             }
+        }
+    }
+
+    private fun setGalleryImages(data: Intent?) {
+        data?.data?.let { imageUri ->
+            binding.cvContentImage.postEditorImage = imageUri.toString()
+            binding.clGalleryImage.isVisible = true
         }
     }
 

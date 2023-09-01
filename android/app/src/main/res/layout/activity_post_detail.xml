@@ -398,15 +398,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_stroke_b0b9d1_top"
-            android:minHeight="44dp"
             app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_gallery_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/et_comment"
+                app:layout_constraintTop_toTopOf="@id/cl_comment_input">
+
+                <include
+                    android:id="@+id/cv_content_image"
+                    layout="@layout/item_post_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
                 android:id="@+id/iv_post_gallery"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="12dp"
                 android:contentDescription="@string/post_detail_gallery_content_description"
                 android:src="@drawable/btn_gallery"
                 app:layout_constraintBottom_toBottomOf="@id/cl_comment_input"
@@ -418,7 +438,7 @@
                 android:id="@+id/et_comment"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="8dp"
+                android:layout_marginVertical="10dp"
                 android:layout_marginEnd="10dp"
                 android:autofillHints="no"
                 android:background="@drawable/bg_d7d9ea_radius_5dp"
@@ -433,7 +453,7 @@
                 android:textSize="11sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cl_gallery_image"
                 app:layout_constraintWidth_percent="0.8722" />
 
             <ImageView
