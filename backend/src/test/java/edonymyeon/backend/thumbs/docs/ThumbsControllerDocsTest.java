@@ -11,7 +11,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.domain.TestMemberBuilder;
+import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;

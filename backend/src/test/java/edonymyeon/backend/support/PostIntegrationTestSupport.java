@@ -1,8 +1,6 @@
 package edonymyeon.backend.support;
 
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.domain.TestMemberBuilder;
-import edonymyeon.backend.post.repository.PostRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

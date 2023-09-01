@@ -1,6 +1,9 @@
-package edonymyeon.backend.member.domain;
+package edonymyeon.backend.support;
 
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
+import edonymyeon.backend.member.domain.Device;
+import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.domain.SocialInfo;
 import edonymyeon.backend.member.repository.MemberRepository;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -88,26 +91,30 @@ public class TestMemberBuilder {
         }
 
         public Member build() {
-            final Member member = new Member();
+            final Member member = new Member(
+                    this.email != null ? this.email : DEFAULT_EMAIL + emailCount++,
+                    this.password != null ? this.password : DEFAULT_PASSWORD,
+                    this.nickname != null ? this.nickname : DEFAULT_NICK_NAME + nickNameCount++,
+                    this.profileImageInfo,
+                    List.of()
+            );
             setField(member, "id", this.id, null);
-            setField(member, "email", this.email, DEFAULT_EMAIL + emailCount++);
-            setField(member, "password", this.password, DEFAULT_PASSWORD);
-            setField(member, "nickname", this.nickname, DEFAULT_NICK_NAME + nickNameCount++);
             setField(member, "socialInfo", this.socialInfo, null);
-            setField(member, "profileImageInfo", this.profileImageInfo, null);
             setField(member, "devices", this.devices, List.of(new Device("testToken", member)));
             setField(member, "deleted", this.deleted, false);
             return memberRepository.save(member);
         }
 
         public Member buildWithoutSaving() {
-            final Member member = new Member();
+            final Member member = new Member(
+                    this.email != null ? this.email : DEFAULT_EMAIL + emailCount++,
+                    this.password != null ? this.password : DEFAULT_PASSWORD,
+                    this.nickname != null ? this.nickname : DEFAULT_NICK_NAME + nickNameCount++,
+                    this.profileImageInfo,
+                    List.of()
+            );
             setField(member, "id", this.id, null);
-            setField(member, "email", this.email, DEFAULT_EMAIL + emailCount++);
-            setField(member, "password", this.password, DEFAULT_PASSWORD);
-            setField(member, "nickname", this.nickname, DEFAULT_NICK_NAME + nickNameCount++);
             setField(member, "socialInfo", this.socialInfo, null);
-            setField(member, "profileImageInfo", this.profileImageInfo, null);
             setField(member, "devices", this.devices, List.of(new Device("testToken", member)));
             setField(member, "deleted", this.deleted, false);
             return member;

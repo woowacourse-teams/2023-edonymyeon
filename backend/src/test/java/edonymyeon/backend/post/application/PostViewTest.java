@@ -2,7 +2,7 @@ package edonymyeon.backend.post.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edonymyeon.backend.member.domain.TestMemberBuilder;
+import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;

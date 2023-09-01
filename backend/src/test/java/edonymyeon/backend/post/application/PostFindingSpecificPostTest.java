@@ -3,7 +3,7 @@ package edonymyeon.backend.post.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import edonymyeon.backend.member.domain.TestMemberBuilder;
+import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;

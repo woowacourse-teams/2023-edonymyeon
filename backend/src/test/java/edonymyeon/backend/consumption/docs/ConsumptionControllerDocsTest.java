@@ -15,7 +15,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edonymyeon.backend.member.domain.TestMemberBuilder;
+import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.support.DocsTest;
 import edonymyeon.backend.consumption.application.ConsumptionService;
 import edonymyeon.backend.consumption.application.dto.ConsumptionPriceResponse;

@@ -9,7 +9,7 @@ import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.YearMonthDto;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.domain.TestMemberBuilder;
+import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.PostTestSupport;

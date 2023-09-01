@@ -4,8 +4,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.member.application.dto.AnonymousMemberId;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.domain.TestMemberBuilder;
-import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.post.application.HotFindingCondition;
 import edonymyeon.backend.post.application.PostReadService;
 import edonymyeon.backend.post.domain.HotPostPolicy;
@@ -13,12 +12,10 @@ import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.PostTestSupport;
 import edonymyeon.backend.support.ThumbsUpPostTestSupport;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 

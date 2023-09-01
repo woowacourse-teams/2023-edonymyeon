@@ -3,7 +3,7 @@ package edonymyeon.backend.consumption.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.domain.TestMemberBuilder;
+import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.post.domain.Post;
 import java.time.LocalDate;
 import java.util.ArrayList;

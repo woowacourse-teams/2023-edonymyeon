@@ -2,7 +2,7 @@ package edonymyeon.backend.report;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
-import edonymyeon.backend.member.domain.TestMemberBuilder;
+import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.report.application.ReportRepository;
 import edonymyeon.backend.report.application.ReportRequest;

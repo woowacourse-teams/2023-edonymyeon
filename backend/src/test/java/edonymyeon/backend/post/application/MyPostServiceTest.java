@@ -9,12 +9,11 @@ import static org.mockito.Mockito.when;
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.domain.TestMemberBuilder;
+import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.application.dto.response.PostConsumptionResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -27,7 +26,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
-import org.springframework.util.ReflectionUtils;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -56,7 +54,7 @@ class MyPostServiceTest {
         final Member 작성자 = testMemberBuilder.builder()
                 .id(1L)
                 .email("test@gmail.com")
-                .password("password")
+                .password("password123!")
                 .nickname("nickname")
                 .buildWithoutSaving();
 

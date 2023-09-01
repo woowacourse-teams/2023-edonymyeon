@@ -1,7 +1,7 @@
 package edonymyeon.backend.post.docs;
 
 import edonymyeon.backend.CacheConfig;
-import edonymyeon.backend.member.domain.TestMemberBuilder;
+import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
@@ -124,9 +124,6 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     void 게시글을_수정한다() throws Exception {
         final Member 글쓴이 = testMemberBuilder.builder()
                 .id(1L)
-                .email("email")
-                .password("password")
-                .nickname("nickname")
                 .buildWithoutSaving();
 
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이);
@@ -192,9 +189,6 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     void 게시글을_삭제한다() throws Exception {
         final Member 글쓴이 = testMemberBuilder.builder()
                 .id(1L)
-                .email("email")
-                .password("password")
-                .nickname("nickname")
                 .buildWithoutSaving();
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이);
 
@@ -227,9 +221,6 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     void 게시글을_전체_조회한다() throws Exception {
         final Member 글쓴이 = testMemberBuilder.builder()
                 .id(1L)
-                .email("email")
-                .password("password")
-                .nickname("nickname")
                 .buildWithoutSaving();
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0);
 
@@ -260,9 +251,6 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
         final Member 글쓴이 = testMemberBuilder.builder()
                 .id(1L)
-                .email("email")
-                .password("password")
-                .nickname("nickname")
                 .buildWithoutSaving();
         final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), 0);
 
@@ -315,9 +303,6 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
         final Member 글쓴이 = testMemberBuilder.builder()
                 .id(1L)
-                .email("email")
-                .password("password")
-                .nickname("nickname")
                 .buildWithoutSaving();
         final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), 0);
 
@@ -362,9 +347,6 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     void 게시글을_상세_조회한다() throws Exception {
         final Member 글쓴이 = testMemberBuilder.builder()
                 .id(1L)
-                .email("email")
-                .password("password")
-                .nickname("nickname")
                 .buildWithoutSaving();
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0);
 

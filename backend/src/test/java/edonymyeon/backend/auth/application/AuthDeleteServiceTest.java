@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.domain.TestMemberBuilder;
+import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.support.IntegrationTest;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -33,7 +33,7 @@ public class AuthDeleteServiceTest {
                 .builder()
                 .id(1L)
                 .email("test@email.com")
-                .password("passwrod1234")
+                .password("passwrod1234!")
                 .nickname("null")
                 .deleted(true)
                 .build();
