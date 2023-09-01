@@ -91,9 +91,13 @@ public class Member extends TemporalRecord {
     }
 
     public static Member from(final SocialInfo socialInfo) {
-        return new Member(UUID.randomUUID().toString(),
-                UUID.randomUUID().toString(),
-                "#" + socialInfo.getSocialType().name() + UUID.randomUUID(),
+        final String nicknamePrefix = "#" + socialInfo.getSocialType().name();
+        return new Member(UUID.randomUUID().toString().substring(0, MAX_EMAIL_LENGTH),
+                "H!" + UUID.randomUUID().toString()
+                        .substring(0, MAX_PASSWORD_LENGTH)
+                        .replaceAll("-", ""),
+                nicknamePrefix + UUID.randomUUID().toString()
+                        .substring(0, MAX_NICKNAME_LENGTH - nicknamePrefix.length()),
                 socialInfo);
     }
 
