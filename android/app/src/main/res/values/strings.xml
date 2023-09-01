@@ -39,6 +39,8 @@
     <string name="post_detail_toolbar_menu_report">수정</string>
     <string name="post_detail_writer_cant_recommend">본인이 작성한 글은 추천할 수 없습니다.</string>
     <string name="post_detail_login_required">추천 기능은 회원만 이용할 수 있습니다.</string>
+    <string name="post_detail_input_comment">댓글을 입력하세요.</string>
+    <string name="post_detail_gallery_content_description">갤러리에 접근할 수 있는 버튼입니다.</string>
 
     <!-- post detail dialog -->
     <string name="post_detail_dialog_title">정말로 삭제하시겠습니까?</string>
@@ -149,6 +151,5 @@
     <!--alarm-->
     <string name="alarm_title">알림</string>
     <string name="alarm_period_explanation">최근 3개월 내  푸시 알림 내역입니다</string>
-
 
 </resources>
