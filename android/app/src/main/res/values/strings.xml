@@ -8,6 +8,8 @@
     <string name="all_price_unit">원</string>
     <string name="all_required_login">로그인이 필요한 서비스입니다.</string>
     <string name="all_writer_createdAt">%s | %s</string>
+    <string name="all_delete">삭제</string>
+    <string name="all_report">신고</string>
 
     <!-- login   -->
     <string name="login_title">로그인</string>
@@ -35,8 +37,6 @@
 
     <!-- post detail -->
     <string name="post_detail_toolbar_menu_update">수정</string>
-    <string name="post_detail_toolbar_menu_delete">삭제</string>
-    <string name="post_detail_toolbar_menu_report">수정</string>
     <string name="post_detail_writer_cant_recommend">본인이 작성한 글은 추천할 수 없습니다.</string>
     <string name="post_detail_login_required">추천 기능은 회원만 이용할 수 있습니다.</string>
     <string name="post_detail_input_comment">댓글을 입력하세요.</string>
@@ -53,7 +53,6 @@
     <string name="post_report_dialog_description">허위신고일 경우, 신고자의 서비스 활동이 제한 될 수 있으니 신중하게 신고해 주세요</string>
     <string name="post_report_dialog_input_reason">신고 사유를 입력하세요.</string>
     <string name="post_report_dialog_cancel">취소</string>
-    <string name="post_report_dialog_report">신고</string>
     <string name="post_report_dialog_report_profit">영리목적/홍보성</string>
     <string name="post_report_dialog_report_privacy">개인정보 노출</string>
     <string name="post_report_dialog_report_obscene">음란성/선정성</string>
