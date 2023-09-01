@@ -1,9 +1,15 @@
 package edonymyeon.backend.setting.application;
 
+import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.global.exception.ExceptionInformation;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.setting.application.dto.SettingsResponse;
 import edonymyeon.backend.setting.domain.Setting;
 import edonymyeon.backend.setting.domain.SettingType;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,8 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class SettingService {
 
     private final SettingRepository settingRepository;
+    private final MemberRepository memberRepository;
 
-    public static List<Setting> getDefaultSettings(final Member member) {
+    private static List<Setting> getDefaultSettings(final Member member) {
         return List.of(
                 new Setting(SettingType.NOTIFICATION_PER_THUMBS, member),
                 new Setting(SettingType.NOTIFICATION_PER_10_THUMBS, member),
@@ -31,6 +38,11 @@ public class SettingService {
     public void initializeSettings(final Member member) {
         final List<Setting> defaultSettings = getDefaultSettings(member);
         settingRepository.saveAll(defaultSettings);
+    }
+
+    public void toggleSetting(final String settingSerialNumber, final MemberId memberId) {
+        final Optional<Member> member = memberRepository.findById(memberId.id());
+        toggleSetting(settingSerialNumber, member.orElseThrow(() -> new EdonymyeonException(ExceptionInformation.MEMBER_ID_NOT_FOUND)));
     }
 
     public void toggleSetting(final String settingSerialNumber, final Member member) {
@@ -111,5 +123,10 @@ public class SettingService {
                 set.deactivate();
             }
         }
+    }
+
+    public SettingsResponse findSettingsByMemberId(final MemberId memberId) {
+        final List<Setting> settings = settingRepository.findByMemberId(memberId.id());
+        return SettingsResponse.from(settings);
     }
 }

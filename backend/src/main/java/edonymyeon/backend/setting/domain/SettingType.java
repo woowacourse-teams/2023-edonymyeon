@@ -10,19 +10,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 public class SettingType {
-    public static SettingType NOTIFICATION_PER_THUMBS
+    public static final SettingType NOTIFICATION_PER_THUMBS
             = new SettingType("1003", "좋아요/싫어요 건별 알림 수신", Category.THUMB, Weight.FIVE);
-    public static SettingType NOTIFICATION_PER_10_THUMBS
+    public static final SettingType NOTIFICATION_PER_10_THUMBS
             = new SettingType("1002", "좋아요/싫어요 10개당 알림 수신", Category.THUMB, Weight.FIVE);
-    public static SettingType NOTIFICATION_THUMBS
+    public static final SettingType NOTIFICATION_THUMBS
             = new SettingType("1001", "좋아요 싫어요 알림 수신", Category.THUMB, Weight.TEN);
 
-    public static SettingType NOTIFICATION_PER_COMMENT
+    public static final SettingType NOTIFICATION_PER_COMMENT
             = new SettingType("2001", "자신의 글에 댓글을 남겼을 때 알림 수신", Category.COMMENT, Weight.FIVE);
-    public static SettingType NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING
+    public static final SettingType NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING
             = new SettingType("5001", "특정 시간마다 소비 확정해야 한다는 알림 수신", Category.COMMENT, Weight.FIVE);
 
-    public static SettingType NOTIFICATION
+    public static final SettingType NOTIFICATION
             = new SettingType("0001", "푸시 알림 수신", Category.ALL, Weight.TEN);
 
     private String serialNumber;
@@ -63,5 +63,9 @@ public class SettingType {
 
     public boolean isPrimary() {
         return Objects.equals(this.category, Category.ALL);
+    }
+
+    public String getSerialNumber() {
+        return serialNumber;
     }
 }

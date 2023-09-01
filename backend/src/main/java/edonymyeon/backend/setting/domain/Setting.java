@@ -45,10 +45,6 @@ public class Setting {
         this.isActive = false;
     }
 
-    public boolean isSerialEqualTo(final String serialNumber) {
-        return settingType.isSerialNumber(serialNumber);
-    }
-
     public boolean isSameCategoryWith(final Setting setting) {
         return settingType.isSameCategoryWith(setting.settingType);
     }
@@ -67,5 +63,9 @@ public class Setting {
 
     public boolean isPrimary() {
         return settingType.isPrimary();
+    }
+
+    public String getSerialNumber() {
+        return settingType.getSerialNumber();
     }
 }

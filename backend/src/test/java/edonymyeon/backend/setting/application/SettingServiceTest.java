@@ -45,7 +45,7 @@ class SettingServiceTest extends IntegrationFixture {
         final Member member = 회원을_저장하고_기본설정을_부여한다();
 
         List<Setting> settings = settingRepository.findByMemberId(member.getId());
-        assertThat(settings).hasSize(SettingService.getDefaultSettings(member).size());
+        assertThat(settings).hasSize(6);
 
         assertThat(settings.stream()
                 .map(Setting::isActive)
