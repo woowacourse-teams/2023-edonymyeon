@@ -73,6 +73,7 @@ class PostDetailActivity : AppCompatActivity() {
 
         initBinding()
         initAppbar()
+        setViewByLoginStatus()
         getPost()
         setObserver()
         setRecommendationCheckedListener()
@@ -151,6 +152,12 @@ class PostDetailActivity : AppCompatActivity() {
         supportActionBar?.title = ""
     }
 
+    private fun setViewByLoginStatus() {
+        if (!viewModel.isLogin) {
+            binding.clCommentInput.isVisible = false
+        }
+    }
+
     private fun getPost() {
         viewModel.getPostDetail(id)
     }
@@ -165,12 +172,13 @@ class PostDetailActivity : AppCompatActivity() {
                 loadingDialog.dismiss()
             }
         }
-        viewModel.post.observe(this) {
-            if (it.images.isNotEmpty()) {
+        viewModel.post.observe(this) { post ->
+            if (post.images.isNotEmpty()) {
                 binding.ivDefaultImage.isVisible = false
-                setImageSlider(it)
+                setImageSlider(post)
                 setImageIndicators()
             }
+            hideInputCommentForWriter(post)
         }
 
         viewModel.reactionCount.observe(this) {
@@ -181,6 +189,12 @@ class PostDetailActivity : AppCompatActivity() {
         viewModel.isRecommendationRequestDone.observe(this) {
             binding.cbUp.isEnabled = it
             binding.cbDown.isEnabled = it
+        }
+    }
+
+    private fun hideInputCommentForWriter(post: PostUiModel) {
+        if (post.isWriter) {
+            binding.clCommentInput.isVisible = false
         }
     }
 
