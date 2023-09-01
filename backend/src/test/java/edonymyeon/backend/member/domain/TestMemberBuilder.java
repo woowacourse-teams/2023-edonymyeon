@@ -13,7 +13,7 @@ import org.springframework.util.ReflectionUtils;
 @Component
 public class TestMemberBuilder {
 
-    private static final String DEFAULT_EMAIL = "email";
+    private static final String DEFAULT_EMAIL = "email@edonymyeon.com";
 
     private static final String DEFAULT_PASSWORD = "password123!";
 

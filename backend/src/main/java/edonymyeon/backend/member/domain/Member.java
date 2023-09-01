@@ -83,6 +83,7 @@ public class Member extends TemporalRecord {
     }
 
     private Member(final String email, final String password, final String nickname, final SocialInfo socialInfo) {
+        validate(email, password, nickname);
         this.email = email;
         this.password = password;
         this.nickname = nickname;
