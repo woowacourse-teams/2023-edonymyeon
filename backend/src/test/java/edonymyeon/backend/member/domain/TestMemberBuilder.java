@@ -3,8 +3,8 @@ package edonymyeon.backend.member.domain;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.member.repository.MemberRepository;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
@@ -116,7 +116,7 @@ public class TestMemberBuilder {
         private void setField(final Member member, final String fieldName, final Object value, final Object orElse) {
             final Field field = ReflectionUtils.findField(Member.class, fieldName);
             ReflectionUtils.makeAccessible(field);
-            if (value != null) {
+            if (Objects.nonNull(value)) {
                 ReflectionUtils.setField(field, member, value);
                 return;
             }
