@@ -39,7 +39,7 @@ public class Comment extends TemporalRecord {
     private Post post;
 
     @Column(nullable = false)
-    private String comment;
+    private String content;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn
@@ -54,12 +54,12 @@ public class Comment extends TemporalRecord {
 
     public Comment(
             final Post post,
-            final String comment,
+            final String content,
             final CommentImageInfo commentImageInfo,
             final Member member
     ) {
         this.post = post;
-        this.comment = comment;
+        this.content = content;
         this.commentImageInfo = commentImageInfo;
         this.member = member;
     }

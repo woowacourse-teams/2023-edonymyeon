@@ -26,7 +26,7 @@ public class CommentTestSupport {
 
         private Post post;
 
-        private String comment;
+        private String content;
 
         private CommentImageInfo commentImageInfo;
 
@@ -37,8 +37,8 @@ public class CommentTestSupport {
             return this;
         }
 
-        public CommentTestSupport.CommentBuilder comment(final String comment) {
-            this.comment = comment;
+        public CommentTestSupport.CommentBuilder content(final String content) {
+            this.content = content;
             return this;
         }
 
@@ -56,7 +56,7 @@ public class CommentTestSupport {
             return commentRepository.save(
                     new Comment(
                             post == null ? postTestSupport.builder().build() : post,
-                            comment == null ? "댓글이지롱" : comment,
+                            content == null ? "댓글이지롱" : content,
                             commentImageInfo == null ? null : commentImageInfo,
                             member == null ? memberTestSupport.builder().build() : member
                     )

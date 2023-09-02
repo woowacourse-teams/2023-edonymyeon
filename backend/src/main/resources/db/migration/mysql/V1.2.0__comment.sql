@@ -11,7 +11,7 @@ create table comment (
     id bigint not null auto_increment,
     created_at datetime(6),
     modified_at datetime(6),
-    comment varchar(255) not null,
+    content varchar(255) not null,
     deleted bit default false not null,
     comment_image_info_id bigint,
     member_id bigint not null,
