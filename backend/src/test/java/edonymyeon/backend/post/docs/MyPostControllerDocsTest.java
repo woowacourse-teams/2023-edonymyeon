@@ -1,5 +1,34 @@
 package edonymyeon.backend.post.docs;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edonymyeon.backend.image.domain.Domain;
+import edonymyeon.backend.image.postimage.domain.PostImageInfos;
+import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.post.application.GeneralFindingCondition;
+import edonymyeon.backend.post.application.MyPostService;
+import edonymyeon.backend.post.application.PostSlice;
+import edonymyeon.backend.post.application.dto.response.MyPostResponse;
+import edonymyeon.backend.post.application.dto.response.PostConsumptionResponse;
+import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.support.DocsTest;
+import edonymyeon.backend.support.TestMemberBuilder;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
+import org.springframework.http.HttpHeaders;
+import org.springframework.restdocs.headers.HeaderDescriptor;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.restdocs.payload.FieldDescriptor;
+import org.springframework.restdocs.request.ParameterDescriptor;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+
+import java.util.List;
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -13,34 +42,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edonymyeon.backend.image.domain.Domain;
-import edonymyeon.backend.image.postimage.domain.PostImageInfos;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.support.TestMemberBuilder;
-import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.post.application.GeneralFindingCondition;
-import edonymyeon.backend.post.application.MyPostService;
-import edonymyeon.backend.post.application.PostSlice;
-import edonymyeon.backend.post.application.dto.response.MyPostResponse;
-import edonymyeon.backend.post.application.dto.response.PostConsumptionResponse;
-import edonymyeon.backend.post.domain.Post;
-import edonymyeon.backend.support.DocsTest;
-import java.util.List;
-import java.util.Optional;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
-import org.springframework.http.HttpHeaders;
-import org.springframework.restdocs.headers.HeaderDescriptor;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-import org.springframework.restdocs.payload.FieldDescriptor;
-import org.springframework.restdocs.request.ParameterDescriptor;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class MyPostControllerDocsTest extends DocsTest {
@@ -68,9 +69,6 @@ public class MyPostControllerDocsTest extends DocsTest {
         final GeneralFindingCondition findingCondition = GeneralFindingCondition.builder().build();
 
         final Member 회원 = testMemberBuilder.builder()
-                .email("example@example.com")
-                .password("password11234!")
-                .nickname("testNickname")
                 .buildWithoutSaving();
         회원_레포지토리를_모킹한다(회원);
 

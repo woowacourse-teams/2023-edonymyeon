@@ -1,15 +1,16 @@
 package edonymyeon.backend.thumbs.domain;
 
+import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.support.TestMemberBuilder;
+import org.junit.jupiter.api.Test;
+
+import java.util.Collections;
+import java.util.List;
+
 import static edonymyeon.backend.thumbs.domain.ThumbsType.DOWN;
 import static edonymyeon.backend.thumbs.domain.ThumbsType.UP;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.support.TestMemberBuilder;
-import edonymyeon.backend.post.domain.Post;
-import java.util.Collections;
-import java.util.List;
-import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("NonAsciiCharacters")
 class AllThumbsInPostTest {
@@ -30,9 +31,6 @@ class AllThumbsInPostTest {
     @Test
     void 추천과_비추천이_수를_제대로_카운트_한다() {
         Member member = testMemberBuilder.builder()
-                .email("email")
-                .password("password123!")
-                .nickname("nick")
                 .buildWithoutSaving();
 
         Post post = new Post("title", "content", 100L, member);

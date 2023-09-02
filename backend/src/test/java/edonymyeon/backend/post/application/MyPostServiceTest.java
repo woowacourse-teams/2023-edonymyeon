@@ -1,21 +1,13 @@
 package edonymyeon.backend.post.application;
 
-import static edonymyeon.backend.consumption.domain.ConsumptionType.PURCHASE;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
-
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.application.dto.response.PostConsumptionResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
-import java.util.List;
-import java.util.Map;
+import edonymyeon.backend.support.TestMemberBuilder;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -26,6 +18,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+
+import java.util.List;
+import java.util.Map;
+
+import static edonymyeon.backend.consumption.domain.ConsumptionType.PURCHASE;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -53,9 +54,6 @@ class MyPostServiceTest {
 
         final Member 작성자 = testMemberBuilder.builder()
                 .id(1L)
-                .email("test@gmail.com")
-                .password("password123!")
-                .nickname("nickname")
                 .buildWithoutSaving();
 
         final List<Post> 게시글_목록 = 임의_게시글_목록(작성자);

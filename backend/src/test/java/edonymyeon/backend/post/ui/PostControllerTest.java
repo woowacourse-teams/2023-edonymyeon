@@ -1,20 +1,13 @@
 package edonymyeon.backend.post.ui;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.support.IntegrationTest;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import edonymyeon.backend.support.TestMemberBuilder;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,6 +19,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
 @AutoConfigureMockMvc
@@ -61,8 +62,7 @@ class PostControllerTest implements ImageFileCleaner {
 
     @Test
     void 사진_첨부_성공_테스트() throws Exception {
-        final Member member = testMemberBuilder.builder()
-                .build();
+        final Member member = testMemberBuilder.builder().build();
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/posts")
                         .file(이미지1)
@@ -93,8 +93,7 @@ class PostControllerTest implements ImageFileCleaner {
 
     @Test
     void 본인이_작성한_게시글_삭제_가능_테스트() throws Exception {
-        final Member member = testMemberBuilder.builder()
-                .build();
+        final Member member = testMemberBuilder.builder().build();
 
         final MvcResult 게시글_생성_요청_결과 = mockMvc.perform(MockMvcRequestBuilders.multipart("/posts")
                         .file(이미지1)
@@ -128,8 +127,7 @@ class PostControllerTest implements ImageFileCleaner {
 
     @Test
     void 본인이_작성하지_않은_게시글_삭제_불가능_테스트() throws Exception {
-        final Member member = testMemberBuilder.builder()
-                .build();
+        final Member member = testMemberBuilder.builder().build();
 
         final MvcResult 게시글_생성_요청_결과 = mockMvc.perform(MockMvcRequestBuilders.multipart("/posts")
                         .file(이미지1)
@@ -145,8 +143,7 @@ class PostControllerTest implements ImageFileCleaner {
                 .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
 
         PostResponse 게시글_생성_응답 = extractResponseFromResult(게시글_생성_요청_결과, PostResponse.class);
-        final Member otherMember = testMemberBuilder.builder()
-                .build();
+        final Member otherMember = testMemberBuilder.builder().build();
 
         final MvcResult 게시글_삭제_요청_결과 = mockMvc.perform(MockMvcRequestBuilders.delete("/posts/" + 게시글_생성_응답.id())
                         .header(HttpHeaders.AUTHORIZATION, "Basic "

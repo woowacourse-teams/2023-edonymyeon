@@ -1,17 +1,18 @@
 package edonymyeon.backend.consumption.domain;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.post.domain.Post;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import edonymyeon.backend.support.TestMemberBuilder;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -22,11 +23,7 @@ class ConsumptionsPerMonthTest {
     @Test
     void 소비내역을_달별로_분류한다() {
         final Member 회원 = testMemberBuilder.builder()
-                .email("email")
-                .password("password123!")
-                .nickname("nickname")
                 .buildWithoutSaving();
-
         final Post 게시글1 = new Post("title", "content", 1_000L, 회원);
         final Post 게시글2 = new Post("title", "content", 2_000L, 회원);
 

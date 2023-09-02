@@ -1,9 +1,5 @@
 package edonymyeon.backend.post.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
@@ -14,7 +10,6 @@ import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.dto.PostModificationRequest;
@@ -26,13 +21,8 @@ import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.support.ConsumptionTestSupport;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.MockMultipartFileTestSupport;
+import edonymyeon.backend.support.TestMemberBuilder;
 import jakarta.persistence.EntityManager;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,6 +32,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -111,12 +112,7 @@ class PostServiceTest implements ImageFileCleaner {
 
     @Test
     void 작성자의_프로필_사진이_없더라도_상세조회가_가능하다() throws IOException {
-        final Member member = testMemberBuilder.builder()
-                .email("anonymous@gmail.com")
-                .password("password123!")
-                .nickname("nickname")
-                .buildWithoutSaving();
-        memberRepository.save(member);
+        final Member member = testMemberBuilder.builder().build();
 
         final ActiveMemberId memberId = new ActiveMemberId(member.getId());
         final PostResponse postResponse = postService.createPost(memberId, getPostRequest());

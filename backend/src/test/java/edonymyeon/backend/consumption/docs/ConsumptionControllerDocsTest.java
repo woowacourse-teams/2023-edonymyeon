@@ -1,5 +1,23 @@
 package edonymyeon.backend.consumption.docs;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edonymyeon.backend.consumption.application.ConsumptionService;
+import edonymyeon.backend.consumption.application.dto.ConsumptionPriceResponse;
+import edonymyeon.backend.consumption.application.dto.RecentConsumptionsResponse;
+import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.support.DocsTest;
+import edonymyeon.backend.support.TestMemberBuilder;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
+import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+
+import java.util.List;
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -13,23 +31,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edonymyeon.backend.support.TestMemberBuilder;
-import edonymyeon.backend.support.DocsTest;
-import edonymyeon.backend.consumption.application.ConsumptionService;
-import edonymyeon.backend.consumption.application.dto.ConsumptionPriceResponse;
-import edonymyeon.backend.consumption.application.dto.RecentConsumptionsResponse;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.repository.MemberRepository;
-import java.util.List;
-import java.util.Optional;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class ConsumptionControllerDocsTest extends DocsTest {
@@ -58,10 +59,6 @@ public class ConsumptionControllerDocsTest extends DocsTest {
     @Test
     void 특정기간의_소비금액을_확인한다() throws Exception {
         final Member 회원 = testMemberBuilder.builder()
-                .id(1L)
-                .email("email@email.com")
-                .password("password123!")
-                .nickname("nickname")
                 .buildWithoutSaving();
         final RecentConsumptionsResponse response = new RecentConsumptionsResponse(
                 "2023-08",
