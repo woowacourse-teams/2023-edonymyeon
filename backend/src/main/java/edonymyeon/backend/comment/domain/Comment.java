@@ -66,7 +66,6 @@ public class Comment extends TemporalRecord {
 
     public void delete() {
         this.deleted = true;
-        // todo: 댓글 사진이 신고 당했을 경우를 대비해서 댓글 사진도 soft delete로 진행
         if(this.commentImageInfo != null) {
             this.commentImageInfo.delete();
         }

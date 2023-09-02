@@ -6,9 +6,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Where;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Where(clause = "deleted = false")
 @Entity
 public class CommentImageInfo extends ImageInfo {
 
