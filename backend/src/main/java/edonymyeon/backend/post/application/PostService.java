@@ -96,8 +96,11 @@ public class PostService {
 
         final List<PostImageInfo> postImageInfos = post.getPostImageInfos();
         final ArrayList<PostImageInfo> copyOfPostImageInfos = new ArrayList<>(postImageInfos);
+        // todo: 소비내역 삭제할 때, 이벤트 대신 인터페이스로 변경
         applicationEventPublisher.publishEvent(new PostDeletionEvent(post.getId()));
         thumbsService.deleteAllThumbsInPost(postId);
+        // todo: 게시글을 soft delete로 변경하면서 댓글, 게시글 이미지를 soft delete 하는 코드 작성
+        // todo: 추천/비추천과 소비내역은 물리적 삭제 맞나요?
         postImageInfoRepository.deleteAllByPostId(postId);
         postRepository.deleteById(postId);
         copyOfPostImageInfos.forEach(imageFileUploader::removeFile);
