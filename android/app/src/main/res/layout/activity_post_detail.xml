@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="postViewModel"
             type="com.app.edonymyeon.presentation.ui.postdetail.PostDetailViewModel" />
@@ -393,7 +392,14 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <include
+            android:id="@+id/cl_comment_input"
+            layout="@layout/view_comment_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+       <!-- <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_comment_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -469,6 +475,6 @@
                 app:layout_constraintEnd_toEndOf="@+id/et_comment"
                 app:layout_constraintWidth_percent="0.05" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
