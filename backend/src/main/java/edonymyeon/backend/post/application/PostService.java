@@ -100,7 +100,8 @@ public class PostService {
         applicationEventPublisher.publishEvent(new PostDeletionEvent(post.getId()));
         thumbsService.deleteAllThumbsInPost(postId);
         // todo: 게시글을 soft delete로 변경하면서 댓글, 게시글 이미지를 soft delete 하는 코드 작성
-        // todo: 추천/비추천과 소비내역은 물리적 삭제 맞나요?
+        // todo: soft delete로 변경 후신고된 게시글 삭제 이슈해결되는지 확인
+        // todo: 추천/비추천과 소비내역은 물리적 삭제로 진행
         postImageInfoRepository.deleteAllByPostId(postId);
         postRepository.deleteById(postId);
         copyOfPostImageInfos.forEach(imageFileUploader::removeFile);
