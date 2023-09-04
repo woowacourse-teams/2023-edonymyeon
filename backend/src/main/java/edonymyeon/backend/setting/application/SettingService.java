@@ -49,10 +49,12 @@ public class SettingService {
 
     public void toggleSetting(final String settingSerialNumber, final MemberId memberId) {
         final Optional<Member> member = memberRepository.findById(memberId.id());
-        toggleSetting(settingSerialNumber, member.orElseThrow(() -> new EdonymyeonException(ExceptionInformation.MEMBER_ID_NOT_FOUND)));
+        toggleSetting(settingSerialNumber, member
+                .orElseThrow(() -> new EdonymyeonException(ExceptionInformation.MEMBER_ID_NOT_FOUND))
+        );
     }
 
-    public void toggleSetting(final String settingSerialNumber, final Member member) {
+    private void toggleSetting(final String settingSerialNumber, final Member member) {
         final Setting setting = settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), settingSerialNumber);
         if (!setting.isActive()) {
             activateSetting(member, setting);
