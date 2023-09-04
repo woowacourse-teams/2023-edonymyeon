@@ -209,6 +209,17 @@ class PostDetailActivity : AppCompatActivity() {
             binding.cbUp.isEnabled = it
             binding.cbDown.isEnabled = it
         }
+
+        viewModel.isCommentSave.observe(this) { isSave ->
+            if (isSave) {
+                viewModel.postComment(
+                    this,
+                    id,
+                    viewModel.commentImage.value,
+                    includeBinding.etComment.text.toString(),
+                )
+            }
+        }
     }
 
     private fun hideInputCommentForWriter(post: PostUiModel) {
@@ -229,10 +240,15 @@ class PostDetailActivity : AppCompatActivity() {
             }
         }
         includeBinding.ivCommentSave.setOnClickListener {
-            if (!viewModel.isLogin) makeLoginSnackbar()
+            if (!viewModel.isLogin) {
+                makeLoginSnackbar()
+            } else {
+                viewModel.checkCommentValidate(includeBinding.etComment.text.toString())
+            }
         }
         includeBinding.cvContentImage.ivPostGalleryImageRemove.setOnClickListener {
             includeBinding.clGalleryImage.visibility = View.GONE
+            viewModel.setCommentImage(null)
         }
     }
 
@@ -317,6 +333,7 @@ class PostDetailActivity : AppCompatActivity() {
         data?.data?.let { imageUri ->
             includeBinding.cvContentImage.postEditorImage = imageUri.toString()
             includeBinding.clGalleryImage.isVisible = true
+            viewModel.setCommentImage(imageUri)
         }
     }
 

@@ -47,4 +47,12 @@ interface PostService {
 
     @GET("/posts/hot")
     suspend fun getHotPosts(): Response<Posts>
+
+    @Multipart
+    @POST("/posts/{postId}/comment")
+    suspend fun postComment(
+        @Path("postId") postId: Long,
+        @Part images: MultipartBody.Part?,
+        @Part content: RequestBody,
+    ): Response<Unit>
 }

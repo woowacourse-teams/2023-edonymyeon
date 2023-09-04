@@ -25,4 +25,10 @@ interface PostDataSource {
     ): Response<PostEditorResponse>
 
     suspend fun getHotPosts(): Response<Posts>
+
+    suspend fun postComment(
+        id: Long,
+        image: File,
+        content: String,
+    ): Response<Unit>
 }

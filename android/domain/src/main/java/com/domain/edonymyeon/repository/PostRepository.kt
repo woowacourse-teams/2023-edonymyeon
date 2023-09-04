@@ -26,4 +26,10 @@ interface PostRepository {
     ): Result<Any>
 
     suspend fun getHotPosts(): Result<PostItems>
+
+    suspend fun postComment(
+        id: Long,
+        images: File,
+        contents: String,
+    ): Result<Unit>
 }

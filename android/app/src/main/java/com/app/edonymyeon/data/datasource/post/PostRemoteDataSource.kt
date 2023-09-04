@@ -69,6 +69,13 @@ class PostRemoteDataSource : PostDataSource {
         return postService.getHotPosts()
     }
 
+    override suspend fun postComment(id: Long, image: File, content: String): Response<Unit> {
+        val requestFile = image.asRequestBody("image/*".toMediaTypeOrNull())
+        val multipartFile = MultipartBody.Part.createFormData("image", image.name, requestFile)
+        val requestBody = content.createRequestBody()
+        return postService.postComment(id, multipartFile, requestBody)
+    }
+
     private fun List<String>.generateMultiPartFromUrl() =
         this.map {
             val requestBody = it.createRequestBody()

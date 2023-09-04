@@ -88,4 +88,13 @@ class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepos
             Result.failure(CustomThrowable(result.code(), result.message()))
         }
     }
+
+    override suspend fun postComment(id: Long, images: File, contents: String): Result<Unit> {
+        val result = postDataSource.postComment(id, images, contents)
+        return if (result.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(CustomThrowable(result.code(), result.message()))
+        }
+    }
 }

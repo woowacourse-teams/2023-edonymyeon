@@ -1,5 +1,7 @@
 package com.app.edonymyeon.presentation.ui.postdetail
 
+import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,6 +11,7 @@ import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
+import com.app.edonymyeon.presentation.common.imageutil.processAndAdjustImage
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
 import com.app.edonymyeon.presentation.uimodel.RecommendationUiModel
@@ -47,6 +50,14 @@ class PostDetailViewModel(
     private val _isLoadingSuccess = MutableLiveData<Boolean>(false)
     val isLoadingSuccess: LiveData<Boolean>
         get() = _isLoadingSuccess
+
+    private val _isCommentSave = MutableLiveData(false)
+    val isCommentSave: LiveData<Boolean>
+        get() = _isCommentSave
+
+    private val _commentImage = MutableLiveData<Uri?>()
+    val commentImage: LiveData<Uri?>
+        get() = _commentImage
 
     fun getPostDetail(postId: Long) {
         viewModelScope.launch {
@@ -179,5 +190,23 @@ class PostDetailViewModel(
                     }
                 }
         }
+    }
+
+    fun postComment(context: Context, postId: Long, uri: Uri?, content: String) {
+        viewModelScope.launch {
+            postRepository.postComment(
+                postId,
+                processAndAdjustImage(context, uri ?: Uri.parse("")),
+                content,
+            )
+        }
+    }
+
+    fun checkCommentValidate(content: String) {
+        _isCommentSave.value = content.isNotBlank()
+    }
+
+    fun setCommentImage(image: Uri?) {
+        _commentImage.value = image
     }
 }
