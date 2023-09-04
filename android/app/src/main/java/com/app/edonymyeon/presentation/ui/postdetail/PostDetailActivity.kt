@@ -31,12 +31,13 @@ import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.ReportDialog
+import com.app.edonymyeon.presentation.ui.postdetail.listener.CommentClickListener
 import com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.util.makeSnackbar
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 
-class PostDetailActivity : AppCompatActivity() {
+class PostDetailActivity : AppCompatActivity(), CommentClickListener {
     private val id: Long by lazy {
         intent.getLongExtra(KEY_POST_ID, -1)
     }
@@ -346,6 +347,10 @@ class PostDetailActivity : AppCompatActivity() {
 
     private fun navigateToLogin() {
         startActivity(LoginActivity.newIntent(this))
+    }
+
+    override fun onDeleteComment(commentId: Long) {
+        viewModel.deleteComment(id, commentId)
     }
 
     companion object {

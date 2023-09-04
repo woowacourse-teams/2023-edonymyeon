@@ -55,4 +55,10 @@ interface PostService {
         @Part images: MultipartBody.Part?,
         @Part content: RequestBody,
     ): Response<Unit>
+
+    @DELETE("/posts/{postId}/comments/{commentId}")
+    suspend fun deleteComment(
+        @Path("postId") postId: Long,
+        @Path("commentId") commentId: Long,
+    ): Response<Unit>
 }

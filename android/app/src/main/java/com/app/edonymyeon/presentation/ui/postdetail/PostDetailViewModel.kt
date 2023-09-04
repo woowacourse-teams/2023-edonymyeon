@@ -202,6 +202,15 @@ class PostDetailViewModel(
         }
     }
 
+    fun deleteComment(postId: Long, commentId: Long) {
+        viewModelScope.launch {
+            postRepository.deleteComment(
+                postId,
+                commentId,
+            )
+        }
+    }
+
     fun checkCommentValidate(content: String) {
         _isCommentSave.value = content.isNotBlank()
     }

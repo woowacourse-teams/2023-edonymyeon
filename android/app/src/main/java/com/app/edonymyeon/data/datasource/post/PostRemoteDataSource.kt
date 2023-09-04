@@ -76,6 +76,10 @@ class PostRemoteDataSource : PostDataSource {
         return postService.postComment(id, multipartFile, requestBody)
     }
 
+    override suspend fun deleteComment(postId: Long, commentId: Long): Response<Unit> {
+        return postService.deleteComment(postId, commentId)
+    }
+
     private fun List<String>.generateMultiPartFromUrl() =
         this.map {
             val requestBody = it.createRequestBody()

@@ -97,4 +97,13 @@ class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepos
             Result.failure(CustomThrowable(result.code(), result.message()))
         }
     }
+
+    override suspend fun deleteComment(postId: Long, commentId: Long): Result<Unit> {
+        val result = postDataSource.deleteComment(postId, commentId)
+        return if (result.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(CustomThrowable(result.code(), result.message()))
+        }
+    }
 }
