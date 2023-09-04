@@ -96,14 +96,14 @@ class MyPageFragment : Fragment() {
         binding.chartMyPayment.isVisible = true
         binding.tvRequiredLogin.isVisible = false
         binding.btnLogin.isVisible = false
-        binding.tvLogout.isVisible = true
-        binding.tvWithdraw.isVisible = true
-        binding.tvUpdateAlarmSetting.isVisible = true
+        binding.clBottom.isVisible = true
+
         binding.tvLogout.setOnClickListener { logout() }
         binding.tvMyPost.setOnClickListener { navigateToMyPost() }
         binding.tvUpdateAlarmSetting.setOnClickListener { navigateToAlarmSetting() }
         binding.tvUpdateUserInfo.setOnClickListener { binding.root.makeSnackbar(getString(R.string.all_preparing_feature)) }
         binding.tvWithdraw.setOnClickListener { showDialog() }
+
         viewModel.getUserProfile()
         viewModel.setConsumptions(PERIOD_MONTH)
 
@@ -112,12 +112,10 @@ class MyPageFragment : Fragment() {
 
     private fun setViewForNotLogin() {
         binding.chartMyPayment.isVisible = false
-        binding.tvLogout.isVisible = false
-        binding.tvUpdateAlarmSetting.isVisible = false
-        binding.tvWithdraw.isVisible = false
+        binding.clBottom.isVisible = false
+
         binding.btnLogin.setOnClickListener { navigateToLogin() }
         binding.tvMyPost.setOnClickListener { makeLoginSnackbar() }
-        binding.tvUpdateUserInfo.setOnClickListener { makeLoginSnackbar() }
 
         viewModel.setNoUserState(NicknameUiModel(getString(R.string.my_page_required_login)))
     }
