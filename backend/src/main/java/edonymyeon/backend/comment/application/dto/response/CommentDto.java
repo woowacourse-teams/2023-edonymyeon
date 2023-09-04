@@ -1,5 +1,6 @@
 package edonymyeon.backend.comment.application.dto.response;
 
+import edonymyeon.backend.comment.domain.Comment;
 import java.time.LocalDateTime;
 
 public record CommentDto(
@@ -11,4 +12,14 @@ public record CommentDto(
         WriterDto writer
 ) {
 
+    public static CommentDto of(final boolean isWriter, final Comment comment, final String image) {
+        return new CommentDto(
+                comment.getId(),
+                image,
+                comment.getContent(),
+                isWriter,
+                comment.getCreatedAt(),
+                new WriterDto(comment.getMember().getNickname())
+        );
+    }
 }
