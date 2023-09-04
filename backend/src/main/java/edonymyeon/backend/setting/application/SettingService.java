@@ -5,6 +5,8 @@ import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.setting.application.activationmanager.ActivationManager;
+import edonymyeon.backend.setting.application.deactivationmanager.DeactivationManager;
 import edonymyeon.backend.setting.application.dto.SettingsResponse;
 import edonymyeon.backend.setting.domain.Setting;
 import edonymyeon.backend.setting.domain.SettingType;
@@ -20,7 +22,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class SettingService {
 
     private final SettingRepository settingRepository;
+
     private final MemberRepository memberRepository;
+
+    private final List<ActivationManager> activationManagers;
+
+    private final List<DeactivationManager> deactivationManagers;
 
     private static List<Setting> getDefaultSettings(final Member member) {
         return List.of(
@@ -59,32 +66,8 @@ public class SettingService {
         setting.activate();
 
         final List<Setting> settings = settingRepository.findByMemberId(member.getId());
-        deactivateSameWeights(setting, settings);
-        activateHighestWeight(setting, settings);
-        activatePrimary(settings);
-    }
-
-    private static void activatePrimary(final List<Setting> settings) {
-        for (Setting set : settings) {
-            if (set.isPrimary()) {
-                set.activate();
-            }
-        }
-    }
-
-    private static void activateHighestWeight(final Setting setting, final List<Setting> settings) {
-        for (Setting set : settings) {
-            if (set.isSameCategoryWith(setting) && set.hasHighestWeight()) {
-                set.activate();
-            }
-        }
-    }
-
-    private static void deactivateSameWeights(final Setting setting, final List<Setting> settings) {
-        for (Setting set : settings) {
-            if (!set.equals(setting) && set.isSameCategoryWith(setting) && set.hasSameWeight(setting)) {
-                set.deactivate();
-            }
+        for (ActivationManager activationManager : activationManagers) {
+            activationManager.manage(settings, setting);
         }
     }
 
@@ -92,36 +75,8 @@ public class SettingService {
         setting.deactivate();
 
         final List<Setting> settings = settingRepository.findByMemberId(member.getId());
-        deactivateHavingLowerWeight(setting, settings);
-        deactivateHighest(setting, settings);
-        checkPrimaryDeactivated(setting, settings);
-    }
-
-    private static void checkPrimaryDeactivated(final Setting setting, final List<Setting> settings) {
-        if (setting.isPrimary()) {
-            for (Setting set : settings) {
-                set.deactivate();
-            }
-        }
-    }
-
-    private static void deactivateHighest(final Setting setting, final List<Setting> settings) {
-        for (Setting set : settings) {
-            if (set.isSameCategoryWith(setting) && !set.hasHighestWeight() && set.isActive()) {
-                return;
-            }
-        }
-
-        settings.stream()
-                .filter(set -> set.isSameCategoryWith(setting) && set.hasHighestWeight())
-                .forEach(Setting::deactivate);
-    }
-
-    private static void deactivateHavingLowerWeight(final Setting setting, final List<Setting> settings) {
-        for (Setting set : settings) {
-            if (set.isSameCategoryWith(setting) && set.hasLowerWeightThan(setting)) {
-                set.deactivate();
-            }
+        for (DeactivationManager deactivationManager : deactivationManagers) {
+            deactivationManager.manage(settings, setting);
         }
     }
 
