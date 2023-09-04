@@ -44,7 +44,8 @@ android {
             localProperties.getProperty("APP_BASE_URL"),
         )
 
-        manifestPlaceholders["KAKAO_NATIVE_KEY"] = localProperties.getProperty("KAKAO_NATIVE_KEY")
+        val kakaoNativeKey = localProperties.getProperty("KAKAO_NATIVE_KEY")
+        manifestPlaceholders["KAKAO_NATIVE_KEY"] = kakaoNativeKey.substring(1, kakaoNativeKey.length - 1)
     }
 
     buildTypes {
