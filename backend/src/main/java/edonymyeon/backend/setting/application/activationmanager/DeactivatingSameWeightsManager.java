@@ -5,6 +5,10 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * 설정 하나가 활성화된다면
+ * 동일한 카테고리의 동일한 가중치를 가진 설정들은 모두 비활성화됩니다.
+ */
 @Component
 @Transactional
 public class DeactivatingSameWeightsManager implements ActivationManager {
