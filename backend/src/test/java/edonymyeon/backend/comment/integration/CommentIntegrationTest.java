@@ -6,6 +6,8 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_N
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+import edonymyeon.backend.CacheConfig;
+import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.domain.Post;
@@ -15,13 +17,20 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
+@Import(TestConfig.class)
 public class CommentIntegrationTest extends IntegrationFixture implements ImageFileCleaner {
+
+    @Value("${domain}")
+    private String domain;
 
     @Test
     void 이미지가_포함된_댓글을_작성한다() {
@@ -142,5 +151,95 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
                             COMMENT_ID_NOT_FOUND.getMessage());
                 }
         );
+    }
+
+    @Test
+    void 로그인하지_않아도_댓글을_조회할_수_있다() {
+        final Post 게시글 = postTestSupport.builder().build();
+        final Member 댓글_작성자 = memberTestSupport.builder().build();
+        final File 이미지 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
+        final ExtractableResponse<Response> 댓글1 = 댓글을_생성한다(게시글.getId(), 이미지, "this is comment1", 댓글_작성자);
+        final ExtractableResponse<Response> 댓글2 = 댓글을_생성한다(게시글.getId(), 이미지, "this is comment2", 댓글_작성자);
+
+        final long 댓글1_id = 응답의_location헤더에서_id를_추출한다(댓글1);
+        final long 댓글2_id = 응답의_location헤더에서_id를_추출한다(댓글2);
+
+        final ExtractableResponse<Response> 댓글_조회_응답 = RestAssured.given()
+                .when()
+                .get("/posts/{postId}/comments", 게시글.getId())
+                .then()
+                .extract();
+
+        Pattern 이미지_형식 = Pattern.compile(domain + "test-inserting\\d+\\.(png|jpg)");
+
+        assertSoftly(
+                softAssertions -> {
+                    assertThat(댓글_조회_응답.statusCode()).isEqualTo(HttpStatus.OK.value());
+                    assertThat(댓글_조회_응답.jsonPath().getList("comments")).hasSize(2);
+
+                    assertThat(댓글_조회_응답.jsonPath().getInt("comments[0].id")).isEqualTo(댓글1_id);
+                    assertThat(이미지_형식.matcher(댓글_조회_응답.jsonPath().getString("comments[0].image")).matches()).isTrue();
+                    assertThat(댓글_조회_응답.jsonPath().getString("comments[0].comment")).isEqualTo("this is comment1");
+                    assertThat(댓글_조회_응답.jsonPath().getString("comments[0].createdAt")).isNotBlank();
+                    assertThat(댓글_조회_응답.jsonPath().getBoolean("comments[0].isWriter")).isFalse();
+                    assertThat(댓글_조회_응답.jsonPath().getString("comments[0].writer.nickname")).isEqualTo(댓글_작성자.getNickname());
+
+                    assertThat(댓글_조회_응답.jsonPath().getInt("comments[1].id")).isEqualTo(댓글2_id);
+                    assertThat(이미지_형식.matcher(댓글_조회_응답.jsonPath().getString("comments[1].image")).matches()).isTrue();
+                    assertThat(댓글_조회_응답.jsonPath().getString("comments[1].comment")).isEqualTo("this is comment2");
+                    assertThat(댓글_조회_응답.jsonPath().getString("comments[1].createdAt")).isNotBlank();
+                    assertThat(댓글_조회_응답.jsonPath().getBoolean("comments[1].isWriter")).isFalse();
+                    assertThat(댓글_조회_응답.jsonPath().getString("comments[1].writer.nickname")).isEqualTo(댓글_작성자.getNickname());
+                }
+        );
+    }
+
+    @Test
+    void 댓글_작성자가_댓글을_조회하면_isWriter_값은_true다() {
+        final Post 게시글 = postTestSupport.builder().build();
+        final Member 댓글_작성자 = memberTestSupport.builder().build();
+        final File 이미지 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
+        final ExtractableResponse<Response> 댓글1 = 댓글을_생성한다(게시글.getId(), 이미지, "this is comment1", 댓글_작성자);
+        final ExtractableResponse<Response> 댓글2 = 댓글을_생성한다(게시글.getId(), 이미지, "this is comment2", 댓글_작성자);
+
+        final long 댓글1_id = 응답의_location헤더에서_id를_추출한다(댓글1);
+        final long 댓글2_id = 응답의_location헤더에서_id를_추출한다(댓글2);
+
+        final ExtractableResponse<Response> 댓글_조회_응답 = 게시물에_대한_댓글을_모두_조회한다(게시글.getId(), 댓글_작성자);
+
+        Pattern 이미지_형식 = Pattern.compile(domain + "test-inserting\\d+\\.(png|jpg)");
+
+        assertSoftly(
+                softAssertions -> {
+                    assertThat(댓글_조회_응답.statusCode()).isEqualTo(HttpStatus.OK.value());
+                    assertThat(댓글_조회_응답.jsonPath().getList("comments")).hasSize(2);
+
+                    assertThat(댓글_조회_응답.jsonPath().getInt("comments[0].id")).isEqualTo(댓글1_id);
+                    assertThat(이미지_형식.matcher(댓글_조회_응답.jsonPath().getString("comments[0].image")).matches()).isTrue();
+                    assertThat(댓글_조회_응답.jsonPath().getString("comments[0].comment")).isEqualTo("this is comment1");
+                    assertThat(댓글_조회_응답.jsonPath().getString("comments[0].createdAt")).isNotBlank();
+                    assertThat(댓글_조회_응답.jsonPath().getBoolean("comments[1].isWriter")).isTrue();
+                    assertThat(댓글_조회_응답.jsonPath().getString("comments[0].writer.nickname")).isEqualTo(댓글_작성자.getNickname());
+
+                    assertThat(댓글_조회_응답.jsonPath().getInt("comments[1].id")).isEqualTo(댓글2_id);
+                    assertThat(이미지_형식.matcher(댓글_조회_응답.jsonPath().getString("comments[1].image")).matches()).isTrue();
+                    assertThat(댓글_조회_응답.jsonPath().getString("comments[1].comment")).isEqualTo("this is comment2");
+                    assertThat(댓글_조회_응답.jsonPath().getString("comments[1].createdAt")).isNotBlank();
+                    assertThat(댓글_조회_응답.jsonPath().getBoolean("comments[1].isWriter")).isTrue();
+                    assertThat(댓글_조회_응답.jsonPath().getString("comments[1].writer.nickname")).isEqualTo(댓글_작성자.getNickname());
+                }
+        );
+    }
+
+    public static ExtractableResponse<Response> 게시물에_대한_댓글을_모두_조회한다(
+            final Long 게시글_id,
+            final Member 사용자
+    ) {
+        return RestAssured.given()
+                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
+                .when()
+                .get("/posts/{postId}/comments", 게시글_id)
+                .then()
+                .extract();
     }
 }

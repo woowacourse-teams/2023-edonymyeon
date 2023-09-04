@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import edonymyeon.backend.comment.application.CommentService;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.support.IntegrationTest;
-import edonymyeon.backend.support.MemberTestSupport;
+import edonymyeon.backend.support.TestMemberBuilder;
 import jakarta.servlet.http.Part;
 import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +51,7 @@ public class CommentControllerDocsTest {
     @MockBean
     private final CommentService commentService;
 
-    private final MemberTestSupport memberTestSupport;
+    private final TestMemberBuilder memberTestSupport;
 
     @Test
     void 댓글을_작성한다() throws Exception {
