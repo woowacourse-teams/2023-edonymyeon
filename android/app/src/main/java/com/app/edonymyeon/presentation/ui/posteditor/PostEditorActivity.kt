@@ -35,7 +35,7 @@ import java.time.LocalDateTime
 class PostEditorActivity : AppCompatActivity() {
 
     private val viewModel: PostEditorViewModel by viewModels {
-        PostEditorViewModelFactory(application, PostRepositoryImpl(PostRemoteDataSource()))
+        PostEditorViewModelFactory(PostRepositoryImpl(PostRemoteDataSource()))
     }
     private val adapter: PostEditorImagesAdapter by lazy {
         PostEditorImagesAdapter(::deleteImages)
@@ -212,9 +212,9 @@ class PostEditorActivity : AppCompatActivity() {
         val postPrice = binding.etPostPrice.text.toString().toInt()
         val postEditor = PostEditor(postTitle, postContent, postPrice)
         when (originActivityKey) {
-            POST_CODE -> viewModel.savePost(postEditor)
+            POST_CODE -> viewModel.savePost(this, postEditor)
             UPDATE_CODE -> post?.let {
-                viewModel.updatePost(it.id, postEditor)
+                viewModel.updatePost(this, it.id, postEditor)
             }
         }
     }
