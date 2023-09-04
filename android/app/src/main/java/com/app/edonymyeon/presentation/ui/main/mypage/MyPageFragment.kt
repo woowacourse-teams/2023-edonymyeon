@@ -22,10 +22,10 @@ import com.app.edonymyeon.presentation.ui.main.mypage.chart.LineChartManager
 import com.app.edonymyeon.presentation.ui.main.mypage.dialog.WithdrawDialog
 import com.app.edonymyeon.presentation.ui.mypost.MyPostActivity
 import com.app.edonymyeon.presentation.uimodel.NicknameUiModel
+import com.app.edonymyeon.presentation.util.makeSnackbar
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
-import com.google.android.material.snackbar.Snackbar
 
 class MyPageFragment : Fragment() {
     private val binding: FragmentMyPageBinding by lazy {
@@ -102,7 +102,7 @@ class MyPageFragment : Fragment() {
         binding.tvLogout.setOnClickListener { logout() }
         binding.tvMyPost.setOnClickListener { navigateToMyPost() }
         binding.tvUpdateAlarmSetting.setOnClickListener { navigateToAlarmSetting() }
-        binding.tvUpdateUserInfo.setOnClickListener { }
+        binding.tvUpdateUserInfo.setOnClickListener { binding.root.makeSnackbar(getString(R.string.all_preparing_feature)) }
         binding.tvWithdraw.setOnClickListener { showDialog() }
         viewModel.getUserProfile()
         viewModel.setConsumptions(PERIOD_MONTH)
@@ -168,7 +168,7 @@ class MyPageFragment : Fragment() {
     }
 
     private fun navigateToAlarmSetting() {
-        Snackbar.make(binding.root, "준비중입니다.", Snackbar.LENGTH_SHORT).show()
+        binding.root.makeSnackbar(getString(R.string.all_preparing_feature))
 //        startActivity(AlarmSettingActivity.newIntent(requireContext()))
     }
 
