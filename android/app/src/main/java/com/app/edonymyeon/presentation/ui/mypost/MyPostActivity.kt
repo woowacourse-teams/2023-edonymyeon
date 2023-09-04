@@ -18,6 +18,9 @@ import com.app.edonymyeon.presentation.ui.mypost.listener.MyPostClickListener
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 
 class MyPostActivity : AppCompatActivity(), MyPostClickListener {
+    private val notificationId by lazy {
+        intent.getLongExtra(KEY_NOTIFICATION_ID, -1)
+    }
 
     private val binding: ActivityMyPostBinding by lazy {
         ActivityMyPostBinding.inflate(layoutInflater)
@@ -74,7 +77,7 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
                     return
                 }
                 if (!binding.rvMyPost.canScrollVertically(1)) {
-                    viewModel.getMyPosts()
+                    viewModel.getMyPosts(notificationId)
                 }
             }
         })
@@ -97,7 +100,7 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
 
     private fun loadNewData() {
         viewModel.clearResult()
-        viewModel.getMyPosts()
+        viewModel.getMyPosts(notificationId)
     }
 
     override fun onMyPostClick(id: Long) {

@@ -27,6 +27,7 @@ class MyPostViewModelTest {
     private lateinit var viewModel: MyPostViewModel
     private lateinit var profileRepository: ProfileRepository
     private lateinit var postRepository: PostRepository
+    private val notificationId = 0L
 
     private val fakeMyPost = List(3) {
         MyPost(
@@ -72,7 +73,9 @@ class MyPostViewModelTest {
     fun `내가 쓴 글을 불러온다`() {
         // given
         val page = 0
-        coEvery { profileRepository.getMyPosts(page) } returns Result.success(fakeMyPosts)
+        coEvery { profileRepository.getMyPosts(page, notificationId) } returns Result.success(
+            fakeMyPosts,
+        )
 
         // when
         viewModel.getMyPosts()
@@ -92,7 +95,9 @@ class MyPostViewModelTest {
             month = 7,
         )
 
-        coEvery { profileRepository.getMyPosts(0) } returns Result.success(fakeMyPosts)
+        coEvery { profileRepository.getMyPosts(0, notificationId) } returns Result.success(
+            fakeMyPosts,
+        )
         coEvery {
             profileRepository.postPurchaseConfirm(
                 postId,
@@ -129,7 +134,9 @@ class MyPostViewModelTest {
             month = 7,
         )
 
-        coEvery { profileRepository.getMyPosts(0) } returns Result.success(fakeMyPosts)
+        coEvery { profileRepository.getMyPosts(0, notificationId) } returns Result.success(
+            fakeMyPosts,
+        )
         coEvery {
             profileRepository.postSavingConfirm(
                 postId,
@@ -164,7 +171,9 @@ class MyPostViewModelTest {
             month = 0,
         )
 
-        coEvery { profileRepository.getMyPosts(0) } returns Result.success(fakeMyPosts)
+        coEvery { profileRepository.getMyPosts(0, notificationId) } returns Result.success(
+            fakeMyPosts,
+        )
         coEvery {
             profileRepository.deleteConfirm(
                 postId,
