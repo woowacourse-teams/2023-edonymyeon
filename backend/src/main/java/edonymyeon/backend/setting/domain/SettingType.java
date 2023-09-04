@@ -10,39 +10,42 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 public class SettingType {
-    public static final SettingType NOTIFICATION_PER_THUMBS
-            = new SettingType("1003", "좋아요/싫어요 건별 알림 수신", Category.THUMB, Weight.FIVE);
-    public static final SettingType NOTIFICATION_PER_10_THUMBS
-            = new SettingType("1002", "좋아요/싫어요 10개당 알림 수신", Category.THUMB, Weight.FIVE);
-    public static final SettingType NOTIFICATION_THUMBS
-            = new SettingType("1001", "좋아요 싫어요 알림 수신", Category.THUMB, Weight.TEN);
-
-    public static final SettingType NOTIFICATION_PER_COMMENT
-            = new SettingType("2001", "자신의 글에 댓글을 남겼을 때 알림 수신", Category.COMMENT, Weight.FIVE);
-    public static final SettingType NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING
-            = new SettingType("5001", "특정 시간마다 소비 확정해야 한다는 알림 수신", Category.COMMENT, Weight.FIVE);
-
-    public static final SettingType NOTIFICATION
-            = new SettingType("0001", "푸시 알림 수신", Category.ALL, Weight.TEN);
+    /**
+     * 좋아요/싫어요 건별 알림 수신
+     */
+    public static final SettingType NOTIFICATION_PER_THUMBS = new SettingType("1003", Category.THUMB, Weight.FIVE);
+    /**
+     * 좋아요/싫어요 10개당 알림 수신
+     */
+    public static final SettingType NOTIFICATION_PER_10_THUMBS = new SettingType("1002", Category.THUMB, Weight.FIVE);
+    /**
+     * 좋아요 싫어요 알림 수신
+     */
+    public static final SettingType NOTIFICATION_THUMBS = new SettingType("1001", Category.THUMB, Weight.TEN);
+    /**
+     * 자신의 글에 댓글을 남겼을 때 알림 수신
+     */
+    public static final SettingType NOTIFICATION_PER_COMMENT = new SettingType("2001", Category.COMMENT, Weight.FIVE);
+    /**
+     * 특정 시간마다 소비 확정해야 한다는 알림 수신
+     */
+    public static final SettingType NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING = new SettingType("5001", Category.COMMENT, Weight.FIVE);
+    /**
+     * 푸시 알림 수신
+     */
+    public static final SettingType NOTIFICATION = new SettingType("0001", Category.ALL, Weight.TEN);
 
     private String serialNumber;
-
-    private String name;
 
     @Enumerated(EnumType.STRING)
     private Category category;
 
     private int weight;
 
-    private SettingType(final String serialNumber, final String name, final Category category, final Weight weight) {
+    private SettingType(final String serialNumber, final Category category, final Weight weight) {
         this.serialNumber = serialNumber;
-        this.name = name;
         this.category = category;
         this.weight = weight.getValue();
-    }
-
-    public boolean isSerialNumber(final String serialNumber) {
-        return Objects.equals(this.serialNumber, serialNumber);
     }
 
     public boolean isSameCategoryWith(final SettingType settingType) {
