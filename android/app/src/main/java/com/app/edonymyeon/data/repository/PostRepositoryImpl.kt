@@ -14,8 +14,8 @@ import com.domain.edonymyeon.repository.PostRepository
 import java.io.File
 
 class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepository {
-    override suspend fun getPostDetail(postId: Long): Result<Any> {
-        val result = postDataSource.getPostDetail(postId)
+    override suspend fun getPostDetail(postId: Long, notificationId: Long): Result<Any> {
+        val result = postDataSource.getPostDetail(postId, notificationId)
         return if (result.isSuccessful) {
             Result.success((result.body() as PostDetailResponse).toDomain())
         } else {

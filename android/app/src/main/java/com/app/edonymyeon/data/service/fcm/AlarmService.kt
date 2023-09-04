@@ -40,7 +40,11 @@ class AlarmService : FirebaseMessagingService() {
 
         val intent = when (message.data["click_action"].toString()) {
             "POST" -> {
-                PostDetailActivity.newIntent(this, message.data["id"]?.toLong() ?: 0).apply {
+                PostDetailActivity.newIntent(
+                    this,
+                    message.data["postId"]?.toLong() ?: 0,
+                    message.data["id"]?.toLong() ?: 0,
+                ).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 }
             }
@@ -96,9 +100,5 @@ class AlarmService : FirebaseMessagingService() {
         private val alarmOn: MutableLiveData<Boolean> = MutableLiveData()
         val isAlarmOn: LiveData<Boolean>
             get() = alarmOn
-
-        fun setAlarmOff() {
-            alarmOn.value = false
-        }
     }
 }

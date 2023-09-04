@@ -78,9 +78,12 @@ class PostDetailViewModel(
     val reportSaveMessage: LiveData<String>
         get() = _reportSaveMessage
 
-    fun getPostDetail(postId: Long) {
+    fun getPostDetail(
+        postId: Long,
+        notificationId: Long,
+    ) {
         viewModelScope.launch {
-            postRepository.getPostDetail(postId)
+            postRepository.getPostDetail(postId, notificationId)
                 .onSuccess {
                     it as Post
                     _recommendation.value = it.recommendation.toUiModel()

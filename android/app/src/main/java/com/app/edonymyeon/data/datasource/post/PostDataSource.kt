@@ -9,7 +9,11 @@ import retrofit2.Response
 import java.io.File
 
 interface PostDataSource {
-    suspend fun getPostDetail(postId: Long): Response<PostDetailResponse>
+    suspend fun getPostDetail(
+        postId: Long,
+        notificationId: Long,
+    ): Response<PostDetailResponse>
+
     suspend fun deletePost(postId: Long): Response<Unit>
     suspend fun getPosts(size: Int, page: Int): Response<Posts>
 

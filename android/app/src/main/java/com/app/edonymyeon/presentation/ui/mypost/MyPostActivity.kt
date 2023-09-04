@@ -138,8 +138,15 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
     }
 
     companion object {
+        private const val KEY_NOTIFICATION_ID = "key_notification_id"
         fun newIntent(context: Context): Intent {
             return Intent(context, MyPostActivity::class.java)
+        }
+
+        fun newIntent(context: Context, notificationId: Long): Intent {
+            return Intent(context, MyPostActivity::class.java).apply {
+                putExtra(KEY_NOTIFICATION_ID, notificationId)
+            }
         }
     }
 }
