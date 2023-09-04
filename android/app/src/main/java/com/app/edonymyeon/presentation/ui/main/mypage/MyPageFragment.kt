@@ -93,31 +93,39 @@ class MyPageFragment : Fragment() {
     }
 
     private fun setViewForLogin() {
-        binding.chartMyPayment.isVisible = true
-        binding.tvRequiredLogin.isVisible = false
-        binding.btnLogin.isVisible = false
-        binding.clBottom.isVisible = true
+        setVisibilityByLogin(true)
+        setListenerForLogin()
 
+        viewModel.getUserProfile()
+        viewModel.setConsumptions(PERIOD_MONTH)
+        binding.chartMyPayment.invalidate()
+    }
+
+    private fun setViewForNotLogin() {
+        setVisibilityByLogin(false)
+        setListenerForNotLogin()
+
+        viewModel.setNoUserState(NicknameUiModel(getString(R.string.my_page_required_login)))
+    }
+
+    private fun setVisibilityByLogin(isLogin: Boolean) {
+        binding.chartMyPayment.isVisible = isLogin
+        binding.tvRequiredLogin.isVisible = !isLogin
+        binding.btnLogin.isVisible = !isLogin
+        binding.clBottom.isVisible = isLogin
+    }
+
+    private fun setListenerForLogin() {
         binding.tvLogout.setOnClickListener { logout() }
         binding.tvMyPost.setOnClickListener { navigateToMyPost() }
         binding.tvUpdateAlarmSetting.setOnClickListener { navigateToAlarmSetting() }
         binding.tvUpdateUserInfo.setOnClickListener { binding.root.makeSnackbar(getString(R.string.all_preparing_feature)) }
         binding.tvWithdraw.setOnClickListener { showDialog() }
-
-        viewModel.getUserProfile()
-        viewModel.setConsumptions(PERIOD_MONTH)
-
-        binding.chartMyPayment.invalidate()
     }
 
-    private fun setViewForNotLogin() {
-        binding.chartMyPayment.isVisible = false
-        binding.clBottom.isVisible = false
-
+    private fun setListenerForNotLogin() {
         binding.btnLogin.setOnClickListener { navigateToLogin() }
         binding.tvMyPost.setOnClickListener { makeLoginSnackbar() }
-
-        viewModel.setNoUserState(NicknameUiModel(getString(R.string.my_page_required_login)))
     }
 
     private fun makeLoginSnackbar() {
