@@ -25,7 +25,7 @@ public class IntegrationFixture {
     protected ProfileImageInfoTestSupport profileImageInfoTestSupport;
 
     @Autowired
-    protected MemberTestSupport memberTestSupport;
+    protected TestMemberBuilder memberTestSupport;
 
     @Autowired
     protected PostTestSupport postTestSupport;

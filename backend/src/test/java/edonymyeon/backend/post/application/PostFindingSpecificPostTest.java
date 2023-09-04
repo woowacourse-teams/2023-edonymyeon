@@ -3,6 +3,7 @@ package edonymyeon.backend.post.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
@@ -14,7 +15,6 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
-import edonymyeon.backend.support.MemberTestSupport;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +32,7 @@ public class PostFindingSpecificPostTest {
 
     private final ProfileImageInfoRepository profileImageInfoRepository;
 
-    private final MemberTestSupport memberTestSupport;
+    private final TestMemberBuilder testMemberBuilder;
 
     private final PostReadService postReadService;
 
@@ -105,7 +105,7 @@ public class PostFindingSpecificPostTest {
     }
 
     private Member saveMember() {
-        final Member member = memberTestSupport.builder()
+        final Member member = testMemberBuilder.builder()
                 .profileImageInfo(saveProfileImageInfo())
                 .build();
         memberId = new ActiveMemberId(member.getId());
@@ -113,7 +113,7 @@ public class PostFindingSpecificPostTest {
     }
 
     private Member saveMember2() {
-        final Member member = memberTestSupport.builder()
+        final Member member = testMemberBuilder.builder()
                 .profileImageInfo(saveProfileImageInfo2())
                 .build();
         member2Id = new ActiveMemberId(memberRepository.save(member).getId());

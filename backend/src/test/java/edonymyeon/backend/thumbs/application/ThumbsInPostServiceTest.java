@@ -1,28 +1,22 @@
 package edonymyeon.backend.thumbs.application;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
-import edonymyeon.backend.support.IntegrationFixture;
-import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.AnonymousMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.notification.application.NotificationSender;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.PostThumbsService;
 import edonymyeon.backend.post.application.dto.AllThumbsInPostResponse;
 import edonymyeon.backend.post.application.dto.PostRequest;
 import edonymyeon.backend.post.application.dto.PostResponse;
 import edonymyeon.backend.post.application.dto.ThumbsStatusInPostResponse;
-import edonymyeon.backend.support.MemberTestSupport;
+import edonymyeon.backend.support.IntegrationFixture;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor

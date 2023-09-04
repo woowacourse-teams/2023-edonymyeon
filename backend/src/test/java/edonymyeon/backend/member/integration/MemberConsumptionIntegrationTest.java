@@ -5,13 +5,13 @@ import static edonymyeon.backend.member.integration.steps.MemberConsumptionSteps
 import static edonymyeon.backend.member.integration.steps.MemberConsumptionSteps.확정_취소_요청을_보낸다;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.assertj.core.api.SoftAssertions;

@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import edonymyeon.backend.auth.application.KakaoAuthResponseProvider;
-import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginRequest;
@@ -60,6 +59,7 @@ public class AuthIntegrationTest extends IntegrationFixture {
         final Member member = memberTestSupport.builder()
                 .email("email@naver.com")
                 .build();
+
         final ExtractableResponse<Response> response = RestAssured
                 .given()
                 .param("target", "email")
