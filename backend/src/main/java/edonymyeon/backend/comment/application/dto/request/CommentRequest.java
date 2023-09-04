@@ -1,4 +1,4 @@
-package edonymyeon.backend.comment.application.dto;
+package edonymyeon.backend.comment.application.dto.request;
 
 import org.springframework.web.multipart.MultipartFile;
 
