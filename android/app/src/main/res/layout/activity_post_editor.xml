@@ -188,7 +188,7 @@
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintTop_toBottomOf="@id/space_content_between"
-                    tools:listitem="@layout/item_post_editor_image" />
+                    tools:listitem="@layout/item_post_image" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
 

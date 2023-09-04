@@ -3,18 +3,22 @@ package com.app.edonymyeon.presentation.ui.postdetail
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.viewpager2.widget.ViewPager2
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostDetailBinding
+import app.edonymyeon.databinding.ViewCommentInputBinding
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.datasource.recommend.RecommendRemoteDataSource
 import com.app.edonymyeon.data.datasource.report.ReportRemoteDataSource
@@ -22,6 +26,7 @@ import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.data.repository.RecommendRepositoryImpl
 import com.app.edonymyeon.data.repository.ReportRepositoryImpl
 import com.app.edonymyeon.presentation.common.dialog.LoadingDialog
+import com.app.edonymyeon.presentation.ui.login.LoginActivity
 import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
@@ -29,6 +34,7 @@ import com.app.edonymyeon.presentation.ui.postdetail.dialog.ReportDialog
 import com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.util.makeSnackbar
+import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 
 class PostDetailActivity : AppCompatActivity() {
     private val id: Long by lazy {
@@ -39,6 +45,10 @@ class PostDetailActivity : AppCompatActivity() {
         ActivityPostDetailBinding.inflate(layoutInflater)
     }
 
+    private val includeBinding: ViewCommentInputBinding by lazy {
+        binding.clCommentInput
+    }
+
     private val viewModel: PostDetailViewModel by viewModels<PostDetailViewModel> {
         PostDetailViewModelFactory(
             PostRepositoryImpl(PostRemoteDataSource()),
@@ -46,6 +56,13 @@ class PostDetailActivity : AppCompatActivity() {
             ReportRepositoryImpl(ReportRemoteDataSource()),
         )
     }
+
+    private val pickGalleryImage =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                setGalleryImages(it.data)
+            }
+        }
 
     private val reportDialog: ReportDialog by lazy {
         ReportDialog(id, viewModel)
@@ -73,8 +90,10 @@ class PostDetailActivity : AppCompatActivity() {
 
         initBinding()
         initAppbar()
+        setViewLogin()
         getPost()
         setObserver()
+        setListener()
         setRecommendationCheckedListener()
     }
 
@@ -151,6 +170,13 @@ class PostDetailActivity : AppCompatActivity() {
         supportActionBar?.title = ""
     }
 
+    private fun setViewLogin() {
+        if (!viewModel.isLogin) {
+            includeBinding.etComment.isFocusable = false
+            includeBinding.etComment.isFocusableInTouchMode = false
+        }
+    }
+
     private fun getPost() {
         viewModel.getPostDetail(id)
     }
@@ -165,12 +191,13 @@ class PostDetailActivity : AppCompatActivity() {
                 loadingDialog.dismiss()
             }
         }
-        viewModel.post.observe(this) {
-            if (it.images.isNotEmpty()) {
+        viewModel.post.observe(this) { post ->
+            if (post.images.isNotEmpty()) {
                 binding.ivDefaultImage.isVisible = false
-                setImageSlider(it)
+                setImageSlider(post)
                 setImageIndicators()
             }
+            hideInputCommentForWriter(post)
         }
 
         viewModel.reactionCount.observe(this) {
@@ -182,6 +209,37 @@ class PostDetailActivity : AppCompatActivity() {
             binding.cbUp.isEnabled = it
             binding.cbDown.isEnabled = it
         }
+    }
+
+    private fun hideInputCommentForWriter(post: PostUiModel) {
+        if (post.isWriter) {
+            binding.clCommentInput.clCommentInput.isVisible = false
+        }
+    }
+
+    private fun setListener() {
+        includeBinding.etComment.setOnClickListener {
+            if (!viewModel.isLogin) makeLoginSnackbar()
+        }
+        includeBinding.ivPostGallery.setOnClickListener {
+            if (!viewModel.isLogin) {
+                makeLoginSnackbar()
+            } else {
+                navigateToGallery()
+            }
+        }
+        includeBinding.ivCommentSave.setOnClickListener {
+            if (!viewModel.isLogin) makeLoginSnackbar()
+        }
+        includeBinding.cvContentImage.ivPostGalleryImageRemove.setOnClickListener {
+            includeBinding.clGalleryImage.visibility = View.GONE
+        }
+    }
+
+    private fun navigateToGallery() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*")
+        pickGalleryImage.launch(intent)
     }
 
     private fun setRecommendationCheckedListener() {
@@ -253,6 +311,24 @@ class PostDetailActivity : AppCompatActivity() {
                 indicatorView.setImageResource(R.drawable.ic_bcc4d8_indicator_focus_off)
             }
         }
+    }
+
+    private fun setGalleryImages(data: Intent?) {
+        data?.data?.let { imageUri ->
+            includeBinding.cvContentImage.postEditorImage = imageUri.toString()
+            includeBinding.clGalleryImage.isVisible = true
+        }
+    }
+
+    private fun makeLoginSnackbar() {
+        binding.root.makeSnackbarWithEvent(
+            message = getString(R.string.all_required_login),
+            eventTitle = getString(R.string.login_title),
+        ) { navigateToLogin() }
+    }
+
+    private fun navigateToLogin() {
+        startActivity(LoginActivity.newIntent(this))
     }
 
     companion object {
