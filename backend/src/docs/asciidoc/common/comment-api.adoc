@@ -7,4 +7,7 @@ operation::comment-create[snippets='request-headers,path-parameters,request-part
 === 댓글 삭제
 operation::comment-delete[snippets='request-headers,path-parameters,http-request,http-response']
 
+=== 하나의 게시물에 대한 댓글만 조회
+operation::comment-findAllByPost[snippets='path-parameters,http-request,http-response,response-fields']
+
 

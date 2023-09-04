@@ -6,7 +6,6 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_N
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.CacheConfig;
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
@@ -182,14 +181,16 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
                     assertThat(댓글_조회_응답.jsonPath().getString("comments[0].comment")).isEqualTo("this is comment1");
                     assertThat(댓글_조회_응답.jsonPath().getString("comments[0].createdAt")).isNotBlank();
                     assertThat(댓글_조회_응답.jsonPath().getBoolean("comments[0].isWriter")).isFalse();
-                    assertThat(댓글_조회_응답.jsonPath().getString("comments[0].writer.nickname")).isEqualTo(댓글_작성자.getNickname());
+                    assertThat(댓글_조회_응답.jsonPath().getString("comments[0].writer.nickname")).isEqualTo(
+                            댓글_작성자.getNickname());
 
                     assertThat(댓글_조회_응답.jsonPath().getInt("comments[1].id")).isEqualTo(댓글2_id);
                     assertThat(이미지_형식.matcher(댓글_조회_응답.jsonPath().getString("comments[1].image")).matches()).isTrue();
                     assertThat(댓글_조회_응답.jsonPath().getString("comments[1].comment")).isEqualTo("this is comment2");
                     assertThat(댓글_조회_응답.jsonPath().getString("comments[1].createdAt")).isNotBlank();
                     assertThat(댓글_조회_응답.jsonPath().getBoolean("comments[1].isWriter")).isFalse();
-                    assertThat(댓글_조회_응답.jsonPath().getString("comments[1].writer.nickname")).isEqualTo(댓글_작성자.getNickname());
+                    assertThat(댓글_조회_응답.jsonPath().getString("comments[1].writer.nickname")).isEqualTo(
+                            댓글_작성자.getNickname());
                 }
         );
     }
@@ -219,14 +220,16 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
                     assertThat(댓글_조회_응답.jsonPath().getString("comments[0].comment")).isEqualTo("this is comment1");
                     assertThat(댓글_조회_응답.jsonPath().getString("comments[0].createdAt")).isNotBlank();
                     assertThat(댓글_조회_응답.jsonPath().getBoolean("comments[1].isWriter")).isTrue();
-                    assertThat(댓글_조회_응답.jsonPath().getString("comments[0].writer.nickname")).isEqualTo(댓글_작성자.getNickname());
+                    assertThat(댓글_조회_응답.jsonPath().getString("comments[0].writer.nickname")).isEqualTo(
+                            댓글_작성자.getNickname());
 
                     assertThat(댓글_조회_응답.jsonPath().getInt("comments[1].id")).isEqualTo(댓글2_id);
                     assertThat(이미지_형식.matcher(댓글_조회_응답.jsonPath().getString("comments[1].image")).matches()).isTrue();
                     assertThat(댓글_조회_응답.jsonPath().getString("comments[1].comment")).isEqualTo("this is comment2");
                     assertThat(댓글_조회_응답.jsonPath().getString("comments[1].createdAt")).isNotBlank();
                     assertThat(댓글_조회_응답.jsonPath().getBoolean("comments[1].isWriter")).isTrue();
-                    assertThat(댓글_조회_응답.jsonPath().getString("comments[1].writer.nickname")).isEqualTo(댓글_작성자.getNickname());
+                    assertThat(댓글_조회_응답.jsonPath().getString("comments[1].writer.nickname")).isEqualTo(
+                            댓글_작성자.getNickname());
                 }
         );
     }
