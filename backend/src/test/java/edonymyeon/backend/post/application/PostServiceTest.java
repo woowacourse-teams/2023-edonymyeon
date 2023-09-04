@@ -1,9 +1,5 @@
 package edonymyeon.backend.post.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
@@ -24,15 +20,9 @@ import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.support.ConsumptionTestSupport;
 import edonymyeon.backend.support.IntegrationTest;
-import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.MockMultipartFileTestSupport;
+import edonymyeon.backend.support.TestMemberBuilder;
 import jakarta.persistence.EntityManager;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,6 +33,17 @@ import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Pattern;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
 @Import(TestConfig.class)
@@ -50,6 +51,8 @@ import org.springframework.web.multipart.MultipartFile;
 class PostServiceTest implements ImageFileCleaner {
 
     private static final Pattern 이미지_UUID_와_확장자_형식 = Pattern.compile("test-inserting\\d+\\.(png|jpg)");
+
+    private final TestMemberBuilder testMemberBuilder;
 
     private final PostImageInfoRepository postImageInfoRepository;
 
@@ -59,7 +62,7 @@ class PostServiceTest implements ImageFileCleaner {
 
     private final MemberRepository memberRepository;
 
-    private final MemberTestSupport memberTestSupport;
+    private final TestMemberBuilder memberTestSupport;
 
     private final MockMultipartFileTestSupport mockMultipartFileTestSupport;
 
@@ -109,8 +112,7 @@ class PostServiceTest implements ImageFileCleaner {
 
     @Test
     void 작성자의_프로필_사진이_없더라도_상세조회가_가능하다() throws IOException {
-        final Member member = new Member("anonymous@gmail.com", "password123!", "엘렐레", null, List.of());
-        memberRepository.save(member);
+        final Member member = testMemberBuilder.builder().build();
 
         final ActiveMemberId memberId = new ActiveMemberId(member.getId());
         final PostResponse postResponse = postService.createPost(memberId, getPostRequest());

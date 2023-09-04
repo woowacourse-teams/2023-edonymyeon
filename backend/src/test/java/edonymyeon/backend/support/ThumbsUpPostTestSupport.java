@@ -16,7 +16,7 @@ public class ThumbsUpPostTestSupport {
 
     private final PostTestSupport postTestSupport;
 
-    private final MemberTestSupport memberTestSupport;
+    private final TestMemberBuilder memberTestSupport;
 
     public ThumbsBuilder builder() {
         return new ThumbsBuilder();

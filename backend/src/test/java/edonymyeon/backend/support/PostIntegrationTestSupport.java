@@ -1,7 +1,6 @@
 package edonymyeon.backend.support;
 
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.repository.PostRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -24,9 +23,7 @@ public class PostIntegrationTestSupport {
 
     private static File DEFAULT_IMAGE2 = new File("./src/test/resources/static/img/file/test_image_2.jpg");
 
-    private final PostRepository postRepository;
-
-    private final MemberTestSupport memberTestSupport;
+    private final TestMemberBuilder memberTestSupport;
 
     public PostIntegrationBuilder builder() {
         return new PostIntegrationBuilder();

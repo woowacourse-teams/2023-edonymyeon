@@ -1,18 +1,15 @@
 package edonymyeon.backend.post.repository;
 
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import edonymyeon.backend.member.application.dto.AnonymousMemberId;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.HotFindingCondition;
 import edonymyeon.backend.post.application.PostReadService;
 import edonymyeon.backend.post.domain.HotPostPolicy;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.PostTestSupport;
+import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.support.ThumbsUpPostTestSupport;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,14 +17,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
 @IntegrationTest
 class PostRepositoryTest {
 
-    private final PostRepository postRepository;
+    private final TestMemberBuilder testMemberBuilder;
 
-    private final MemberRepository memberRepository;
+    private final PostRepository postRepository;
 
     private final PostReadService postReadService;
 
@@ -41,14 +40,7 @@ class PostRepositoryTest {
 
     @BeforeEach
     public void setUp() {
-        member = new Member(
-                "email",
-                "password123!",
-                "nickname",
-                null,
-                List.of()
-        );
-        memberRepository.save(member);
+        member = testMemberBuilder.builder().build();
     }
 
     @Test

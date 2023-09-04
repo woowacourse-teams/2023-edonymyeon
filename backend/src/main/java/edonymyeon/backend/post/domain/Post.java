@@ -164,6 +164,10 @@ public class Post extends TemporalRecord {
         return this.member.equals(member);
     }
 
+    public boolean isSameMember(final Long memberId) {
+        return this.member.hasId(memberId);
+    }
+
     public Member getMember() {
         return member;
     }
@@ -181,8 +185,7 @@ public class Post extends TemporalRecord {
     }
 
     public void validateWriter(final Long memberId) {
-        final Member other = new Member(memberId);
-        if (!isSameMember(other)) {
+        if (!isSameMember(memberId)) {
             throw new EdonymyeonException(POST_MEMBER_NOT_SAME);
         }
     }

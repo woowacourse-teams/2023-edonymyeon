@@ -2,13 +2,13 @@ package edonymyeon.backend.consumption.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.domain.ConsumptionType;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.ConsumptionTestSupport;
-import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.support.PostTestSupport;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,7 +24,7 @@ class ConsumptionRepositoryTest {
 
     private final ConsumptionRepository consumptionRepository;
 
-    private final MemberTestSupport memberTestSupport;
+    private final TestMemberBuilder memberTestSupport;
 
     private final ConsumptionTestSupport consumptionTestSupport;
 

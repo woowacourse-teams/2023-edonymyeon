@@ -1,14 +1,14 @@
 package edonymyeon.backend.report;
 
-import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.report.application.ReportRepository;
 import edonymyeon.backend.report.application.ReportRequest;
 import edonymyeon.backend.report.application.ReportService;
 import edonymyeon.backend.report.domain.Report;
-import edonymyeon.backend.support.MemberTestSupport;
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.PostTestSupport;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
@@ -25,7 +25,7 @@ class ReportServiceTest {
 
     private final PostTestSupport postTestSupport;
 
-    private final MemberTestSupport memberTestSupport;
+    private final TestMemberBuilder memberTestSupport;
 
     @Test
     void 특정_게시글을_신고할_수_있다() {
