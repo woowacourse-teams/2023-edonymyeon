@@ -1,7 +1,6 @@
 package edonymyeon.backend.support;
 
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.domain.TestMemberBuilder;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;

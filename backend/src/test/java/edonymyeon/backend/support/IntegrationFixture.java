@@ -6,7 +6,6 @@ import static org.mockito.Mockito.doNothing;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.domain.TestMemberBuilder;
 import edonymyeon.backend.notification.application.NotificationSender;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
