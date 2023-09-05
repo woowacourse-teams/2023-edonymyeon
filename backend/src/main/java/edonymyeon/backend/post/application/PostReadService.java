@@ -47,11 +47,18 @@ public class PostReadService {
 
     private final PostCachingService postCachingService;
 
+    private final PostCommentService postCommentService;
+
+    /** 게시글 전체 목록 조회 */
     public PostSlice<GeneralPostInfoResponse> findPostsByPagingCondition(
             final GeneralFindingCondition generalFindingCondition) {
         PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
         Slice<GeneralPostInfoResponse> posts = postRepository.findAllBy(pageRequest)
-                .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
+                .map(post -> GeneralPostInfoResponse.of(
+                        post,
+                        domain.getDomain(),
+                        postCommentService.findCommentCountByPostId(post.getId()) //todo: 게시글이 여러개->여러번 날리는거 개선
+                ));
         return PostSlice.from(posts);
     }
 
@@ -71,6 +78,7 @@ public class PostReadService {
         }
     }
 
+    /** 게시글 상세 조회 */
     @Transactional
     public SpecificPostInfoResponse findSpecificPost(final Long postId, final MemberId memberId) {
         final Post post = postRepository.findById(postId)
@@ -81,7 +89,7 @@ public class PostReadService {
 
         final ReactionCountResponse reactionCountResponse = new ReactionCountResponse(
                 post.getViewCount(),
-                0 // TODO: 댓글 수 기능 구현 필요
+                postCommentService.findCommentCountByPostId(post.getId())
         );
         final AllThumbsInPostResponse allThumbsInPost = thumbsService.findAllThumbsInPost(postId);
         final WriterDetailResponse writerDetailResponse = getWriterResponse(post.getMember());
@@ -124,16 +132,22 @@ public class PostReadService {
         );
     }
 
+    /** 게시글 검색 */
     public PostSlice<GeneralPostInfoResponse> searchPosts(final String searchWord,
                                                           final GeneralFindingCondition generalFindingCondition) {
         final Specification<Post> searchResults = PostSpecification.searchBy(searchWord);
         final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
 
         Slice<GeneralPostInfoResponse> foundPosts = postRepository.findAll(searchResults, pageRequest)
-                .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
+                .map(post -> GeneralPostInfoResponse.of(
+                        post,
+                        domain.getDomain(),
+                        postCommentService.findCommentCountByPostId(post.getId()) //todo: 개선
+                ));
         return PostSlice.from(foundPosts);
     }
 
+    /** 핫 게시글 조회 */
     public PostSlice<GeneralPostInfoResponse> findHotPosts(final HotFindingCondition hotFindingCondition) {
         if(postCachingService.isNotCached(hotFindingCondition)){
             return findHotPostFromRepository(hotFindingCondition);
@@ -147,7 +161,11 @@ public class PostReadService {
     private PostSlice<GeneralPostInfoResponse> findHotPostFromRepository(final HotFindingCondition hotFindingCondition) {
         final Slice<Post> hotPost = findHotPostSliceFromRepositoryByPolicy(hotFindingCondition);
         postCachingService.cachePosts(hotFindingCondition, hotPost);
-        Slice<GeneralPostInfoResponse> hotPostSlice = hotPost.map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()));
+        Slice<GeneralPostInfoResponse> hotPostSlice = hotPost.map(post -> GeneralPostInfoResponse.of(
+                post,
+                domain.getDomain(),
+                postCommentService.findCommentCountByPostId(post.getId())
+        ));
         return PostSlice.from(hotPostSlice);
     }
 
@@ -161,7 +179,11 @@ public class PostReadService {
 
         List<GeneralPostInfoResponse> posts = postRepository.findByIds(cachedHotPosts.postIds())
                 .stream()
-                .map(post -> GeneralPostInfoResponse.of(post, domain.getDomain()))
+                .map(post -> GeneralPostInfoResponse.of(
+                        post,
+                        domain.getDomain(),
+                        postCommentService.findCommentCountByPostId(post.getId()) //todo: 개선
+                ))
                 .toList();
         return new PostSlice<>(posts, cachedHotPosts.isLast());
     }

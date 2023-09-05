@@ -37,6 +37,9 @@ public class IntegrationFixture {
     protected PostIntegrationTestSupport postIntegrationTestSupport;
 
     @Autowired
+    protected ThumbsUpPostTestSupport thumbsUpPostTestSupport;
+
+    @Autowired
     protected ConsumptionTestSupport consumptionTestSupport;
 
     @Autowired

@@ -13,15 +13,15 @@ public record GeneralPostInfoResponse(
         ReactionCountResponse reactionCount
 ) {
 
-    public static GeneralPostInfoResponse of(Post post, String domain) {
+    public static GeneralPostInfoResponse of(Post post, String domain, int commentCount) {
         return new GeneralPostInfoResponse(
                 post.getId(),
                 post.getTitle(),
-                post.getPostImageInfos().size() == 0 ? null : domain + post.getPostImageInfos().get(0).getStoreName(),
+                post.getPostImageInfos().isEmpty() ? null : domain + post.getPostImageInfos().get(0).getStoreName(),
                 post.getContent(),
                 new WriterResponse(post.getMember().getNickname()),
                 post.getCreatedAt(),
-                new ReactionCountResponse(post.getViewCount(), 0) // TODO: 댓글 수
+                new ReactionCountResponse(post.getViewCount(), commentCount)
         );
     }
 }
