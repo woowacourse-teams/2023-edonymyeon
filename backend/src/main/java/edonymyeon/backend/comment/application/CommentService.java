@@ -75,6 +75,10 @@ public class CommentService {
     }
 
     public CommentsResponse findCommentsByPostId(final MemberId memberId, final Long postId) {
+        if(!postRepository.existsById(postId)) {
+            throw new EdonymyeonException(ExceptionInformation.POST_ID_NOT_FOUND);
+        }
+
         final List<Comment> comments = commentRepository.findAllByPostId(postId);
         List<CommentDto> commentDtos = new ArrayList<>();
         for (Comment comment : comments) {

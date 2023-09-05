@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.TestConfig;
-import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.domain.Post;
@@ -281,6 +280,36 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
                     assertThat(댓글_조회_응답.statusCode()).isEqualTo(HttpStatus.OK.value());
                     assertThat(댓글_조회_응답.jsonPath().getList("comments")).hasSize(1);
                     assertThat(댓글_조회_응답.jsonPath().getString("comments[0].image")).isNull();
+                }
+        );
+    }
+
+    @Test
+    void 댓글이_없으면_빈_리스트가_조회된다() {
+        final Post 게시글 = postTestSupport.builder().build();
+        final Member 사용자 = memberTestSupport.builder().build();
+
+        final ExtractableResponse<Response> 댓글_조회_응답 = 게시물에_대한_댓글을_모두_조회한다(게시글.getId(), 사용자);
+
+        assertSoftly(
+                softAssertions -> {
+                    assertThat(댓글_조회_응답.statusCode()).isEqualTo(HttpStatus.OK.value());
+                    assertThat(댓글_조회_응답.jsonPath().getList("comments")).isEmpty();
+                }
+        );
+    }
+
+    @Test
+    void 게시글이_존재하지_않으면_예외가_발생한다() {
+        final Member 사용자 = memberTestSupport.builder().build();
+
+        final ExtractableResponse<Response> 댓글_조회_응답 = 게시물에_대한_댓글을_모두_조회한다(-1L, 사용자);
+
+        assertSoftly(
+                softAssertions -> {
+                    assertThat(댓글_조회_응답.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+                    assertThat(댓글_조회_응답.jsonPath().getInt("errorCode")).isEqualTo(POST_ID_NOT_FOUND.getCode());
+                    assertThat(댓글_조회_응답.jsonPath().getString("errorMessage")).isEqualTo(POST_ID_NOT_FOUND.getMessage());
                 }
         );
     }
