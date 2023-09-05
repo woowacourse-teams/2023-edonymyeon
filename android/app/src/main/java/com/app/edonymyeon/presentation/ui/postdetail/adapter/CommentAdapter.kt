@@ -8,9 +8,10 @@ import com.app.edonymyeon.presentation.uimodel.CommentUiModel
 
 class CommentAdapter(
     private val commentClickListener: CommentClickListener,
+    private val isLogin: Boolean,
 ) : ListAdapter<CommentUiModel, CommentViewHolder>(CommentDiffUtilCallback) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
-        return CommentViewHolder(parent, commentClickListener)
+        return CommentViewHolder(parent, commentClickListener, isLogin)
     }
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {

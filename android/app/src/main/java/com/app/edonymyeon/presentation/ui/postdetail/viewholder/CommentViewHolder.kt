@@ -11,6 +11,7 @@ import com.app.edonymyeon.presentation.uimodel.CommentUiModel
 class CommentViewHolder(
     parent: ViewGroup,
     commentClickListener: CommentClickListener,
+    isLogin: Boolean,
 ) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(
         R.layout.item_comment,
@@ -22,6 +23,7 @@ class CommentViewHolder(
 
     init {
         binding.listener = commentClickListener
+        binding.isLogin = isLogin
     }
 
     fun bind(commentUiModel: CommentUiModel) {

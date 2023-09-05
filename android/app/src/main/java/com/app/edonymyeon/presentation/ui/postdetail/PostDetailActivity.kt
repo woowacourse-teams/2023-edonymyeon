@@ -80,7 +80,7 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
     }
 
     private val adapter: CommentAdapter by lazy {
-        CommentAdapter(this)
+        CommentAdapter(this, viewModel.isLogin)
     }
 
     private val isMyPost: Boolean
@@ -109,8 +109,12 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_report -> {
-                ReportDialog(id, ReportType.POST, viewModel)
-                    .show(supportFragmentManager, "ReportDialog")
+                if (!viewModel.isLogin) {
+                    makeLoginSnackbar()
+                } else {
+                    ReportDialog(id, ReportType.POST, viewModel)
+                        .show(supportFragmentManager, "ReportDialog")
+                }
                 true
             }
 

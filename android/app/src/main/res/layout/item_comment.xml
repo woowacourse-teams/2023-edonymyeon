@@ -14,6 +14,10 @@
         <variable
             name="comment"
             type="com.app.edonymyeon.presentation.uimodel.CommentUiModel" />
+
+        <variable
+            name="isLogin"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,9 +47,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/all_report"
-            android:visibility="@{comment.writer ? View.GONE : View.VISIBLE}"
             android:textColor="@color/gray_666666"
             android:textSize="13sp"
+            android:visibility="@{comment.writer ? View.GONE : View.VISIBLE}"
             app:layout_constraintEnd_toEndOf="@id/tv_comment"
             app:layout_constraintTop_toBottomOf="@id/space_nickname_top" />
 
@@ -105,9 +109,9 @@
             android:id="@+id/tv_comment_createdAt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@{comment.createdAt.toString()}"
             android:textColor="@color/gray_666666"
             android:textSize="13sp"
-            android:text="@{comment.createdAt.toString()}"
             app:layout_constraintStart_toStartOf="@id/tv_nickname"
             app:layout_constraintTop_toBottomOf="@id/iv_comment"
             tools:text="07.02 22:23" />
