@@ -7,13 +7,13 @@ import com.domain.edonymyeon.model.ReactionCount
 fun ReactionCount.toUiModel(): ReactionCountUiModel {
     return ReactionCountUiModel(
         viewCount = viewCount.value,
-        commentCount = commentCount.value,
+        commentCount = commentCount,
     )
 }
 
 fun ReactionCountUiModel.toDomain(): ReactionCount {
     return ReactionCount(
         viewCount = Count(viewCount),
-        commentCount = Count(commentCount),
+        commentCount = commentCount,
     )
 }
