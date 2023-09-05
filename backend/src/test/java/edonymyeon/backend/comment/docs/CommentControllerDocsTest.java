@@ -132,7 +132,7 @@ public class CommentControllerDocsTest {
                 List.of(
                         new CommentDto(
                                 4L,
-                                "http://edonymyeon.site/images/image1.png",
+                                null,
                                 "그건 너무 비싸용",
                                 false,
                                 LocalDateTime.now(),
@@ -170,7 +170,7 @@ public class CommentControllerDocsTest {
                 responseFields(
                         fieldWithPath("commentCount").description("댓글 수"),
                         fieldWithPath("comments[].id").description("댓글 id"),
-                        fieldWithPath("comments[].image").description("댓글에 첨부된 사진의 url"),
+                        fieldWithPath("comments[].image").description("댓글에 첨부된 사진의 url").optional(),
                         fieldWithPath("comments[].comment").description("댓글 본문"),
                         fieldWithPath("comments[].isWriter").description("댓글 조회 요청을 보낸 사용자가 댓글 작성자 본인인지 여부"),
                         fieldWithPath("comments[].createdAt").description("댓글 작성 시각"),

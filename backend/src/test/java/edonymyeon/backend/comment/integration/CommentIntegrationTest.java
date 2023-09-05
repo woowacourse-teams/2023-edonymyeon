@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.TestConfig;
+import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.domain.Post;
@@ -246,5 +247,41 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
                 .get("/posts/{postId}/comments", 게시글_id)
                 .then()
                 .extract();
+    }
+
+    @Test
+    void 삭제된_댓글은_조회되지_않는다() {
+        final Post 게시글 = postTestSupport.builder().build();
+        final Member 댓글_작성자 = memberTestSupport.builder().build();
+        final File 이미지 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
+
+        final ExtractableResponse<Response> 댓글 = 댓글을_생성한다(게시글.getId(), 이미지, "this is comment1", 댓글_작성자);
+        final long 댓글_id = 응답의_location헤더에서_id를_추출한다(댓글);
+        댓글을_삭제한다(게시글.getId(), 댓글_id, 댓글_작성자);
+        final ExtractableResponse<Response> 댓글_조회_응답 = 게시물에_대한_댓글을_모두_조회한다(게시글.getId(), 댓글_작성자);
+
+        assertSoftly(
+                softAssertions -> {
+                    assertThat(댓글_조회_응답.statusCode()).isEqualTo(HttpStatus.OK.value());
+                    assertThat(댓글_조회_응답.jsonPath().getList("comments")).isEmpty();
+                }
+        );
+    }
+
+    @Test
+    void 이미지가_없으면_image_값은_null_로_조회된다() {
+        final Post 게시글 = postTestSupport.builder().build();
+        commentTestSupport.builder().post(게시글).build();
+        final Member 사용자 = memberTestSupport.builder().build();
+
+        final ExtractableResponse<Response> 댓글_조회_응답 = 게시물에_대한_댓글을_모두_조회한다(게시글.getId(), 사용자);
+
+        assertSoftly(
+                softAssertions -> {
+                    assertThat(댓글_조회_응답.statusCode()).isEqualTo(HttpStatus.OK.value());
+                    assertThat(댓글_조회_응답.jsonPath().getList("comments")).hasSize(1);
+                    assertThat(댓글_조회_응답.jsonPath().getString("comments[0].image")).isNull();
+                }
+        );
     }
 }
