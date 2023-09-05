@@ -18,7 +18,6 @@ public record SpecificPostInfoResponse(
         int downCount,
         boolean isUp,
         boolean isDown,
-        boolean isScrap,
         boolean isWriter
 ) {
 
@@ -44,7 +43,6 @@ public record SpecificPostInfoResponse(
                 allThumbsInPost.thumbsDownCount(),
                 thumbsStatusInPost.isUp(),
                 thumbsStatusInPost.isDown(),
-                false, // TODO: 스크랩 기능 구현 필요
                 post.isSameMember(member)
         );
     }
@@ -69,7 +67,6 @@ public record SpecificPostInfoResponse(
                 allThumbsInPost.thumbsDownCount(),
                 false,
                 false,
-                false, // TODO: 스크랩 기능 구현 필요
                 false
         );
     }

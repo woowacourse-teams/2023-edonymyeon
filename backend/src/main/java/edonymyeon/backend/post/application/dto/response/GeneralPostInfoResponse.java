@@ -21,9 +21,7 @@ public record GeneralPostInfoResponse(
                 post.getContent(),
                 new WriterResponse(post.getMember().getNickname()),
                 post.getCreatedAt(),
-                new ReactionCountResponse(post.getViewCount(), 0, 0)
-                // TODO: 스크랩 수
-                // TODO: 댓글 수
+                new ReactionCountResponse(post.getViewCount(), 0) // TODO: 댓글 수
         );
     }
 }

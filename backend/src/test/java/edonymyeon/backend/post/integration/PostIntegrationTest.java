@@ -216,7 +216,6 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
             softly.assertThat(jsonPath.getString("content[0].createdAt")).isNotNull();
             softly.assertThat(jsonPath.getInt("content[0].reactionCount.viewCount")).isNotNull();
             softly.assertThat(jsonPath.getInt("content[0].reactionCount.commentCount")).isNotNull();
-            softly.assertThat(jsonPath.getInt("content[0].reactionCount.scrapCount")).isNotNull();
         });
     }
 
@@ -244,7 +243,6 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
             softly.assertThat(jsonPath.getString("content[0].createdAt")).isNotNull();
             softly.assertThat(jsonPath.getInt("content[0].reactionCount.viewCount")).isNotNull();
             softly.assertThat(jsonPath.getInt("content[0].reactionCount.commentCount")).isNotNull();
-            softly.assertThat(jsonPath.getInt("content[0].reactionCount.scrapCount")).isNotNull();
         });
     }
 
@@ -283,8 +281,6 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
                     .isEqualTo(전체조회_4번째_게시글.reactionCount().viewCount());
             softly.assertThat(jsonPath.getInt("content[0].reactionCount.commentCount"))
                     .isEqualTo(전체조회_4번째_게시글.reactionCount().commentCount());
-            softly.assertThat(jsonPath.getInt("content[0].reactionCount.scrapCount"))
-                    .isEqualTo(전체조회_4번째_게시글.reactionCount().scrapCount());
         });
     }
 
@@ -333,14 +329,11 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
                         게시글.reactionCount().viewCount()),
                 () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.commentCount")).isEqualTo(
                         게시글.reactionCount().commentCount()),
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.scrapCount")).isEqualTo(
-                        게시글.reactionCount().scrapCount()),
 
                 () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("upCount")).isEqualTo(게시글.upCount()),
                 () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("downCount")).isEqualTo(게시글.downCount()),
                 () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isUp")).isEqualTo(게시글.isUp()),
                 () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isDown")).isEqualTo(게시글.isDown()),
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isScrap")).isEqualTo(게시글.isScrap()),
                 () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isWriter")).isEqualTo(false)
         );
     }
@@ -378,14 +371,11 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
                             게시글.reactionCount().viewCount());
                     assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.commentCount")).isEqualTo(
                             게시글.reactionCount().commentCount());
-                    assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("reactionCount.scrapCount")).isEqualTo(
-                            게시글.reactionCount().scrapCount());
 
                     assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("upCount")).isEqualTo(게시글.upCount());
                     assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("downCount")).isEqualTo(게시글.downCount());
                     assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isUp")).isEqualTo(게시글.isUp());
                     assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isDown")).isEqualTo(게시글.isDown());
-                    assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isScrap")).isEqualTo(게시글.isScrap());
                     assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isWriter")).isEqualTo(true);
                 }
         );
@@ -434,9 +424,6 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
                     softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getInt("reactionCount.commentCount"))
                             .isEqualTo(
                                     게시글.reactionCount().commentCount());
-                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getInt("reactionCount.scrapCount"))
-                            .isEqualTo(
-                                    게시글.reactionCount().scrapCount());
 
                     softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getInt("upCount"))
                             .isEqualTo(게시글.upCount());
@@ -445,8 +432,6 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
                     softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getBoolean("isUp")).isEqualTo(게시글.isUp());
                     softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getBoolean("isDown"))
                             .isEqualTo(게시글.isDown());
-                    softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getBoolean("isScrap"))
-                            .isEqualTo(게시글.isScrap());
                     softAssertions.assertThat(게시글_상세_조회_결과.body().jsonPath().getBoolean("isWriter")).isEqualTo(false);
                 }
         );

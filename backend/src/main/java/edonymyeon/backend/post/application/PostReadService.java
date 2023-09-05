@@ -81,8 +81,7 @@ public class PostReadService {
 
         final ReactionCountResponse reactionCountResponse = new ReactionCountResponse(
                 post.getViewCount(),
-                0, // TODO: 댓글 수 기능 구현 필요
-                0 // TODO: 스크랩 기능 구현 필요
+                0 // TODO: 댓글 수 기능 구현 필요
         );
         final AllThumbsInPostResponse allThumbsInPost = thumbsService.findAllThumbsInPost(postId);
         final WriterDetailResponse writerDetailResponse = getWriterResponse(post.getMember());

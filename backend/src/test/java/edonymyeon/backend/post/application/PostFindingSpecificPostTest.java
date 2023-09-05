@@ -65,7 +65,6 @@ public class PostFindingSpecificPostTest {
 
                 () -> assertThat(postInfoResponse.isUp()).isFalse(),
                 () -> assertThat(postInfoResponse.isDown()).isFalse(),
-                () -> assertThat(postInfoResponse.isScrap()).isFalse(),
                 () -> assertThat(postInfoResponse.isWriter()).isTrue()
         );
     }
@@ -76,7 +75,6 @@ public class PostFindingSpecificPostTest {
 
         assertThat(postInfoResponse.isUp()).isFalse();
         assertThat(postInfoResponse.isDown()).isFalse();
-        assertThat(postInfoResponse.isScrap()).isFalse();
         assertThat(postInfoResponse.isWriter()).isFalse();
     }
 
