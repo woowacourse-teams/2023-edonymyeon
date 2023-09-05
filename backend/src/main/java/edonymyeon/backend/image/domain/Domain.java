@@ -32,7 +32,7 @@ public class Domain {
         }
     }
 
-    public String attachFileName(final String fileName) {
+    public String convertToImageUrl(final String fileName) {
         return domain + fileName;
     }
 }

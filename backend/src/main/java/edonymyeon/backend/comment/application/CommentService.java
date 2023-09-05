@@ -79,18 +79,18 @@ public class CommentService {
         List<CommentDto> commentDtos = new ArrayList<>();
         for (Comment comment : comments) {
             final boolean isWriter = comment.isSameMember(memberId.id());
-            final String imageUrl = createUrl(comment.getCommentImageInfo());
+            final String imageUrl = convertToImageUrl(comment.getCommentImageInfo());
             final CommentDto commentDto = CommentDto.of(isWriter, comment, imageUrl);
             commentDtos.add(commentDto);
         }
         return new CommentsResponse(commentDtos.size(), commentDtos);
     }
 
-    private String createUrl(final CommentImageInfo commentImageInfo) {
+    private String convertToImageUrl(final CommentImageInfo commentImageInfo) {
         if(commentImageInfo == null){
             return null;
         }
         final String imageFileName = commentImageInfo.getStoreName();
-        return domain.attachFileName(imageFileName);
+        return domain.convertToImageUrl(imageFileName);
     }
 }
