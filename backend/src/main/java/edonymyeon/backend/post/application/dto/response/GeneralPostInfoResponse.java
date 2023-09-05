@@ -13,7 +13,7 @@ public record GeneralPostInfoResponse(
         ReactionCountResponse reactionCount
 ) {
 
-    public static GeneralPostInfoResponse of(Post post, String domain, int commentCount) {
+    public static GeneralPostInfoResponse of(Post post, String domain) {
         return new GeneralPostInfoResponse(
                 post.getId(),
                 post.getTitle(),
@@ -21,7 +21,7 @@ public record GeneralPostInfoResponse(
                 post.getContent(),
                 new WriterResponse(post.getMember().getNickname()),
                 post.getCreatedAt(),
-                new ReactionCountResponse(post.getViewCount(), commentCount)
+                new ReactionCountResponse(post.getViewCount(), post.getCommentCount())
         );
     }
 }
