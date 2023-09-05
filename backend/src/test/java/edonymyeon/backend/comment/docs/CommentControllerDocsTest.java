@@ -128,6 +128,7 @@ public class CommentControllerDocsTest {
     @Test
     void 댓글을_조회한다() throws Exception {
         final CommentsResponse commentsResponse = new CommentsResponse(
+                3,
                 List.of(
                         new CommentDto(
                                 4L,
@@ -167,6 +168,7 @@ public class CommentControllerDocsTest {
                         parameterWithName("postId").description("게시글 id")
                 ),
                 responseFields(
+                        fieldWithPath("commentCount").description("댓글 수"),
                         fieldWithPath("comments[].id").description("댓글 id"),
                         fieldWithPath("comments[].image").description("댓글에 첨부된 사진의 url"),
                         fieldWithPath("comments[].comment").description("댓글 본문"),

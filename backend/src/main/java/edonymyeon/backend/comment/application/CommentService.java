@@ -84,6 +84,6 @@ public class CommentService {
             final CommentDto commentDto = CommentDto.of(isWriter, comment, imageUrl);
             commentDtos.add(commentDto);
         }
-        return new CommentsResponse(commentDtos);
+        return new CommentsResponse(commentDtos.size(), commentDtos);
     }
 }

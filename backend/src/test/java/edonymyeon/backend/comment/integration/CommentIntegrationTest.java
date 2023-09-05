@@ -175,6 +175,7 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
                 softAssertions -> {
                     assertThat(댓글_조회_응답.statusCode()).isEqualTo(HttpStatus.OK.value());
                     assertThat(댓글_조회_응답.jsonPath().getList("comments")).hasSize(2);
+                    assertThat(댓글_조회_응답.jsonPath().getInt("commentCount")).isEqualTo(2);
 
                     assertThat(댓글_조회_응답.jsonPath().getInt("comments[0].id")).isEqualTo(댓글1_id);
                     assertThat(이미지_형식.matcher(댓글_조회_응답.jsonPath().getString("comments[0].image")).matches()).isTrue();
@@ -214,6 +215,7 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
                 softAssertions -> {
                     assertThat(댓글_조회_응답.statusCode()).isEqualTo(HttpStatus.OK.value());
                     assertThat(댓글_조회_응답.jsonPath().getList("comments")).hasSize(2);
+                    assertThat(댓글_조회_응답.jsonPath().getInt("commentCount")).isEqualTo(2);
 
                     assertThat(댓글_조회_응답.jsonPath().getInt("comments[0].id")).isEqualTo(댓글1_id);
                     assertThat(이미지_형식.matcher(댓글_조회_응답.jsonPath().getString("comments[0].image")).matches()).isTrue();
