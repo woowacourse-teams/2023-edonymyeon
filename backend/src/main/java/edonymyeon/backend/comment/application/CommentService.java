@@ -79,7 +79,8 @@ public class CommentService {
         List<CommentDto> commentDtos = new ArrayList<>();
         for (Comment comment : comments) {
             final boolean isWriter = comment.isSameMember(memberId.id());
-            final String imageUrl = domain.getDomain() + comment.getCommentImageInfo().getStoreName();
+            final String imageFileName = comment.getCommentImageInfo().getStoreName();
+            final String imageUrl = domain.attachFileName(imageFileName);
             final CommentDto commentDto = CommentDto.of(isWriter, comment, imageUrl);
             commentDtos.add(commentDto);
         }

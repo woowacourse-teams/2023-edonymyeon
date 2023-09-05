@@ -31,4 +31,8 @@ public class Domain {
             throw new EdonymyeonException(IMAGE_DOMAIN_INVALID);
         }
     }
+
+    public String attachFileName(final String fileName) {
+        return domain + fileName;
+    }
 }
