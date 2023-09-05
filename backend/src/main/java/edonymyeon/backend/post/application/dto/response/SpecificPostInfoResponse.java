@@ -1,4 +1,4 @@
-package edonymyeon.backend.post.application.dto;
+package edonymyeon.backend.post.application.dto.response;
 
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.domain.Post;

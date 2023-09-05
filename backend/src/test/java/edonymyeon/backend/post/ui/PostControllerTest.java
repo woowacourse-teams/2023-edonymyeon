@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
-import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.post.application.dto.response.PostResponse;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.TestMemberBuilder;
 import org.junit.jupiter.api.Test;
