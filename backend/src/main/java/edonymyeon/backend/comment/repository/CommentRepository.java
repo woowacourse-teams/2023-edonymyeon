@@ -13,6 +13,4 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @EntityGraph(attributePaths = {"post", "member", "commentImageInfo"})
     List<Comment> findAllByPostId(final Long postId);
-
-    int countByPostId(final Long postId);
 }
