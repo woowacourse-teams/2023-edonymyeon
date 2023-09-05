@@ -28,6 +28,7 @@ import com.app.edonymyeon.data.repository.ReportRepositoryImpl
 import com.app.edonymyeon.presentation.common.dialog.LoadingDialog
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
 import com.app.edonymyeon.presentation.ui.post.PostActivity
+import com.app.edonymyeon.presentation.ui.postdetail.adapter.CommentAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.ReportDialog
@@ -80,6 +81,10 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
 
     private val loadingDialog: LoadingDialog by lazy {
         LoadingDialog(getString(R.string.post_detail_loading))
+    }
+
+    private val adapter: CommentAdapter by lazy {
+        CommentAdapter(this)
     }
 
     private val isMyPost: Boolean
@@ -180,6 +185,7 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
 
     private fun getPost() {
         viewModel.getPostDetail(id)
+        viewModel.getComments(id)
     }
 
     private fun setObserver() {
@@ -220,6 +226,9 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
                     includeBinding.etComment.text.toString(),
                 )
             }
+        }
+        viewModel.comments.observe(this) {
+            adapter.setComments(it)
         }
     }
 

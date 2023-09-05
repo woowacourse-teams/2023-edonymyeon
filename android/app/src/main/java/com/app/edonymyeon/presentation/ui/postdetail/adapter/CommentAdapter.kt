@@ -16,4 +16,8 @@ class CommentAdapter(
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
         return holder.bind(currentList[position])
     }
+
+    fun setComments(comments: List<CommentUiModel>) {
+        submitList(comments)
+    }
 }

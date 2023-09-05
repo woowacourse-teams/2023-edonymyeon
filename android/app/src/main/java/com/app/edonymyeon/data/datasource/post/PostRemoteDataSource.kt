@@ -1,6 +1,7 @@
 package com.app.edonymyeon.data.datasource.post
 
 import com.app.edonymyeon.data.dto.request.PostEditorRequest
+import com.app.edonymyeon.data.dto.response.CommentsResponse
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
 import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.Posts
@@ -67,6 +68,10 @@ class PostRemoteDataSource : PostDataSource {
 
     override suspend fun getHotPosts(): Response<Posts> {
         return postService.getHotPosts()
+    }
+
+    override suspend fun getComments(postId: Long): Response<CommentsResponse> {
+        return postService.getComments(postId)
     }
 
     override suspend fun postComment(id: Long, image: File, content: String): Response<Unit> {
