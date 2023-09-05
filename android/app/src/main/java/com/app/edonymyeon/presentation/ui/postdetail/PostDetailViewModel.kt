@@ -92,9 +92,9 @@ class PostDetailViewModel(
         }
     }
 
-    fun postReport(postId: Long, reportId: Int, content: String?) {
+    fun postReport(type: ReportType, postId: Long, reportId: Int, content: String?) {
         viewModelScope.launch {
-            reportRepository.postReport(postId, reportId, content)
+            reportRepository.postReport(type.toString(), postId, reportId, content)
                 .onSuccess { }
                 .onFailure {
                     it as CustomThrowable
@@ -203,7 +203,8 @@ class PostDetailViewModel(
         viewModelScope.launch {
             postRepository.getComments(postId).onSuccess { comments ->
                 _comments.value = comments.comments.map { it.toUiModel() }
-                _reactionCount.value = _reactionCount.value?.copy(commentCount = comments.commentCount)
+                _reactionCount.value =
+                    _reactionCount.value?.copy(commentCount = comments.commentCount)
                 _isCommentsLoadingSuccess.value = true
             }.onFailure {
                 _isCommentsLoadingSuccess.value = false

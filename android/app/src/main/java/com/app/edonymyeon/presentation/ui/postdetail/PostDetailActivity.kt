@@ -66,10 +66,6 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
             }
         }
 
-    private val reportDialog: ReportDialog by lazy {
-        ReportDialog(id, viewModel)
-    }
-
     private val deleteDialog: DeleteDialog by lazy {
         DeleteDialog {
             viewModel.deletePost(id)
@@ -113,7 +109,8 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_report -> {
-                reportDialog.show(supportFragmentManager, "ReportDialog")
+                ReportDialog(id, ReportType.POST, viewModel)
+                    .show(supportFragmentManager, "ReportDialog")
                 true
             }
 
@@ -360,6 +357,11 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
 
     override fun onDeleteComment(commentId: Long) {
         viewModel.deleteComment(id, commentId)
+    }
+
+    override fun onReportComment(commentId: Long) {
+        ReportDialog(id, ReportType.COMMENT, viewModel)
+            .show(supportFragmentManager, "ReportDialog")
     }
 
     companion object {
