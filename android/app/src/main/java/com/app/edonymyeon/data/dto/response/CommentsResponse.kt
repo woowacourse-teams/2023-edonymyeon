@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CommentsResponse(
     @SerialName("commentCount")
-    val commentCount: Long,
+    val commentCount: Int,
     @SerialName("comments")
     val comments: List<CommentDataModel>,
 )
