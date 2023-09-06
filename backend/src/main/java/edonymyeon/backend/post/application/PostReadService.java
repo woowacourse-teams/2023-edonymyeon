@@ -192,7 +192,6 @@ public class PostReadService {
     }
 
     private Slice<Post> findHotPostSliceFromRepositoryByPolicy(final HotFindingCondition hotFindingCondition) {
-        // todo: 댓글 가중치 고려
         return postRepository.findHotPosts(
                 HotPostPolicy.getFindPeriod(),
                 HotPostPolicy.getViewCountWeight(),
