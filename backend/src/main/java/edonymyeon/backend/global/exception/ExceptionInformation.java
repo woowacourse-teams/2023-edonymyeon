@@ -21,6 +21,8 @@ public enum ExceptionInformation {
     AUTHORIZATION_EMPTY(1523, "인증 정보가 없습니다."),
     ILLEGAL_ARGUMENT_TYPE(1524, "잘못된 타입의 요청입니다."),
     LOGOUT_FAILED(1525, "로그아웃에 실패하였습니다."),
+    NOT_SUPPORTED_VERSION(1526, "지원하지 않는 버전입니다."),
+    NOT_SUPPORTED_ALGORITHM(1527, "현재 지원하지 않는 알고리즘입니다."),
 
     // 2___: 게시글 관련
     POST_ID_NOT_FOUND(2000, "존재하지 않는 게시글입니다."),

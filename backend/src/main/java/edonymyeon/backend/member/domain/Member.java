@@ -3,7 +3,6 @@ package edonymyeon.backend.member.domain;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_INVALID;
-import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_NOT_MATCH;
 
 import edonymyeon.backend.global.domain.TemporalRecord;
 import edonymyeon.backend.global.exception.EdonymyeonException;
@@ -141,13 +140,6 @@ public class Member extends TemporalRecord {
         throw new EdonymyeonException(MEMBER_PASSWORD_INVALID);
     }
 
-    public void checkPassword(final String password) {
-        if (this.password.equals(password)) {
-            return;
-        }
-        throw new EdonymyeonException(MEMBER_PASSWORD_NOT_MATCH);
-    }
-
     public Optional<String> getActiveDeviceToken() {
         return devices.stream().filter(Device::isActive)
                 .map(Device::getDeviceToken)
@@ -194,4 +186,14 @@ public class Member extends TemporalRecord {
     private boolean isNewDevice(final String deviceToken) {
         return this.devices.stream().noneMatch(device -> device.isDeviceTokenEqualTo(deviceToken));
     }
+
+    public void encrypt(final String encodedPassword) {
+        this.password = encodedPassword;
+    }
+
+    // todo
+    // 실제로 비밀번호가 변경하고 싶을 때는 UpdateMemberInfo라는 회원 정보 변경 클래스를 받아서 수정하도록
+//    public void updateMember(final UpdateMemberRequest updateMember) {
+//
+//    }
 }
