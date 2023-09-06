@@ -99,7 +99,7 @@ class PostRepositoryTest {
     }
 
     @Test
-    void 핫게시글에서_인기순_대로_게시글이_조회되는지_확인한다_댓글_없는_버전() {
+    void 핫게시글에서_인기순_대로_게시글이_조회되는지_확인한다_댓글_있는_버전() {
         // given
         Post score8Post = postTestSupport.builder().build();
         Post score6Post = postTestSupport.builder().build();
@@ -144,7 +144,7 @@ class PostRepositoryTest {
     }
 
     @Test
-    void 핫게시글에서_인기순_대로_게시글이_조회되는지_확인한다_댓글_있는_버전() {
+    void 핫게시글에서_인기순_대로_게시글이_조회되는지_확인한다_댓글_없는_버전() {
         // given
         Post score8Post = postTestSupport.builder().build();
         Post score6Post = postTestSupport.builder().build();
