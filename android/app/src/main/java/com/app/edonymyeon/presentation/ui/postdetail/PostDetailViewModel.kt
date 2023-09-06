@@ -216,7 +216,7 @@ class PostDetailViewModel(
         viewModelScope.launch {
             postRepository.postComment(
                 postId,
-                processAndAdjustImage(context, uri ?: Uri.parse("")),
+                if (uri == null) null else processAndAdjustImage(context, uri),
                 content,
             ).onSuccess {
                 getComments(postId)

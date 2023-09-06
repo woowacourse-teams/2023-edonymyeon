@@ -32,8 +32,8 @@ interface PostRepository {
 
     suspend fun postComment(
         id: Long,
-        images: File,
-        contents: String,
+        image: File?,
+        comment: String,
     ): Result<Unit>
 
     suspend fun deleteComment(

@@ -58,8 +58,8 @@ interface PostService {
     @POST("/posts/{postId}/comment")
     suspend fun postComment(
         @Path("postId") postId: Long,
-        @Part images: MultipartBody.Part?,
-        @Part content: RequestBody,
+        @Part image: MultipartBody.Part?,
+        @Part("comment") comment: RequestBody,
     ): Response<Unit>
 
     @DELETE("/posts/{postId}/comments/{commentId}")

@@ -108,8 +108,8 @@ class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepos
         }
     }
 
-    override suspend fun postComment(id: Long, images: File, contents: String): Result<Unit> {
-        val result = postDataSource.postComment(id, images, contents)
+    override suspend fun postComment(id: Long, image: File?, comment: String): Result<Unit> {
+        val result = postDataSource.postComment(id, image, comment)
         return if (result.isSuccessful) {
             Result.success(Unit)
         } else {

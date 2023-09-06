@@ -74,11 +74,12 @@ class PostRemoteDataSource : PostDataSource {
         return postService.getComments(postId)
     }
 
-    override suspend fun postComment(id: Long, image: File, content: String): Response<Unit> {
-        val requestFile = image.asRequestBody("image/*".toMediaTypeOrNull())
-        val multipartFile = MultipartBody.Part.createFormData("image", image.name, requestFile)
-        val requestBody = content.createRequestBody()
-        return postService.postComment(id, multipartFile, requestBody)
+    override suspend fun postComment(id: Long, image: File?, comment: String): Response<Unit> {
+        val requestFile = image?.asRequestBody("image/*".toMediaTypeOrNull())
+        val multipartFile =
+            requestFile?.let { MultipartBody.Part.createFormData("image", image.name, it) }
+        val requestBody = comment.createRequestBody()
+        return postService.postComment(id, if (image == null) null else multipartFile, requestBody)
     }
 
     override suspend fun deleteComment(postId: Long, commentId: Long): Response<Unit> {

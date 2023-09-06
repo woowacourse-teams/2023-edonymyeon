@@ -31,8 +31,8 @@ interface PostDataSource {
 
     suspend fun postComment(
         id: Long,
-        image: File,
-        content: String,
+        image: File?,
+        comment: String,
     ): Response<Unit>
 
     suspend fun deleteComment(
