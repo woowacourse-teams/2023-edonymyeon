@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 public class BasicTokenGenerator implements TokenGenerator {
 
     @Override
-    public String getToken(final String email, final String password) {
-        String valueToEncode = email + ":" + password;
+    public String getToken(final String email) {
+        String valueToEncode = email + ":";
 
         return "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
     }

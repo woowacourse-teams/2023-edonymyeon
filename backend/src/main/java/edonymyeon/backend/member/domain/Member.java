@@ -36,7 +36,6 @@ import org.hibernate.annotations.ColumnDefault;
 public class Member extends TemporalRecord {
 
     private static final int MAX_EMAIL_LENGTH = 30;
-    private static final int MAX_PASSWORD_LENGTH = 30;
     private static final int MAX_NICKNAME_LENGTH = 20;
     private static final String UNKNOWN = "Unknown";
 
@@ -110,9 +109,14 @@ public class Member extends TemporalRecord {
 
     public static Member from(final SocialInfo socialInfo) {
         return new Member(UUID.randomUUID().toString(),
-                UUID.randomUUID().toString(),
+                defaultSocialPassword(),
                 "#" + socialInfo.getSocialType().name() + UUID.randomUUID(),
                 socialInfo);
+    }
+
+    private static String defaultSocialPassword() {
+        final String uuid = UUID.randomUUID().toString();
+        return uuid.replace("-", "").substring(0, 25) + "!";
     }
 
     private void validate(final String email, final String password, final String nickname) {

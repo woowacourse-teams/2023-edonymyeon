@@ -26,7 +26,7 @@ import org.springframework.util.ReflectionUtils;
 @ExtendWith(MockitoExtension.class)
 @RequiredArgsConstructor
 @IntegrationTest
-public class AuthDeleteServiceTest {
+class AuthDeleteServiceTest {
 
     @MockBean
     private MemberRepository memberRepository;
@@ -45,7 +45,8 @@ public class AuthDeleteServiceTest {
         when(memberRepository.findByEmail(member.getEmail()))
                 .thenReturn(Optional.of(member));
 
-        assertThatThrownBy(() -> authService.login(member.getEmail(), member.getPassword()))
+        final String email = member.getEmail();
+        assertThatThrownBy(() -> authService.getAuthenticatedUser(email))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(MEMBER_IS_DELETED.getMessage());
     }

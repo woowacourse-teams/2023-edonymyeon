@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,15 +50,21 @@ public class AuthService {
         return new ActiveMemberId(member.getId());
     }
 
-    public MemberId login(final String email, final String password) {
-        final Member member = authenticateMember(email, password);
+    private Member authenticateMember(final String email, final String password) {
+        final Member member = findByEmail(email);
+        checkPassword(password, member.getPassword());
+        return member;
+    }
+
+    public MemberId getAuthenticatedUser(final String email) {
+        final Member member = findByEmail(email);
         return new ActiveMemberId(member.getId());
     }
 
-    private Member authenticateMember(final String email, final String password) {
+    @NotNull
+    private Member findByEmail(final String email) {
         final Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_EMAIL_NOT_FOUND));
-        checkPassword(password, member.getPassword());
         if (member.isDeleted()) {
             throw new EdonymyeonException(MEMBER_IS_DELETED);
         }
@@ -129,6 +136,19 @@ public class AuthService {
 
         publisher.publishEvent(new JoinMemberEvent(member));
         return saveMember(member);
+    }
+
+    // todo DB에 암호화 적용하고 삭제
+    @Transactional
+    public void updatePasswordToEncrypt() {
+        final List<Member> members = memberRepository.findAll();
+        for (Member member : members) {
+            final String encodedPassword = passwordEncoder.encode(member.getPassword());
+            try {
+                member.encrypt(encodedPassword);
+            } catch (EdonymyeonException e) {
+            }
+        }
     }
 
     private void validateDuplicateEmail(final String email) {

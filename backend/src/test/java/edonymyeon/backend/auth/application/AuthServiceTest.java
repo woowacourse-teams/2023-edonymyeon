@@ -133,8 +133,10 @@ class AuthServiceTest {
         final JoinRequest request = new JoinRequest("example@email.com", "password1234!", "nickname", "");
         authService.joinMember(request);
 
+        final LoginRequest loginRequest = new LoginRequest(request.email(), request.password(), "");
+
         assertSoftly(soft -> {
-            assertDoesNotThrow(() -> authService.login(request.email(), request.password()));
+            assertDoesNotThrow(() -> authService.login(loginRequest));
             verify(passwordEncoder, atLeastOnce()).encode(any());
             verify(passwordEncoder, atLeastOnce()).matches(any(), any());
         });
