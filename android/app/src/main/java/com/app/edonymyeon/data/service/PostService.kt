@@ -55,7 +55,7 @@ interface PostService {
     ): Response<CommentsResponse>
 
     @Multipart
-    @POST("/posts/{postId}/comment")
+    @POST("/posts/{postId}/comments")
     suspend fun postComment(
         @Path("postId") postId: Long,
         @Part image: MultipartBody.Part?,
