@@ -167,6 +167,7 @@ public class PostReadService {
                 HotPostPolicy.getFindPeriod(),
                 HotPostPolicy.getViewCountWeight(),
                 HotPostPolicy.getThumbsCountWeight(),
+                HotPostPolicy.getCommentCountWeight(),
                 hotFindingCondition.toPage()
         );
     }

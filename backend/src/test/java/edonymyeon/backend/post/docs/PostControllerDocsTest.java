@@ -1,6 +1,7 @@
 package edonymyeon.backend.post.docs;
 
 import edonymyeon.backend.CacheConfig;
+import edonymyeon.backend.post.domain.HotPostPolicy;
 import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
@@ -100,7 +101,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     }
 
     private void 핫_게시글_조회를_모킹한다(final Post 게시글) {
-        when(postRepository.findHotPosts(any(LocalDateTime.class), anyInt(), anyInt(), any()))
+        when(postRepository.findHotPosts(any(LocalDateTime.class), anyInt(), anyInt(), HotPostPolicy.getCommentCountWeight(), any()))
                 .thenReturn(new SliceImpl<>(List.of(게시글)));
         when(postRepository.findByIds(anyList()))
                 .thenReturn(List.of(게시글));

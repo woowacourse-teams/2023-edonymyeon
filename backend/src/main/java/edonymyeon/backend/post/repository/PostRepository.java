@@ -35,15 +35,19 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
             FROM Post p
             LEFT JOIN Thumbs t
             ON p.id = t.post.id
+            LEFT JOIN Comment c
+            ON p.id = c.post.id
             WHERE p.createdAt >= :findStartDate
             GROUP BY p.id
-            ORDER BY (COUNT(t.id) * :thumbsCountWeight + p.viewCount * :viewCountWeight) DESC, p.createdAt ASC
+            ORDER BY (COUNT(t.id) * :thumbsCountWeight + COUNT(c.id) * :commentCountWeight + p.viewCount * :viewCountWeight) DESC, 
+            p.createdAt ASC
             """)
     Slice<Post> findHotPosts(
             @Param("findStartDate") final LocalDateTime findStartDate,
             @Param("viewCountWeight") final int viewCountWeight,
             @Param("thumbsCountWeight") final int thumbsCountWeight,
-            Pageable pageable);
+            @Param("commentCountWeight") final int commentCountWeight,
+            final Pageable pageable);
 
     @EntityGraph(attributePaths = "member")
     @Query("SELECT p FROM Post p WHERE p.id IN (:postIds)")
