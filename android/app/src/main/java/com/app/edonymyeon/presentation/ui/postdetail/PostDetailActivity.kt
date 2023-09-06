@@ -380,7 +380,7 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
     }
 
     override fun onReportComment(commentId: Long) {
-        ReportDialog(id, ReportType.COMMENT, viewModel)
+        ReportDialog(commentId, ReportType.COMMENT, viewModel)
             .show(supportFragmentManager, "ReportDialog")
     }
 
