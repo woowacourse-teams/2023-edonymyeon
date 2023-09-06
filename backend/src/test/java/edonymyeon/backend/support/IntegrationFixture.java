@@ -1,18 +1,19 @@
 package edonymyeon.backend.support;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.application.NotificationSender;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.io.File;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
+
+import java.io.File;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 
 @SuppressWarnings("NonAsciiCharacters")
 @IntegrationTest
@@ -69,8 +70,8 @@ public class IntegrationFixture {
                 .build();
     }
 
-    protected long 응답의_location헤더에서_id를_추출한다(final ExtractableResponse<Response> 게시글_생성_요청_결과) {
-        final String location = 게시글_생성_요청_결과.header("location");
+    protected long 응답의_location헤더에서_id를_추출한다(final ExtractableResponse<Response> 요청에_대한_응답) {
+        final String location = 요청에_대한_응답.header("location");
         final String[] split = location.split("/");
         return Long.parseLong(split[split.length - 1]);
     }
