@@ -93,6 +93,7 @@ public class AuthService {
     @Transactional
     public Member joinSocialMember(final SocialInfo socialInfo) {
         final Member member = Member.from(socialInfo);
+        publisher.publishEvent(new JoinMemberEvent(member));
         return memberRepository.save(member);
     }
 

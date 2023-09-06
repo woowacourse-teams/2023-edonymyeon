@@ -16,6 +16,8 @@ import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.auth.application.dto.LogoutRequest;
 import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.domain.SocialInfo;
+import edonymyeon.backend.member.domain.SocialInfo.SocialType;
 import edonymyeon.backend.setting.application.SettingService;
 import edonymyeon.backend.support.IntegrationTest;
 import jakarta.persistence.EntityManager;
@@ -68,6 +70,14 @@ class AuthServiceTest {
 
         authService.joinMember(
                 new JoinRequest("test@gmail.com", "@testPassword234", "testNickname", "testDeviceToken"));
+        verify(settingService, atLeastOnce()).initializeSettings(any());
+    }
+
+    @Test
+    void 소셜_회원가입_이후_설정초기화_작업을_수행한다() {
+        doNothing().when(settingService).initializeSettings(any());
+
+        authService.joinSocialMember(SocialInfo.of(SocialType.KAKAO, 1L));
         verify(settingService, atLeastOnce()).initializeSettings(any());
     }
 
