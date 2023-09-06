@@ -9,7 +9,6 @@ import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.auth.application.dto.LogoutRequest;
 import edonymyeon.backend.auth.application.dto.MemberResponse;
-import edonymyeon.backend.auth.domain.BasicTokenGenerator;
 import edonymyeon.backend.auth.domain.TokenGenerator;
 import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
