@@ -14,7 +14,7 @@ public class CommentTestSupport {
 
     private final PostTestSupport postTestSupport;
 
-    private final MemberTestSupport memberTestSupport;
+    private final TestMemberBuilder memberTestSupport;
 
     private final CommentRepository commentRepository;
 
