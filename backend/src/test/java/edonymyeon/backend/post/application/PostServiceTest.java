@@ -14,7 +14,7 @@ import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.dto.request.PostModificationRequest;
 import edonymyeon.backend.post.application.dto.request.PostRequest;
-import edonymyeon.backend.post.application.dto.response.PostResponse;
+import edonymyeon.backend.post.application.dto.response.PostIdResponse;
 import edonymyeon.backend.post.application.dto.response.SpecificPostInfoResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
@@ -72,7 +72,7 @@ class PostServiceTest implements ImageFileCleaner {
 
     private MemberId memberId;
 
-    private static Post getFetchedPostWithPostImageInfos(final EntityManager entityManager, final PostResponse post) {
+    private static Post getFetchedPostWithPostImageInfos(final EntityManager entityManager, final PostIdResponse post) {
         return entityManager
                 .createQuery(
                         "select p from Post p left join fetch p.postImageInfos.postImageInfos where p.id = :postId",
@@ -81,7 +81,7 @@ class PostServiceTest implements ImageFileCleaner {
                 .getSingleResult();
     }
 
-    private static List<PostImageInfo> getImageInfos(final EntityManager entityManager, final PostResponse post) {
+    private static List<PostImageInfo> getImageInfos(final EntityManager entityManager, final PostIdResponse post) {
         return entityManager
                 .createQuery("select pi from PostImageInfo pi where pi.post.id = :postId", PostImageInfo.class)
                 .setParameter("postId", post.id())
@@ -115,10 +115,10 @@ class PostServiceTest implements ImageFileCleaner {
         final Member member = testMemberBuilder.builder().build();
 
         final ActiveMemberId memberId = new ActiveMemberId(member.getId());
-        final PostResponse postResponse = postService.createPost(memberId, getPostRequest());
+        final PostIdResponse postIdResponse = postService.createPost(memberId, getPostRequest());
 
         Assertions
-                .assertThatCode(() -> postReadService.findSpecificPost(postResponse.id(), memberId))
+                .assertThatCode(() -> postReadService.findSpecificPost(postIdResponse.id(), memberId))
                 .doesNotThrowAnyException();
     }
 
@@ -134,7 +134,7 @@ class PostServiceTest implements ImageFileCleaner {
                     Collections.emptyList()
             );
 
-            final PostResponse target = postService.createPost(memberId, request);
+            final PostIdResponse target = postService.createPost(memberId, request);
             assertThat(target.id()).isNotNull();
         }
 
@@ -197,23 +197,23 @@ class PostServiceTest implements ImageFileCleaner {
 
         @Test
         void 연관된_소비내역도_삭제된다(@Autowired PostRepository postRepository, @Autowired ConsumptionRepository consumptionRepository) throws IOException {
-            final PostResponse postResponse = postService.createPost(memberId, getPostRequest());
-            final Post post = postRepository.findById(postResponse.id()).get();
+            final PostIdResponse postIdResponse = postService.createPost(memberId, getPostRequest());
+            final Post post = postRepository.findById(postIdResponse.id()).get();
 
             consumptionTestSupport.builder().post(post).build();
             assertThat(consumptionRepository.findByPostId(post.getId()).isPresent()).isTrue();
 
-            postService.deletePost(memberId, postResponse.id());
+            postService.deletePost(memberId, postIdResponse.id());
             assertThat(consumptionRepository.findByPostId(post.getId()).isEmpty()).isTrue();
         }
 
         @Test
         void 게시글이_삭제되면_디렉토리에_있는_이미지도_삭제된다() throws IOException {
-            final PostResponse postResponse = postService.createPost(memberId, getPostRequest());
-            final PostImageInfo postImageInfo = postImageInfoRepository.findAllByPostId(postResponse.id()).get(0);
+            final PostIdResponse postIdResponse = postService.createPost(memberId, getPostRequest());
+            final PostImageInfo postImageInfo = postImageInfoRepository.findAllByPostId(postIdResponse.id()).get(0);
             assertThat(new File(imageFileUploader.getFullPath(postImageInfo.getStoreName())).canRead()).isTrue();
 
-            postService.deletePost(memberId, postResponse.id());
+            postService.deletePost(memberId, postIdResponse.id());
             assertThat(new File(imageFileUploader.getFullPath(postImageInfo.getStoreName())).canRead()).isFalse();
         }
     }
@@ -230,7 +230,7 @@ class PostServiceTest implements ImageFileCleaner {
                     13_000L,
                     Collections.emptyList()
             );
-            final PostResponse post = postService.createPost(memberId, postRequest);
+            final PostIdResponse post = postService.createPost(memberId, postRequest);
 
             // when
             Member 다른_사람 = memberTestSupport.builder()
@@ -260,7 +260,7 @@ class PostServiceTest implements ImageFileCleaner {
                     13_000L,
                     null
             );
-            final PostResponse post = postService.createPost(memberId, postRequest);
+            final PostIdResponse post = postService.createPost(memberId, postRequest);
 
             // when
             final PostModificationRequest updatedPostRequest = new PostModificationRequest(
@@ -301,7 +301,7 @@ class PostServiceTest implements ImageFileCleaner {
             void 이미지가_10개_초과일_수_없다()
                     throws IOException {
                 // given
-                final PostResponse post = postService.createPost(memberId, 이미지가_없는_요청);
+                final PostIdResponse post = postService.createPost(memberId, 이미지가_없는_요청);
 
                 // when
                 List<MultipartFile> images = new ArrayList<>();
@@ -324,7 +324,7 @@ class PostServiceTest implements ImageFileCleaner {
             @Test
             void 이미지를_추가할_수_있다(@Autowired EntityManager entityManager) throws IOException {
                 // given
-                final PostResponse 게시글_생성_결과 = postService.createPost(memberId, 이미지가_없는_요청);
+                final PostIdResponse 게시글_생성_결과 = postService.createPost(memberId, 이미지가_없는_요청);
                 final SpecificPostInfoResponse 게시글_상세조회_결과 = postReadService.findSpecificPost(게시글_생성_결과.id(), memberId);
 
                 // when
@@ -348,7 +348,7 @@ class PostServiceTest implements ImageFileCleaner {
             @Test
             void 이미지를_전부_삭제할_수_있다(@Autowired EntityManager entityManager) {
                 // given
-                final PostResponse post = postService.createPost(memberId, 이미지가_2개_있는_요청);
+                final PostIdResponse post = postService.createPost(memberId, 이미지가_2개_있는_요청);
 
                 // when
                 final PostModificationRequest 이미지가_없는_요청 = new PostModificationRequest(
@@ -375,7 +375,7 @@ class PostServiceTest implements ImageFileCleaner {
                         13_000L,
                         List.of(바꾸기_전_이미지)
                 );
-                final PostResponse post = postService.createPost(memberId, 게시글_생성_요청);
+                final PostIdResponse post = postService.createPost(memberId, 게시글_생성_요청);
                 final PostImageInfo 바꾸기_전_이미지_정보 = getImageInfos(entityManager, post)
                         .get(0);
 

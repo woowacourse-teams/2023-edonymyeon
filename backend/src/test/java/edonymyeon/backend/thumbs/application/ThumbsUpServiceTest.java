@@ -13,7 +13,7 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.request.PostRequest;
-import edonymyeon.backend.post.application.dto.response.PostResponse;
+import edonymyeon.backend.post.application.dto.response.PostIdResponse;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
@@ -36,7 +36,7 @@ class ThumbsUpServiceTest extends IntegrationFixture {
 
     private Member postWriter;
 
-    private PostResponse postResponse;
+    private PostIdResponse postIdResponse;
 
     @BeforeEach
     void 사전작업() {
@@ -53,7 +53,7 @@ class ThumbsUpServiceTest extends IntegrationFixture {
         );
 
         MemberId memberId = new ActiveMemberId(postWriter.getId());
-        postResponse = postService.createPost(memberId, postRequest);
+        postIdResponse = postService.createPost(memberId, postRequest);
     }
 
     @Test
@@ -71,7 +71,7 @@ class ThumbsUpServiceTest extends IntegrationFixture {
         MemberId loginMemberId = new ActiveMemberId(postWriter.getId());
 
         assertThatThrownBy(
-                () -> thumbsService.thumbsUp(loginMemberId, postResponse.id()))
+                () -> thumbsService.thumbsUp(loginMemberId, postIdResponse.id()))
                 .isExactlyInstanceOf(EdonymyeonException.class)
                 .hasMessage(THUMBS_IS_SELF_UP_DOWN.getMessage());
     }
@@ -82,8 +82,8 @@ class ThumbsUpServiceTest extends IntegrationFixture {
         Member otherMember = registerMember();
 
         // when
-        thumbsUp(otherMember, postResponse);
-        Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postResponse.id(),
+        thumbsUp(otherMember, postIdResponse);
+        Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postIdResponse.id(),
                 otherMember.getId());
 
         // then
@@ -91,7 +91,7 @@ class ThumbsUpServiceTest extends IntegrationFixture {
                     softly.assertThat(postThumbs).isPresent();
                     softly.assertThat(postThumbs.get().getThumbsType()).isEqualTo(ThumbsType.UP);
                     softly.assertThat(postThumbs.get().getMember().getId()).isEqualTo(otherMember.getId());
-                    softly.assertThat(postThumbs.get().getPost().getId()).isEqualTo(postResponse.id());
+                    softly.assertThat(postThumbs.get().getPost().getId()).isEqualTo(postIdResponse.id());
                 }
         );
     }
@@ -102,9 +102,9 @@ class ThumbsUpServiceTest extends IntegrationFixture {
         Member otherMember = registerMember();
 
         // when
-        thumbsDown(otherMember, postResponse);
-        thumbsUp(otherMember, postResponse);
-        Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postResponse.id(),
+        thumbsDown(otherMember, postIdResponse);
+        thumbsUp(otherMember, postIdResponse);
+        Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postIdResponse.id(),
                 otherMember.getId());
 
         // then
@@ -112,7 +112,7 @@ class ThumbsUpServiceTest extends IntegrationFixture {
                     softly.assertThat(postThumbs).isPresent();
                     softly.assertThat(postThumbs.get().getThumbsType()).isEqualTo(ThumbsType.UP);
                     softly.assertThat(postThumbs.get().getMember().getId()).isEqualTo(otherMember.getId());
-                    softly.assertThat(postThumbs.get().getPost().getId()).isEqualTo(postResponse.id());
+                    softly.assertThat(postThumbs.get().getPost().getId()).isEqualTo(postIdResponse.id());
                 }
         );
     }
@@ -123,23 +123,23 @@ class ThumbsUpServiceTest extends IntegrationFixture {
         Member otherMember = registerMember();
 
         // when
-        thumbsUp(otherMember, postResponse);
+        thumbsUp(otherMember, postIdResponse);
 
         // then
         MemberId otherMemberId = new ActiveMemberId(otherMember.getId());
 
         assertThatThrownBy(
-                () -> thumbsService.thumbsUp(otherMemberId, postResponse.id()))
+                () -> thumbsService.thumbsUp(otherMemberId, postIdResponse.id()))
                 .isExactlyInstanceOf(EdonymyeonException.class)
                 .hasMessage(THUMBS_UP_ALREADY_EXIST.getMessage());
     }
 
-    private void thumbsUp(final Member member, final PostResponse post) {
+    private void thumbsUp(final Member member, final PostIdResponse post) {
         MemberId memberId = new ActiveMemberId(member.getId());
         thumbsService.thumbsUp(memberId, post.id());
     }
 
-    private void thumbsDown(final Member member, final PostResponse post) {
+    private void thumbsDown(final Member member, final PostIdResponse post) {
         MemberId memberId = new ActiveMemberId(member.getId());
         thumbsService.thumbsDown(memberId, post.id());
     }

@@ -5,7 +5,7 @@ import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.request.PostModificationRequest;
 import edonymyeon.backend.post.application.dto.request.PostRequest;
-import edonymyeon.backend.post.application.dto.response.PostResponse;
+import edonymyeon.backend.post.application.dto.response.PostIdResponse;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,9 +25,9 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<PostResponse> createPost(@AuthPrincipal MemberId memberId,
-                                                   @ModelAttribute PostRequest postRequest) {
-        PostResponse response = postService.createPost(memberId, postRequest);
+    public ResponseEntity<PostIdResponse> createPost(@AuthPrincipal MemberId memberId,
+                                                     @ModelAttribute PostRequest postRequest) {
+        PostIdResponse response = postService.createPost(memberId, postRequest);
         return ResponseEntity.created(URI.create("/posts/" + response.id()))
                 .body(response);
     }
@@ -39,10 +39,10 @@ public class PostController {
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<PostResponse> updatePost(@AuthPrincipal MemberId memberId,
-                                                   @ModelAttribute PostModificationRequest postModificationRequest,
-                                                   @PathVariable Long postId) {
-        final PostResponse postResponse = postService.updatePost(memberId, postId, postModificationRequest);
-        return ResponseEntity.ok().body(postResponse);
+    public ResponseEntity<PostIdResponse> updatePost(@AuthPrincipal MemberId memberId,
+                                                     @ModelAttribute PostModificationRequest postModificationRequest,
+                                                     @PathVariable Long postId) {
+        final PostIdResponse postIdResponse = postService.updatePost(memberId, postId, postModificationRequest);
+        return ResponseEntity.ok().body(postIdResponse);
     }
 }
