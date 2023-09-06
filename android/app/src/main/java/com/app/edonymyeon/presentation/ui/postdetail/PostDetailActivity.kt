@@ -213,7 +213,6 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
                 setImageSlider(post)
                 setImageIndicators()
             }
-            hideInputCommentForWriter(post)
         }
 
         viewModel.reactionCount.observe(this) {
@@ -237,12 +236,6 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
         }
         viewModel.comments.observe(this) {
             adapter.setComments(it)
-        }
-    }
-
-    private fun hideInputCommentForWriter(post: PostUiModel) {
-        if (post.isWriter) {
-            binding.clCommentInput.clCommentInput.isVisible = false
         }
     }
 
