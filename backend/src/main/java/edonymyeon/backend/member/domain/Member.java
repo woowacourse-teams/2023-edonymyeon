@@ -1,5 +1,6 @@
 package edonymyeon.backend.member.domain;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.ENCODED_PASSWORD_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_INVALID;
@@ -188,7 +189,16 @@ public class Member extends TemporalRecord {
     }
 
     public void encrypt(final String encodedPassword) {
+        validatePassword(password);
+        validateEncodedPassword(encodedPassword);
         this.password = encodedPassword;
+    }
+
+    private void validateEncodedPassword(final String encodedPassword) {
+        if (PasswordValidator.isValidEncodedPassword(encodedPassword)) {
+            return;
+        }
+        throw new EdonymyeonException(ENCODED_PASSWORD_INVALID);
     }
 
     // todo
