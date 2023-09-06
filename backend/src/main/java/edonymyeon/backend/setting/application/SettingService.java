@@ -11,7 +11,6 @@ import edonymyeon.backend.setting.application.dto.SettingsResponse;
 import edonymyeon.backend.setting.domain.Setting;
 import edonymyeon.backend.setting.domain.SettingType;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,20 +47,16 @@ public class SettingService {
     }
 
     public void toggleSetting(final String settingSerialNumber, final MemberId memberId) {
-        final Optional<Member> member = memberRepository.findById(memberId.id());
-        toggleSetting(settingSerialNumber, member
-                .orElseThrow(() -> new EdonymyeonException(ExceptionInformation.MEMBER_ID_NOT_FOUND))
-        );
+        final Member member = findMemberById(memberId);
+        final Setting setting = settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), settingSerialNumber);
+
+        setting.ifActive(() -> deactivateSetting(member, setting));
+        setting.ifInactive(() -> activateSetting(member, setting));
     }
 
-    private void toggleSetting(final String settingSerialNumber, final Member member) {
-        final Setting setting = settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), settingSerialNumber);
-        if (!setting.isActive()) {
-            activateSetting(member, setting);
-            return;
-        }
-
-        deactivateSetting(member, setting);
+    private Member findMemberById(final MemberId memberId) {
+        return memberRepository.findById(memberId.id())
+                .orElseThrow(() -> new EdonymyeonException(ExceptionInformation.MEMBER_ID_NOT_FOUND));
     }
 
     private void activateSetting(final Member member, final Setting setting) {

@@ -68,4 +68,16 @@ public class Setting {
     public String getSerialNumber() {
         return settingType.getSerialNumber();
     }
+
+    public void ifActive(final Runnable task) {
+        if (this.isActive) {
+            task.run();
+        }
+    }
+
+    public void ifInactive(final Runnable task) {
+        if (!this.isActive) {
+            task.run();
+        }
+    }
 }
