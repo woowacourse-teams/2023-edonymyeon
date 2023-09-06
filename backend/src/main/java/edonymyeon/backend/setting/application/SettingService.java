@@ -32,7 +32,6 @@ public class SettingService {
         return List.of(
                 new Setting(SettingType.NOTIFICATION_PER_THUMBS, member),
                 new Setting(SettingType.NOTIFICATION_PER_10_THUMBS, member),
-                new Setting(SettingType.NOTIFICATION_THUMBS, member),
 
                 new Setting(SettingType.NOTIFICATION_PER_COMMENT, member),
                 new Setting(SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING, member),

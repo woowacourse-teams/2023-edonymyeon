@@ -19,13 +19,9 @@ public class SettingType {
      */
     public static final SettingType NOTIFICATION_PER_10_THUMBS = new SettingType("1002", SettingTypeCategory.THUMB, Weight.FIVE);
     /**
-     * 좋아요 싫어요 알림 수신
-     */
-    public static final SettingType NOTIFICATION_THUMBS = new SettingType("1001", SettingTypeCategory.THUMB, Weight.TEN);
-    /**
      * 자신의 글에 댓글을 남겼을 때 알림 수신
      */
-    public static final SettingType NOTIFICATION_PER_COMMENT = new SettingType("2001", SettingTypeCategory.COMMENT, Weight.TEN);
+    public static final SettingType NOTIFICATION_PER_COMMENT = new SettingType("2001", SettingTypeCategory.COMMENT, Weight.FIVE);
     /**
      * 특정 시간마다 소비 확정해야 한다는 알림 수신
      */

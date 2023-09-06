@@ -46,41 +46,12 @@ class SettingServiceTest extends IntegrationFixture {
         final Member member = 회원을_저장하고_기본설정을_부여한다();
 
         List<Setting> settings = settingRepository.findByMemberId(member.getId());
-        assertThat(settings).hasSize(6);
+        assertThat(settings).hasSize(5);
 
         assertThat(settings.stream()
                 .map(Setting::isActive)
                 .toList())
                 .containsOnly(false);
-    }
-
-    @Test
-    void 가중치_10인_설정이_disable되면_해당_type의_설정_모두_disabled() {
-        final Member member = 회원을_저장하고_기본설정을_부여한다();
-
-        settingService.toggleSetting("1001", new ActiveMemberId(member.getId()));
-        settingService.toggleSetting("1002", new ActiveMemberId(member.getId()));
-        assertThat(settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), "1002")
-                .isActive()).isTrue();
-
-        settingService.toggleSetting("1001", new ActiveMemberId(member.getId()));
-        assertThat(settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), "1002")
-                .isActive()).isFalse();
-    }
-
-    @Test
-    void 가중치_10_미만인_모든_설정이_disabled면_가중치_10인_설정도_disabled() {
-        final Member member = 회원을_저장하고_기본설정을_부여한다();
-
-        settingService.toggleSetting("1002", new ActiveMemberId(member.getId()));
-
-        assertThat(settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), "1001")
-                .isActive()).isTrue();
-
-        settingService.toggleSetting("1002", new ActiveMemberId(member.getId()));
-
-        assertThat(settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), "1001")
-                .isActive()).isFalse();
     }
 
     @Test
@@ -103,30 +74,16 @@ class SettingServiceTest extends IntegrationFixture {
     }
 
     @Test
-    void 십_미만인_설정이_하나라도_enabled되면_가중치_10인_설정_enabled() {
-        final Member member = 회원을_저장하고_기본설정을_부여한다();
-
-        settingService.toggleSetting("1002", new ActiveMemberId(member.getId()));
-
-        assertThat(settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), "1001")
-                .isActive()).isTrue();
-    }
-
-    @Test
     void ALL_type인_설정이_disabled되면_전체_설정_disabled() {
         final Member member = 회원을_저장하고_기본설정을_부여한다();
 
         settingService.toggleSetting("1002", new ActiveMemberId(member.getId()));
 
-        assertThat(settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), "1001")
-                .isActive()).isTrue();
         assertThat(settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), "1002")
                 .isActive()).isTrue();
 
         settingService.toggleSetting("0001", new ActiveMemberId(member.getId()));
 
-        assertThat(settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), "1001")
-                .isActive()).isFalse();
         assertThat(settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), "1002")
                 .isActive()).isFalse();
     }
@@ -140,8 +97,6 @@ class SettingServiceTest extends IntegrationFixture {
         settingService.toggleSetting("5001", new ActiveMemberId(member.getId()));
 
         assertThat(settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), "1002")
-                .isActive()).isTrue();
-        assertThat(settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), "0001")
                 .isActive()).isTrue();
     }
 

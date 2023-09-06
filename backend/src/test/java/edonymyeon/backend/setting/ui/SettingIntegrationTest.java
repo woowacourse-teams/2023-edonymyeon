@@ -51,7 +51,7 @@ class SettingIntegrationTest extends IntegrationFixture {
         final Map<String, List<Map<String, String>>> settings = objectMapper.readValue(response.body().asByteArray(),
                 new TypeReference<>() {
                 });
-        assertThat(settings.get("notifications")).hasSize(6);
+        assertThat(settings.get("notifications")).hasSize(5);
     }
 
     @Test
@@ -79,7 +79,7 @@ class SettingIntegrationTest extends IntegrationFixture {
                 new TypeReference<>() {
                 });
         final List<Map<String, String>> settingDetails = settings.get("notifications");
-        assertThat(settingDetails).hasSize(6);
+        assertThat(settingDetails).hasSize(5);
 
         설정값_검증(settingDetails, "0001", "true");
         설정값_검증(settingDetails, "1002", "true");
