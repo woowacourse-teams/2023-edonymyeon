@@ -8,13 +8,11 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMB
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Mockito.any;
 
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.integration.steps.MemberConsumptionSteps;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.PostReadService;
