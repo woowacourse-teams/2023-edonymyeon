@@ -1,5 +1,5 @@
 package edonymyeon.backend.setting.domain;
 
-public enum Category {
+public enum SettingTypeCategory {
     ALL, THUMB, COMMENT, REMINDING
 }
