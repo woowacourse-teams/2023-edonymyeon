@@ -67,7 +67,7 @@ public class Post extends TemporalRecord {
     @ColumnDefault("0")
     private int viewCount;
 
-    @Formula("(select count(*) from comment c where c.post_id = id and c.deleted = false)")
+    @Formula("(select count(c.id) from comment c where c.post_id = id and c.deleted = false)")
     private int commentCount;
 
     public Post(
