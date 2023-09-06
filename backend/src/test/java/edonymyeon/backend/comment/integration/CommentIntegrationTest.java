@@ -320,7 +320,6 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
         final Member 댓글_작성자 = memberTestSupport.builder().build();
         String 엄청긴내용 = "https://www.google.com/search?q=%EA%B5%AD%EB%B0%A5&sca_esv=563011930&sxsrf=AB5stBiDy2a0MwlQmu6VB-8YpfjsEyjxEQ:1693986737909&tbm=isch&source=iu&ictx=1&vet=1&fir=sIvtHEk9_U_o5M%252CpD1Tq-sHZpN7AM%252C%252Fg%252F12392002%253B4HF-UXGBj8FhYM%252CE9uWSBBha3D_gM%252C_%253BJYaErMf7-y-c_M%252CrSd-S_vLxb3sGM%252C_%253BpkfPdVq-V8ZlSM%252CMMk5hcmb_gk_3M%252C_%253BdzDN-T5gf8f6bM%252CP3XbliiGuxt2fM%252C_%253BJNdLHh8L8dOAEM%252CGCZOxBwC4UaqpM%252C_&usg=AI4_-kQ5oFr6wN3omZLxhEDp75ruIzRELQ&sa=X&sqi=2&ved=2ahUKEwjSrpGuwJWBAxWI-2EKHaIzD84Q_B16BAhHEAE#imgrc=sIvtHEk9_U_o5M";
 
-
         final File 이미지 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
         final ExtractableResponse<Response> 댓글_생성_응답 = 댓글을_생성한다(게시글.getId(), 이미지, 엄청긴내용, 댓글_작성자);
 
