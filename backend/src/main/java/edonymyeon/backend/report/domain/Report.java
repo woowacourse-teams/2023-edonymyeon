@@ -2,38 +2,47 @@ package edonymyeon.backend.report.domain;
 
 import edonymyeon.backend.global.domain.TemporalRecord;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.domain.Post;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 public class Report extends TemporalRecord {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "post_id")
-    private Post post;
+    @Enumerated(value = EnumType.STRING)
+    private ReportType reportType;
+
+    private Long referenceId;
 
     @ManyToOne
     @JoinColumn(name = "reporter_id")
     private Member reporter;
 
+    @Enumerated
     private AbusingType abusingType;
+
     private String additionalComment;
+
+    public Report(
+            final ReportType reportType,
+            final Long referenceId,
+            final Member reporter,
+            final AbusingType abusingType,
+            final String additionalComment
+    ) {
+        this.reportType = reportType;
+        this.referenceId = referenceId;
+        this.reporter = reporter;
+        this.abusingType = abusingType;
+        this.additionalComment = additionalComment;
+    }
 }

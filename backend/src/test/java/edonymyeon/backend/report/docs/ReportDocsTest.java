@@ -1,17 +1,6 @@
 package edonymyeon.backend.report.docs;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edonymyeon.backend.support.TestMemberBuilder;
-import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -22,8 +11,8 @@ import edonymyeon.backend.report.application.ReportRepository;
 import edonymyeon.backend.report.application.ReportRequest;
 import edonymyeon.backend.report.domain.AbusingType;
 import edonymyeon.backend.report.domain.Report;
-import java.util.List;
-import java.util.Optional;
+import edonymyeon.backend.support.IntegrationTest;
+import edonymyeon.backend.support.TestMemberBuilder;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -34,6 +23,19 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
+import java.util.Optional;
+
+import static edonymyeon.backend.report.domain.ReportType.POST;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -71,7 +73,7 @@ public class ReportDocsTest implements ImageFileCleaner {
 
     private void 신고_서비스를_모킹한다(final Report 신고) {
         when(reportRepository.save(any()))
-                .thenReturn(new Report(1L, 신고.getPost(), 신고.getPost().getMember(), AbusingType.OBSCENITY, ""));
+                .thenReturn(new Report(POST, 신고.getReferenceId(), 신고.getReporter(), AbusingType.OBSCENITY, ""));
     }
 
     @Test
@@ -86,9 +88,9 @@ public class ReportDocsTest implements ImageFileCleaner {
 
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);
-        신고_서비스를_모킹한다(new Report(null, 게시글, 글쓴이, AbusingType.OBSCENITY, ""));
+        신고_서비스를_모킹한다(new Report(POST, 게시글.getId(), 글쓴이, AbusingType.OBSCENITY, ""));
 
-        final ReportRequest reportRequest = new ReportRequest(게시글.getId(), AbusingType.OBSCENITY.getTypeCode(), "");
+        final ReportRequest reportRequest = new ReportRequest(POST, 게시글.getId(), AbusingType.OBSCENITY.getTypeCode(), "");
 
         final var 게시글_상세_조회_요청 = post("/report")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)

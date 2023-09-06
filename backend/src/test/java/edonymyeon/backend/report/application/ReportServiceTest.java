@@ -1,18 +1,18 @@
-package edonymyeon.backend.report;
+package edonymyeon.backend.report.application;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
-import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.post.domain.Post;
-import edonymyeon.backend.report.application.ReportRepository;
-import edonymyeon.backend.report.application.ReportRequest;
-import edonymyeon.backend.report.application.ReportService;
 import edonymyeon.backend.report.domain.Report;
+import edonymyeon.backend.report.domain.ReportType;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.PostTestSupport;
+import edonymyeon.backend.support.TestMemberBuilder;
 import lombok.RequiredArgsConstructor;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -32,21 +32,21 @@ class ReportServiceTest {
         final Post post = postTestSupport.builder().build();
         final Long reportId = reportService
                 .report(
-                        new ReportRequest(post.getId(), 4, ""),
+                        new ReportRequest(ReportType.POST, post.getId(), 4, null),
                         new ActiveMemberId(memberTestSupport.builder().build().getId())
                 );
 
         final Report report = reportRepository.findById(reportId).get();
-        Assertions.assertThat(report).extracting("id").isEqualTo(reportId);
+        assertThat(report).extracting("id").isEqualTo(reportId);
     }
 
     @Test
     void 존재하지_않는_게시글은_신고할_수_없다() {
-        Assertions.assertThatThrownBy(() -> reportService
-                        .report(
-                                new ReportRequest(-2L, 4, ""),
-                                new ActiveMemberId(memberTestSupport.builder().build().getId()))
-                )
+        assertThatThrownBy(() -> reportService
+                .report(
+                        new ReportRequest(ReportType.POST, -2L, 4, ""),
+                        new ActiveMemberId(memberTestSupport.builder().build().getId()))
+        )
                 .isInstanceOf(EdonymyeonException.class);
     }
 }
