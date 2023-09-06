@@ -104,7 +104,7 @@ public class PostServiceFindingAllPostsTest extends IntegrationFixture implement
                         .extracting(GeneralPostInfoResponse::createdAt)
                         .hasSize(3),
                 () -> assertThat(postFindingResponses)
-                        .extracting(generalPostInfoResponse -> generalPostInfoResponse.writer().nickName())
+                        .extracting(generalPostInfoResponse -> generalPostInfoResponse.writer().nickname())
                         .containsOnly("nickname", "nickname2"),
                 () -> assertThat(postFindingResponses)
                         .extracting(generalPostInfoResponse -> generalPostInfoResponse.reactionCount().viewCount())

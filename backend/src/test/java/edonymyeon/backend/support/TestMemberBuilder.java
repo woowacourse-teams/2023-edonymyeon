@@ -20,7 +20,7 @@ public class TestMemberBuilder {
 
     private static final String DEFAULT_PASSWORD = "password123!";
 
-    private static final String DEFAULT_NICK_NAME = "nickName";
+    private static final String DEFAULT_NICK_NAME = "nickname";
 
     private static int emailCount = 1;
 

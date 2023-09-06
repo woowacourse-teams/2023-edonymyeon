@@ -10,6 +10,8 @@
     <string name="all_writer_createdAt">%s | %s</string>
     <string name="all_delete">삭제</string>
     <string name="all_report">신고</string>
+    <string name="all_preparing_page">준비 중인 페이지입니다</string>
+    <string name="all_preparing_feature">준비 중인 기능입니다</string>
 
     <!-- login   -->
     <string name="login_title">로그인</string>
@@ -27,7 +29,6 @@
     <string name="bottom_navigation_category_title">카테고리</string>
     <string name="bottom_navigation_alarm_title">알림</string>
     <string name="bottom_navigation_my_page_title">마이 페이지</string>
-    <string name="all_preparing_page">준비중인 페이지입니다</string>
 
     <!-- home fragment   -->
     <string name="home_edonymyeon">이돈이면</string>

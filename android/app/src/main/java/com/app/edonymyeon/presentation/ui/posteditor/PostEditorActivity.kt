@@ -29,7 +29,6 @@ import com.app.edonymyeon.presentation.util.getParcelableExtraCompat
 import com.app.edonymyeon.presentation.util.makeSnackbar
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import com.domain.edonymyeon.model.PostEditor
-import com.google.android.material.snackbar.Snackbar
 import java.time.LocalDateTime
 
 class PostEditorActivity : AppCompatActivity() {
@@ -289,11 +288,7 @@ class PostEditorActivity : AppCompatActivity() {
 
     private fun checkImageCountLimit(count: Int, limitCount: Int): Boolean {
         if (count > limitCount) {
-            Snackbar.make(
-                binding.clPostEditor,
-                getString(R.string.post_editor_image_limit_message),
-                Snackbar.LENGTH_SHORT,
-            ).show()
+            binding.clPostEditor.makeSnackbar(getString(R.string.post_editor_image_limit_message))
             return false
         }
         return true

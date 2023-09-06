@@ -273,7 +273,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
                 fieldWithPath("content[].image").description("게시글 이미지 url"),
                 fieldWithPath("content[].content").description("게시글 내용"),
                 fieldWithPath("content[].createdAt").description("게시글 생성 날짜"),
-                fieldWithPath("content[].writer.nickName").description("닉네임"),
+                fieldWithPath("content[].writer.nickname").description("닉네임"),
                 fieldWithPath("content[].reactionCount.viewCount").description("조회수"),
                 fieldWithPath("content[].reactionCount.commentCount").description("댓글 수"),
                 fieldWithPath("last").description("현재 요청한 페이지가 마지막 페이지인지")
@@ -321,7 +321,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
                 fieldWithPath("content[].image").description("게시글 이미지 url"),
                 fieldWithPath("content[].content").description("게시글 내용"),
                 fieldWithPath("content[].createdAt").description("게시글 생성 날짜"),
-                fieldWithPath("content[].writer.nickName").description("닉네임"),
+                fieldWithPath("content[].writer.nickname").description("닉네임"),
                 fieldWithPath("content[].reactionCount.viewCount").description("조회수"),
                 fieldWithPath("content[].reactionCount.commentCount").description("댓글 수"),
                 fieldWithPath("last").description("현재 요청한 페이지가 마지막 페이지인지")
