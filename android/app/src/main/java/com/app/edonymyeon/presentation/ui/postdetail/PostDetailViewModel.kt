@@ -52,8 +52,9 @@ class PostDetailViewModel(
     val isLogin: Boolean
         get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
 
+    private val _isLoadingSuccess = MutableLiveData(false)
     val isLoadingSuccess: LiveData<Boolean>
-        get() = MutableLiveData(_isPostLoadingSuccess.value == true && _isCommentsLoadingSuccess.value == true)
+        get() = _isLoadingSuccess
 
     private val _isCommentSave = MutableLiveData(false)
     val isCommentSave: LiveData<Boolean>
@@ -75,6 +76,7 @@ class PostDetailViewModel(
                     _reactionCount.value = it.reactionCount.toUiModel()
                     _post.value = it.toUiModel()
                     _isPostLoadingSuccess.value = true
+                    checkLoadingSuccess()
                 }.onFailure {
                     it as CustomThrowable
                     _isPostLoadingSuccess.value = false
@@ -206,6 +208,7 @@ class PostDetailViewModel(
                 _reactionCount.value =
                     _reactionCount.value?.copy(commentCount = comments.commentCount)
                 _isCommentsLoadingSuccess.value = true
+                checkLoadingSuccess()
             }.onFailure {
                 _isCommentsLoadingSuccess.value = false
             }
@@ -241,5 +244,10 @@ class PostDetailViewModel(
 
     fun setCommentImage(image: Uri?) {
         _commentImage.value = image
+    }
+
+    private fun checkLoadingSuccess() {
+        _isLoadingSuccess.value =
+            _isPostLoadingSuccess.value == true && _isCommentsLoadingSuccess.value == true
     }
 }
