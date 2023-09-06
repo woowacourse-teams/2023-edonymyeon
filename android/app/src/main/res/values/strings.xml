@@ -8,6 +8,10 @@
     <string name="all_price_unit">원</string>
     <string name="all_required_login">로그인이 필요한 서비스입니다.</string>
     <string name="all_writer_createdAt">%s | %s</string>
+    <string name="all_delete">삭제</string>
+    <string name="all_report">신고</string>
+    <string name="all_preparing_page">준비 중인 페이지입니다</string>
+    <string name="all_preparing_feature">준비 중인 기능입니다</string>
 
     <!-- login   -->
     <string name="login_title">로그인</string>
@@ -25,7 +29,6 @@
     <string name="bottom_navigation_category_title">카테고리</string>
     <string name="bottom_navigation_alarm_title">알림</string>
     <string name="bottom_navigation_my_page_title">마이 페이지</string>
-    <string name="all_preparing_page">준비중인 페이지입니다</string>
 
     <!-- home fragment   -->
     <string name="home_edonymyeon">이돈이면</string>
@@ -35,10 +38,10 @@
 
     <!-- post detail -->
     <string name="post_detail_toolbar_menu_update">수정</string>
-    <string name="post_detail_toolbar_menu_delete">삭제</string>
-    <string name="post_detail_toolbar_menu_report">수정</string>
     <string name="post_detail_writer_cant_recommend">본인이 작성한 글은 추천할 수 없습니다.</string>
     <string name="post_detail_login_required">추천 기능은 회원만 이용할 수 있습니다.</string>
+    <string name="post_detail_input_comment">댓글을 입력하세요.</string>
+    <string name="post_detail_gallery_content_description">갤러리에 접근할 수 있는 버튼입니다.</string>
 
     <!-- post detail dialog -->
     <string name="post_detail_dialog_title">정말로 삭제하시겠습니까?</string>
@@ -51,7 +54,6 @@
     <string name="post_report_dialog_description">허위신고일 경우, 신고자의 서비스 활동이 제한 될 수 있으니 신중하게 신고해 주세요</string>
     <string name="post_report_dialog_input_reason">신고 사유를 입력하세요.</string>
     <string name="post_report_dialog_cancel">취소</string>
-    <string name="post_report_dialog_report">신고</string>
     <string name="post_report_dialog_report_profit">영리목적/홍보성</string>
     <string name="post_report_dialog_report_privacy">개인정보 노출</string>
     <string name="post_report_dialog_report_obscene">음란성/선정성</string>
@@ -149,6 +151,6 @@
     <!--alarm-->
     <string name="alarm_title">알림</string>
     <string name="alarm_period_explanation">최근 3개월 내  푸시 알림 내역입니다</string>
-
+    <string name="post_detail_comment_title">댓글</string>
 
 </resources>

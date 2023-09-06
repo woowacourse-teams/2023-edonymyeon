@@ -72,9 +72,12 @@ public class Comment extends TemporalRecord {
     }
 
     public void checkWriter(final Long memberId) {
-        // todo: 여우의 PR 반영해서 member 비교하는거 고치기
-        if (!member.getId().equals(memberId)) {
+        if (!member.hasId(memberId)) {
             throw new EdonymyeonException(COMMENT_MEMBER_NOT_SAME);
         }
+    }
+
+    public boolean isSameMember(final Long memberId) {
+        return this.member.hasId(memberId);
     }
 }

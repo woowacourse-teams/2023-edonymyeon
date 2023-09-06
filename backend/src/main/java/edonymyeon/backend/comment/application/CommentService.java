@@ -1,6 +1,8 @@
 package edonymyeon.backend.comment.application;
 
-import edonymyeon.backend.comment.application.dto.CommentRequest;
+import edonymyeon.backend.comment.application.dto.request.CommentRequest;
+import edonymyeon.backend.comment.application.dto.response.CommentDto;
+import edonymyeon.backend.comment.application.dto.response.CommentsResponse;
 import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.comment.repository.CommentRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
@@ -8,11 +10,14 @@ import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.commentimage.domain.CommentImageInfo;
 import edonymyeon.backend.image.commentimage.repository.CommentImageInfoRepository;
+import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +38,8 @@ public class CommentService {
 
     private final ImageFileUploader imageFileUploader;
 
+    private final Domain domain;
+
     @Transactional
     public long createComment(final MemberId memberId, final Long postId, final CommentRequest commentRequest) {
         final Post post = postRepository.findById(postId)
@@ -51,7 +58,7 @@ public class CommentService {
     }
 
     private CommentImageInfo extractCommentImageInfo(final MultipartFile image) {
-        if (image.isEmpty()) {
+        if (image == null || image.isEmpty()) {
             return null;
         }
         final CommentImageInfo commentImageInfo = CommentImageInfo.from(imageFileUploader.uploadFile(image));
@@ -65,5 +72,29 @@ public class CommentService {
                 .orElseThrow(() -> new EdonymyeonException(ExceptionInformation.COMMENT_ID_NOT_FOUND));
         comment.checkWriter(memberId.id());
         comment.delete();
+    }
+
+    public CommentsResponse findCommentsByPostId(final MemberId memberId, final Long postId) {
+        if(!postRepository.existsById(postId)) {
+            throw new EdonymyeonException(ExceptionInformation.POST_ID_NOT_FOUND);
+        }
+
+        final List<Comment> comments = commentRepository.findAllByPostId(postId);
+        List<CommentDto> commentDtos = new ArrayList<>();
+        for (Comment comment : comments) {
+            final boolean isWriter = comment.isSameMember(memberId.id());
+            final String imageUrl = convertToImageUrl(comment.getCommentImageInfo());
+            final CommentDto commentDto = CommentDto.of(isWriter, comment, imageUrl);
+            commentDtos.add(commentDto);
+        }
+        return new CommentsResponse(commentDtos.size(), commentDtos);
+    }
+
+    private String convertToImageUrl(final CommentImageInfo commentImageInfo) {
+        if(commentImageInfo == null){
+            return null;
+        }
+        final String imageFileName = commentImageInfo.getStoreName();
+        return domain.convertToImageUrl(imageFileName);
     }
 }
