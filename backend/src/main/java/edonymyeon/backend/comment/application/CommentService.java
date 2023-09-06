@@ -58,7 +58,7 @@ public class CommentService {
     }
 
     private CommentImageInfo extractCommentImageInfo(final MultipartFile image) {
-        if (image.isEmpty()) {
+        if (image == null || image.isEmpty()) {
             return null;
         }
         final CommentImageInfo commentImageInfo = CommentImageInfo.from(imageFileUploader.uploadFile(image));
