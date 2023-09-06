@@ -13,7 +13,6 @@ import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +20,7 @@ import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostEditorBinding
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
+import com.app.edonymyeon.presentation.common.activityutil.hideKeyboard
 import com.app.edonymyeon.presentation.common.dialog.LoadingDialog
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import com.app.edonymyeon.presentation.ui.posteditor.adapter.PostEditorImagesAdapter
@@ -302,12 +302,6 @@ class PostEditorActivity : AppCompatActivity() {
     private fun navigateToDetail() {
         startActivity(PostDetailActivity.newIntent(this, viewModel.postId.value ?: -1))
         finish()
-    }
-
-    private fun hideKeyboard() {
-        val imm: InputMethodManager =
-            getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
     }
 
     companion object {
