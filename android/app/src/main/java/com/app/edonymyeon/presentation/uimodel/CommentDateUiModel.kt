@@ -8,6 +8,6 @@ data class CommentDateUiModel(
 ) {
     override fun toString(): String {
         val localDateTime = Date(createdAt).localDateTime
-        return localDateTime.format(DateTimeFormatter.ofPattern("mm.dd h:m"))
+        return localDateTime.format(DateTimeFormatter.ofPattern("MM.dd HH:mm"))
     }
 }
