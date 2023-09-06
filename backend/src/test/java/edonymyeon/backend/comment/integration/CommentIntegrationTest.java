@@ -1,5 +1,8 @@
 package edonymyeon.backend.comment.integration;
 
+import static edonymyeon.backend.comment.integration.steps.CommentSteps.게시물에_대한_댓글을_모두_조회한다;
+import static edonymyeon.backend.comment.integration.steps.CommentSteps.댓글을_삭제한다;
+import static edonymyeon.backend.comment.integration.steps.CommentSteps.댓글을_생성한다;
 import static edonymyeon.backend.global.exception.ExceptionInformation.COMMENT_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.COMMENT_MEMBER_NOT_SAME;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
@@ -42,22 +45,6 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
         assertThat(댓글_생성_응답.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
 
-    public static ExtractableResponse<Response> 댓글을_생성한다(
-            final Long 게시글_id,
-            final File 이미지,
-            final String 내용,
-            final Member 사용자
-    ) {
-        return RestAssured.given()
-                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
-                .multiPart("image", 이미지)
-                .multiPart("comment", 내용)
-                .when()
-                .post("/posts/{postId}/comments", 게시글_id)
-                .then()
-                .extract();
-    }
-
     @Test
     void 이미지가_포함되지_않은_댓글을_작성한다() throws IOException {
         final Post 게시글 = postTestSupport.builder().build();
@@ -96,19 +83,6 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
         final ExtractableResponse<Response> 댓글_삭제_응답 = 댓글을_삭제한다(게시글.getId(), 댓글_id, 댓글_작성자);
 
         assertThat(댓글_삭제_응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
-    }
-
-    public static ExtractableResponse<Response> 댓글을_삭제한다(
-            final Long 게시글_id,
-            final Long 댓글_id,
-            final Member 사용자
-    ) {
-        return RestAssured.given()
-                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
-                .when()
-                .delete("/posts/{postId}/comments/{commentId}", 게시글_id, 댓글_id)
-                .then()
-                .extract();
     }
 
     @Test
@@ -234,18 +208,6 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
                             댓글_작성자.getNickname());
                 }
         );
-    }
-
-    public static ExtractableResponse<Response> 게시물에_대한_댓글을_모두_조회한다(
-            final Long 게시글_id,
-            final Member 사용자
-    ) {
-        return RestAssured.given()
-                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
-                .when()
-                .get("/posts/{postId}/comments", 게시글_id)
-                .then()
-                .extract();
     }
 
     @Test

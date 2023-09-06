@@ -1,11 +1,13 @@
 package edonymyeon.backend.post.integration;
 
+import static edonymyeon.backend.comment.integration.steps.CommentSteps.댓글을_삭제한다;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.CacheConfig;
 import edonymyeon.backend.cache.application.HotPostsRedisRepository;
 import edonymyeon.backend.cache.util.HotPostCachePolicy;
+import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.application.HotFindingCondition;
 import edonymyeon.backend.post.domain.Post;
@@ -49,6 +51,23 @@ public class PostCommentCountIntegrationTest extends IntegrationFixture {
         assertSoftly(softAssertions -> {
             assertThat(게시글_상세_조회_응답.statusCode()).isEqualTo(HttpStatus.OK.value());
             assertThat(게시글_상세_조회_응답.jsonPath().getInt("reactionCount.commentCount")).isEqualTo(commentCount);
+        });
+    }
+
+    @Test
+    void 상세_게시글_조회시_댓글수가_반영되어_조회된다_그런데_이제_삭제된_댓글수는_빼는것을_곁들인() {
+        final Member 사용자 = memberTestSupport.builder().build();
+        final Post 게시글 = postTestSupport.builder().build();
+        commentTestSupport.builder().post(게시글).build();
+        commentTestSupport.builder().post(게시글).build();
+        final Comment 삭제될_댓글 = commentTestSupport.builder().post(게시글).member(사용자).build();
+
+        댓글을_삭제한다(게시글.getId(), 삭제될_댓글.getId(), 사용자);
+        final ExtractableResponse<Response> 게시글_상세_조회_응답 = 게시글_하나를_상세_조회한다(사용자, 게시글.getId());
+
+        assertSoftly(softAssertions -> {
+            assertThat(게시글_상세_조회_응답.statusCode()).isEqualTo(HttpStatus.OK.value());
+            assertThat(게시글_상세_조회_응답.jsonPath().getInt("reactionCount.commentCount")).isEqualTo(2);
         });
     }
 
