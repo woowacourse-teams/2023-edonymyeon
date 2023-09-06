@@ -24,6 +24,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ScrollView
+            android:id="@+id/sv_post_detail"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/gray_f5f5f5"
@@ -369,7 +370,7 @@
                         android:id="@+id/space_comment_title_bottom"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="H, 360:8"
+                        app:layout_constraintDimensionRatio="H, 360:20"
                         app:layout_constraintTop_toBottomOf="@id/tv_comment_title" />
 
                     <androidx.recyclerview.widget.RecyclerView

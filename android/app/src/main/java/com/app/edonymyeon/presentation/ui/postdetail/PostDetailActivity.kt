@@ -2,6 +2,7 @@ package com.app.edonymyeon.presentation.ui.postdetail
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.Menu
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +27,7 @@ import com.app.edonymyeon.data.datasource.report.ReportRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.data.repository.RecommendRepositoryImpl
 import com.app.edonymyeon.data.repository.ReportRepositoryImpl
+import com.app.edonymyeon.presentation.common.activityutil.hideKeyboard
 import com.app.edonymyeon.presentation.common.dialog.LoadingDialog
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
 import com.app.edonymyeon.presentation.ui.post.PostActivity
@@ -225,8 +228,7 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
 
         viewModel.isCommentSave.observe(this) { isSave ->
             if (isSave) {
-                viewModel.postComment(
-                    this,
+                saveComment(
                     id,
                     viewModel.commentImage.value,
                     includeBinding.etComment.text.toString(),
@@ -266,6 +268,13 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
             includeBinding.clGalleryImage.visibility = View.GONE
             viewModel.setCommentImage(null)
         }
+    }
+
+    private fun saveComment(id: Long, image: Uri?, comment: String) {
+        viewModel.postComment(this, id, image, comment)
+        includeBinding.etComment.setText("")
+        hideKeyboard()
+        binding.svPostDetail.fullScroll(ScrollView.FOCUS_DOWN)
     }
 
     private fun navigateToGallery() {
