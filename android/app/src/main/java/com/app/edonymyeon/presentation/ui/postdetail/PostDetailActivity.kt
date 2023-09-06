@@ -94,6 +94,7 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
         initAppbar()
         setViewLogin()
         getPost()
+        setCommentsAdapter()
         setObserver()
         setListener()
         setRecommendationCheckedListener()
@@ -187,6 +188,10 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
     private fun getPost() {
         viewModel.getPostDetail(id)
         viewModel.getComments(id)
+    }
+
+    private fun setCommentsAdapter() {
+        binding.rvComment.adapter = adapter
     }
 
     private fun setObserver() {
