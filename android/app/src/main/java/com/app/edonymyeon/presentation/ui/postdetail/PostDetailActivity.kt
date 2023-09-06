@@ -275,7 +275,8 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
         viewModel.postComment(this, id, image, comment)
         includeBinding.etComment.setText("")
         hideKeyboard()
-        binding.svPostDetail.fullScroll(ScrollView.FOCUS_DOWN)
+        includeBinding.clGalleryImage.isVisible = false
+        viewModel.setCommentImage(null)
     }
 
     private fun navigateToGallery() {
