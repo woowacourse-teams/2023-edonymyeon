@@ -1,47 +1,52 @@
 package edonymyeon.backend.setting.domain;
 
-import jakarta.persistence.Embeddable;
+import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.global.exception.ExceptionInformation;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import java.util.Arrays;
 import java.util.Objects;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Embeddable
-public class SettingType {
+public enum SettingType {
     /**
      * 좋아요/싫어요 건별 알림 수신
      */
-    public static final SettingType NOTIFICATION_PER_THUMBS = new SettingType("1003", SettingTypeCategory.THUMB, Weight.FIVE);
+    NOTIFICATION_PER_THUMBS("1003", SettingTypeCategory.THUMB, Weight.FIVE),
     /**
      * 좋아요/싫어요 10개당 알림 수신
      */
-    public static final SettingType NOTIFICATION_PER_10_THUMBS = new SettingType("1002", SettingTypeCategory.THUMB, Weight.FIVE);
+    NOTIFICATION_PER_10_THUMBS("1002", SettingTypeCategory.THUMB, Weight.FIVE),
     /**
      * 자신의 글에 댓글을 남겼을 때 알림 수신
      */
-    public static final SettingType NOTIFICATION_PER_COMMENT = new SettingType("2001", SettingTypeCategory.COMMENT, Weight.FIVE);
+    NOTIFICATION_PER_COMMENT("2001", SettingTypeCategory.COMMENT, Weight.FIVE),
     /**
      * 특정 시간마다 소비 확정해야 한다는 알림 수신
      */
-    public static final SettingType NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING = new SettingType("5001", SettingTypeCategory.REMINDING, Weight.FIVE);
+    NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING("5001", SettingTypeCategory.REMINDING, Weight.FIVE),
     /**
      * 푸시 알림 수신
      */
-    public static final SettingType NOTIFICATION = new SettingType("0001", SettingTypeCategory.ALL, Weight.TEN);
+    NOTIFICATION("0001", SettingTypeCategory.ALL, Weight.TEN);
 
-    private String serialNumber;
+    private final String serialNumber;
 
     @Enumerated(EnumType.STRING)
-    private SettingTypeCategory category;
+    private final SettingTypeCategory category;
 
-    private int weight;
+    private final int weight;
 
-    private SettingType(final String serialNumber, final SettingTypeCategory category, final Weight weight) {
+    SettingType(final String serialNumber, final SettingTypeCategory category, final Weight weight) {
         this.serialNumber = serialNumber;
         this.category = category;
         this.weight = weight.getValue();
+    }
+
+    public static SettingType from(final String settingSerialNumber) {
+        return Arrays.stream(values())
+                .filter(settingType -> Objects.equals(settingType.serialNumber, settingSerialNumber))
+                .findAny()
+                .orElseThrow(() -> new EdonymyeonException(ExceptionInformation.MEMBER_SETTING_SERIAL_NOT_FOUNT));
     }
 
     public boolean isSameCategoryWith(final SettingType settingType) {
@@ -50,10 +55,6 @@ public class SettingType {
 
     public boolean hasLowerWeightThan(final SettingType settingType) {
         return this.weight < settingType.weight;
-    }
-
-    public boolean hasHighestWeight() {
-        return Objects.equals(this.weight, Weight.TEN.getValue());
     }
 
     public boolean hasSameWeight(final SettingType settingType) {

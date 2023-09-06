@@ -47,7 +47,7 @@ public class SettingService {
 
     public void toggleSetting(final String settingSerialNumber, final MemberId memberId) {
         final Member member = findMemberById(memberId);
-        final Setting setting = settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), settingSerialNumber);
+        final Setting setting = settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.from(settingSerialNumber));
 
         setting.ifActive(() -> deactivateSetting(member, setting));
         setting.ifInactive(() -> activateSetting(member, setting));

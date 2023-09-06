@@ -3,6 +3,8 @@ package edonymyeon.backend.setting.domain;
 import edonymyeon.backend.member.domain.Member;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,7 +21,7 @@ public class Setting {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Embedded
+    @Enumerated(EnumType.STRING)
     private SettingType settingType;
 
     private boolean isActive;
@@ -51,10 +53,6 @@ public class Setting {
 
     public boolean hasLowerWeightThan(final Setting setting) {
         return settingType.hasLowerWeightThan(setting.settingType);
-    }
-
-    public boolean hasHighestWeight() {
-        return settingType.hasHighestWeight();
     }
 
     public boolean hasSameWeight(final Setting setting) {

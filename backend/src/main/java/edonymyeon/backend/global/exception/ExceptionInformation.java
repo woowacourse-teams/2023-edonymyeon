@@ -40,6 +40,7 @@ public enum ExceptionInformation {
     MEMBER_NICKNAME_DUPLICATE(3005, "이미 존재하는 닉네임입니다."),
     MEMBER_IS_DELETED(3006, "삭제된 회원입니다."),
     MEMBER_SETTING_NOT_INITIALIZED(3007, "회원 설정 정보가 정상적으로 초기화되지 않았습니다."),
+    MEMBER_SETTING_SERIAL_NOT_FOUNT(3010, "존재하지 않는 회원 설정입니다."),
 
     // 4___: 추천 관련
     THUMBS_UP_ALREADY_EXIST(4000, "이미 추천된 게시글 입니다."),

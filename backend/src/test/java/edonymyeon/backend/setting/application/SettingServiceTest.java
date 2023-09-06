@@ -10,6 +10,7 @@ import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.setting.domain.Setting;
+import edonymyeon.backend.setting.domain.SettingType;
 import edonymyeon.backend.support.IntegrationFixture;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -60,16 +61,16 @@ class SettingServiceTest extends IntegrationFixture {
 
         settingService.toggleSetting("1002", new ActiveMemberId(member.getId()));
 
-        assertThat(settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), "1002")
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
                 .isActive()).isTrue();
-        assertThat(settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), "1003")
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_THUMBS)
                 .isActive()).isFalse();
 
         settingService.toggleSetting("1003", new ActiveMemberId(member.getId()));
 
-        assertThat(settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), "1002")
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
                 .isActive()).isFalse();
-        assertThat(settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), "1003")
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_THUMBS)
                 .isActive()).isTrue();
     }
 
@@ -79,12 +80,12 @@ class SettingServiceTest extends IntegrationFixture {
 
         settingService.toggleSetting("1002", new ActiveMemberId(member.getId()));
 
-        assertThat(settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), "1002")
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
                 .isActive()).isTrue();
 
         settingService.toggleSetting("0001", new ActiveMemberId(member.getId()));
 
-        assertThat(settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), "1002")
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
                 .isActive()).isFalse();
     }
 
@@ -96,7 +97,7 @@ class SettingServiceTest extends IntegrationFixture {
 
         settingService.toggleSetting("5001", new ActiveMemberId(member.getId()));
 
-        assertThat(settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), "1002")
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
                 .isActive()).isTrue();
     }
 
@@ -106,7 +107,7 @@ class SettingServiceTest extends IntegrationFixture {
 
         settingService.toggleSetting("5001", new ActiveMemberId(member.getId()));
 
-        assertThat(settingRepository.findByMemberIdAndSettingType_SerialNumber(member.getId(), "0001")
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION)
                 .isActive()).isTrue();
     }
 
