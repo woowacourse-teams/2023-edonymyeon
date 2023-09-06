@@ -1,5 +1,5 @@
 package edonymyeon.backend.post.application.dto;
 
-public record WriterResponse(String nickName) {
+public record WriterResponse(String nickname) {
 
 }
