@@ -237,6 +237,14 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
         viewModel.comments.observe(this) {
             adapter.setComments(it)
         }
+
+        viewModel.isCommentLoadingSuccess.observe(this) {
+            if (it && viewModel.isCommentSaveSuccess.value == true) {
+                binding.svPostDetail.post {
+                    binding.svPostDetail.fullScroll(ScrollView.FOCUS_DOWN)
+                }
+            }
+        }
     }
 
     private fun setListener() {

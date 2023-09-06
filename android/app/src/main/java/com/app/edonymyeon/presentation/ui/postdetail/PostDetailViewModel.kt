@@ -64,8 +64,15 @@ class PostDetailViewModel(
     val commentImage: LiveData<Uri?>
         get() = _commentImage
 
-    private val _isPostLoadingSuccess = MutableLiveData(false)
     private val _isCommentsLoadingSuccess = MutableLiveData(false)
+    val isCommentLoadingSuccess: LiveData<Boolean>
+        get() = _isCommentsLoadingSuccess
+
+    private val _isPostLoadingSuccess = MutableLiveData(false)
+
+    private val _isCommentSaveSuccess = MutableLiveData(false)
+    val isCommentSaveSuccess: LiveData<Boolean>
+        get() = _isCommentSaveSuccess
 
     fun getPostDetail(postId: Long) {
         viewModelScope.launch {
@@ -223,6 +230,9 @@ class PostDetailViewModel(
                 content,
             ).onSuccess {
                 getComments(postId)
+                _isCommentSaveSuccess.value = true
+            }.onFailure {
+                _isCommentSaveSuccess.value = false
             }
         }
     }
