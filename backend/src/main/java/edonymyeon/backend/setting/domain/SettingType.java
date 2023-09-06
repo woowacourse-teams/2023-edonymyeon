@@ -25,11 +25,11 @@ public class SettingType {
     /**
      * 자신의 글에 댓글을 남겼을 때 알림 수신
      */
-    public static final SettingType NOTIFICATION_PER_COMMENT = new SettingType("2001", Category.COMMENT, Weight.FIVE);
+    public static final SettingType NOTIFICATION_PER_COMMENT = new SettingType("2001", Category.COMMENT, Weight.TEN);
     /**
      * 특정 시간마다 소비 확정해야 한다는 알림 수신
      */
-    public static final SettingType NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING = new SettingType("5001", Category.COMMENT, Weight.FIVE);
+    public static final SettingType NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING = new SettingType("5001", Category.REMINDING, Weight.FIVE);
     /**
      * 푸시 알림 수신
      */
