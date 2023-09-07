@@ -9,4 +9,4 @@ create table setting (
                          primary key (id)
 );
 
-alter table setting add foreign key (member_id) references member (id);
+alter table setting add constraint fk_setting_member_id foreign key (member_id) references member (id);
