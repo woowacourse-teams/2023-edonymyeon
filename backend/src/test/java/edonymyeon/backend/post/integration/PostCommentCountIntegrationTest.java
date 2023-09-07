@@ -126,17 +126,17 @@ public class PostCommentCountIntegrationTest extends IntegrationFixture {
 
         assertSoftly(softly -> {
                     softly.assertThat(jsonPath.getList("content").size()).isEqualTo(5);
-                    softly.assertThat(jsonPath.getLong("content[0].id")).isEqualTo(post1.getId());
-                    softly.assertThat(jsonPath.getLong("content[1].id")).isEqualTo(post2.getId());
+                    softly.assertThat(jsonPath.getLong("content[0].id")).isEqualTo(post5.getId());
+                    softly.assertThat(jsonPath.getLong("content[1].id")).isEqualTo(post4.getId());
                     softly.assertThat(jsonPath.getLong("content[2].id")).isEqualTo(post3.getId());
-                    softly.assertThat(jsonPath.getLong("content[3].id")).isEqualTo(post4.getId());
-                    softly.assertThat(jsonPath.getLong("content[4].id")).isEqualTo(post5.getId());
+                    softly.assertThat(jsonPath.getLong("content[3].id")).isEqualTo(post2.getId());
+                    softly.assertThat(jsonPath.getLong("content[4].id")).isEqualTo(post1.getId());
 
-                    softly.assertThat(jsonPath.getLong("content[0].reactionCount.commentCount")).isEqualTo(1);
-                    softly.assertThat(jsonPath.getLong("content[1].reactionCount.commentCount")).isEqualTo(2);
+                    softly.assertThat(jsonPath.getLong("content[0].reactionCount.commentCount")).isEqualTo(5);
+                    softly.assertThat(jsonPath.getLong("content[1].reactionCount.commentCount")).isEqualTo(4);
                     softly.assertThat(jsonPath.getLong("content[2].reactionCount.commentCount")).isEqualTo(3);
-                    softly.assertThat(jsonPath.getLong("content[3].reactionCount.commentCount")).isEqualTo(4);
-                    softly.assertThat(jsonPath.getLong("content[4].reactionCount.commentCount")).isEqualTo(5);
+                    softly.assertThat(jsonPath.getLong("content[3].reactionCount.commentCount")).isEqualTo(2);
+                    softly.assertThat(jsonPath.getLong("content[4].reactionCount.commentCount")).isEqualTo(1);
                 }
         );
     }
