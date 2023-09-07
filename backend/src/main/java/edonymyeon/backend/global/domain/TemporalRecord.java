@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public abstract class TemporalRecord {
 
     @CreatedDate
-    @Column(updatable = false, name = "createdAt")
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
