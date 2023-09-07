@@ -12,8 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import static edonymyeon.backend.report.domain.ReportType.COMMENT;
-import static edonymyeon.backend.report.domain.ReportType.POST;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("NonAsciiCharacters")
@@ -25,7 +23,7 @@ class ReportIntegrationTest extends IntegrationFixture implements ImageFileClean
         final ExtractableResponse<Response> post = 게시글을_하나_만든다(member);
         final long postId = 응답의_location헤더에서_id를_추출한다(post);
 
-        final ReportRequest reportRequest = new ReportRequest(POST, postId, 4, null);
+        final ReportRequest reportRequest = new ReportRequest("POST", postId, 4, null);
 
         final ExtractableResponse<Response> 게시글_신고_응답 = RestAssured
                 .given()
@@ -46,7 +44,7 @@ class ReportIntegrationTest extends IntegrationFixture implements ImageFileClean
         final Member member = 사용자를_하나_만든다();
         final Comment 댓글 = commentTestSupport.builder().build();
 
-        final ReportRequest reportRequest = new ReportRequest(COMMENT, 댓글.getId(), 4, null);
+        final ReportRequest reportRequest = new ReportRequest("COMMENT", 댓글.getId(), 4, null);
 
         final ExtractableResponse<Response> 댓글_신고_응답 = RestAssured
                 .given()
@@ -68,7 +66,7 @@ class ReportIntegrationTest extends IntegrationFixture implements ImageFileClean
         final ExtractableResponse<Response> post = 게시글을_하나_만든다(member);
         final long postId = 응답의_location헤더에서_id를_추출한다(post);
 
-        final ReportRequest reportRequest = new ReportRequest(POST, postId, 4, null);
+        final ReportRequest reportRequest = new ReportRequest("POST", postId, 4, null);
 
         final ExtractableResponse<Response> 게시글_신고_응답 = RestAssured
                 .given()

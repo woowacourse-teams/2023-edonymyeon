@@ -5,7 +5,6 @@ import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.report.domain.Report;
-import edonymyeon.backend.report.domain.ReportType;
 import edonymyeon.backend.support.CommentTestSupport;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.PostTestSupport;
@@ -38,7 +37,7 @@ class ReportServiceTest {
         final Post post = postTestSupport.builder().build();
         final Long reportId = reportService
                 .report(
-                        new ReportRequest(ReportType.POST, post.getId(), 4, null),
+                        new ReportRequest("POST", post.getId(), 4, null),
                         new ActiveMemberId(memberTestSupport.builder().build().getId())
                 );
 
@@ -50,7 +49,7 @@ class ReportServiceTest {
     void 존재하지_않는_게시글은_신고할_수_없다() {
         assertThatThrownBy(() -> reportService
                 .report(
-                        new ReportRequest(ReportType.POST, -2L, 4, ""),
+                        new ReportRequest("POST", -2L, 4, ""),
                         new ActiveMemberId(memberTestSupport.builder().build().getId()))
         )
                 .isInstanceOf(EdonymyeonException.class)
@@ -62,7 +61,7 @@ class ReportServiceTest {
         final Comment comment = commentTestSupport.builder().build();
         final Long reportId = reportService
                 .report(
-                        new ReportRequest(ReportType.COMMENT, comment.getId(), 4, null),
+                        new ReportRequest("COMMENT", comment.getId(), 4, null),
                         new ActiveMemberId(memberTestSupport.builder().build().getId())
                 );
 
@@ -74,7 +73,7 @@ class ReportServiceTest {
     void 존재하지_않는_댓글은_신고할_수_없다() {
         assertThatThrownBy(() -> reportService
                 .report(
-                        new ReportRequest(ReportType.COMMENT, -2L, 4, ""),
+                        new ReportRequest("COMMENT", -2L, 4, ""),
                         new ActiveMemberId(memberTestSupport.builder().build().getId()))
         )
                 .isInstanceOf(EdonymyeonException.class)

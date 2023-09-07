@@ -90,7 +90,7 @@ public class ReportDocsTest implements ImageFileCleaner {
         게시글_레포지토리를_모킹한다(게시글);
         신고_서비스를_모킹한다(new Report(POST, 게시글.getId(), 글쓴이, AbusingType.OBSCENITY, ""));
 
-        final ReportRequest reportRequest = new ReportRequest(POST, 게시글.getId(), AbusingType.OBSCENITY.getTypeCode(), "");
+        final ReportRequest reportRequest = new ReportRequest("POST", 게시글.getId(), AbusingType.OBSCENITY.getTypeCode(), "");
 
         final var 게시글_상세_조회_요청 = post("/report")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
