@@ -13,9 +13,9 @@ import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.post.application.dto.PostModificationRequest;
-import edonymyeon.backend.post.application.dto.PostRequest;
-import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.post.application.dto.request.PostModificationRequest;
+import edonymyeon.backend.post.application.dto.request.PostRequest;
+import edonymyeon.backend.post.application.dto.response.PostIdResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.thumbs.application.event.PostDeletionEvent;
@@ -48,7 +48,7 @@ public class PostService {
     private final Domain domain;
 
     @Transactional
-    public PostResponse createPost(final MemberId memberId, final PostRequest postRequest) {
+    public PostIdResponse createPost(final MemberId memberId, final PostRequest postRequest) {
         final Member member = findMemberById(memberId);
 
         final Post post = new Post(
@@ -60,7 +60,7 @@ public class PostService {
         postRepository.save(post);
 
         if (isImagesEmpty(postRequest.newImages())) {
-            return new PostResponse(post.getId());
+            return new PostIdResponse(post.getId());
         }
         post.validateImageAdditionCount(postRequest.newImages().size());
 
@@ -69,7 +69,7 @@ public class PostService {
         post.updateImages(postImageInfos);
         postImageInfoRepository.saveAll(postImageInfos.getPostImageInfos());
 
-        return new PostResponse(post.getId());
+        return new PostIdResponse(post.getId());
     }
 
     private Member findMemberById(final MemberId memberId) {
@@ -119,7 +119,7 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponse updatePost(
+    public PostIdResponse updatePost(
             final MemberId memberId,
             final Long postId,
             final PostModificationRequest request
@@ -139,13 +139,13 @@ public class PostService {
 
         if (isImagesEmpty(request.newImages())) {
             copyOfDeletedImagesOfPost.forEach(imageFileUploader::removeFile);
-            return new PostResponse(postId);
+            return new PostIdResponse(postId);
         }
 
         post.validateImageAdditionCount(request.newImages().size());
         updateImagesOfPost(request, post);
         deletedImagesOfPost.forEach(imageFileUploader::removeFile);
-        return new PostResponse(postId);
+        return new PostIdResponse(postId);
     }
 
     private List<String> convertUrlToStoreName(final List<String> originalImageUrls) {

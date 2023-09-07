@@ -9,10 +9,10 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.PostThumbsService;
-import edonymyeon.backend.post.application.dto.AllThumbsInPostResponse;
-import edonymyeon.backend.post.application.dto.PostRequest;
-import edonymyeon.backend.post.application.dto.PostResponse;
-import edonymyeon.backend.post.application.dto.ThumbsStatusInPostResponse;
+import edonymyeon.backend.post.application.dto.response.AllThumbsInPostResponse;
+import edonymyeon.backend.post.application.dto.request.PostRequest;
+import edonymyeon.backend.post.application.dto.response.PostIdResponse;
+import edonymyeon.backend.post.application.dto.response.ThumbsStatusInPostResponse;
 import edonymyeon.backend.support.IntegrationFixture;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +32,7 @@ public class ThumbsInPostServiceTest extends IntegrationFixture {
 
     private Member otherMember;
 
-    private PostResponse postResponse;
+    private PostIdResponse postIdResponse;
 
     @BeforeEach
     public void 사전작업() {
@@ -50,12 +50,12 @@ public class ThumbsInPostServiceTest extends IntegrationFixture {
                 null
         );
         MemberId memberId = new ActiveMemberId(postWriter.getId());
-        postResponse = postService.createPost(memberId, postRequest);
+        postIdResponse = postService.createPost(memberId, postRequest);
     }
 
     @Test
     void 해당_게시글에_추천이_없을시에도_정상_동작한다() {
-        AllThumbsInPostResponse allThumbsInPostResponse = postThumbsService.findAllThumbsInPost(postResponse.id());
+        AllThumbsInPostResponse allThumbsInPostResponse = postThumbsService.findAllThumbsInPost(postIdResponse.id());
 
         assertSoftly(softly -> {
                     softly.assertThat(allThumbsInPostResponse.thumbsUpCount()).isEqualTo(0);
@@ -68,11 +68,11 @@ public class ThumbsInPostServiceTest extends IntegrationFixture {
     void 해당_게시글에_추천과_비추천_수를_읽어온다() {
         // given
         Member otherMember2 = registerMember();
-        thumbsUp(otherMember, postResponse);
-        thumbsUp(otherMember2, postResponse);
+        thumbsUp(otherMember, postIdResponse);
+        thumbsUp(otherMember2, postIdResponse);
 
         // when
-        AllThumbsInPostResponse allThumbsInPostResponse = postThumbsService.findAllThumbsInPost(postResponse.id());
+        AllThumbsInPostResponse allThumbsInPostResponse = postThumbsService.findAllThumbsInPost(postIdResponse.id());
 
         // then
         assertSoftly(softly -> {
@@ -88,12 +88,12 @@ public class ThumbsInPostServiceTest extends IntegrationFixture {
         Member otherMember2 = registerMember();
         Member otherMember3 = registerMember();
 
-        thumbsUp(otherMember, postResponse);
-        thumbsUp(otherMember2, postResponse);
-        thumbsDown(otherMember3, postResponse);
+        thumbsUp(otherMember, postIdResponse);
+        thumbsUp(otherMember2, postIdResponse);
+        thumbsDown(otherMember3, postIdResponse);
 
         // when
-        AllThumbsInPostResponse allThumbsInPostResponse = postThumbsService.findAllThumbsInPost(postResponse.id());
+        AllThumbsInPostResponse allThumbsInPostResponse = postThumbsService.findAllThumbsInPost(postIdResponse.id());
 
         // then
         assertSoftly(softly -> {
@@ -106,12 +106,12 @@ public class ThumbsInPostServiceTest extends IntegrationFixture {
     @Test
     void 로그인_하지_않으면_추천과_비추천_여부가_모두_false_이다() {
         // given
-        thumbsUp(otherMember, postResponse);
+        thumbsUp(otherMember, postIdResponse);
 
         // when
         MemberId emptyId = new ActiveMemberId(AnonymousMemberId.ANONYMOUS_MEMBER_ID);
         ThumbsStatusInPostResponse thumbsStatusInPostResponse = postThumbsService.findThumbsStatusInPost(emptyId,
-                postResponse.id());
+                postIdResponse.id());
 
         // then
         assertSoftly(softly -> {
@@ -124,12 +124,12 @@ public class ThumbsInPostServiceTest extends IntegrationFixture {
     @Test
     void 해당_게시글을_추천했을때_추천여부만_True_이다() {
         // given
-        thumbsUp(otherMember, postResponse);
+        thumbsUp(otherMember, postIdResponse);
 
         // when
         MemberId otherMemberId = new ActiveMemberId(otherMember.getId());
         ThumbsStatusInPostResponse thumbsStatusInPostResponse = postThumbsService.findThumbsStatusInPost(otherMemberId,
-                postResponse.id());
+                postIdResponse.id());
 
         // then
         assertSoftly(softly -> {
@@ -146,7 +146,7 @@ public class ThumbsInPostServiceTest extends IntegrationFixture {
 
         // when
         ThumbsStatusInPostResponse thumbsStatusInPostResponse = postThumbsService.findThumbsStatusInPost(otherMemberId,
-                postResponse.id());
+                postIdResponse.id());
 
         // then
         assertSoftly(softly -> {
@@ -159,12 +159,12 @@ public class ThumbsInPostServiceTest extends IntegrationFixture {
     @Test
     void 해당_게시글을_비추천했을때_비추천여부만_True_이다() {
         // given
-        thumbsDown(otherMember, postResponse);
+        thumbsDown(otherMember, postIdResponse);
 
         // when
         MemberId otherMemberId = new ActiveMemberId(otherMember.getId());
         ThumbsStatusInPostResponse thumbsStatusInPostResponse = postThumbsService.findThumbsStatusInPost(otherMemberId,
-                postResponse.id());
+                postIdResponse.id());
 
         // then
         assertSoftly(softly -> {
@@ -174,12 +174,12 @@ public class ThumbsInPostServiceTest extends IntegrationFixture {
         );
     }
 
-    private void thumbsUp(final Member member, final PostResponse post) {
+    private void thumbsUp(final Member member, final PostIdResponse post) {
         MemberId memberId = new ActiveMemberId(member.getId());
         thumbsService.thumbsUp(memberId, post.id());
     }
 
-    private void thumbsDown(final Member member, final PostResponse post) {
+    private void thumbsDown(final Member member, final PostIdResponse post) {
         MemberId memberId = new ActiveMemberId(member.getId());
         thumbsService.thumbsDown(memberId, post.id());
     }

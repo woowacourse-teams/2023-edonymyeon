@@ -8,8 +8,8 @@ import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.PostService;
-import edonymyeon.backend.post.application.dto.PostRequest;
-import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.post.application.dto.request.PostRequest;
+import edonymyeon.backend.post.application.dto.response.PostIdResponse;
 import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -54,9 +54,9 @@ public class ThumbsIntegrationTest extends IntegrationFixture {
         otherMember = registerMember();
 
         PostRequest postRequest = new PostRequest("title", "content", 1000L, null);
-        PostResponse postResponse = postService.createPost(new ActiveMemberId(postWriter.getId()), postRequest);
+        PostIdResponse postIdResponse = postService.createPost(new ActiveMemberId(postWriter.getId()), postRequest);
 
-        postId = postResponse.id();
+        postId = postIdResponse.id();
     }
 
     @Test

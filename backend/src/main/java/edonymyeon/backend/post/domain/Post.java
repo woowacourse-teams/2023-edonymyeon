@@ -28,6 +28,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.Formula;
 
 @Getter
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
@@ -65,6 +66,9 @@ public class Post extends TemporalRecord {
 
     @ColumnDefault("0")
     private int viewCount;
+
+    @Formula("(select count(c.id) from comment c where c.post_id = id and c.deleted = false)")
+    private int commentCount;
 
     public Post(
             final Long id,
