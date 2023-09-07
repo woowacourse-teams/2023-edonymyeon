@@ -1,8 +1,6 @@
 package edonymyeon.backend.post.docs;
 
 import edonymyeon.backend.CacheConfig;
-import edonymyeon.backend.support.TestMemberBuilder;
-import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
@@ -16,6 +14,8 @@ import edonymyeon.backend.post.application.dto.AllThumbsInPostResponse;
 import edonymyeon.backend.post.application.dto.ThumbsStatusInPostResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.support.IntegrationTest;
+import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.thumbs.application.PostThumbsServiceImpl;
 import jakarta.servlet.http.Part;
 import lombok.RequiredArgsConstructor;
@@ -100,7 +100,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     }
 
     private void 핫_게시글_조회를_모킹한다(final Post 게시글) {
-        when(postRepository.findHotPosts(any(LocalDateTime.class), anyInt(), anyInt(), any()))
+        when(postRepository.findHotPosts(any(LocalDateTime.class), anyInt(), anyInt(), anyInt(), any()))
                 .thenReturn(new SliceImpl<>(List.of(게시글)));
         when(postRepository.findByIds(anyList()))
                 .thenReturn(List.of(게시글));
