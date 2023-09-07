@@ -56,6 +56,36 @@ class SettingServiceTest extends IntegrationFixture {
     }
 
     @Test
+    void 설정을_껐다가_켤_수_있다() {
+        final Member member = 회원을_저장하고_기본설정을_부여한다();
+
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber(), new ActiveMemberId(member.getId()));
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
+                .isActive()).isTrue();
+
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber(), new ActiveMemberId(member.getId()));
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
+                .isActive()).isFalse();
+    }
+
+    @Test
+    void 전략에_따라_어떤_알림이_켜지면_어떤_알림은_꺼지기도_한다() {
+        final Member member = 회원을_저장하고_기본설정을_부여한다();
+
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber(), new ActiveMemberId(member.getId()));
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
+                .isActive()).isTrue();
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_THUMBS)
+                .isActive()).isFalse();
+
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_THUMBS.getSerialNumber(), new ActiveMemberId(member.getId()));
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
+                .isActive()).isFalse();
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_THUMBS)
+                .isActive()).isTrue();
+    }
+
+    @Test
     void 동일한_가중치의_설정이_enabled되면_동일한_가중치인_설정은_모두_disabled() {
         final Member member = 회원을_저장하고_기본설정을_부여한다();
 

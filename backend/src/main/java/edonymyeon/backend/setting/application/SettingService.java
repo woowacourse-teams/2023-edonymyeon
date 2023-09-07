@@ -49,8 +49,11 @@ public class SettingService {
         final Member member = findMemberById(memberId);
         final Setting setting = settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.from(settingSerialNumber));
 
+        if (!setting.isActive()) {
+            activateSetting(member, setting);
+            return;
+        }
         setting.ifActive(() -> deactivateSetting(member, setting));
-        setting.ifInactive(() -> activateSetting(member, setting));
     }
 
     private Member findMemberById(final MemberId memberId) {
