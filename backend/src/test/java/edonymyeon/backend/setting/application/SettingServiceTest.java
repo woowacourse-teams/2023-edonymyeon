@@ -11,6 +11,7 @@ import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.setting.domain.Setting;
 import edonymyeon.backend.setting.domain.SettingType;
+import edonymyeon.backend.setting.repository.SettingRepository;
 import edonymyeon.backend.support.IntegrationFixture;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

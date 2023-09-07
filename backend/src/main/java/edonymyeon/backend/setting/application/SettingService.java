@@ -10,6 +10,7 @@ import edonymyeon.backend.setting.application.deactivationmanager.DeactivationMa
 import edonymyeon.backend.setting.application.dto.SettingsResponse;
 import edonymyeon.backend.setting.domain.Setting;
 import edonymyeon.backend.setting.domain.SettingType;
+import edonymyeon.backend.setting.repository.SettingRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

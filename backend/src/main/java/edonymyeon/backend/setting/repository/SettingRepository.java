@@ -1,4 +1,4 @@
-package edonymyeon.backend.setting.application;
+package edonymyeon.backend.setting.repository;
 
 import edonymyeon.backend.setting.domain.Setting;
 import edonymyeon.backend.setting.domain.SettingType;
