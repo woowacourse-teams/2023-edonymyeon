@@ -1,8 +1,6 @@
 package edonymyeon.backend.post.docs;
 
 import edonymyeon.backend.CacheConfig;
-import edonymyeon.backend.support.TestMemberBuilder;
-import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
@@ -12,10 +10,12 @@ import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.HotFindingCondition;
-import edonymyeon.backend.post.application.dto.AllThumbsInPostResponse;
-import edonymyeon.backend.post.application.dto.ThumbsStatusInPostResponse;
+import edonymyeon.backend.post.application.dto.response.AllThumbsInPostResponse;
+import edonymyeon.backend.post.application.dto.response.ThumbsStatusInPostResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.support.IntegrationTest;
+import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.thumbs.application.PostThumbsServiceImpl;
 import jakarta.servlet.http.Part;
 import lombok.RequiredArgsConstructor;
@@ -100,7 +100,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     }
 
     private void 핫_게시글_조회를_모킹한다(final Post 게시글) {
-        when(postRepository.findHotPosts(any(LocalDateTime.class), anyInt(), anyInt(), any()))
+        when(postRepository.findHotPosts(any(LocalDateTime.class), anyInt(), anyInt(), anyInt(), any()))
                 .thenReturn(new SliceImpl<>(List.of(게시글)));
         when(postRepository.findByIds(anyList()))
                 .thenReturn(List.of(게시글));
@@ -222,7 +222,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
         final Member 글쓴이 = testMemberBuilder.builder()
                 .id(1L)
                 .buildWithoutSaving();
-        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0);
+        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0, 0);
 
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);
@@ -252,7 +252,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
         final Member 글쓴이 = testMemberBuilder.builder()
                 .id(1L)
                 .buildWithoutSaving();
-        final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), 0);
+        final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), 0, 0);
 
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);
@@ -276,7 +276,6 @@ public class PostControllerDocsTest implements ImageFileCleaner {
                 fieldWithPath("content[].writer.nickname").description("닉네임"),
                 fieldWithPath("content[].reactionCount.viewCount").description("조회수"),
                 fieldWithPath("content[].reactionCount.commentCount").description("댓글 수"),
-                fieldWithPath("content[].reactionCount.scrapCount").description("스크랩수"),
                 fieldWithPath("last").description("현재 요청한 페이지가 마지막 페이지인지")
         };
 
@@ -304,7 +303,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
         final Member 글쓴이 = testMemberBuilder.builder()
                 .id(1L)
                 .buildWithoutSaving();
-        final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), 0);
+        final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), 0, 0);
 
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);
@@ -325,7 +324,6 @@ public class PostControllerDocsTest implements ImageFileCleaner {
                 fieldWithPath("content[].writer.nickname").description("닉네임"),
                 fieldWithPath("content[].reactionCount.viewCount").description("조회수"),
                 fieldWithPath("content[].reactionCount.commentCount").description("댓글 수"),
-                fieldWithPath("content[].reactionCount.scrapCount").description("스크랩수"),
                 fieldWithPath("last").description("현재 요청한 페이지가 마지막 페이지인지")
         };
 
@@ -348,7 +346,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
         final Member 글쓴이 = testMemberBuilder.builder()
                 .id(1L)
                 .buildWithoutSaving();
-        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0);
+        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0, 0);
 
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);

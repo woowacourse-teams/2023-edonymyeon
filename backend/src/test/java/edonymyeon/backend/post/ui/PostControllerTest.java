@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
-import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.post.application.dto.response.PostIdResponse;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.TestMemberBuilder;
 import org.junit.jupiter.api.Test;
@@ -108,7 +108,7 @@ class PostControllerTest implements ImageFileCleaner {
                 )
                 .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
 
-        PostResponse 게시글_생성_응답 = extractResponseFromResult(게시글_생성_요청_결과, PostResponse.class);
+        PostIdResponse 게시글_생성_응답 = extractResponseFromResult(게시글_생성_요청_결과, PostIdResponse.class);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/posts/" + 게시글_생성_응답.id())
                         .header(HttpHeaders.AUTHORIZATION, "Basic "
@@ -142,7 +142,7 @@ class PostControllerTest implements ImageFileCleaner {
                 )
                 .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
 
-        PostResponse 게시글_생성_응답 = extractResponseFromResult(게시글_생성_요청_결과, PostResponse.class);
+        PostIdResponse 게시글_생성_응답 = extractResponseFromResult(게시글_생성_요청_결과, PostIdResponse.class);
         final Member otherMember = testMemberBuilder.builder().build();
 
         final MvcResult 게시글_삭제_요청_결과 = mockMvc.perform(MockMvcRequestBuilders.delete("/posts/" + 게시글_생성_응답.id())

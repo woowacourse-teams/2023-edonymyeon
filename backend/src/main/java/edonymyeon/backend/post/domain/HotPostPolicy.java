@@ -11,6 +11,8 @@ public class HotPostPolicy {
 
     private static final int THUMBS_COUNT_WEIGHT = 3;
 
+    private static final int COMMENT_COUNT_WEIGHT = 5;
+
     public static LocalDateTime getFindPeriod(){
         return LocalDateTime.now()
                 .minus(FINDING_PERIOD, ChronoUnit.DAYS);
@@ -22,5 +24,9 @@ public class HotPostPolicy {
 
     public static int getThumbsCountWeight(){
         return THUMBS_COUNT_WEIGHT;
+    }
+
+    public static int getCommentCountWeight() {
+        return COMMENT_COUNT_WEIGHT;
     }
 }

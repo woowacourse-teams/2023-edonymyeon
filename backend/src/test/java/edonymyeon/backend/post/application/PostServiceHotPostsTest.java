@@ -4,7 +4,7 @@ import edonymyeon.backend.CacheConfig;
 import edonymyeon.backend.cache.application.HotPostsRedisRepository;
 import edonymyeon.backend.cache.application.PostCachingService;
 import edonymyeon.backend.cache.util.HotPostCachePolicy;
-import edonymyeon.backend.post.application.dto.GeneralPostInfoResponse;
+import edonymyeon.backend.post.application.dto.response.GeneralPostInfoResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.support.IntegrationTest;
