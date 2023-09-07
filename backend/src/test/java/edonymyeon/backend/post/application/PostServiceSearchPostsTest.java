@@ -3,9 +3,9 @@ package edonymyeon.backend.post.application;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.support.MemberTestSupport;
+import edonymyeon.backend.support.TestMemberBuilder;
+import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.PostTestSupport;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +20,7 @@ public class PostServiceSearchPostsTest {
 
     private final PostReadService postReadService;
 
-    private final MemberTestSupport memberTestSupport;
+    private final TestMemberBuilder memberTestSupport;
 
     private final PostTestSupport postTestSupport;
 

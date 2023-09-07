@@ -13,7 +13,6 @@ public enum ExceptionInformation {
     REQUEST_FILE_SIZE_TOO_LARGE(2, "첨부 파일의 용량이 제한을 초과하였습니다."),
     CACHE_NOT_FOUND(100, "캐싱된 값이 없습니다."),
 
-
     // 클래스이름_필드명_틀린내용
     // 1___: 인증 관련
     MEMBER_EMAIL_NOT_FOUND(1511, "회원의 이메일이 존재하지 않습니다."),
@@ -66,6 +65,10 @@ public enum ExceptionInformation {
     CONSUMPTION_POST_ID_NOT_FOUND(6546, "소비 확정 내역이 존재하지 않습니다."),
     CONSUMPTION_YEAR_MONTH_ILLEGAL(6547, "소비 확정 년도, 달이 현재 시각보다 미래입니다."),
     CONSUMPTION_PERIOD_MONTH_ILLEGAL(6548, "해당 기간의 소비 금액은 조회할 수 없습니다."),
+
+    // 7___: 댓글 관련
+    COMMENT_ID_NOT_FOUND(7000, "존재하지 않는 댓글입니다."),
+    COMMENT_MEMBER_NOT_SAME(7001, "댓글 작성자가 아닙니다."),
 
     // 9___: 어드민 페이지 관련
     LOGGING_TYPE_NOT_EXISTS(9001, "존재하지 않는 로그 타입입니다."),

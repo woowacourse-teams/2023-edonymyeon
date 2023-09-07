@@ -5,18 +5,15 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_DOM
 import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_STORE_NAME_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_IMAGE_COUNT_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
 
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.integration.steps.MemberConsumptionSteps;
-import edonymyeon.backend.notification.application.NotificationSender;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.PostReadService;
@@ -26,12 +23,9 @@ import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -217,7 +211,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
             softly.assertThat(jsonPath.getString("content[0].title")).isNotNull();
             softly.assertThat(jsonPath.getString("content[0].image")).isNotNull();
             softly.assertThat(jsonPath.getString("content[0].content")).isNotNull();
-            softly.assertThat(jsonPath.getString("content[0].writer.nickName")).isNotNull();
+            softly.assertThat(jsonPath.getString("content[0].writer.nickname")).isNotNull();
             softly.assertThat(jsonPath.getString("content[0].createdAt")).isNotNull();
             softly.assertThat(jsonPath.getInt("content[0].reactionCount.viewCount")).isNotNull();
             softly.assertThat(jsonPath.getInt("content[0].reactionCount.commentCount")).isNotNull();
@@ -245,7 +239,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
             softly.assertThat(jsonPath.getString("content[0].title")).isNotNull();
             softly.assertThat(jsonPath.getString("content[0].image")).isNotNull();
             softly.assertThat(jsonPath.getString("content[0].content")).isNotNull();
-            softly.assertThat(jsonPath.getString("content[0].writer.nickName")).isNotNull();
+            softly.assertThat(jsonPath.getString("content[0].writer.nickname")).isNotNull();
             softly.assertThat(jsonPath.getString("content[0].createdAt")).isNotNull();
             softly.assertThat(jsonPath.getInt("content[0].reactionCount.viewCount")).isNotNull();
             softly.assertThat(jsonPath.getInt("content[0].reactionCount.commentCount")).isNotNull();
@@ -281,8 +275,8 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
             softly.assertThat(jsonPath.getString("content[0].title")).isEqualTo(전체조회_4번째_게시글.title());
             softly.assertThat(jsonPath.getString("content[0].image")).isEqualTo(전체조회_4번째_게시글.image());
             softly.assertThat(jsonPath.getString("content[0].content")).isEqualTo(전체조회_4번째_게시글.content());
-            softly.assertThat(jsonPath.getString("content[0].writer.nickName"))
-                    .isEqualTo(전체조회_4번째_게시글.writer().nickName());
+            softly.assertThat(jsonPath.getString("content[0].writer.nickname"))
+                    .isEqualTo(전체조회_4번째_게시글.writer().nickname());
             softly.assertThat(jsonPath.getString("content[0].createdAt")).isNotNull();
             softly.assertThat(jsonPath.getInt("content[0].reactionCount.viewCount"))
                     .isEqualTo(전체조회_4번째_게시글.reactionCount().viewCount());

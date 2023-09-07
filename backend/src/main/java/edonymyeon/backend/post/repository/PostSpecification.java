@@ -4,22 +4,33 @@ import edonymyeon.backend.post.domain.Post;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import org.springframework.data.jpa.domain.Specification;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import org.springframework.data.jpa.domain.Specification;
 
 public class PostSpecification {
 
     public static Specification<Post> searchBy(String searchWord) {
         return ((root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
-            if (Objects.nonNull(searchWord) && !searchWord.isBlank()) {
-                appendSearchCondition(searchWord, root, criteriaBuilder, predicates);
+            if (Objects.isNull(searchWord) || searchWord.isBlank()) {
+                appendNoCondition(criteriaBuilder, predicates);
+                return combineAllConditions(criteriaBuilder, predicates);
             }
-            return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
+            appendSearchCondition(searchWord, root, criteriaBuilder, predicates);
+            return combineAllConditions(criteriaBuilder, predicates);
         });
+    }
+
+    private static void appendNoCondition(CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
+        predicates.add(criteriaBuilder.disjunction());
+    }
+
+    private static Predicate combineAllConditions(CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
+        return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
     }
 
     private static void appendSearchCondition(String searchWord, Root<Post> root, CriteriaBuilder criteriaBuilder,

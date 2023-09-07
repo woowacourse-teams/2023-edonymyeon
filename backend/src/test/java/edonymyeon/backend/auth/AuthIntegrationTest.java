@@ -61,6 +61,7 @@ class AuthIntegrationTest extends IntegrationFixture {
         final Member member = memberTestSupport.builder()
                 .email("email@naver.com")
                 .build();
+
         final ExtractableResponse<Response> response = RestAssured
                 .given()
                 .param("target", "email")

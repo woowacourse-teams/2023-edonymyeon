@@ -81,26 +81,8 @@ public class Member extends TemporalRecord {
                 .toList();
     }
 
-    public Member(final Long id, final String email, final String password, final String nickname,
-                  final SocialInfo socialInfo,
-                  final ProfileImageInfo profileImageInfo, final List<String> deviceTokens, final boolean deleted) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-        this.socialInfo = socialInfo;
-        this.profileImageInfo = profileImageInfo;
-        this.devices = deviceTokens.stream()
-                .map(token -> new Device(token, this))
-                .toList();
-        this.deleted = deleted;
-    }
-
-    public Member(final Long id) {
-        this.id = id;
-    }
-
-    public Member(final String email, final String password, final String nickname, final SocialInfo socialInfo) {
+    private Member(final String email, final String password, final String nickname, final SocialInfo socialInfo) {
+        validate(email, password, nickname);
         this.email = email;
         this.password = password;
         this.nickname = nickname;
@@ -190,6 +172,10 @@ public class Member extends TemporalRecord {
 
     private boolean isNewDevice(final String deviceToken) {
         return this.devices.stream().noneMatch(device -> device.isDeviceTokenEqualTo(deviceToken));
+    }
+
+    public boolean hasId(final Long memberId) {
+        return Objects.equals(this.id, memberId);
     }
 
     public void encrypt(final String encodedPassword) {

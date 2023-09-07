@@ -18,7 +18,7 @@ public class PostTestSupport {
 
     private final PostRepository postRepository;
 
-    private final MemberTestSupport memberTestSupport;
+    private final TestMemberBuilder memberTestSupport;
 
     public PostBuilder builder() {
         return new PostBuilder();

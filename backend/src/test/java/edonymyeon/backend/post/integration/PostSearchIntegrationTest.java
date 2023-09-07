@@ -1,17 +1,17 @@
 package edonymyeon.backend.post.integration;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
-import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class PostSearchIntegrationTest extends IntegrationFixture {
@@ -92,6 +92,21 @@ public class PostSearchIntegrationTest extends IntegrationFixture {
                 .given()
                 .when()
                 .queryParam("query", "케로로")
+                .get("/search")
+                .then()
+                .extract();
+
+        final var jsonPath = 검색된_게시글_조회_결과.body().jsonPath();
+
+        assertThat(jsonPath.getList("content").size()).isEqualTo(0);
+    }
+
+    @Test
+    void 빈_값을_검색하면_빈_리스트가_조회된다() {
+        final var 검색된_게시글_조회_결과 = RestAssured
+                .given()
+                .when()
+                .queryParam("query", "")
                 .get("/search")
                 .then()
                 .extract();

@@ -3,15 +3,20 @@ package edonymyeon.backend.setting.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.support.TestMemberBuilder;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("NonAsciiCharacters")
 class SettingTest {
+    private final TestMemberBuilder testMemberBuilder = new TestMemberBuilder(null);
+
     @Test
     void 설정_항목을_체크하여_OnOff할_수_있다() {
-        final Member member = new Member(1L, "test@gmail.com", "password123", "nickName", null, null, List.of(), false);
+        final Member member = testMemberBuilder.builder()
+                .id(1L)
+                .buildWithoutSaving();
         final Setting setting
                 = new Setting(member, SettingType.NOTIFICATION_PER_THUMB, Collections.emptyList(),
                 EnableStatus.ENABLED);
@@ -23,7 +28,9 @@ class SettingTest {
 
     @Test
     void 상위_항목을_disable하는_경우_하위_항목도_함께_disable된다() {
-        final Member member = new Member(1L, "test@gmail.com", "password123", "nickName", null, null, List.of(), false);
+        final Member member = testMemberBuilder.builder()
+                .id(1L)
+                .buildWithoutSaving();
 
         final Setting 하위항목1 = new Setting(member, SettingType.NOTIFICATION_PER_THUMB, Collections.emptyList(),
                 EnableStatus.ENABLED);
@@ -42,7 +49,9 @@ class SettingTest {
 
     @Test
     void 상위_항목에_의해_disable된_항목이_상위_항목에_의해_다시_activated된_경우_이전의_설정을_다시_복구한다() {
-        final Member member = new Member("test@gmail.com", "password123!", "nickName", null, List.of());
+        final Member member = testMemberBuilder.builder()
+                .id(1L)
+                .buildWithoutSaving();
 
         final Setting 하위항목1 = new Setting(member, SettingType.NOTIFICATION_PER_THUMB, Collections.emptyList(),
                 EnableStatus.ENABLED);

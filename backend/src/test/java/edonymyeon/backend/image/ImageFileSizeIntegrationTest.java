@@ -3,10 +3,10 @@ package edonymyeon.backend.image;
 import static edonymyeon.backend.global.exception.ExceptionInformation.REQUEST_FILE_SIZE_TOO_LARGE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
+import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.RestAssured;
 import java.io.File;
 import org.assertj.core.api.SoftAssertions;
