@@ -33,12 +33,13 @@ public class ReportService {
 
     @Transactional
     public Long report(ReportRequest reportRequest, MemberId reporterId) {
-        final Long referenceId = getReferenceId(reportRequest.type(), reportRequest.referenceId());
+        final ReportType reportType = ReportType.from(reportRequest.type());
+        final Long referenceId = getReferenceId(reportType, reportRequest.referenceId());
         final Member reporter = memberRepository.findById(reporterId.id())
                 .orElseThrow(() -> new EdonymyeonException(ExceptionInformation.MEMBER_ID_NOT_FOUND));
 
         final Report report = new Report(
-                reportRequest.type(),
+                reportType,
                 referenceId, reporter,
                 AbusingType.of(reportRequest.reportCategoryId()),
                 reportRequest.content());
