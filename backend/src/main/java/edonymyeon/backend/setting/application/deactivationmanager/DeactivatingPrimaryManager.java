@@ -11,10 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Component
 @Transactional
-public class DeactivatingPrimaryManager implements DeactivationManager {
+public class DeactivatingPrimaryManager extends DeactivationManager {
 
     @Override
-    public void manage(final List<Setting> settings, final Setting target) {
+    public void manageSettings(final List<Setting> settings, final Setting target) {
         if (target.isPrimary()) {
             for (Setting setting : settings) {
                 setting.deactivate();

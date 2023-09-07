@@ -12,10 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Component
 @Transactional
-public class ActivatingPrimaryManager implements ActivationManager {
+public class ActivatingPrimaryManager extends ActivationManager {
 
     @Override
-    public void manage(final List<Setting> settings, final Setting target) {
+    public void manageSettings(final List<Setting> settings, final Setting target) {
         for (Setting setting : settings) {
             if (setting.isPrimary()) {
                 setting.activate();

@@ -11,10 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Component
 @Transactional
-public class DeactivatingSameWeightsManager implements ActivationManager {
+public class DeactivatingSameWeightsManager extends ActivationManager {
 
     @Override
-    public void manage(final List<Setting> settings, final Setting target) {
+    public void manageSettings(final List<Setting> settings, final Setting target) {
         for (Setting setting : settings) {
             if (!setting.equals(target) && setting.isSameCategoryWith(target) && setting.hasSameWeight(target)) {
                 setting.deactivate();

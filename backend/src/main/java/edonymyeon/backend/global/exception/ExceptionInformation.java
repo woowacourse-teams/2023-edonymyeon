@@ -12,6 +12,7 @@ public enum ExceptionInformation {
     REQUEST_PARAMETER_NOT_EXIST(1, "필수 쿼리 파라미터가 비었습니다."),
     REQUEST_FILE_SIZE_TOO_LARGE(2, "첨부 파일의 용량이 제한을 초과하였습니다."),
     CACHE_NOT_FOUND(100, "캐싱된 값이 없습니다."),
+    INVALID_SETTING_MANAGER_ASSIGNED(201, "잘못된 설정 매니저가 매핑되었습니다"),
 
     // 클래스이름_필드명_틀린내용
     // 1___: 인증 관련
