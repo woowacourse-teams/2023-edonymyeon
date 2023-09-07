@@ -23,7 +23,7 @@ public class Report extends TemporalRecord {
 
     private Long referenceId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reporter_id")
     private Member reporter;
 
