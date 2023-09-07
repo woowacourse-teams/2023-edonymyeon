@@ -81,8 +81,8 @@ class SettingIntegrationTest extends IntegrationFixture {
         final List<Map<String, String>> settingDetails = settings.get("notifications");
         assertThat(settingDetails).hasSize(5);
 
-        설정값_검증(settingDetails, "0001", "true");
-        설정값_검증(settingDetails, "1002", "true");
-        설정값_검증(settingDetails, "1003", "false");
+        설정값_검증(settingDetails, SettingType.NOTIFICATION.getSerialNumber(), "true");
+        설정값_검증(settingDetails, SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber(), "true");
+        설정값_검증(settingDetails, SettingType.NOTIFICATION_PER_THUMBS.getSerialNumber(), "false");
     }
 }

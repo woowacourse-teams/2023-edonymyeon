@@ -90,14 +90,16 @@ class SettingServiceTest extends IntegrationFixture {
     void 동일한_가중치의_설정이_enabled되면_동일한_가중치인_설정은_모두_disabled() {
         final Member member = 회원을_저장하고_기본설정을_부여한다();
 
-        settingService.toggleSetting("1002", new ActiveMemberId(member.getId()));
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber(),
+                new ActiveMemberId(member.getId()));
 
         assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
                 .isActive()).isTrue();
         assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_THUMBS)
                 .isActive()).isFalse();
 
-        settingService.toggleSetting("1003", new ActiveMemberId(member.getId()));
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_THUMBS.getSerialNumber(),
+                new ActiveMemberId(member.getId()));
 
         assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
                 .isActive()).isFalse();
@@ -109,12 +111,12 @@ class SettingServiceTest extends IntegrationFixture {
     void ALL_type인_설정이_disabled되면_전체_설정_disabled() {
         final Member member = 회원을_저장하고_기본설정을_부여한다();
 
-        settingService.toggleSetting("1002", new ActiveMemberId(member.getId()));
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber(), new ActiveMemberId(member.getId()));
 
         assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
                 .isActive()).isTrue();
 
-        settingService.toggleSetting("0001", new ActiveMemberId(member.getId()));
+        settingService.toggleSetting(SettingType.NOTIFICATION.getSerialNumber(), new ActiveMemberId(member.getId()));
 
         assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
                 .isActive()).isFalse();
@@ -124,9 +126,9 @@ class SettingServiceTest extends IntegrationFixture {
     void ALL이_아닌_설정이_enabled_또는_disabled되면_다른_type의_설정에_영향_X() {
         final Member member = 회원을_저장하고_기본설정을_부여한다();
 
-        settingService.toggleSetting("1002", new ActiveMemberId(member.getId()));
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber(), new ActiveMemberId(member.getId()));
 
-        settingService.toggleSetting("5001", new ActiveMemberId(member.getId()));
+        settingService.toggleSetting(SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING.getSerialNumber(), new ActiveMemberId(member.getId()));
 
         assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
                 .isActive()).isTrue();
@@ -136,7 +138,7 @@ class SettingServiceTest extends IntegrationFixture {
     void 설정이_하나라도_enabled되면_ALL_타입의_설정_enabled() {
         final Member member = 회원을_저장하고_기본설정을_부여한다();
 
-        settingService.toggleSetting("5001", new ActiveMemberId(member.getId()));
+        settingService.toggleSetting(SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING.getSerialNumber(), new ActiveMemberId(member.getId()));
 
         assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION)
                 .isActive()).isTrue();
