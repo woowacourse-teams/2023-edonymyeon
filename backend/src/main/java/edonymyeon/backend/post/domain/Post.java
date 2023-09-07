@@ -1,33 +1,19 @@
 package edonymyeon.backend.post.domain;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_CONTENT_ILLEGAL_LENGTH;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_EMPTY;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_PRICE_ILLEGAL_SIZE;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_TITLE_ILLEGAL_LENGTH;
-
 import edonymyeon.backend.global.domain.TemporalRecord;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.member.domain.Member;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import java.util.List;
-import java.util.Objects;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+
+import java.util.List;
+import java.util.Objects;
+
+import static edonymyeon.backend.global.exception.ExceptionInformation.*;
 
 @Getter
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
@@ -35,6 +21,7 @@ import org.hibernate.annotations.DynamicInsert;
 @AllArgsConstructor
 @DynamicInsert
 @Entity
+@Table(indexes = @Index(name = "i_post_created_at", columnList = "createdAt"))
 public class Post extends TemporalRecord {
 
     public static final int DEFAULT_BATCH_SIZE = 20;
