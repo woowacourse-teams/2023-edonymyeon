@@ -3,7 +3,7 @@ package edonymyeon.backend.auth.domain;
 import static edonymyeon.backend.global.exception.ExceptionInformation.NOT_SUPPORTED_ALGORITHM;
 import static edonymyeon.backend.global.exception.ExceptionInformation.NOT_SUPPORTED_VERSION;
 
-import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.global.exception.BusinessLogicException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -20,16 +20,16 @@ public class SimplePasswordEncoder implements PasswordEncoder {
     private static final int MAX_BOUND = Integer.MAX_VALUE;
     private static final int MAX_HEX = 0xff;
 
-    private MessageDigest hashFunction = getHashFunction();
+    private MessageDigest hashFunction = getHashFunctionInstance();
 
-    private MessageDigest getHashFunction() {
+    private MessageDigest getHashFunctionInstance() {
         if (Objects.nonNull(hashFunction)) {
             return hashFunction;
         }
         try {
             hashFunction = MessageDigest.getInstance(ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
-            throw new EdonymyeonException(NOT_SUPPORTED_ALGORITHM);
+            throw new BusinessLogicException(NOT_SUPPORTED_ALGORITHM);
         }
         return hashFunction;
     }
@@ -49,10 +49,15 @@ public class SimplePasswordEncoder implements PasswordEncoder {
     }
 
     private String generateSalt(String version, int cost) {
-        if (!SimplePasswordEncoder.VERSION.equals(version)) {
-            throw new EdonymyeonException(NOT_SUPPORTED_VERSION);
-        }
+        validateVersion(version);
         return toHash64(Integer.toHexString(cost));
+    }
+
+    private void validateVersion(final String version) {
+        if (VERSION.equals(version)) {
+            return;
+        }
+        throw new BusinessLogicException(NOT_SUPPORTED_VERSION);
     }
 
     private String toHash64(String input) {
