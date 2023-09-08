@@ -10,18 +10,20 @@ public record MyPostResponse(
         String image,
         String content,
         LocalDateTime createdAt,
-        PostConsumptionResponse consumption
+        PostConsumptionResponse consumption,
+        ReactionCountResponse reactionCount
 ) {
 
     public static MyPostResponse of(Post post, Domain domain, PostConsumptionResponse postConsumptionResponse) {
         return new MyPostResponse(
                 post.getId(),
                 post.getTitle(),
-                post.getPostImageInfos().size() == 0 ? null
+                post.getPostImageInfos().isEmpty() ? null
                         : domain.getDomain() + post.getPostImageInfos().get(0).getStoreName(),
                 post.getContent(),
                 post.getCreatedAt(),
-                postConsumptionResponse
+                postConsumptionResponse,
+                new ReactionCountResponse(post.getViewCount(), post.getViewCount())
         );
     }
 }
