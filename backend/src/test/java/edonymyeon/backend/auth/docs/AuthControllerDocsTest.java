@@ -1,7 +1,6 @@
 package edonymyeon.backend.auth.docs;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
@@ -151,8 +150,6 @@ public class AuthControllerDocsTest extends DocsTest {
     void 회원가입_문서화() throws Exception {
         final JoinRequest request = new JoinRequest("email@email.com", "password1234!", "testNickname",
                 "kj234jkn342kj");
-
-        doNothing().when(authService).joinMember(request);
 
         final MockHttpServletRequestBuilder 회원가입_요청 = post("/join")
                 .contentType(MediaType.APPLICATION_JSON)
