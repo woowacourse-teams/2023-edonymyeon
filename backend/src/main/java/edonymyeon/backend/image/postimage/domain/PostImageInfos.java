@@ -82,8 +82,15 @@ public class PostImageInfos {
         return unmatchedPostImageInfos;
     }
 
-    public void remove(final List<PostImageInfo> deletedPostImageInfos) {
+    // todo : 여기 부분 맞게 했나요? 헷갈립니다.
+    public void delete(final List<PostImageInfo> deletedPostImageInfos) {
+        // 어쨌든 deleted = false 인 놈들만 가지고 있어야 하니 지워져야 할 녀석들을 리스트에서 뺀다.
         this.postImageInfos.removeAll(deletedPostImageInfos);
-        deletedPostImageInfos.forEach(each -> each.updatePost(null));
+        // 지워져야 하는 녀석들을 soft delete
+        deletedPostImageInfos.forEach(PostImageInfo::delete);
+    }
+
+    public void deleteAll() {
+        this.postImageInfos.forEach(PostImageInfo::delete);
     }
 }

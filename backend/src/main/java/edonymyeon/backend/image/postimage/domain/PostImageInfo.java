@@ -9,15 +9,21 @@ import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Where;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Where(clause = "deleted = false")
 @Entity
 public class PostImageInfo extends ImageInfo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Post post;
+
+    @ColumnDefault("false")
+    private boolean deleted;
 
     public PostImageInfo(final String storeName, final Post post) {
         super(storeName);
@@ -30,7 +36,7 @@ public class PostImageInfo extends ImageInfo {
         return postImageInfo;
     }
 
-    public void updatePost(final Post post) {
-        this.post = post;
+    public void delete() {
+        this.deleted = true;
     }
 }

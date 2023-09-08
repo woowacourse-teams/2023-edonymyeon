@@ -94,17 +94,15 @@ public class PostService {
         final Post post = findPostById(postId);
         checkWriter(member, post);
 
-        final List<PostImageInfo> postImageInfos = post.getPostImageInfos();
-        final ArrayList<PostImageInfo> copyOfPostImageInfos = new ArrayList<>(postImageInfos);
+        //todo: 주석 처리된 부분은 이미지를 soft delete 시킬 때, 실제 이미지도 지울 것인가? 입니다.
+        //final List<PostImageInfo> postImageInfos = post.getPostImageInfos();
+        //final ArrayList<PostImageInfo> copyOfPostImageInfos = new ArrayList<>(postImageInfos);
+        // todo: 추천/비추천과 소비내역은 물리적 삭제로 진행
         // todo: 소비내역 삭제할 때, 이벤트 대신 인터페이스로 변경
         applicationEventPublisher.publishEvent(new PostDeletionEvent(post.getId()));
         thumbsService.deleteAllThumbsInPost(postId);
-        // todo: 게시글을 soft delete로 변경하면서 댓글, 게시글 이미지를 soft delete 하는 코드 작성
-        // todo: soft delete로 변경 후신고된 게시글 삭제 이슈해결되는지 확인
-        // todo: 추천/비추천과 소비내역은 물리적 삭제로 진행
-        postImageInfoRepository.deleteAllByPostId(postId);
-        postRepository.deleteById(postId);
-        copyOfPostImageInfos.forEach(imageFileUploader::removeFile);
+        post.delete();
+        //copyOfPostImageInfos.forEach(imageFileUploader::removeFile);
     }
 
     private Post findPostById(final Long postId) {

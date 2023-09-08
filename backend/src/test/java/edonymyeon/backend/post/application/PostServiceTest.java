@@ -207,7 +207,8 @@ class PostServiceTest implements ImageFileCleaner {
             assertThat(consumptionRepository.findByPostId(post.getId()).isEmpty()).isTrue();
         }
 
-        @Test
+        // 디렉토리 이미지 실제로 삭제할건지?
+/*        @Test
         void 게시글이_삭제되면_디렉토리에_있는_이미지도_삭제된다() throws IOException {
             final PostIdResponse postIdResponse = postService.createPost(memberId, getPostRequest());
             final PostImageInfo postImageInfo = postImageInfoRepository.findAllByPostId(postIdResponse.id()).get(0);
@@ -215,6 +216,16 @@ class PostServiceTest implements ImageFileCleaner {
 
             postService.deletePost(memberId, postIdResponse.id());
             assertThat(new File(imageFileUploader.getFullPath(postImageInfo.getStoreName())).canRead()).isFalse();
+        }*/
+
+        @Test
+        void 게시글이_삭제되면_조회되지_않는다() throws IOException {
+            final PostIdResponse postIdResponse = postService.createPost(memberId, getPostRequest());
+
+            postService.deletePost(memberId, postIdResponse.id());
+
+            assertThatThrownBy(() -> postReadService.findSpecificPost(postIdResponse.id(), memberId)).isInstanceOf(EdonymyeonException.class)
+                    .hasMessage(ExceptionInformation.POST_ID_NOT_FOUND.getMessage());
         }
     }
 

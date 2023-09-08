@@ -29,12 +29,14 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.Where;
 
 @Getter
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @DynamicInsert
+@Where(clause = "deleted = false")
 @Entity
 public class Post extends TemporalRecord {
 
@@ -69,6 +71,9 @@ public class Post extends TemporalRecord {
 
     @Formula("(select count(c.id) from comment c where c.post_id = id and c.deleted = false)")
     private int commentCount;
+
+    @ColumnDefault("false")
+    private boolean deleted;
 
     public Post(
             final Long id,
@@ -185,7 +190,7 @@ public class Post extends TemporalRecord {
     }
 
     public void removePostImageInfos(final List<PostImageInfo> deletedPostImageInfos) {
-        this.postImageInfos.remove(deletedPostImageInfos);
+        this.postImageInfos.delete(deletedPostImageInfos);
     }
 
     public void validateWriter(final Long memberId) {
@@ -199,5 +204,10 @@ public class Post extends TemporalRecord {
             return;
         }
         this.viewCount++;
+    }
+
+    public void delete() {
+        this.deleted = true;
+        this.postImageInfos.deleteAll();
     }
 }

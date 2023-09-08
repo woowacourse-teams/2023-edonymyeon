@@ -78,6 +78,6 @@ create table if not exists report (
     post_id bigint,
     reporter_id bigint,
     primary key (id),
-    foreign key (reporter_id) references member (id),
+    constraint fk_report_member_id foreign key (reporter_id) references member (id),
     constraint report_ibfk_1 foreign key (post_id) references post (id)
 );

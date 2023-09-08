@@ -23,6 +23,7 @@ import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -192,6 +193,20 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final Member 신고자 = 사용자를_하나_만든다();
         final ReportRequest reportRequest = new ReportRequest("POST", 게시글_id, 4, null);
         신고를_한다(신고자, reportRequest);
+
+        final ExtractableResponse<Response> 게시글_삭제_응답 = 게시글을_삭제한다(작성자, 게시글_id);
+
+        assertThat(게시글_삭제_응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    void 게시글에_댓글이_존재해도_게시글을_삭제할_수_있다() throws IOException {
+        final Member 작성자 = 사용자를_하나_만든다();
+        final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
+        final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
+
+        final Member 댓글_쓰는_자 = 사용자를_하나_만든다();
+        댓글을_생성한다_이미지없이(게시글_id,"내용",댓글_쓰는_자);
 
         final ExtractableResponse<Response> 게시글_삭제_응답 = 게시글을_삭제한다(작성자, 게시글_id);
 
