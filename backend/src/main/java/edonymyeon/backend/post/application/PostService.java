@@ -43,6 +43,8 @@ public class PostService {
 
     private final PostThumbsService thumbsService;
 
+    private final PostCommentService commentService;
+
     private final ApplicationEventPublisher applicationEventPublisher;
 
     private final Domain domain;
@@ -101,6 +103,7 @@ public class PostService {
         // todo: 소비내역 삭제할 때, 이벤트 대신 인터페이스로 변경
         applicationEventPublisher.publishEvent(new PostDeletionEvent(post.getId()));
         thumbsService.deleteAllThumbsInPost(postId);
+        commentService.deleteAllCommentsInPost(postId);
         post.delete();
         //copyOfPostImageInfos.forEach(imageFileUploader::removeFile);
     }

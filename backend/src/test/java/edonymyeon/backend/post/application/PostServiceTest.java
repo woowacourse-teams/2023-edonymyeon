@@ -1,6 +1,9 @@
 package edonymyeon.backend.post.application;
 
 import edonymyeon.backend.TestConfig;
+import edonymyeon.backend.comment.application.CommentService;
+import edonymyeon.backend.comment.application.dto.request.CommentRequest;
+import edonymyeon.backend.comment.repository.CommentRepository;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
@@ -226,6 +229,19 @@ class PostServiceTest implements ImageFileCleaner {
 
             assertThatThrownBy(() -> postReadService.findSpecificPost(postIdResponse.id(), memberId)).isInstanceOf(EdonymyeonException.class)
                     .hasMessage(ExceptionInformation.POST_ID_NOT_FOUND.getMessage());
+        }
+
+        @Test
+        void 게시글이_삭제되면_댓글도_삭제된다(@Autowired CommentService commentService, @Autowired CommentRepository commentRepository) throws IOException {
+            final PostIdResponse postIdResponse = postService.createPost(memberId, getPostRequest());
+            commentService.createComment(
+                    memberId,
+                    postIdResponse.id(),
+                    new CommentRequest(null, "댓글이다")
+            );
+            postService.deletePost(memberId, postIdResponse.id());
+
+            assertThat(commentRepository.findAllByPostId(postIdResponse.id())).isEmpty();
         }
     }
 
