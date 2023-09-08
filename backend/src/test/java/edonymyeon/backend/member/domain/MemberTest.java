@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import edonymyeon.backend.auth.domain.PasswordEncoder;
 import edonymyeon.backend.auth.domain.SimplePasswordEncoder;
+import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import java.util.Collections;
 import java.util.List;
@@ -25,7 +26,7 @@ class MemberTest {
     @Test
     void 이메일이_30자_초과이면_예외발생() {
         final String invalidEmail = "i".repeat(31);
-        List emptyList = Collections.emptyList();
+        List<String> emptyList = Collections.emptyList();
         assertThatThrownBy(() -> new Member(invalidEmail, "password1234!", "nickname", null, emptyList))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(MEMBER_EMAIL_INVALID.getMessage());
@@ -34,7 +35,7 @@ class MemberTest {
     @Test
     void 이메일이_공백이면_예외발생() {
         final String invalidEmail = "   ";
-        List emptyList = Collections.emptyList();
+        List<String> emptyList = Collections.emptyList();
         assertThatThrownBy(() -> new Member(invalidEmail, "password1234!", "nickname", null, emptyList))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(MEMBER_EMAIL_INVALID.getMessage());
@@ -43,7 +44,7 @@ class MemberTest {
     @Test
     void 비밀번호가_8자_미만이면_예외발생() {
         final String invalidPassword = "i".repeat(7);
-        List emptyList = Collections.emptyList();
+        List<String> emptyList = Collections.emptyList();
         assertThatThrownBy(() -> new Member("test@email.com", invalidPassword, "nickname", null, emptyList))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(MEMBER_PASSWORD_INVALID.getMessage());
@@ -52,7 +53,7 @@ class MemberTest {
     @Test
     void 비밀번호가_30자_초과이면_예외발생() {
         final String invalidPassword = "i".repeat(31);
-        List emptyList = Collections.emptyList();
+        List<String> emptyList = Collections.emptyList();
         assertThatThrownBy(() -> new Member("test@email.com", invalidPassword, "nickname", null, emptyList))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(MEMBER_PASSWORD_INVALID.getMessage());
@@ -61,7 +62,7 @@ class MemberTest {
     @ValueSource(strings = {"abcd1234", "!@#1234", "abcd!@#"})
     @ParameterizedTest(name = "{index}. password: {0}")
     void 비밀번호가_영문_숫자_특수문자가_포함되지_않으면_예외발생(String invalidPassword) {
-        List emptyList = Collections.emptyList();
+        List<String> emptyList = Collections.emptyList();
         Assertions.assertThatThrownBy(() -> new Member("test@email.com", invalidPassword, "nickname", null,
                         emptyList))
                 .isInstanceOf(EdonymyeonException.class)
@@ -71,7 +72,7 @@ class MemberTest {
     @Test
     void 닉네임이_20자_초과이면_예외발생() {
         final String invalidNickname = "i".repeat(21);
-        List emptyList = Collections.emptyList();
+        List<String> emptyList = Collections.emptyList();
         assertThatThrownBy(() -> new Member("test@email.com", "password1234!", invalidNickname, null,
                 emptyList))
                 .isInstanceOf(EdonymyeonException.class)
@@ -81,7 +82,7 @@ class MemberTest {
     @Test
     void 닉네임이_공백이면_예외발생() {
         final String invalidNickname = "   ";
-        List emptyList = Collections.emptyList();
+        List<String> emptyList = Collections.emptyList();
         assertThatThrownBy(() -> new Member("test@email.com", "password1234!", invalidNickname, null,
                 emptyList))
                 .isInstanceOf(EdonymyeonException.class)
@@ -98,7 +99,7 @@ class MemberTest {
 
     @Test
     void 비밀번호_암호화시_이미_암호화되었다면_예외발생() {
-        List emptyList = Collections.emptyList();
+        List<String> emptyList = Collections.emptyList();
         final Member member = new Member("test@email.com", "password1234!", "nickname", null, emptyList);
         PasswordEncoder encoder = new SimplePasswordEncoder();
         member.encrypt(encoder.encode(member.getPassword()));
@@ -111,11 +112,11 @@ class MemberTest {
 
     @Test
     void 비밀번호_암호화시_잘못_암호화된_비밀번호가_들어오면_예외발생() {
-        List emptyList = Collections.emptyList();
+        List<String> emptyList = Collections.emptyList();
         final Member member = new Member("test@email.com", "password1234!", "nickname", null, emptyList);
 
         assertThatThrownBy(() -> member.encrypt("이리내바보"))
-                .isInstanceOf(EdonymyeonException.class)
+                .isInstanceOf(BusinessLogicException.class)
                 .hasMessage(ENCODED_PASSWORD_INVALID.getMessage());
     }
 }
