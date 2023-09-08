@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @ExtendWith(MockitoExtension.class)
 @RequiredArgsConstructor
 @IntegrationTest
-public class AuthDeleteServiceTest {
+class AuthDeleteServiceTest {
 
     private final TestMemberBuilder testMemberBuilder;
 
@@ -38,7 +38,8 @@ public class AuthDeleteServiceTest {
                 .deleted(true)
                 .build();
 
-        assertThatThrownBy(() -> authService.login(member.getEmail(), member.getPassword()))
+        final String email = member.getEmail();
+        assertThatThrownBy(() -> authService.getAuthenticatedUser(email))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(MEMBER_IS_DELETED.getMessage());
     }

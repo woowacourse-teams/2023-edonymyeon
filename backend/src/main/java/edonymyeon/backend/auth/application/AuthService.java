@@ -4,6 +4,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EM
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_IS_DELETED;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_INVALID;
+import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_NOT_MATCH;
 
 import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
@@ -13,6 +14,7 @@ import edonymyeon.backend.auth.application.dto.MemberResponse;
 import edonymyeon.backend.auth.application.event.JoinMemberEvent;
 import edonymyeon.backend.auth.application.event.LoginEvent;
 import edonymyeon.backend.auth.application.event.LogoutEvent;
+import edonymyeon.backend.auth.domain.PasswordEncoder;
 import edonymyeon.backend.auth.domain.ValidateType;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,26 +42,42 @@ public class AuthService {
 
     private final MemberRepository memberRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     public MemberId login(final LoginRequest loginRequest) {
         final Member member = authenticateMember(loginRequest.email(), loginRequest.password());
         publisher.publishEvent(new LoginEvent(member, loginRequest.deviceToken()));
         return new ActiveMemberId(member.getId());
     }
 
-    public MemberId login(final String email, final String password) {
-        final Member member = authenticateMember(email, password);
+    private Member authenticateMember(final String email, final String password) {
+        final Member member = findByEmail(email);
+        checkPassword(password, member.getPassword());
+        return member;
+    }
+
+    public MemberId getAuthenticatedUser(final String email) {
+        final Member member = findByEmail(email);
         return new ActiveMemberId(member.getId());
     }
 
-    private Member authenticateMember(final String email, final String password) {
+    @NotNull
+    private Member findByEmail(final String email) {
         final Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_EMAIL_NOT_FOUND));
-        member.checkPassword(password);
         if (member.isDeleted()) {
             throw new EdonymyeonException(MEMBER_IS_DELETED);
         }
         return member;
     }
+
+    private void checkPassword(final String rawPassword, final String encodedPassword) {
+        if (passwordEncoder.matches(rawPassword, encodedPassword)) {
+            return;
+        }
+        throw new EdonymyeonException(MEMBER_PASSWORD_NOT_MATCH);
+    }
+
 
     public DuplicateCheckResponse checkDuplicate(final String target, final String value) {
         final ValidateType validateType = ValidateType.from(target);
@@ -93,13 +112,17 @@ public class AuthService {
     @Transactional
     public Member joinSocialMember(final SocialInfo socialInfo) {
         final Member member = Member.from(socialInfo);
-        publisher.publishEvent(new JoinMemberEvent(member));
+        return saveMember(member);
+    }
+
+    private Member saveMember(Member member) {
+        final String encodedPassword = passwordEncoder.encode(member.getPassword());
+        member.encrypt(encodedPassword);
         return memberRepository.save(member);
     }
 
-    // todo: 비밀번호 암호화
     @Transactional
-    public void joinMember(final JoinRequest joinRequest) {
+    public Member joinMember(final JoinRequest joinRequest) {
         final Member member = new Member(
                 joinRequest.email(),
                 joinRequest.password(),
@@ -111,9 +134,21 @@ public class AuthService {
         validateDuplicateEmail(joinRequest.email());
         validateDuplicateNickname(joinRequest.nickname());
 
-        memberRepository.save(member);
-
         publisher.publishEvent(new JoinMemberEvent(member));
+        return saveMember(member);
+    }
+
+    // todo DB에 암호화 적용하고 삭제
+    @Transactional
+    public void updatePasswordToEncrypt() {
+        final List<Member> members = memberRepository.findAll();
+        for (Member member : members) {
+            final String encodedPassword = passwordEncoder.encode(member.getPassword());
+            try {
+                member.encrypt(encodedPassword);
+            } catch (EdonymyeonException e) {
+            }
+        }
     }
 
     private void validateDuplicateEmail(final String email) {
