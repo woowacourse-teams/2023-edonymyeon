@@ -212,8 +212,9 @@ class PostDetailViewModel(
         viewModelScope.launch {
             postRepository.getComments(postId).onSuccess { comments ->
                 _comments.value = comments.comments.map { it.toUiModel() }
-                _reactionCount.value =
-                    _reactionCount.value?.copy(commentCount = comments.commentCount)
+                _reactionCount.value = _reactionCount.value?.takeIf { true }?.copy(
+                    commentCount = comments.commentCount,
+                ) ?: ReactionCountUiModel(0, comments.commentCount)
                 _isCommentsLoadingSuccess.value = true
                 checkLoadingSuccess()
             }.onFailure {
