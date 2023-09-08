@@ -60,8 +60,7 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
             throw new EdonymyeonException(AUTHORIZATION_EMPTY);
         }
 
-        byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
-        String decodedString = new String(decodedBytes);
+        String decodedString = new String(Base64.decodeBase64(authHeader[1]));
 
         String[] credentials = decodedString.split(":");
         return credentials[0];
