@@ -52,7 +52,6 @@ class PostDetailViewModelTest() {
             commentCount = Count(0),
         ),
         recommendation: Recommendation,
-        isScrap: Boolean = false,
         isWriter: Boolean = false,
     ) = Post(
         id,
@@ -64,7 +63,6 @@ class PostDetailViewModelTest() {
         writer,
         reactionCount,
         recommendation,
-        isScrap,
         isWriter,
     )
 
