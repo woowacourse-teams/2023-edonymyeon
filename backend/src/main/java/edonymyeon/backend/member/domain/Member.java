@@ -6,6 +6,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NI
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_INVALID;
 
 import edonymyeon.backend.global.domain.TemporalRecord;
+import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import jakarta.persistence.CascadeType;
@@ -178,7 +179,9 @@ public class Member extends TemporalRecord {
     }
 
     public void encrypt(final String encodedPassword) {
+        //todo 운영 DB에 암호화 적용후 라인 삭제
         validatePassword(password);
+
         validateEncodedPassword(encodedPassword);
         this.password = encodedPassword;
     }
@@ -187,7 +190,7 @@ public class Member extends TemporalRecord {
         if (PasswordValidator.isValidEncodedPassword(encodedPassword)) {
             return;
         }
-        throw new EdonymyeonException(ENCODED_PASSWORD_INVALID);
+        throw new BusinessLogicException(ENCODED_PASSWORD_INVALID);
     }
 
     // todo
