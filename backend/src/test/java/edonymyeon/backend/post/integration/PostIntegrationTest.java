@@ -17,6 +17,7 @@ import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.PostReadService;
 import edonymyeon.backend.post.application.dto.response.SpecificPostInfoResponse;
+import edonymyeon.backend.report.application.ReportRequest;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
@@ -152,12 +153,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
                 .statusCode(HttpStatus.OK.value());
 
         //when
-        final ExtractableResponse<Response> 게시글_삭제_응답 = RestAssured.given()
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
-                .when()
-                .delete("posts/" + 게시글_id)
-                .then()
-                .extract();
+        final ExtractableResponse<Response> 게시글_삭제_응답 = 게시글을_삭제한다(작성자, 게시글_id);
 
         //then
         assertSoftly(softly -> {
@@ -174,15 +170,10 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
         final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
         final PurchaseConfirmRequest 구매_확정_요청 = new PurchaseConfirmRequest(10000L, 2023, 7);
-        MemberConsumptionSteps.구매_확정_요청을_보낸다(작성자, 게시글_id, 구매_확정_요청);
+        구매_확정_요청을_보낸다(작성자, 게시글_id, 구매_확정_요청);
 
         //when
-        final ExtractableResponse<Response> 게시글_삭제_응답 = RestAssured.given()
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
-                .when()
-                .delete("posts/" + 게시글_id)
-                .then()
-                .extract();
+        final ExtractableResponse<Response> 게시글_삭제_응답 = 게시글을_삭제한다(작성자, 게시글_id);
 
         //then
         assertSoftly(softly -> {
@@ -190,6 +181,21 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
                     softly.assertThat(게시글_삭제_응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
                 }
         );
+    }
+
+    @Test
+    void 게시글에_신고내역이_존재해도_게시글을_삭제할_수_있다() {
+        final Member 작성자 = 사용자를_하나_만든다();
+        final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
+        final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
+
+        final Member 신고자 = 사용자를_하나_만든다();
+        final ReportRequest reportRequest = new ReportRequest("POST", 게시글_id, 4, null);
+        신고를_한다(신고자, reportRequest);
+
+        final ExtractableResponse<Response> 게시글_삭제_응답 = 게시글을_삭제한다(작성자, 게시글_id);
+
+        assertThat(게시글_삭제_응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
     }
 
     @Test
