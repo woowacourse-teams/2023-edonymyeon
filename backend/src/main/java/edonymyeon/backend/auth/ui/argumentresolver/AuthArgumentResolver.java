@@ -45,27 +45,24 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
             throw new EdonymyeonException(AUTHORIZATION_EMPTY);
         }
 
-        String[] credentials = getCredentials(authorization);
-        String email = credentials[0];
-        String password = credentials[1];
+        final String email = parseToEmail(authorization);
 
-        if (Objects.isNull(email) || Objects.isNull(password)) {
+        if (Objects.isNull(email)) {
             throw new EdonymyeonException(AUTHORIZATION_EMPTY);
         }
 
-        return authService.login(email, password);
+        return authService.getAuthenticatedUser(email);
     }
 
-    private static String[] getCredentials(final String authorization) {
+    private String parseToEmail(final String authorization) {
         String[] authHeader = authorization.split(" ");
         if (!authHeader[0].equalsIgnoreCase("basic")) {
             throw new EdonymyeonException(AUTHORIZATION_EMPTY);
         }
 
-        byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
-        String decodedString = new String(decodedBytes);
+        String decodedString = new String(Base64.decodeBase64(authHeader[1]));
 
         String[] credentials = decodedString.split(":");
-        return credentials;
+        return credentials[0];
     }
 }
