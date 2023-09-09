@@ -21,6 +21,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.AllArgsConstructor;
@@ -199,5 +200,9 @@ public class Post extends TemporalRecord {
             return;
         }
         this.viewCount++;
+    }
+
+    public Optional<String> getDeviceTokenFromWriter() {
+        return this.member.getActiveDeviceToken();
     }
 }

@@ -1,24 +1,16 @@
 package edonymyeon.backend.notification.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
-import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.ScreenType;
-import edonymyeon.backend.notification.infrastructure.FCMNotificationSender;
 import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.IntegrationFixture;
-import edonymyeon.backend.support.IntegrationTest;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor

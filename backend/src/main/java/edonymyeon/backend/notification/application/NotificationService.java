@@ -1,18 +1,23 @@
 package edonymyeon.backend.notification.application;
 
+import static edonymyeon.backend.notification.domain.NotificationMessage.COMMENT_NOTIFICATION_TITLE;
 import static edonymyeon.backend.notification.domain.NotificationMessage.THUMBS_NOTIFICATION_TITLE;
 
+import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.member.application.dto.MemberId;
+import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.application.dto.Data;
 import edonymyeon.backend.notification.application.dto.NotificationResponse;
 import edonymyeon.backend.notification.application.dto.Receiver;
 import edonymyeon.backend.notification.domain.Notification;
+import edonymyeon.backend.notification.domain.NotificationMessage;
 import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.PostSlice;
 import edonymyeon.backend.post.domain.Post;
+import jakarta.persistence.EntityManager;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class NotificationService {
+
+    private final EntityManager entityManager;
 
     private final NotificationSender notificationSender;
 
@@ -41,33 +48,45 @@ public class NotificationService {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void sendThumbsNotificationToWriter(final Post post) {
         final Optional<String> deviceToken = post.getMember().getActiveDeviceToken();
-
         if (deviceToken.isEmpty()) {
             return;
         }
 
-        final Long notificationId = saveNotification(post);
+        sendNotification(post.getMember(), ScreenType.POST, post.getId(), THUMBS_NOTIFICATION_TITLE);
+    }
 
-        final Receiver receiver = new Receiver(post.getMember(),
-                new Data(notificationId, ScreenType.POST, post.getId()));
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void sendCommentNotificationToPostWriter(Comment comment) {
+        comment = entityManager.merge(comment);
+
+        final Optional<String> deviceToken = comment.getDeviceTokenFromPostWriter();
+        if (deviceToken.isEmpty()) {
+            return;
+        }
+
+        sendNotification(comment.getWriter(), ScreenType.POST, comment.findPostId(), COMMENT_NOTIFICATION_TITLE);
+    }
+
+    private void sendNotification(final Member notifyingTarget, final ScreenType notifyingType, final Long redirectId,
+                                  final NotificationMessage notificationMessage) {
+        final Notification notification = new Notification(
+                notifyingTarget,
+                notificationMessage.getMessage(),
+                notifyingType,
+                redirectId
+        );
+        final Long notificationId = notificationRepository.save(notification).getId();
+
+        final Receiver receiver = new Receiver(notifyingTarget,
+                new Data(notificationId, notifyingType, redirectId));
         try {
             notificationSender.sendNotification(
                     receiver,
-                    THUMBS_NOTIFICATION_TITLE.getMessage()
+                    notificationMessage.getMessage()
             );
         } catch (BusinessLogicException e) {
             log.error("알림 전송에 실패했습니다.", e);
         }
-    }
-
-    private Long saveNotification(final Post post) {
-        final Notification notification = new Notification(
-                post.getMember(),
-                THUMBS_NOTIFICATION_TITLE.getMessage(),
-                ScreenType.POST,
-                post.getId()
-        );
-        return notificationRepository.save(notification).getId();
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)

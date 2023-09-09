@@ -4,8 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 
+import edonymyeon.backend.comment.application.CommentService;
+import edonymyeon.backend.comment.application.dto.request.CommentRequest;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.IntegrationFixture;
@@ -20,19 +23,18 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.transaction.support.TransactionTemplate;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
 @RunWith(MockitoJUnitRunner.class)
 class NotificationEventListenerTest extends IntegrationFixture {
 
-    private final ThumbsService thumbsService;
-
     @SpyBean
     private NotificationEventListener notificationEventListener;
 
     @Test
-    void 나의_게시글에_따봉을_누르면_알림을_전송한다() {
+    void 나의_게시글에_따봉을_누르면_알림을_전송한다(@Autowired ThumbsService thumbsService) {
         doNothing().when(notificationEventListener).sendThumbsUpNotification(any());
 
         final Member member = memberTestSupport.builder().build();
@@ -60,6 +62,26 @@ class NotificationEventListenerTest extends IntegrationFixture {
         assertThat(thumbs)
                 .as("따봉도 정상적으로 저장되어야 한다.")
                 .hasSize(1);
+    }
+
+    @Test
+    void 댓글을_남기면_글_작성자에게_알림이_간다(
+            @Autowired TransactionTemplate template,
+            @Autowired CommentService commentService,
+            @Autowired NotificationRepository notificationRepository
+    ) {
+        final Member writer = memberTestSupport.builder().build();
+        final Member commenter = memberTestSupport.builder().build();
+        final Post post = postTestSupport.builder().member(writer).build();
+        final CommentRequest commentRequest = new CommentRequest(null, "뭐 이런 글을 썼대요");
+        commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(), commentRequest);
+
+        template.execute(status -> {
+            final List<Notification> notifications = notificationRepository.findAll();
+            assertThat(notifications).hasSize(1);
+            assertThat(notifications.get(0).getMember()).isEqualTo(writer);
+            return "";
+        });
     }
 
     @Test

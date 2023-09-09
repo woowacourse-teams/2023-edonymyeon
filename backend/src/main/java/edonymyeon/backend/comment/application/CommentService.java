@@ -3,6 +3,7 @@ package edonymyeon.backend.comment.application;
 import edonymyeon.backend.comment.application.dto.request.CommentRequest;
 import edonymyeon.backend.comment.application.dto.response.CommentDto;
 import edonymyeon.backend.comment.application.dto.response.CommentsResponse;
+import edonymyeon.backend.comment.application.event.CommentSavingEvent;
 import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.comment.repository.CommentRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
@@ -19,6 +20,7 @@ import edonymyeon.backend.post.repository.PostRepository;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +40,8 @@ public class CommentService {
 
     private final ImageFileUploader imageFileUploader;
 
+    private final ApplicationEventPublisher publisher;
+
     private final Domain domain;
 
     @Transactional
@@ -54,6 +58,9 @@ public class CommentService {
                 member
         );
         commentRepository.save(comment);
+
+        publisher.publishEvent(new CommentSavingEvent(comment));
+
         return comment.getId();
     }
 
