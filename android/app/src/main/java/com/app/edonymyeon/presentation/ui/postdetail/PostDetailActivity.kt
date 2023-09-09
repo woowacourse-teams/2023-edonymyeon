@@ -201,7 +201,7 @@ class PostDetailActivity : AppCompatActivity() {
         }
 
         viewModel.reactionCount.observe(this) {
-            binding.postReactionCtv.reactionCount = it
+            binding.prvPostReaction.reactionCount = it
         }
 
         // 추천/비추천 체크박스 클릭 시 활성화/비활성화
