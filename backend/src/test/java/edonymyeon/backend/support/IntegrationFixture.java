@@ -49,7 +49,7 @@ public class IntegrationFixture {
     protected CommentTestSupport commentTestSupport;
 
     @MockBean
-    private NotificationSender notificationSender;
+    protected NotificationSender notificationSender;
 
     @LocalServerPort
     private int port;

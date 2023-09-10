@@ -1,14 +1,31 @@
 package edonymyeon.backend.notification.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.awaitility.Awaitility.await;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
+import edonymyeon.backend.auth.application.AuthService;
+import edonymyeon.backend.auth.application.dto.JoinRequest;
+import edonymyeon.backend.comment.application.CommentService;
+import edonymyeon.backend.comment.application.dto.request.CommentRequest;
+import edonymyeon.backend.global.exception.BusinessLogicException;
+import edonymyeon.backend.global.exception.ExceptionInformation;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.setting.application.SettingService;
+import edonymyeon.backend.setting.domain.SettingType;
 import edonymyeon.backend.support.IntegrationFixture;
+import edonymyeon.backend.thumbs.application.ThumbsService;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
@@ -21,25 +38,40 @@ class NotificationServiceTest extends IntegrationFixture {
 
     private final NotificationService notificationService;
 
+    private final AuthService authService;
+
+    private final SettingService settingService;
+
+    private final NotificationRepository notificationRepository;
+
     @Test
-    void 알림을_성공적으로_전송한_이후에는_알림_내역을_저장한다(@Autowired NotificationRepository notificationRepository) {
-        final Post post = postTestSupport.builder().build();
+    void 알림을_성공적으로_전송한_이후에는_알림_내역을_저장한다() {
+        final Member writer = getJoinedMember(authService);
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_THUMBS.getSerialNumber(), new ActiveMemberId(writer.getId()));
+        final Post post = postTestSupport.builder().member(writer).build();
         notificationService.sendThumbsNotificationToWriter(post);
 
         assertThat(notificationRepository.findAll()).hasSize(1);
     }
 
     @Test
-    void 알림_전송에_실패해도_기록으로_남는다(@Autowired NotificationRepository notificationRepository) {
-        final Post post = postTestSupport.builder().build();
-        org.assertj.core.api.Assertions.assertThatCode(() -> notificationService.sendThumbsNotificationToWriter(post))
+    void 알림_전송에_실패해도_기록으로_남는다() {
+        final Member writer = getJoinedMember(authService);
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_THUMBS.getSerialNumber(), new ActiveMemberId(writer.getId()));
+        final Post post = postTestSupport.builder().member(writer).build();
+
+        doThrow(new BusinessLogicException(ExceptionInformation.NOTIFICATION_REQUEST_FAILED))
+                .when(notificationSender)
+                .sendNotification(any(), any());
+
+        assertThatCode(() -> notificationService.sendThumbsNotificationToWriter(post))
                 .doesNotThrowAnyException();
 
         assertThat(notificationRepository.findAll()).hasSize(1);
     }
 
     @Test
-    void 특정_알림을_사용자가_읽었음을_체크할_수_있다(@Autowired NotificationRepository notificationRepository) {
+    void 특정_알림을_사용자가_읽었음을_체크할_수_있다() {
         final var post = postTestSupport.builder().build();
         final var notificationId = notificationRepository.save(
                         new Notification(post.getMember(), "알림이 도착했어요!", ScreenType.POST, post.getId()))
@@ -60,14 +92,93 @@ class NotificationServiceTest extends IntegrationFixture {
     }
 
     @Test
-    void 소비_절약확정을_하지_않은_사용자에게_쫌_하라는_알림을_보낸다(
-            @Autowired NotificationRepository notificationRepository
-    ) {
-        final Member member = memberTestSupport.builder().build();
-        final Post post1 = postTestSupport.builder().member(member).build();
+    void 좋아요_관련_알림이_비활성화_되어_있다면_알림을_보내지_않는다(@Autowired ThumbsService thumbsService) {
+        final Member writer = getJoinedMember(authService);
+        final Member liker = memberTestSupport.builder().build();
+        final Post post = postTestSupport.builder().member(writer).build();
+
+        thumbsService.thumbsUp(new ActiveMemberId(liker.getId()), post.getId());
+
+        verify(super.notificationSender, never()).sendNotification(any(), any());
+    }
+
+    @Test
+    void 건별_당_좋아요_알림이_활성화되어_있다면_좋아요가_달릴_때마다_알림을_발송한다(@Autowired ThumbsService thumbsService) {
+        final Member writer = getJoinedMember(authService);
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_THUMBS.getSerialNumber(), new ActiveMemberId(writer.getId()));
+
+        final Member liker = memberTestSupport.builder().build();
+        final Post post = postTestSupport.builder().member(writer).build();
+
+        thumbsService.thumbsUp(new ActiveMemberId(liker.getId()), post.getId());
+
+        verify(super.notificationSender, atLeastOnce()).sendNotification(any(), any());
+    }
+
+    @Test
+    void 열건_당_좋아요_알림이_활성화되어_있다면_좋아요가_10개_달릴_때마다_알림을_발송한다(@Autowired ThumbsService thumbsService) {
+        final Member writer = getJoinedMember(authService);
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber(), new ActiveMemberId(writer.getId()));
+
+        final Post post = postTestSupport.builder().member(writer).build();
+
+        for (int i = 0; i < 10; i++) {
+            thumbsService.thumbsUp(new ActiveMemberId(memberTestSupport.builder().build().getId()), post.getId());
+        }
+
+        verify(super.notificationSender, times(1)).sendNotification(any(), any());
+    }
+
+    @Test
+    void 댓글당_알림이_비활성화되어_있다면_알림을_받지_않는다(@Autowired CommentService commentService) {
+        final Member writer = getJoinedMember(authService);
+
+        final Member commenter = memberTestSupport.builder().build();
+        final Post post = postTestSupport.builder().member(writer).build();
+
+        commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
+                new CommentRequest(null, "Test Commentary"));
+
+        verify(super.notificationSender, never()).sendNotification(any(), any());
+    }
+
+    @Test
+    void 댓글당_알림이_활성화되어_있다면_알림을_발송한다(@Autowired CommentService commentService) {
+        final Member writer = getJoinedMember(authService);
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_COMMENT.getSerialNumber(), new ActiveMemberId(writer.getId()));
+
+        final Member commenter = memberTestSupport.builder().build();
+        final Post post = postTestSupport.builder().member(writer).build();
+
+        commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
+                new CommentRequest(null, "Test Commentary"));
+
+        verify(super.notificationSender, atLeastOnce()).sendNotification(any(), any());
+    }
+
+    @Test
+    void 리마인드_알림이_비활성화되어_있다면_알림을_받지_않는다(@Autowired AuthService authService) {
+        final Member member = getJoinedMember(authService);
+        postTestSupport.builder().member(member).build();
 
         await()
                 .atMost(Duration.ofSeconds(3))
-                .untilAsserted(() -> assertThat(notificationRepository.findAll()).hasSize(3));
+                .untilAsserted(() -> verify(notificationSender, never()).sendNotification(any(), any()));
+    }
+
+    @Test
+    void 리마인드_알림이_활성화되어_있다면_알림을_발송한다() {
+        final Member member = getJoinedMember(authService);
+        settingService.toggleSetting(SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING.getSerialNumber(), new ActiveMemberId(member.getId()));
+
+        postTestSupport.builder().member(member).build();
+
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> verify(notificationSender, never()).sendNotification(any(), any()));
+    }
+
+    private static Member getJoinedMember(final AuthService authService) {
+        return authService.joinMember(new JoinRequest("test@gmail.com", "password123!", "backfoxxx", "testDevice123"));
     }
 }

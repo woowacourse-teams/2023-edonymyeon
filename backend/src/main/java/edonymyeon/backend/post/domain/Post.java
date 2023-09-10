@@ -10,6 +10,8 @@ import edonymyeon.backend.global.domain.TemporalRecord;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -175,6 +177,10 @@ public class Post extends TemporalRecord {
 
     public Member getMember() {
         return member;
+    }
+
+    public MemberId getWriterId() {
+        return new ActiveMemberId(this.member.getId());
     }
 
     public List<PostImageInfo> getPostImageInfos() {

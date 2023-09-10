@@ -2,9 +2,11 @@ package edonymyeon.backend.notification.application;
 
 import static edonymyeon.backend.notification.domain.NotificationMessage.COMMENT_NOTIFICATION_TITLE;
 import static edonymyeon.backend.notification.domain.NotificationMessage.THUMBS_NOTIFICATION_TITLE;
+import static edonymyeon.backend.notification.domain.NotificationMessage.THUMBS_PER_10_NOTIFICATION_TITLE;
 
 import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.global.exception.BusinessLogicException;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -18,6 +20,9 @@ import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.PostSlice;
 import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.setting.application.SettingService;
+import edonymyeon.backend.setting.domain.SettingType;
+import edonymyeon.backend.thumbs.application.ThumbsService;
 import jakarta.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
@@ -42,6 +47,10 @@ public class NotificationService {
 
     private final MemberRepository memberRepository;
 
+    private final SettingService settingService;
+
+    private final ThumbsService thumbsService;
+
     public PostSlice<NotificationResponse> findNotifications(MemberId memberId,
                                                              final GeneralFindingCondition findingCondition) {
         final Slice<Notification> notificationSlice = notificationRepository.findByMemberId(memberId.id(), findingCondition.toPage());
@@ -52,24 +61,38 @@ public class NotificationService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void sendThumbsNotificationToWriter(final Post post) {
+        final Long reactionCount = thumbsService.countReactions(post.getId());
         final Optional<String> deviceToken = post.getMember().getActiveDeviceToken();
         if (deviceToken.isEmpty()) {
             return;
         }
 
-        sendNotification(post.getMember(), ScreenType.POST, post.getId(), THUMBS_NOTIFICATION_TITLE);
+        if (isDivisibleBy10(reactionCount)
+                && settingService.isSettingActive(post.getWriterId(), SettingType.NOTIFICATION_PER_10_THUMBS)) {
+            sendNotification(post.getMember(), ScreenType.POST, post.getId(), THUMBS_PER_10_NOTIFICATION_TITLE);
+        }
+
+        if (settingService.isSettingActive(post.getWriterId(), SettingType.NOTIFICATION_PER_THUMBS)) {
+            sendNotification(post.getMember(), ScreenType.POST, post.getId(), THUMBS_NOTIFICATION_TITLE);
+        }
+    }
+
+    private static boolean isDivisibleBy10(final Long reactionCount) {
+        return reactionCount % 10 == 0;
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void sendCommentNotificationToPostWriter(Comment comment) {
-        comment = entityManager.merge(comment);
+        if (settingService.isSettingActive(comment.getPost().getWriterId(), SettingType.NOTIFICATION_PER_COMMENT)) {
+            comment = entityManager.merge(comment);
 
-        final Optional<String> deviceToken = comment.getDeviceTokenFromPostWriter();
-        if (deviceToken.isEmpty()) {
-            return;
+            final Optional<String> deviceToken = comment.getDeviceTokenFromPostWriter();
+            if (deviceToken.isEmpty()) {
+                return;
+            }
+
+            sendNotification(comment.getWriter(), ScreenType.POST, comment.findPostId(), COMMENT_NOTIFICATION_TITLE);
         }
-
-        sendNotification(comment.getWriter(), ScreenType.POST, comment.findPostId(), COMMENT_NOTIFICATION_TITLE);
     }
 
     @Scheduled(cron = "${scheduler.cron.reminder}")
@@ -78,7 +101,10 @@ public class NotificationService {
         final List<Member> membersHavingUnConfirmedPost = memberRepository.findAllHavingUnConfirmedPost();
 
         for (Member member : membersHavingUnConfirmedPost) {
-            sendNotification(member, ScreenType.MYPOST, null, NotificationMessage.UNCONFIRMED_POST_REMINDER_TITLE);
+            if (settingService.isSettingActive(new ActiveMemberId(member.getId()),
+                    SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING)) {
+                sendNotification(member, ScreenType.MYPOST, null, NotificationMessage.UNCONFIRMED_POST_REMINDER_TITLE);
+            }
         }
     }
 

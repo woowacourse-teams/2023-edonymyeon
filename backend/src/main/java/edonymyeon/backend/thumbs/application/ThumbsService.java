@@ -129,4 +129,8 @@ public class ThumbsService {
         }
         thumbsRepository.delete(thumbs);
     }
+
+    public Long countReactions(final Long postId) {
+        return thumbsRepository.countByPostId(postId);
+    }
 }
