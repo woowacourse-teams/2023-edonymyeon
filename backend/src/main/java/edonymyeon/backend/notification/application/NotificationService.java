@@ -7,6 +7,7 @@ import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.notification.application.dto.Data;
 import edonymyeon.backend.notification.application.dto.NotificationResponse;
 import edonymyeon.backend.notification.application.dto.Receiver;
@@ -18,10 +19,12 @@ import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.PostSlice;
 import edonymyeon.backend.post.domain.Post;
 import jakarta.persistence.EntityManager;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Slice;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +39,8 @@ public class NotificationService {
     private final NotificationSender notificationSender;
 
     private final NotificationRepository notificationRepository;
+
+    private final MemberRepository memberRepository;
 
     public PostSlice<NotificationResponse> findNotifications(MemberId memberId,
                                                              final GeneralFindingCondition findingCondition) {
@@ -67,15 +72,19 @@ public class NotificationService {
         sendNotification(comment.getWriter(), ScreenType.POST, comment.findPostId(), COMMENT_NOTIFICATION_TITLE);
     }
 
+    @Scheduled(cron = "${scheduler.cron.reminder}")
+    @Transactional(readOnly = true)
+    public void remindConfirmingConsumptions() {
+        final List<Member> membersHavingUnConfirmedPost = memberRepository.findAllHavingUnConfirmedPost();
+
+        for (Member member : membersHavingUnConfirmedPost) {
+            sendNotification(member, ScreenType.MYPOST, null, NotificationMessage.UNCONFIRMED_POST_REMINDER_TITLE);
+        }
+    }
+
     private void sendNotification(final Member notifyingTarget, final ScreenType notifyingType, final Long redirectId,
                                   final NotificationMessage notificationMessage) {
-        final Notification notification = new Notification(
-                notifyingTarget,
-                notificationMessage.getMessage(),
-                notifyingType,
-                redirectId
-        );
-        final Long notificationId = notificationRepository.save(notification).getId();
+        final Long notificationId = saveNotification(notifyingTarget, notifyingType, redirectId, notificationMessage);
 
         final Receiver receiver = new Receiver(notifyingTarget,
                 new Data(notificationId, notifyingType, redirectId));
@@ -87,6 +96,17 @@ public class NotificationService {
         } catch (BusinessLogicException e) {
             log.error("알림 전송에 실패했습니다.", e);
         }
+    }
+
+    private Long saveNotification(final Member notifyingTarget, final ScreenType notifyingType, final Long redirectId,
+                          final NotificationMessage notificationMessage) {
+        final Notification notification = new Notification(
+                notifyingTarget,
+                notificationMessage.getMessage(),
+                notifyingType,
+                redirectId
+        );
+        return notificationRepository.save(notification).getId();
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)

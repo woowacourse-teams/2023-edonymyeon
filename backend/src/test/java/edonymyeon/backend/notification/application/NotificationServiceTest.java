@@ -1,12 +1,15 @@
 package edonymyeon.backend.notification.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
+import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.IntegrationFixture;
+import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -54,5 +57,17 @@ class NotificationServiceTest extends IntegrationFixture {
                 not -> assertThat(not.isRead()).isTrue(),
                 Assertions::fail
         );
+    }
+
+    @Test
+    void 소비_절약확정을_하지_않은_사용자에게_쫌_하라는_알림을_보낸다(
+            @Autowired NotificationRepository notificationRepository
+    ) {
+        final Member member = memberTestSupport.builder().build();
+        final Post post1 = postTestSupport.builder().member(member).build();
+
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> assertThat(notificationRepository.findAll()).hasSize(3));
     }
 }
