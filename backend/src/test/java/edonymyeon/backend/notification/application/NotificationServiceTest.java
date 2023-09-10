@@ -175,7 +175,7 @@ class NotificationServiceTest extends IntegrationFixture {
 
         await()
                 .atMost(Duration.ofSeconds(3))
-                .untilAsserted(() -> verify(notificationSender, never()).sendNotification(any(), any()));
+                .untilAsserted(() -> verify(notificationSender, times(3)).sendNotification(any(), any()));
     }
 
     private static Member getJoinedMember(final AuthService authService) {
