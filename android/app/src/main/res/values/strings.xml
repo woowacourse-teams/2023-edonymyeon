@@ -152,5 +152,6 @@
     <string name="alarm_title">알림</string>
     <string name="alarm_period_explanation">최근 3개월 내  푸시 알림 내역입니다</string>
     <string name="post_detail_comment_title">댓글</string>
+    <string name="alarm_setting_comment">댓글 알림 수신</string>
 
 </resources>
