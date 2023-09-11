@@ -39,6 +39,14 @@ public class PostCommentCountIntegrationTest extends IntegrationFixture {
         return 게시글;
     }
 
+    private Post 댓글이_달린_게시글을_만든다(final Member 작성자, final int commentCount) {
+        final Post 게시글 = postTestSupport.builder().member(작성자).build();
+        for (int i = 0; i < commentCount; i++) {
+            commentTestSupport.builder().post(게시글).build();
+        }
+        return 게시글;
+    }
+
     @Test
     void 상세_게시글_조회시_댓글수가_반영되어_조회된다() {
         int commentCount = 3;
@@ -164,6 +172,30 @@ public class PostCommentCountIntegrationTest extends IntegrationFixture {
             softly.assertThat(jsonPath.getList("content")).hasSize(1);
             softly.assertThat(jsonPath.getString("content[0].title")).contains("사과");
             softly.assertThat(jsonPath.getInt("content[0].reactionCount.commentCount")).isEqualTo(3);
+        });
+    }
+
+    @Test
+    void 내가_쓴_글_조회시_댓글수가_반영되어_조회된다() {
+        final Member 사용자 = memberTestSupport.builder().build();
+        final Post 게시글1 = 댓글이_달린_게시글을_만든다(사용자, 10);
+        final Post 게시글2 = 댓글이_달린_게시글을_만든다(사용자, 20);
+
+        final var 검색된_게시글_조회_결과 = RestAssured
+                .given()
+                .when()
+                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
+                .get("/profile/my-posts")
+                .then()
+                .log().all()
+                .extract();
+
+        final var jsonPath = 검색된_게시글_조회_결과.body().jsonPath();
+
+        assertSoftly(softly -> {
+            softly.assertThat(jsonPath.getList("content")).hasSize(2);
+            softly.assertThat(jsonPath.getInt("content[0].reactionCount.commentCount")).isEqualTo(게시글2.getCommentCount());
+            softly.assertThat(jsonPath.getInt("content[1].reactionCount.commentCount")).isEqualTo(게시글1.getCommentCount());
         });
     }
 }

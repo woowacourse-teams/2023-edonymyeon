@@ -10,6 +10,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
+import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
@@ -18,6 +19,7 @@ import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.PostReadService;
 import edonymyeon.backend.post.application.dto.response.SpecificPostInfoResponse;
 import edonymyeon.backend.report.application.ReportRequest;
+import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
@@ -211,6 +213,46 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final ExtractableResponse<Response> 게시글_삭제_응답 = 게시글을_삭제한다(작성자, 게시글_id);
 
         assertThat(게시글_삭제_응답.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    void 기본조건으로_전체게시글_조회시_게시글_이미지가_없으면_대표_이미지는_null() {
+        postTestSupport.builder().build();
+
+        final var 게시글_전체_조회_응답 = RestAssured
+                .when()
+                .get("/posts")
+                .then()
+                .extract();
+
+        final var jsonPath = 게시글_전체_조회_응답.body().jsonPath();
+
+        assertSoftly(softly -> {
+            softly.assertThat(jsonPath.getList("content")).hasSize(1);
+            softly.assertThat(jsonPath.getLong("content[0].id")).isNotNull();
+            softly.assertThat(jsonPath.getString("content[0].image")).isNull();
+        });
+    }
+
+    @Test
+    void 기본조건으로_전체게시글_조회시_게시글_이미지가_있으면_대표_이미지는_첫번째_이미지() {
+        final Post 게시글 = postTestSupport.builder().build();
+        final PostImageInfo 첫번째이미지 = postImageInfoTestSupport.builder().post(게시글).build();
+        final PostImageInfo 두번째이미지 = postImageInfoTestSupport.builder().post(게시글).build();
+
+        final var 게시글_전체_조회_응답 = RestAssured
+                .when()
+                .get("/posts")
+                .then()
+                .extract();
+
+        final var jsonPath = 게시글_전체_조회_응답.body().jsonPath();
+
+        assertSoftly(softly -> {
+            softly.assertThat(jsonPath.getList("content")).hasSize(1);
+            softly.assertThat(jsonPath.getLong("content[0].id")).isNotNull();
+            softly.assertThat(jsonPath.getString("content[0].image")).isEqualTo(domain + 첫번째이미지.getStoreName());
+        });
     }
 
     @Test

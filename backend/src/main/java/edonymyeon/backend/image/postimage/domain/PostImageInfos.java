@@ -93,4 +93,15 @@ public class PostImageInfos {
     public void deleteAll() {
         this.postImageInfos.forEach(PostImageInfo::delete);
     }
+
+    public boolean isEmpty() {
+        return this.postImageInfos.isEmpty();
+    }
+
+    public String getThumbnailName() {
+        if(this.postImageInfos.isEmpty()) {
+            return null;
+        }
+        return this.postImageInfos.get(0).getStoreName();
+    }
 }
