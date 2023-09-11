@@ -101,6 +101,7 @@
 
             <com.app.edonymyeon.presentation.common.customview.PostReactionView
                 android:id="@+id/prv_my_post_reaction"
+                reactionCount="@{post.reactionCount}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
