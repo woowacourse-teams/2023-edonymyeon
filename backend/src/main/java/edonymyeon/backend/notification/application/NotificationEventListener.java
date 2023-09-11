@@ -1,6 +1,6 @@
 package edonymyeon.backend.notification.application;
 
-import edonymyeon.backend.comment.application.event.CommentSavingEvent;
+import edonymyeon.backend.comment.application.event.SavedCommentEvent;
 import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.thumbs.application.event.ThumbsDownEvent;
 import edonymyeon.backend.thumbs.application.event.ThumbsUpEvent;
@@ -35,7 +35,7 @@ public class NotificationEventListener {
     }
 
     @TransactionalEventListener
-    public void sendCommentSavedNotification(CommentSavingEvent event) {
+    public void sendCommentSavedNotification(SavedCommentEvent event) {
         try {
             notificationService.sendCommentNotificationToPostWriter(event.comment());
         } catch (BusinessLogicException e) {

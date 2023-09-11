@@ -3,7 +3,7 @@ package edonymyeon.backend.comment.application;
 import edonymyeon.backend.comment.application.dto.request.CommentRequest;
 import edonymyeon.backend.comment.application.dto.response.CommentDto;
 import edonymyeon.backend.comment.application.dto.response.CommentsResponse;
-import edonymyeon.backend.comment.application.event.CommentSavingEvent;
+import edonymyeon.backend.comment.application.event.SavedCommentEvent;
 import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.comment.repository.CommentRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
@@ -59,7 +59,7 @@ public class CommentService {
         );
         commentRepository.save(comment);
 
-        publisher.publishEvent(new CommentSavingEvent(comment));
+        publisher.publishEvent(new SavedCommentEvent(comment));
 
         return comment.getId();
     }
