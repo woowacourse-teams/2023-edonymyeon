@@ -10,8 +10,6 @@ import edonymyeon.backend.global.domain.TemporalRecord;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
-import edonymyeon.backend.member.application.dto.ActiveMemberId;
-import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,8 +23,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -179,8 +177,8 @@ public class Post extends TemporalRecord {
         return member;
     }
 
-    public MemberId getWriterId() {
-        return new ActiveMemberId(this.member.getId());
+    public Long getWriterId() {
+        return this.member.getId();
     }
 
     public List<PostImageInfo> getPostImageInfos() {

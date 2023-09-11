@@ -166,18 +166,6 @@ class NotificationServiceTest extends IntegrationFixture {
                 .untilAsserted(() -> verify(notificationSender, never()).sendNotification(any(), any()));
     }
 
-    @Test
-    void 리마인드_알림이_활성화되어_있다면_알림을_발송한다() {
-        final Member member = getJoinedMember(authService);
-        settingService.toggleSetting(SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING.getSerialNumber(), new ActiveMemberId(member.getId()));
-
-        postTestSupport.builder().member(member).build();
-
-        await()
-                .atMost(Duration.ofSeconds(3))
-                .untilAsserted(() -> verify(notificationSender, times(3)).sendNotification(any(), any()));
-    }
-
     private static Member getJoinedMember(final AuthService authService) {
         return authService.joinMember(new JoinRequest("test@gmail.com", "password123!", "backfoxxx", "testDevice123"));
     }

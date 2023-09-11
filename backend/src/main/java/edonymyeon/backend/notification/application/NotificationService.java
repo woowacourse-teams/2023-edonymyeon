@@ -66,13 +66,13 @@ public class NotificationService {
             return;
         }
 
-        if (settingService.isSettingActive(post.getWriterId(), SettingType.NOTIFICATION_PER_10_THUMBS)
+        if (settingService.isSettingActive(new ActiveMemberId(post.getWriterId()), SettingType.NOTIFICATION_PER_10_THUMBS)
                 && isDivisibleBy10(thumbsService.countReactions(post.getId()))) {
             sendNotification(post.getMember(), ScreenType.POST, post.getId(), THUMBS_PER_10_NOTIFICATION_TITLE);
             return;
         }
 
-        if (settingService.isSettingActive(post.getWriterId(), SettingType.NOTIFICATION_PER_THUMBS)) {
+        if (settingService.isSettingActive(new ActiveMemberId(post.getWriterId()), SettingType.NOTIFICATION_PER_THUMBS)) {
             sendNotification(post.getMember(), ScreenType.POST, post.getId(), THUMBS_NOTIFICATION_TITLE);
         }
     }
@@ -83,7 +83,7 @@ public class NotificationService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void sendCommentNotificationToPostWriter(Comment comment) {
-        if (settingService.isSettingActive(comment.getPost().getWriterId(), SettingType.NOTIFICATION_PER_COMMENT)) {
+        if (settingService.isSettingActive(new ActiveMemberId(comment.getPost().getWriterId()), SettingType.NOTIFICATION_PER_COMMENT)) {
             comment = entityManager.merge(comment);
 
             final Optional<String> deviceToken = comment.getDeviceTokenFromPostWriter();
