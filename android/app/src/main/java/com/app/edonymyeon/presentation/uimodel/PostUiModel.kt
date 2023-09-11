@@ -14,6 +14,5 @@ data class PostUiModel(
     val writer: WriterUiModel,
     val reactionCount: ReactionCountUiModel,
     val recommendation: RecommendationUiModel,
-    val isScrap: Boolean,
     val isWriter: Boolean,
 ) : Parcelable

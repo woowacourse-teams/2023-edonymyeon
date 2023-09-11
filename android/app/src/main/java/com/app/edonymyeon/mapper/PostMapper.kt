@@ -21,7 +21,6 @@ fun Post.toUiModel(): PostUiModel {
         writer = writer.toUiModel(),
         reactionCount = reactionCount.toUiModel(),
         recommendation = recommendation.toUiModel(),
-        isScrap = isScrap,
         isWriter = isWriter,
     )
 }
@@ -49,7 +48,6 @@ fun PostDetailResponse.toDomain(): Post {
             isUp = this.isUp,
             isDown = this.isDown,
         ),
-        isScrap = this.isScrap,
         isWriter = this.isWriter,
     )
 }

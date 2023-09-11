@@ -123,6 +123,8 @@ public class MyPostControllerDocsTest extends DocsTest {
                 fieldWithPath("content[].consumption.purchasePrice").description("소비 확정시 구매 가격 (확정 x의 경우: 0)"),
                 fieldWithPath("content[].consumption.year").description("소비 확정 연도 (확정 x의 경우: 0)"),
                 fieldWithPath("content[].consumption.month").description("소비 확정 달 (확정 x의 경우: 0)"),
+                fieldWithPath("content[].reactionCount.viewCount").description("조회수"),
+                fieldWithPath("content[].reactionCount.commentCount").description("댓글 수"),
                 fieldWithPath("last").description("현재 요청한 페이지가 마지막 페이지인지")
         };
 

@@ -8,6 +8,11 @@ import java.time.temporal.ChronoUnit
 data class Date(
     val dateTime: String,
 ) {
+    val localDateTime: LocalDateTime
+        get() {
+            val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+            return LocalDateTime.parse(dateTime, formatter)
+        }
     val yearMonth: YearMonth
         get() {
             val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
