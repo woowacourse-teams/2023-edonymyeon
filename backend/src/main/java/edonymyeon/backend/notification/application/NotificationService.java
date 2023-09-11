@@ -95,6 +95,7 @@ public class NotificationService {
         }
     }
 
+    // 매일 오후 8시
     @Scheduled(cron = "0 0 20 * * *")
     @Transactional(readOnly = true)
     public void remindConfirmingConsumptions() {
