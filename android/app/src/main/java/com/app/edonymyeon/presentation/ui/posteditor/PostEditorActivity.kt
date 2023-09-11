@@ -13,7 +13,6 @@ import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
-import android.view.inputmethod.InputMethodManager
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +20,7 @@ import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostEditorBinding
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
+import com.app.edonymyeon.presentation.common.activityutil.hideKeyboard
 import com.app.edonymyeon.presentation.common.dialog.LoadingDialog
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import com.app.edonymyeon.presentation.ui.posteditor.adapter.PostEditorImagesAdapter
@@ -34,7 +34,7 @@ import java.time.LocalDateTime
 class PostEditorActivity : AppCompatActivity() {
 
     private val viewModel: PostEditorViewModel by viewModels {
-        PostEditorViewModelFactory(application, PostRepositoryImpl(PostRemoteDataSource()))
+        PostEditorViewModelFactory(PostRepositoryImpl(PostRemoteDataSource()))
     }
     private val adapter: PostEditorImagesAdapter by lazy {
         PostEditorImagesAdapter(::deleteImages)
@@ -211,9 +211,9 @@ class PostEditorActivity : AppCompatActivity() {
         val postPrice = binding.etPostPrice.text.toString().toInt()
         val postEditor = PostEditor(postTitle, postContent, postPrice)
         when (originActivityKey) {
-            POST_CODE -> viewModel.savePost(postEditor)
+            POST_CODE -> viewModel.savePost(this, postEditor)
             UPDATE_CODE -> post?.let {
-                viewModel.updatePost(it.id, postEditor)
+                viewModel.updatePost(this, it.id, postEditor)
             }
         }
     }
@@ -297,12 +297,6 @@ class PostEditorActivity : AppCompatActivity() {
     private fun navigateToDetail() {
         startActivity(PostDetailActivity.newIntent(this, viewModel.postId.value ?: -1))
         finish()
-    }
-
-    private fun hideKeyboard() {
-        val imm: InputMethodManager =
-            getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
     }
 
     companion object {
