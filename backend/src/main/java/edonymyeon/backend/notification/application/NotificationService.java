@@ -95,7 +95,7 @@ public class NotificationService {
         }
     }
 
-    @Scheduled(cron = "${scheduler.cron.reminder}")
+    @Scheduled(cron = "0 0 20 * * *")
     @Transactional(readOnly = true)
     public void remindConfirmingConsumptions() {
         final List<Member> membersHavingUnConfirmedPost = memberRepository.findAllHavingUnConfirmedPost();
