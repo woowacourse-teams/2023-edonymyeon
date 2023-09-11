@@ -1,78 +1,153 @@
 package edonymyeon.backend.setting.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 
+import edonymyeon.backend.auth.application.AuthService;
+import edonymyeon.backend.auth.application.dto.JoinRequest;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.setting.domain.Setting;
 import edonymyeon.backend.setting.domain.SettingType;
+import edonymyeon.backend.setting.repository.SettingRepository;
 import edonymyeon.backend.support.IntegrationFixture;
-import edonymyeon.backend.support.IntegrationTest;
-import jakarta.persistence.EntityManager;
-import java.lang.reflect.Field;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ReflectionUtils;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
 @RequiredArgsConstructor
-@IntegrationTest
+@SuppressWarnings("NonAsciiCharacters")
 class SettingServiceTest extends IntegrationFixture {
 
-    private final SettingService settingService;
+    @SpyBean
+    private SettingService settingService;
 
-    private static void 설정_간_의존성을_검사한다(final Setting setting) {
-        final SettingType settingType = getPreferenceKey(setting);
-        final List<Setting> dependentSettings = getDependentPreferences(setting);
-        for (Setting dependentSetting : dependentSettings) {
-            final SettingType dependentSettingType = getPreferenceKey(dependentSetting);
-            assertThat(dependentSettingType.isDependentBy(settingType)).isTrue();
-        }
-    }
+    private final SettingRepository settingRepository;
 
-    private static SettingType getPreferenceKey(final Setting setting) {
-        final Field preferenceKeyField = ReflectionUtils.findField(Setting.class, "settingType");
-        ReflectionUtils.makeAccessible(preferenceKeyField);
-        return (SettingType) ReflectionUtils.getField(preferenceKeyField, setting);
-    }
+    @Test
+    void 최초_회원가입이_완료된_이후_설정_초기화_작업을_진행한다(
+            @Autowired AuthService authService
+    ) {
+        authService.joinMember(new JoinRequest(
+                "test@gmail.com",
+                "testPassword123!",
+                "nickname",
+                "testDeviceToken"
+        ));
 
-    private static List<Setting> getDependentPreferences(final Setting setting) {
-        final Field dependentPreferencesField = ReflectionUtils.findField(Setting.class, "dependentSettings");
-        ReflectionUtils.makeAccessible(dependentPreferencesField);
-        return (List<Setting>) ReflectionUtils.getField(dependentPreferencesField, setting);
-    }
-
-    private static List<Setting> findPreferencesByMember(final EntityManager entityManager, final Member member) {
-        return entityManager
-                .createQuery(
-                        "select p from Setting p left join fetch p.dependentSettings where p.member.id = :memberId",
-                        Setting.class)
-                .setParameter("memberId", member.getId())
-                .getResultList();
+        verify(settingService, atLeastOnce()).initializeSettings(any());
     }
 
     @Test
-    void 유저_가입_후_설정을_초기화할_수_있다(@Autowired EntityManager entityManager) {
-        final Member member = 사용자를_하나_만든다();
-        settingService.initializeSettings(member);
+    void 설정을_초기화하면_회원에_대한_기본_설정이_저장되어_있다() {
+        final Member member = 회원을_저장하고_기본설정을_부여한다();
 
-        final List<Setting> settings = findPreferencesByMember(entityManager, member);
+        List<Setting> settings = settingRepository.findByMemberId(member.getId());
+        assertThat(settings).hasSize(5);
 
-        assertThat(settings)
-                .as("존재하는 설정 항목의 개수만큼 초기화한다.").hasSize(SettingType.values().length);
-
-        for (Setting setting : settings) {
-            설정_간_의존성을_검사한다(setting);
-        }
+        assertThat(settings.stream()
+                .map(Setting::isActive)
+                .toList())
+                .containsOnly(false);
     }
 
     @Test
-    void 초기화된_설정은_전부_비활성화_되어있다(@Autowired EntityManager entityManager) {
-        final Member member = 사용자를_하나_만든다();
+    void 설정을_껐다가_켤_수_있다() {
+        final Member member = 회원을_저장하고_기본설정을_부여한다();
+
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber(), new ActiveMemberId(member.getId()));
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
+                .isActive()).isTrue();
+
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber(), new ActiveMemberId(member.getId()));
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
+                .isActive()).isFalse();
+    }
+
+    @Test
+    void 전략에_따라_어떤_알림이_켜지면_어떤_알림은_꺼지기도_한다() {
+        final Member member = 회원을_저장하고_기본설정을_부여한다();
+
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber(), new ActiveMemberId(member.getId()));
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
+                .isActive()).isTrue();
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_THUMBS)
+                .isActive()).isFalse();
+
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_THUMBS.getSerialNumber(), new ActiveMemberId(member.getId()));
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
+                .isActive()).isFalse();
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_THUMBS)
+                .isActive()).isTrue();
+    }
+
+    @Test
+    void 동일한_가중치의_설정이_enabled되면_동일한_가중치인_설정은_모두_disabled() {
+        final Member member = 회원을_저장하고_기본설정을_부여한다();
+
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber(),
+                new ActiveMemberId(member.getId()));
+
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
+                .isActive()).isTrue();
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_THUMBS)
+                .isActive()).isFalse();
+
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_THUMBS.getSerialNumber(),
+                new ActiveMemberId(member.getId()));
+
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
+                .isActive()).isFalse();
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_THUMBS)
+                .isActive()).isTrue();
+    }
+
+    @Test
+    void ALL_type인_설정이_disabled되면_전체_설정_disabled() {
+        final Member member = 회원을_저장하고_기본설정을_부여한다();
+
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber(), new ActiveMemberId(member.getId()));
+
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
+                .isActive()).isTrue();
+
+        settingService.toggleSetting(SettingType.NOTIFICATION.getSerialNumber(), new ActiveMemberId(member.getId()));
+
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
+                .isActive()).isFalse();
+    }
+
+    @Test
+    void ALL이_아닌_설정이_enabled_또는_disabled되면_다른_type의_설정에_영향_X() {
+        final Member member = 회원을_저장하고_기본설정을_부여한다();
+
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber(), new ActiveMemberId(member.getId()));
+
+        settingService.toggleSetting(SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING.getSerialNumber(), new ActiveMemberId(member.getId()));
+
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION_PER_10_THUMBS)
+                .isActive()).isTrue();
+    }
+
+    @Test
+    void 설정이_하나라도_enabled되면_ALL_타입의_설정_enabled() {
+        final Member member = 회원을_저장하고_기본설정을_부여한다();
+
+        settingService.toggleSetting(SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING.getSerialNumber(), new ActiveMemberId(member.getId()));
+
+        assertThat(settingRepository.findByMemberIdAndSettingType(member.getId(), SettingType.NOTIFICATION)
+                .isActive()).isTrue();
+    }
+
+    @NotNull
+    private Member 회원을_저장하고_기본설정을_부여한다() {
+        final Member member = memberTestSupport.builder().build();
         settingService.initializeSettings(member);
-        final List<Setting> settings = findPreferencesByMember(entityManager, member);
-        for (Setting setting : settings) {
-            assertThat(setting.isEnabled()).isFalse();
-        }
+        return member;
     }
 }

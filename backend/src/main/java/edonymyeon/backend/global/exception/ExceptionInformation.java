@@ -12,6 +12,7 @@ public enum ExceptionInformation {
     REQUEST_PARAMETER_NOT_EXIST(1, "필수 쿼리 파라미터가 비었습니다."),
     REQUEST_FILE_SIZE_TOO_LARGE(2, "첨부 파일의 용량이 제한을 초과하였습니다."),
     CACHE_NOT_FOUND(100, "캐싱된 값이 없습니다."),
+    INVALID_SETTING_MANAGER_ASSIGNED(201, "잘못된 설정 매니저가 매핑되었습니다"),
 
     // 클래스이름_필드명_틀린내용
     // 1___: 인증 관련
@@ -20,6 +21,9 @@ public enum ExceptionInformation {
     AUTHORIZATION_EMPTY(1523, "인증 정보가 없습니다."),
     ILLEGAL_ARGUMENT_TYPE(1524, "잘못된 타입의 요청입니다."),
     LOGOUT_FAILED(1525, "로그아웃에 실패하였습니다."),
+    NOT_SUPPORTED_VERSION(1526, "지원하지 않는 버전입니다."),
+    NOT_SUPPORTED_ALGORITHM(1527, "현재 지원하지 않는 알고리즘입니다."),
+    ENCODED_PASSWORD_INVALID(1528, "잘못 인코딩된 비밀번호입니다."),
 
     // 2___: 게시글 관련
     POST_ID_NOT_FOUND(2000, "존재하지 않는 게시글입니다."),
@@ -39,6 +43,8 @@ public enum ExceptionInformation {
     MEMBER_EMAIL_DUPLICATE(3004, "이미 존재하는 이메일입니다."),
     MEMBER_NICKNAME_DUPLICATE(3005, "이미 존재하는 닉네임입니다."),
     MEMBER_IS_DELETED(3006, "삭제된 회원입니다."),
+    MEMBER_SETTING_NOT_INITIALIZED(3007, "회원 설정 정보가 정상적으로 초기화되지 않았습니다."),
+    MEMBER_SETTING_SERIAL_NOT_FOUNT(3010, "존재하지 않는 회원 설정입니다."),
 
     // 4___: 추천 관련
     THUMBS_UP_ALREADY_EXIST(4000, "이미 추천된 게시글 입니다."),
