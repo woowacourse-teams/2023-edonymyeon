@@ -215,7 +215,7 @@
                         app:layout_constraintTop_toBottomOf="@id/tv_content" />
 
                     <com.app.edonymyeon.presentation.common.customview.PostReactionView
-                        android:id="@+id/post_reaction_ctv"
+                        android:id="@+id/prv_post_reaction"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         app:layout_constraintDimensionRatio="H, 360:24"
@@ -230,7 +230,7 @@
                         app:layout_constraintDimensionRatio="H, 360:16"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/post_reaction_ctv" />
+                        app:layout_constraintTop_toBottomOf="@id/prv_post_reaction" />
 
                     <com.google.android.material.divider.MaterialDivider
                         android:id="@+id/div_post_and_comment"

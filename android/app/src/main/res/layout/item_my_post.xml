@@ -24,11 +24,12 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_item"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:background="@drawable/bg_ffffff_radius_10dp"
             android:elevation="4dp"
             android:onClick="@{() -> listener.onMyPostClick(post.id)}"
-            android:paddingVertical="8dp"
+            android:paddingVertical="10dp"
+            app:layout_constraintDimensionRatio="H, 360:150"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -89,48 +90,57 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="4dp"
                 android:lines="1"
                 android:text="@{@string/my_post_createdAt(post.createdAt.toString())}"
                 android:textColor="@color/gray_615f5f"
                 android:textSize="12sp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/prv_my_post_reaction"
                 app:layout_constraintStart_toStartOf="@id/tv_my_post_title"
+                app:layout_constraintTop_toBottomOf="@id/space_thumbnail_bottom"
                 tools:text="1일전" />
 
-            <Space
-                android:id="@+id/space_date_bottom"
-                android:layout_width="0dp"
-                android:layout_height="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/iv_my_post_thumb_nail" />
+            <com.app.edonymyeon.presentation.common.customview.PostReactionView
+                android:id="@+id/prv_my_post_reaction"
+                reactionCount="@{post.reactionCount}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_my_post_title" />
 
             <ImageView
                 android:id="@+id/iv_my_post_thumb_nail"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
                 android:scaleType="centerCrop"
                 app:imgUrlFitCenter="@{post.image}"
-                app:layout_constraintBottom_toTopOf="@id/space_date_bottom"
+                app:layout_constraintBottom_toTopOf="@id/tv_my_post_name_date"
                 app:layout_constraintDimensionRatio="H,50:40"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_my_post_content"
                 app:layout_constraintTop_toBottomOf="@id/tv_my_post_consumption_date"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_percent="0.16"
                 tools:src="@drawable/ic_launcher_background" />
+
+            <Space
+                android:id="@+id/space_thumbnail_bottom"
+                android:layout_width="0dp"
+                android:layout_height="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/iv_my_post_thumb_nail" />
 
             <include
                 android:id="@+id/cv_my_post_consumption"
                 layout="@layout/view_my_post_comsumption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:visibility="@{post.consumption.type.equals(`NONE`) ? View.VISIBLE: View.GONE}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/space_date_bottom"
+                app:layout_constraintBottom_toBottomOf="@id/prv_my_post_reaction"
+                app:layout_constraintEnd_toEndOf="@id/iv_my_post_thumb_nail"
                 bind:listener="@{listener}"
                 bind:postId="@{post.id}" />
 
@@ -139,11 +149,9 @@
                 layout="@layout/view_my_post_consumption_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
                 android:visibility="@{post.consumption.type.equals(`NONE`) ? View.GONE: View.VISIBLE}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/space_date_bottom"
+                app:layout_constraintBottom_toBottomOf="@id/prv_my_post_reaction"
+                app:layout_constraintEnd_toEndOf="@id/iv_my_post_thumb_nail"
                 bind:consumption="@{post.consumption}"
                 bind:listener="@{listener}"
                 bind:postId="@{post.id}" />
