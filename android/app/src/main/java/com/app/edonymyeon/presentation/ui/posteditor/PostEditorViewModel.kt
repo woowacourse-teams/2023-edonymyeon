@@ -112,38 +112,6 @@ class PostEditorViewModel(
         }
     }
 
-    /* private fun processAndAdjustImage(uri: Uri): File {
-         val bitmap = uri.getBitmapFromUri()
-         val file = bitmap?.convertResizeImage()
-         file?.updateExifOrientation(uri)
-         return file ?: File("")
-     }
-
-     private fun Uri.getBitmapFromUri(): Bitmap? {
-         return application.contentResolver.openInputStream(this)?.use {
-             BitmapFactory.decodeStream(it)
-         }
-     }
-
-     private fun Bitmap.convertResizeImage(): File {
-         val tempFile = File.createTempFile("resized_image", ".jpg", application.cacheDir)
-
-         FileOutputStream(tempFile).use { fileOutputStream ->
-             this.compress(Bitmap.CompressFormat.JPEG, 80, fileOutputStream)
-         }
-         return tempFile
-     }
-
-     private fun File.updateExifOrientation(uri: Uri) {
-         application.contentResolver.openInputStream(uri)?.use {
-             val exif = ExifInterface(it)
-             exif.getAttribute(ExifInterface.TAG_ORIENTATION)?.let {
-                 val newExif = ExifInterface(absolutePath)
-                 newExif.setAttribute(ExifInterface.TAG_ORIENTATION, it)
-             }
-         }
-     }*/
-
     companion object {
         private const val PREFIX_HTTP = "http"
         private const val PREFIX_CONTENT = "content"
