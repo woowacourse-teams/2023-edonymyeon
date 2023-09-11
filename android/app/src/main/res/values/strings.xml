@@ -64,7 +64,7 @@
     <!-- my page   -->
     <string name="my_page_title">마이페이지</string>
     <string name="my_page_payment_title">월 별 소비/절약 그래프</string>
-    <string name="my_page_my_post">내가 쓴 글</string>
+    <string name="my_page_my_post">내가 쓴 글 및 소비/절약 확정</string>
     <string name="my_page_my_comment">댓글 단 글</string>
     <string name="my_page_update_user_info">회원 정보 수정</string>
     <string name="my_page_alarm_setting">푸시 알람 설정</string>
@@ -110,7 +110,7 @@
     <string name="post_all_post">전체 게시물</string>
 
     <!--my_post-->
-    <string name="my_post_page_title">내가 쓴 글</string>
+    <string name="my_post_page_title">내가 쓴 글 및 소비/절약 확정</string>
     <string name="my_post_consumption_purchase">샀어요</string>
     <string name="my_post_consumption_not_purchase">안샀어요</string>
     <string name="my_post_consumption_cancel">확정취소</string>
