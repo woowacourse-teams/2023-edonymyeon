@@ -17,7 +17,7 @@ public record GeneralPostInfoResponse(
         return new GeneralPostInfoResponse(
                 post.getId(),
                 post.getTitle(),
-                post.getThumbnailName() == null ? null : domain + post.getThumbnailName(),
+                post.hasThumbnail() ? domain + post.getThumbnailName() : null,
                 post.getContent(),
                 new WriterResponse(post.getMember().getNickname()),
                 post.getCreatedAt(),

@@ -18,7 +18,7 @@ public record MyPostResponse(
         return new MyPostResponse(
                 post.getId(),
                 post.getTitle(),
-                post.getThumbnailName() == null ? null : domain.getDomain() + post.getThumbnailName(),
+                post.hasThumbnail() ? domain.getDomain() + post.getThumbnailName() : null,
                 post.getContent(),
                 post.getCreatedAt(),
                 postConsumptionResponse,
