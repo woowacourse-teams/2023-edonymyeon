@@ -64,9 +64,10 @@ class AlarmService : FirebaseMessagingService() {
                 }
             }
         }
+
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_bottom_nav_alarm_off)
-            .setContentTitle(message.data["title"])
+            .setContentTitle(message.notification?.title)
             .setContentText(message.data["content"])
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(

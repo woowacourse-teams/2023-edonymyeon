@@ -46,8 +46,8 @@ class MainActivity : AppCompatActivity() {
     private fun navigateByIntent() {
         when (intent.extras?.getString(NOTIFICATION_CLICK_EVENT)) {
             NOTIFICATION_CLICK_EVENT_POST -> {
-                val postId = intent.extras?.getLong(NOTIFICATION_POST_ID)
-                val notificationId = intent.extras?.getLong(NOTIFICATION_ID)
+                val postId = (intent.extras?.getString(NOTIFICATION_POST_ID) ?: "0").toLong()
+                val notificationId = (intent.extras?.getString(NOTIFICATION_ID) ?: "0").toLong()
                 navigateToPostDetail(postId, notificationId)
             }
 
