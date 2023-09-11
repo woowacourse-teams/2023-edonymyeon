@@ -61,14 +61,13 @@ public class NotificationService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void sendThumbsNotificationToWriter(final Post post) {
-        final Long reactionCount = thumbsService.countReactions(post.getId());
         final Optional<String> deviceToken = post.getMember().getActiveDeviceToken();
         if (deviceToken.isEmpty()) {
             return;
         }
 
-        if (isDivisibleBy10(reactionCount)
-                && settingService.isSettingActive(post.getWriterId(), SettingType.NOTIFICATION_PER_10_THUMBS)) {
+        if (settingService.isSettingActive(post.getWriterId(), SettingType.NOTIFICATION_PER_10_THUMBS)
+                && isDivisibleBy10(thumbsService.countReactions(post.getId()))) {
             sendNotification(post.getMember(), ScreenType.POST, post.getId(), THUMBS_PER_10_NOTIFICATION_TITLE);
             return;
         }
