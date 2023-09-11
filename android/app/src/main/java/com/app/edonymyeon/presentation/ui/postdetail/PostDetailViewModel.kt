@@ -74,6 +74,10 @@ class PostDetailViewModel(
     val isCommentSaveSuccess: LiveData<Boolean>
         get() = _isCommentSaveSuccess
 
+    private val _reportSaveMessage = MutableLiveData<String>()
+    val reportSaveMessage: LiveData<String>
+        get() = _reportSaveMessage
+
     fun getPostDetail(postId: Long) {
         viewModelScope.launch {
             postRepository.getPostDetail(postId)
@@ -104,7 +108,9 @@ class PostDetailViewModel(
     fun postReport(type: ReportType, postId: Long, reportId: Int, content: String?) {
         viewModelScope.launch {
             reportRepository.postReport(type.toString(), postId, reportId, content)
-                .onSuccess { }
+                .onSuccess {
+                    _reportSaveMessage.value = MESSAGE_REPORT_SUCCESS
+                }
                 .onFailure {
                     it as CustomThrowable
                 }
@@ -260,5 +266,9 @@ class PostDetailViewModel(
     private fun checkLoadingSuccess() {
         _isLoadingSuccess.value =
             _isPostLoadingSuccess.value == true && _isCommentsLoadingSuccess.value == true
+    }
+
+    companion object {
+        private const val MESSAGE_REPORT_SUCCESS = "신고가 접수되었습니다."
     }
 }

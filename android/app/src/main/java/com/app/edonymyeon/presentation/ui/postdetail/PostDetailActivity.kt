@@ -245,6 +245,10 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
                 }
             }
         }
+
+        viewModel.reportSaveMessage.observe(this) {
+            binding.root.makeSnackbar(it)
+        }
     }
 
     private fun setListener() {
