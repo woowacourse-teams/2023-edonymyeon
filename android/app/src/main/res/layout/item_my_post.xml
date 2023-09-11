@@ -24,11 +24,12 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_item"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:background="@drawable/bg_ffffff_radius_10dp"
             android:elevation="4dp"
             android:onClick="@{() -> listener.onMyPostClick(post.id)}"
             android:paddingVertical="10dp"
+            app:layout_constraintDimensionRatio="H, 360:150"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -94,9 +95,9 @@
                 android:text="@{@string/my_post_createdAt(post.createdAt.toString())}"
                 android:textColor="@color/gray_615f5f"
                 android:textSize="12sp"
-                app:layout_constraintTop_toBottomOf="@id/space_thumbnail_bottom"
                 app:layout_constraintBottom_toTopOf="@id/prv_my_post_reaction"
                 app:layout_constraintStart_toStartOf="@id/tv_my_post_title"
+                app:layout_constraintTop_toBottomOf="@id/space_thumbnail_bottom"
                 tools:text="1일전" />
 
             <com.app.edonymyeon.presentation.common.customview.PostReactionView
@@ -119,8 +120,8 @@
                 app:layout_constraintBottom_toTopOf="@id/tv_my_post_name_date"
                 app:layout_constraintDimensionRatio="H,50:40"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_my_post_consumption_date"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintWidth_percent="0.16"
                 tools:src="@drawable/ic_launcher_background" />
 
