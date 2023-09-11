@@ -2,13 +2,13 @@ package com.app.edonymyeon.presentation.ui.postdetail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
+import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
 import com.app.edonymyeon.presentation.uimodel.RecommendationUiModel
@@ -23,7 +23,7 @@ class PostDetailViewModel(
     private val postRepository: PostRepository,
     private val recommendRepository: RecommendRepository,
     private val reportRepository: ReportRepository,
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _post = MutableLiveData<PostUiModel>()
     val post: LiveData<PostUiModel>
@@ -49,7 +49,7 @@ class PostDetailViewModel(
         get() = _isLoadingSuccess
 
     fun getPostDetail(postId: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             postRepository.getPostDetail(postId)
                 .onSuccess {
                     it as Post
@@ -65,7 +65,7 @@ class PostDetailViewModel(
     }
 
     fun deletePost(postId: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             postRepository.deletePost(postId)
                 .onSuccess {}
                 .onFailure {
@@ -75,7 +75,7 @@ class PostDetailViewModel(
     }
 
     fun postReport(postId: Long, reportId: Int, content: String?) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             reportRepository.postReport(postId, reportId, content)
                 .onSuccess { }
                 .onFailure {
@@ -167,7 +167,7 @@ class PostDetailViewModel(
         postId: Long,
         event: suspend RecommendRepository.(Long) -> Result<Any>,
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             recommendRepository.event(postId)
                 .onSuccess {
                     _isRecommendationRequestDone.value = true

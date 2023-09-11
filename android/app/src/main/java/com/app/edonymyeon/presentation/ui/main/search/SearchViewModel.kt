@@ -2,15 +2,15 @@ package com.app.edonymyeon.presentation.ui.main.search
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.mapper.toUiModel
+import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
 import com.domain.edonymyeon.model.Page
 import com.domain.edonymyeon.repository.SearchRepository
 import kotlinx.coroutines.launch
 
-class SearchViewModel(private val searchRepository: SearchRepository) : ViewModel() {
+class SearchViewModel(private val searchRepository: SearchRepository) : BaseViewModel() {
     private var currentPage = Page()
     private var isLastPage = false
 
@@ -18,7 +18,7 @@ class SearchViewModel(private val searchRepository: SearchRepository) : ViewMode
     val searchResult: LiveData<List<PostItemUiModel>> get() = _searchResult
 
     fun getSearchResult(query: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             searchRepository.getSearchResult(query, currentPage.value)
                 .onSuccess { result ->
                     _searchResult.value = searchResult.value.orEmpty() + result.posts.map {

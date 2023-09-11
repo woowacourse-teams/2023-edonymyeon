@@ -1,10 +1,10 @@
 package com.app.edonymyeon.presentation.ui.alarmsetting
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.domain.edonymyeon.repository.ProfileRepository
 
-class AlarmSettingViewModel(private val alarmRepository: ProfileRepository) : ViewModel() {
+class AlarmSettingViewModel(private val alarmRepository: ProfileRepository) : BaseViewModel() {
     private val _isPushAlarmOn = MutableLiveData<Boolean>()
     val isPushAlarmOn: MutableLiveData<Boolean> get() = _isPushAlarmOn
     private val _isOneReactionAlarmOn = MutableLiveData<Boolean>()
