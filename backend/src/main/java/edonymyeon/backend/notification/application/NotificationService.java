@@ -70,6 +70,7 @@ public class NotificationService {
         if (isDivisibleBy10(reactionCount)
                 && settingService.isSettingActive(post.getWriterId(), SettingType.NOTIFICATION_PER_10_THUMBS)) {
             sendNotification(post.getMember(), ScreenType.POST, post.getId(), THUMBS_PER_10_NOTIFICATION_TITLE);
+            return;
         }
 
         if (settingService.isSettingActive(post.getWriterId(), SettingType.NOTIFICATION_PER_THUMBS)) {
