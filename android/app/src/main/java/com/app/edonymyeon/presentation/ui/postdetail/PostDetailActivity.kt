@@ -380,8 +380,12 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
     }
 
     override fun onReportComment(commentId: Long) {
-        ReportDialog(commentId, ReportType.COMMENT, viewModel)
-            .show(supportFragmentManager, "ReportDialog")
+        if (viewModel.isLogin) {
+            ReportDialog(commentId, ReportType.COMMENT, viewModel)
+                .show(supportFragmentManager, "ReportDialog")
+        } else {
+            makeLoginSnackbar()
+        }
     }
 
     companion object {
