@@ -78,7 +78,7 @@ class MyPostViewModelTest {
         )
 
         // when
-        viewModel.getMyPosts()
+        viewModel.getMyPosts(notificationId)
 
         // then
         assertEquals(fakeMyPost.map { it.toUiModel() }, viewModel.posts.value)
@@ -108,7 +108,7 @@ class MyPostViewModelTest {
         } returns Result.success(Unit)
 
         // when
-        viewModel.getMyPosts()
+        viewModel.getMyPosts(notificationId)
         viewModel.postPurchaseConfirm(
             postId,
             consumption.purchasePrice,
@@ -146,7 +146,7 @@ class MyPostViewModelTest {
         } returns Result.success(Unit)
 
         // when
-        viewModel.getMyPosts()
+        viewModel.getMyPosts(notificationId)
         viewModel.postSavingConfirm(
             postId,
             consumption.year,
@@ -181,7 +181,7 @@ class MyPostViewModelTest {
         } returns Result.success(Unit)
 
         // when
-        viewModel.getMyPosts()
+        viewModel.getMyPosts(notificationId)
         viewModel.deleteConfirm(
             postId,
         )
