@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -40,20 +41,29 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         final HttpSession session = request.getSession();
 
         if (Objects.isNull(session)) {
-            if (!Objects.requireNonNull(parameter.getParameterAnnotation(AuthPrincipal.class)).required()) {
-                return new AnonymousMemberId();
-            }
-            throw new EdonymyeonException(AUTHORIZATION_EMPTY);
+            return getAnonymousMemberId(parameter);
         }
 
         final Long userId = getUserId(session);
 
         if (Objects.isNull(userId)) {
-            throw new EdonymyeonException(AUTHORIZATION_EMPTY);
+            return getAnonymousMemberId(parameter);
         }
 
         session.setMaxInactiveInterval(USER.getValidatedTime());
         return new ActiveMemberId(userId);
+    }
+
+    @NotNull
+    private AnonymousMemberId getAnonymousMemberId(final MethodParameter parameter) {
+        if (authPrincipalFrom(parameter).required()) {
+            throw new EdonymyeonException(AUTHORIZATION_EMPTY);
+        }
+        return new AnonymousMemberId();
+    }
+
+    private AuthPrincipal authPrincipalFrom(final MethodParameter parameter) {
+        return Objects.requireNonNull(parameter.getParameterAnnotation(AuthPrincipal.class));
     }
 
     private Long getUserId(final HttpSession session) {
