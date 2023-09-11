@@ -25,7 +25,7 @@ import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
-import edonymyeon.backend.auth.application.dto.MemberResponse;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.support.DocsTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -38,7 +38,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class AuthControllerDocsTest extends DocsTest {
+class AuthControllerDocsTest extends DocsTest {
 
     @MockBean
     private AuthService authService;
@@ -86,10 +86,10 @@ public class AuthControllerDocsTest extends DocsTest {
     void 카카오_로그인_문서화() throws Exception {
         final KakaoLoginRequest kakaoLoginRequest = new KakaoLoginRequest("accessToken!!!!!", "deviceToken");
         final KakaoLoginResponse kakaoLoginResponse = new KakaoLoginResponse(1L);
-        final MemberResponse memberResponse = new MemberResponse("example@email.com", "password123!");
+        final ActiveMemberId activeMemberId = new ActiveMemberId(1L);
 
         when(kakaoAuthResponseProvider.request(kakaoLoginRequest)).thenReturn(kakaoLoginResponse);
-        when(authService.loginByKakao(kakaoLoginResponse, kakaoLoginRequest.deviceToken())).thenReturn(memberResponse);
+        when(authService.loginByKakao(kakaoLoginResponse, kakaoLoginRequest.deviceToken())).thenReturn(activeMemberId);
 
         final MockHttpServletRequestBuilder 로그인_요청 = post("/auth/kakao/login")
                 .contentType(MediaType.APPLICATION_JSON)

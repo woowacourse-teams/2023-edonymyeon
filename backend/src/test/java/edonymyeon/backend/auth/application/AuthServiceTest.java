@@ -16,7 +16,6 @@ import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.auth.application.dto.LogoutRequest;
-import edonymyeon.backend.auth.application.dto.MemberResponse;
 import edonymyeon.backend.auth.domain.PasswordEncoder;
 import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.domain.Member;
@@ -139,20 +138,6 @@ class AuthServiceTest {
             assertDoesNotThrow(() -> authService.login(loginRequest));
             verify(passwordEncoder, atLeastOnce()).encode(any());
             verify(passwordEncoder, atLeastOnce()).matches(any(), any());
-        });
-    }
-
-    @Test
-    void 카카오_로그인시_DB에_암호화된_비밀번호와_입력받은_비밀번호를_검증한다() {
-        final SocialInfo socialInfo = SocialInfo.of(SocialInfo.SocialType.KAKAO, 1L);
-        final Member member = authService.joinSocialMember(socialInfo);
-
-        final KakaoLoginResponse kakaoLoginResponse = new KakaoLoginResponse(socialInfo.getSocialId());
-        final MemberResponse memberResponse = authService.loginByKakao(kakaoLoginResponse, "");
-
-        assertSoftly(soft -> {
-            soft.assertThat(member.getEmail()).isEqualTo(memberResponse.email());
-            soft.assertThat(member.getPassword()).isEqualTo(memberResponse.password());
         });
     }
 }
