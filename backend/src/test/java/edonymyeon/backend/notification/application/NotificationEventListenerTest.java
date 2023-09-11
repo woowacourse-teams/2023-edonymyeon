@@ -3,11 +3,14 @@ package edonymyeon.backend.notification.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 
 import edonymyeon.backend.auth.application.AuthService;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.comment.application.CommentService;
 import edonymyeon.backend.comment.application.dto.request.CommentRequest;
+import edonymyeon.backend.global.exception.BusinessLogicException;
+import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.domain.Notification;
@@ -94,6 +97,11 @@ class NotificationEventListenerTest extends IntegrationFixture {
 
     @Test
     void 알림_전송_트랜잭션이_실패했다고_해서_따봉까지_롤백되어서는_안된다() {
+        doThrow(new BusinessLogicException(ExceptionInformation.NOTIFICATION_REQUEST_FAILED))
+                .when(notificationSender)
+                .sendNotification(any(), any());
+
+
         final Member liker = 사용자를_하나_만든다();
         final Member writer = authService.joinMember(new JoinRequest("test@gmail.com", "password123!", "backfoxxx", "testDevice123"));
         final Post post = postTestSupport.builder().member(writer).build();
