@@ -2,6 +2,7 @@ package edonymyeon.backend.notification.application;
 
 import edonymyeon.backend.comment.application.event.SavedCommentEvent;
 import edonymyeon.backend.global.exception.BusinessLogicException;
+import edonymyeon.backend.post.application.event.PostDeletionEvent;
 import edonymyeon.backend.thumbs.application.event.ThumbsDownEvent;
 import edonymyeon.backend.thumbs.application.event.ThumbsUpEvent;
 import lombok.RequiredArgsConstructor;
@@ -41,5 +42,10 @@ public class NotificationEventListener {
         } catch (BusinessLogicException e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    @TransactionalEventListener
+    public void deleteNotificationFromDeletedPost(PostDeletionEvent event) {
+        notificationService.deleteNotificationByPost(event.postId());
     }
 }

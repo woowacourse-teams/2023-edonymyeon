@@ -16,11 +16,13 @@ import edonymyeon.backend.comment.application.CommentService;
 import edonymyeon.backend.comment.application.dto.request.CommentRequest;
 import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
+import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.notification.repository.NotificationRepository;
+import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.setting.application.SettingService;
 import edonymyeon.backend.setting.domain.SettingType;
@@ -29,6 +31,7 @@ import edonymyeon.backend.thumbs.application.ThumbsService;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -164,6 +167,69 @@ class NotificationServiceTest extends IntegrationFixture {
         await()
                 .atMost(Duration.ofSeconds(3))
                 .untilAsserted(() -> verify(notificationSender, never()).sendNotification(any(), any()));
+    }
+
+    @Test
+    void 탈퇴한_회원에게는_알림을_발송하면_안된다(
+            @Autowired AuthService authService,
+            @Autowired CommentService commentService,
+            @Autowired MemberService memberService
+    ) {
+        final Member writer = getJoinedMember(authService);
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_COMMENT.getSerialNumber(),
+                new ActiveMemberId(writer.getId()));
+
+        final Member commenter = memberTestSupport.builder().build();
+        final Post post = postTestSupport.builder().member(writer).build();
+
+        memberService.deleteMember(writer.getId());
+
+        commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
+                new CommentRequest(null, "Test Commentary"));
+
+        verify(super.notificationSender, never()).sendNotification(any(), any());
+    }
+
+    @Test
+    void 삭제한_게시글에_대한_알림을_발송하면_안된다(
+            @Autowired AuthService authService,
+            @Autowired PostService postService
+    ) {
+        final Member writer = getJoinedMember(authService);
+        settingService.toggleSetting(SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING.getSerialNumber(),
+                new ActiveMemberId(writer.getId()));
+
+        final Post post = postTestSupport.builder().member(writer).build();
+
+        postService.deletePost(new ActiveMemberId(writer.getId()), post.getId());
+        notificationService.remindConfirmingConsumptions();
+
+        verify(super.notificationSender, never()).sendNotification(any(), any());
+    }
+
+    @Test
+    @Disabled("Post Soft DELETE 머지된 이후 테스트할 수 있음")
+    void 게시글이_삭제되면_그와_관련된_알림_내역도_함께_삭제된다(
+            @Autowired AuthService authService,
+            @Autowired CommentService commentService,
+            @Autowired PostService postService
+    ) {
+        final Member writer = getJoinedMember(authService);
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_COMMENT.getSerialNumber(),
+                new ActiveMemberId(writer.getId()));
+
+        final Member commenter = memberTestSupport.builder().build();
+        final Post post = postTestSupport.builder().member(writer).build();
+
+        commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
+                new CommentRequest(null, "Test Commentary"));
+
+        assertThat(notificationRepository.count()).isEqualTo(1);
+
+//        postService.deletePost(new ActiveMemberId(writer.getId()), post.getId());
+//        TODO: Post Soft DELETE 머지된 이후 테스트할 수 있음
+
+        assertThat(notificationRepository.count()).isZero();
     }
 
     private static Member getJoinedMember(final AuthService authService) {

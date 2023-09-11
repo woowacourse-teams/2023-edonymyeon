@@ -117,6 +117,11 @@ public class NotificationService {
                                   final NotificationMessage notificationMessage) {
         final Long notificationId = saveNotification(notifyingTarget, notifyingType, redirectId, notificationMessage);
 
+        if (notifyingTarget.isDeleted()) {
+            log.info("탈퇴한 회원에 대한 알림 전송 시도입니다.");
+            return;
+        }
+
         final Receiver receiver = new Receiver(notifyingTarget,
                 new Data(notificationId, notifyingType, redirectId));
         try {
@@ -144,5 +149,10 @@ public class NotificationService {
     public void markNotificationAsRead(final Long notificationId) {
         final Optional<Notification> notification = notificationRepository.findById(notificationId);
         notification.ifPresent(Notification::markAsRead);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void deleteNotificationByPost(final Long postId) {
+        notificationRepository.deleteAllByPostId(postId);
     }
 }
