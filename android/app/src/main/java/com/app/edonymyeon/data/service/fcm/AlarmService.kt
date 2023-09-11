@@ -38,7 +38,7 @@ class AlarmService : FirebaseMessagingService() {
         }
         Log.d("testToken", "message: ${message.data["click_action"]}" + "this1")
 
-        val intent = when (message.data["click_action"].toString()) {
+        val intent = when (message.data["navigateTo"].toString()) {
             "POST" -> {
                 PostDetailActivity.newIntent(
                     this,
