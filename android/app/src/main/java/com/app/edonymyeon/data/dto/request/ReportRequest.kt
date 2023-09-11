@@ -5,7 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ReportRequest(
-    @SerialName("postId") val postId: Long,
-    @SerialName("reportId") val reportId: Int,
+    @SerialName("type") val type: String,
+    @SerialName("referenceId") val commentId: Long,
+    @SerialName("reportCategoryId") val reportId: Int,
     @SerialName("content") val content: String?,
 )

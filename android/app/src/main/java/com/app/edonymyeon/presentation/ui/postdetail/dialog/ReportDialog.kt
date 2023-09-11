@@ -11,9 +11,11 @@ import androidx.fragment.app.FragmentManager
 import app.edonymyeon.R
 import app.edonymyeon.databinding.DialogReportBinding
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailViewModel
+import com.app.edonymyeon.presentation.ui.postdetail.ReportType
 
 class ReportDialog(
     private val id: Long,
+    private val type: ReportType,
     private val viewModel: PostDetailViewModel,
 ) : DialogFragment() {
 
@@ -42,7 +44,7 @@ class ReportDialog(
             }
         }
         binding.tvReport.setOnClickListener {
-            viewModel.postReport(id, getReportNum(), binding.etReportContent.text.toString())
+            viewModel.postReport(type, id, getReportNum(), binding.etReportContent.text.toString())
             dismiss()
         }
         binding.tvCancel.setOnClickListener {

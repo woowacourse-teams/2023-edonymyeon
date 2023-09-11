@@ -1,5 +1,6 @@
 package com.domain.edonymyeon.repository
 
+import com.domain.edonymyeon.model.Comments
 import com.domain.edonymyeon.model.PostEditor
 import com.domain.edonymyeon.model.PostItems
 import java.io.File
@@ -26,4 +27,17 @@ interface PostRepository {
     ): Result<Any>
 
     suspend fun getHotPosts(): Result<PostItems>
+
+    suspend fun getComments(postId: Long): Result<Comments>
+
+    suspend fun postComment(
+        id: Long,
+        image: File?,
+        comment: String,
+    ): Result<Unit>
+
+    suspend fun deleteComment(
+        postId: Long,
+        commentId: Long,
+    ): Result<Unit>
 }

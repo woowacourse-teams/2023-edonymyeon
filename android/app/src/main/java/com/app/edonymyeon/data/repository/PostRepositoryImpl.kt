@@ -2,10 +2,12 @@ package com.app.edonymyeon.data.repository
 
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.datasource.post.PostDataSource
+import com.app.edonymyeon.data.dto.response.CommentsResponse
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
 import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.mapper.toDataModel
 import com.app.edonymyeon.mapper.toDomain
+import com.domain.edonymyeon.model.Comments
 import com.domain.edonymyeon.model.PostEditor
 import com.domain.edonymyeon.model.PostItems
 import com.domain.edonymyeon.repository.PostRepository
@@ -84,6 +86,41 @@ class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepos
                     result.body()!!.isLast,
                 ),
             )
+        } else {
+            Result.failure(CustomThrowable(result.code(), result.message()))
+        }
+    }
+
+    override suspend fun getComments(postId: Long): Result<Comments> {
+        val result = postDataSource.getComments(postId)
+        return if (result.isSuccessful && result.body() != null) {
+            val body = result.body()
+            Result.success(
+                Comments(
+                    body?.commentCount ?: 0,
+                    (body as CommentsResponse).comments.map {
+                        it.toDomain()
+                    },
+                ),
+            )
+        } else {
+            Result.failure(CustomThrowable(result.code(), result.message()))
+        }
+    }
+
+    override suspend fun postComment(id: Long, image: File?, comment: String): Result<Unit> {
+        val result = postDataSource.postComment(id, image, comment)
+        return if (result.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(CustomThrowable(result.code(), result.message()))
+        }
+    }
+
+    override suspend fun deleteComment(postId: Long, commentId: Long): Result<Unit> {
+        val result = postDataSource.deleteComment(postId, commentId)
+        return if (result.isSuccessful) {
+            Result.success(Unit)
         } else {
             Result.failure(CustomThrowable(result.code(), result.message()))
         }
