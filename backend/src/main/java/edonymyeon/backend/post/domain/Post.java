@@ -176,6 +176,10 @@ public class Post extends TemporalRecord {
         return member;
     }
 
+    public String getThumbnailName() {
+        return this.postImageInfos.getThumbnailName();
+    }
+
     public List<PostImageInfo> getPostImageInfos() {
         return this.postImageInfos.getPostImageInfos();
     }
