@@ -3,11 +3,13 @@ package edonymyeon.backend.support;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 
+import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.application.NotificationSender;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.io.File;
@@ -64,6 +66,33 @@ public class IntegrationFixture {
         return memberTestSupport.builder().build();
     }
 
+    public String 로그인(final Member member) {
+        final LoginRequest request = new LoginRequest(member.getEmail(), TestMemberBuilder.getRawPassword(),
+                "testToken");
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(request)
+                .when()
+                .post("/login")
+                .then()
+                .extract()
+                .sessionId();
+    }
+
+    public String 로그인(final String email, final String password) {
+        final LoginRequest request = new LoginRequest(email, password, "testToken");
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(request)
+                .when()
+                .post("/login")
+                .then()
+                .extract()
+                .sessionId();
+    }
+
     protected ExtractableResponse<Response> 게시글을_하나_만든다(final Member member) {
         return postIntegrationTestSupport.builder()
                 .member(member)
@@ -82,10 +111,12 @@ public class IntegrationFixture {
     }
 
     protected ExtractableResponse<Response> 게시글_하나를_상세_조회한다(final Member 열람인, final long 게시글_id) {
+        final String sessionId = 로그인(열람인);
+
         return RestAssured
                 .given()
+                .sessionId(sessionId)
                 .when()
-                .auth().preemptive().basic(열람인.getEmail(), 열람인.getPassword())
                 .get("/posts/" + 게시글_id)
                 .then()
                 .extract();
@@ -103,8 +134,10 @@ public class IntegrationFixture {
                 final String 내용,
                 final Member 사용자
         ) {
+            final String sessionId = 로그인(사용자);
+
             return RestAssured.given()
-                    .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
+                    .sessionId(sessionId)
                     .multiPart("image", 이미지)
                     .multiPart("comment", 내용)
                     .when()
@@ -113,13 +146,31 @@ public class IntegrationFixture {
                     .extract();
         }
 
+        private static String 로그인(final Member 사용자) {
+            final LoginRequest request = new LoginRequest(사용자.getEmail(), TestMemberBuilder.getRawPassword(),
+                    "testToken");
+
+            final String sessionId = RestAssured
+                    .given()
+                    .contentType(ContentType.JSON)
+                    .body(request)
+                    .when()
+                    .post("/login")
+                    .then()
+                    .extract()
+                    .sessionId();
+            return sessionId;
+        }
+
         public static ExtractableResponse<Response> 댓글을_삭제한다(
                 final Long 게시글_id,
                 final Long 댓글_id,
                 final Member 사용자
         ) {
+            final String sessionId = 로그인(사용자);
+
             return RestAssured.given()
-                    .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
+                    .sessionId(sessionId)
                     .when()
                     .delete("/posts/{postId}/comments/{commentId}", 게시글_id, 댓글_id)
                     .then()
@@ -130,8 +181,10 @@ public class IntegrationFixture {
                 final Long 게시글_id,
                 final Member 사용자
         ) {
+            final String sessionId = 로그인(사용자);
+
             return RestAssured.given()
-                    .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
+                    .sessionId(sessionId)
                     .when()
                     .get("/posts/{postId}/comments", 게시글_id)
                     .then()
@@ -142,15 +195,31 @@ public class IntegrationFixture {
     public class ConsumptionSteps {
 
         public static ExtractableResponse<Response> 특정_기간의_소비금액을_확인한다(final Integer 기간, final Member 사용자) {
+            final String sessionId = 로그인(사용자);
+
             final ExtractableResponse<Response> 조회_응답 = RestAssured
                     .given()
+                    .sessionId(sessionId)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
                     .when()
                     .get("/consumptions?period-month={periodMonth}", 기간)
                     .then()
                     .extract();
             return 조회_응답;
+        }
+
+        private static String 로그인(final Member member) {
+            final LoginRequest request = new LoginRequest(member.getEmail(), TestMemberBuilder.getRawPassword(),
+                    "testToken");
+            return RestAssured
+                    .given()
+                    .contentType(ContentType.JSON)
+                    .body(request)
+                    .when()
+                    .post("/login")
+                    .then()
+                    .extract()
+                    .sessionId();
         }
     }
 
@@ -161,15 +230,31 @@ public class IntegrationFixture {
                 final Long 게시글_id,
                 final PurchaseConfirmRequest 구매_확정_요청
         ) {
+            final String sessionId = 로그인(사용자);
+
             return RestAssured
                     .given()
+                    .sessionId(sessionId)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(구매_확정_요청)
-                    .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
                     .when()
                     .post("/profile/my-posts/{postId}/purchase-confirm", 게시글_id)
                     .then()
                     .extract();
+        }
+
+        public static String 로그인(final Member member) {
+            final LoginRequest request = new LoginRequest(member.getEmail(), TestMemberBuilder.getRawPassword(),
+                    "testToken");
+            return RestAssured
+                    .given()
+                    .contentType(ContentType.JSON)
+                    .body(request)
+                    .when()
+                    .post("/login")
+                    .then()
+                    .extract()
+                    .sessionId();
         }
 
         public static ExtractableResponse<Response> 절약_확정_요청을_보낸다(
@@ -177,11 +262,13 @@ public class IntegrationFixture {
                 final Long 게시글_id,
                 final SavingConfirmRequest 절약_확정_요청
         ) {
+            final String sessionId = 로그인(사용자);
+
             return RestAssured
                     .given()
+                    .sessionId(sessionId)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .body(절약_확정_요청)
-                    .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
                     .when()
                     .post("/profile/my-posts/{postId}/saving-confirm", 게시글_id)
                     .then()
@@ -189,10 +276,12 @@ public class IntegrationFixture {
         }
 
         public static ExtractableResponse<Response> 확정_취소_요청을_보낸다(final Member 사용자, final Long 게시글_id) {
+            final String sessionId = 로그인(사용자);
+
             return RestAssured
                     .given()
+                    .sessionId(sessionId)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
-                    .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
                     .when()
                     .delete("/profile/my-posts/{postId}/confirm-remove", 게시글_id)
                     .then()

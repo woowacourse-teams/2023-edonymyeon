@@ -1,5 +1,9 @@
 package edonymyeon.backend.post.ui;
 
+import static edonymyeon.backend.auth.ui.SessionConst.USER;
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
@@ -8,10 +12,12 @@ import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.dto.response.PostIdResponse;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.TestMemberBuilder;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
@@ -20,21 +26,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 @SuppressWarnings("NonAsciiCharacters")
 @AutoConfigureMockMvc
 @IntegrationTest
 class PostControllerTest implements ImageFileCleaner {
 
-    private static MockMultipartFile 이미지1;
-    private static MockMultipartFile 이미지2;
+    private static final MockMultipartFile 이미지1;
+    private static final MockMultipartFile 이미지2;
 
     static {
         try {
@@ -71,9 +69,7 @@ class PostControllerTest implements ImageFileCleaner {
                         .param("content", "test content")
                         .param("price", "1000")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .header(HttpHeaders.AUTHORIZATION, "Basic "
-                                + java.util.Base64.getEncoder()
-                                .encodeToString((member.getEmail() + ":" + member.getPassword()).getBytes()))
+                        .sessionAttr(USER.getSessionId(), member.getId())
                 )
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
@@ -102,18 +98,14 @@ class PostControllerTest implements ImageFileCleaner {
                         .param("content", "test content")
                         .param("price", "1000")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .header(HttpHeaders.AUTHORIZATION, "Basic "
-                                + Base64.getEncoder()
-                                .encodeToString((member.getEmail() + ":" + member.getPassword()).getBytes()))
+                        .sessionAttr(USER.getSessionId(), member.getId())
                 )
                 .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
 
         PostIdResponse 게시글_생성_응답 = extractResponseFromResult(게시글_생성_요청_결과, PostIdResponse.class);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/posts/" + 게시글_생성_응답.id())
-                        .header(HttpHeaders.AUTHORIZATION, "Basic "
-                                + Base64.getEncoder()
-                                .encodeToString((member.getEmail() + ":" + member.getPassword()).getBytes())))
+                        .sessionAttr(USER.getSessionId(), member.getId()))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
@@ -136,9 +128,7 @@ class PostControllerTest implements ImageFileCleaner {
                         .param("content", "test content")
                         .param("price", "1000")
                         .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .header(HttpHeaders.AUTHORIZATION, "Basic "
-                                + Base64.getEncoder()
-                                .encodeToString((member.getEmail() + ":" + member.getPassword()).getBytes()))
+                        .sessionAttr(USER.getSessionId(), member.getId())
                 )
                 .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
 
@@ -146,9 +136,7 @@ class PostControllerTest implements ImageFileCleaner {
         final Member otherMember = testMemberBuilder.builder().build();
 
         final MvcResult 게시글_삭제_요청_결과 = mockMvc.perform(MockMvcRequestBuilders.delete("/posts/" + 게시글_생성_응답.id())
-                        .header(HttpHeaders.AUTHORIZATION, "Basic "
-                                + Base64.getEncoder()
-                                .encodeToString((otherMember.getEmail() + ":" + otherMember.getPassword()).getBytes())))
+                        .sessionAttr(USER.getSessionId(), otherMember.getId()))
                 .andExpect(MockMvcResultMatchers.status().isForbidden())
                 .andReturn();
 

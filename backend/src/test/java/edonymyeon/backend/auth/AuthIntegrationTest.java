@@ -12,8 +12,6 @@ import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
-import edonymyeon.backend.auth.domain.BasicTokenGenerator;
-import edonymyeon.backend.auth.domain.TokenGenerator;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.domain.SocialInfo;
 import edonymyeon.backend.member.domain.SocialInfo.SocialType;
@@ -22,7 +20,6 @@ import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.Base64;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -198,14 +195,11 @@ class AuthIntegrationTest extends IntegrationFixture {
                 .then()
                 .extract();
 
-        String valueToEncode = request.email() + ":";
-        final String expectedCookieValue = Base64.getEncoder().encodeToString(valueToEncode.getBytes());
-
         assertSoftly(
                 softly -> {
                     softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-                    softly.assertThat(response.header(HttpHeaders.AUTHORIZATION))
-                            .isEqualTo("Basic " + expectedCookieValue);
+                    softly.assertThat(response.header(HttpHeaders.SET_COOKIE))
+                            .contains(response.sessionId());
                 });
     }
 
@@ -229,12 +223,10 @@ class AuthIntegrationTest extends IntegrationFixture {
                 .then()
                 .extract();
 
-        TokenGenerator tokenGenerator = new BasicTokenGenerator();
-
         assertSoftly(softly -> {
             softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(response.header(HttpHeaders.AUTHORIZATION))
-                    .isEqualTo(tokenGenerator.getToken(member.getEmail()));
+            softly.assertThat(response.header(HttpHeaders.SET_COOKIE))
+                    .contains(response.sessionId());
         });
     }
 

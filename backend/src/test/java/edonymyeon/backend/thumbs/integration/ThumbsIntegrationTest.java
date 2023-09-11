@@ -205,8 +205,10 @@ public class ThumbsIntegrationTest extends IntegrationFixture {
     }
 
     private ExtractableResponse<Response> requestThumbs(String upOrDown, Member member, Long postId) {
+        final String sessionId = 로그인(member);
+
         return given()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .sessionId(sessionId)
                 .when()
                 .put("posts/" + postId + "/" + upOrDown)
                 .then()
@@ -215,8 +217,10 @@ public class ThumbsIntegrationTest extends IntegrationFixture {
     }
 
     private ExtractableResponse<Response> requestDeleteThumbs(String upOrDown, Member member, Long postId) {
+        final String sessionId = 로그인(member);
+
         return given()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .sessionId(sessionId)
                 .when()
                 .delete("posts/" + postId + "/" + upOrDown)
                 .then()

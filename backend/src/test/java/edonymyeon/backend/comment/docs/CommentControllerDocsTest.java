@@ -1,11 +1,10 @@
 package edonymyeon.backend.comment.docs;
 
+import static edonymyeon.backend.auth.ui.SessionConst.USER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -39,7 +38,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
@@ -74,16 +72,11 @@ public class CommentControllerDocsTest {
                 .part(내용)
                 .file(이미지)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((사용자.getEmail() + ":" + 사용자.getPassword()).getBytes()));
+                .sessionAttr(USER.getSessionId(), 사용자.getId());
 
         final RestDocumentationResultHandler 문서화 = document("comment-create",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
-                ),
                 pathParameters(
                         parameterWithName("postId").description("게시글 id")
                 ),
@@ -106,14 +99,9 @@ public class CommentControllerDocsTest {
 
         final MockHttpServletRequestBuilder 댓글_삭제_요청 = delete("/posts/{postId}/comments/{commentId}", 1L, 1L)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((사용자.getEmail() + ":" + 사용자.getPassword()).getBytes()));
+                .sessionAttr(USER.getSessionId(), 사용자.getId());
 
         final RestDocumentationResultHandler 문서화 = document("comment-delete",
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
-                ),
                 pathParameters(
                         parameterWithName("postId").description("게시글 id"),
                         parameterWithName("commentId").description("댓글 id")

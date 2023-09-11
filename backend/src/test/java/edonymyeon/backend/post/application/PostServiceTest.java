@@ -1,5 +1,9 @@
 package edonymyeon.backend.post.application;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
@@ -23,6 +27,12 @@ import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.MockMultipartFileTestSupport;
 import edonymyeon.backend.support.TestMemberBuilder;
 import jakarta.persistence.EntityManager;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,17 +42,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -196,7 +195,8 @@ class PostServiceTest implements ImageFileCleaner {
     class 게시글을_삭제할_때 {
 
         @Test
-        void 연관된_소비내역도_삭제된다(@Autowired PostRepository postRepository, @Autowired ConsumptionRepository consumptionRepository) throws IOException {
+        void 연관된_소비내역도_삭제된다(@Autowired PostRepository postRepository,
+                            @Autowired ConsumptionRepository consumptionRepository) throws IOException {
             final PostIdResponse postIdResponse = postService.createPost(memberId, getPostRequest());
             final Post post = postRepository.findById(postIdResponse.id()).get();
 
@@ -235,7 +235,6 @@ class PostServiceTest implements ImageFileCleaner {
             // when
             Member 다른_사람 = memberTestSupport.builder()
                     .email("otheremail")
-                    .password("password123!")
                     .build();
 
             memberId = new ActiveMemberId(다른_사람.getId());
