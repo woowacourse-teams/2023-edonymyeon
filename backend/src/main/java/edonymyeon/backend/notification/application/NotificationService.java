@@ -101,10 +101,14 @@ public class NotificationService {
         final List<Member> membersHavingUnConfirmedPost = memberRepository.findAllHavingUnConfirmedPost();
 
         for (Member member : membersHavingUnConfirmedPost) {
-            if (settingService.isSettingActive(new ActiveMemberId(member.getId()),
-                    SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING)) {
-                sendNotification(member, ScreenType.MYPOST, null, NotificationMessage.UNCONFIRMED_POST_REMINDER_TITLE);
-            }
+            remindConfirmingConsumptions(member);
+        }
+    }
+
+    private void remindConfirmingConsumptions(final Member member) {
+        if (settingService.isSettingActive(new ActiveMemberId(member.getId()),
+                SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING)) {
+            sendNotification(member, ScreenType.MYPOST, null, NotificationMessage.UNCONFIRMED_POST_REMINDER_TITLE);
         }
     }
 
