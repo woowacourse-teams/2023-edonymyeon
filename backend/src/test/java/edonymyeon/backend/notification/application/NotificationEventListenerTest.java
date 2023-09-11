@@ -36,9 +36,14 @@ class NotificationEventListenerTest extends IntegrationFixture {
 
     @SpyBean
     private NotificationEventListener notificationEventListener;
+    private final AuthService authService;
+    private final SettingService settingService;
+    private final ThumbsService thumbsService;
+    private final NotificationRepository notificationRepository;
+    private final ThumbsRepository thumbsRepository;
 
     @Test
-    void 나의_게시글에_따봉을_누르면_알림을_전송한다(@Autowired ThumbsService thumbsService) {
+    void 나의_게시글에_따봉을_누르면_알림을_전송한다() {
         doNothing().when(notificationEventListener).sendThumbsUpNotification(any());
 
         final Member member = memberTestSupport.builder().build();
@@ -49,13 +54,7 @@ class NotificationEventListenerTest extends IntegrationFixture {
     }
 
     @Test
-    void 따봉_저장이_완료된_후에는_알림_발송_후_저장한다(
-            @Autowired AuthService authService,
-            @Autowired SettingService settingService,
-            @Autowired ThumbsService thumbsService,
-            @Autowired NotificationRepository notificationRepository,
-            @Autowired ThumbsRepository thumbsRepository
-    ) {
+    void 따봉_저장이_완료된_후에는_알림_발송_후_저장한다() {
         final Member liker = 사용자를_하나_만든다();
         final Member writer = authService.joinMember(new JoinRequest("test@gmail.com", "password123!", "backfoxxx", "testDevice123"));
         final Post post = postTestSupport.builder().member(writer).build();
@@ -75,11 +74,8 @@ class NotificationEventListenerTest extends IntegrationFixture {
 
     @Test
     void 댓글을_남기면_글_작성자에게_알림이_간다(
-            @Autowired AuthService authService,
-            @Autowired SettingService settingService,
             @Autowired TransactionTemplate template,
-            @Autowired CommentService commentService,
-            @Autowired NotificationRepository notificationRepository
+            @Autowired CommentService commentService
     ) {
         final Member writer = authService.joinMember(new JoinRequest("test@gmail.com", "password123!", "backfoxxx", "testDevice123"));
         settingService.toggleSetting(SettingType.NOTIFICATION_PER_COMMENT.getSerialNumber(), new ActiveMemberId(writer.getId()));
@@ -97,13 +93,7 @@ class NotificationEventListenerTest extends IntegrationFixture {
     }
 
     @Test
-    void 알림_전송_트랜잭션이_실패했다고_해서_따봉까지_롤백되어서는_안된다(
-            @Autowired AuthService authService,
-            @Autowired SettingService settingService,
-            @Autowired ThumbsService thumbsService,
-            @Autowired NotificationRepository notificationRepository,
-            @Autowired ThumbsRepository thumbsRepository
-    ) {
+    void 알림_전송_트랜잭션이_실패했다고_해서_따봉까지_롤백되어서는_안된다() {
         final Member liker = 사용자를_하나_만든다();
         final Member writer = authService.joinMember(new JoinRequest("test@gmail.com", "password123!", "backfoxxx", "testDevice123"));
         final Post post = postTestSupport.builder().member(writer).build();
