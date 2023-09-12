@@ -21,13 +21,6 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @DeleteMapping("/withdraw")
-    public ResponseEntity<Void> withdraw(@AuthPrincipal MemberId memberId) {
-        memberService.deleteMember(memberId.id());
-        return ResponseEntity.noContent()
-                .build();
-    }
-
     @GetMapping("/profile")
     public ResponseEntity<MyPageResponse> findMemberInfo(@AuthPrincipal MemberId memberId) {
         final MyPageResponse memberInfo = memberService.findMemberInfoById(memberId.id());
