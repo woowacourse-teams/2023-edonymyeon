@@ -21,6 +21,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 @Getter
@@ -79,5 +80,9 @@ public class Comment extends TemporalRecord {
 
     public boolean isSameMember(final Long memberId) {
         return this.member.hasId(memberId);
+    }
+
+    public boolean hasImage() {
+        return commentImageInfo != null;
     }
 }

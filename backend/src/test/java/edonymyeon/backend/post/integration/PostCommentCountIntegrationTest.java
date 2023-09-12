@@ -1,6 +1,5 @@
 package edonymyeon.backend.post.integration;
 
-import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.댓글을_삭제한다;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 

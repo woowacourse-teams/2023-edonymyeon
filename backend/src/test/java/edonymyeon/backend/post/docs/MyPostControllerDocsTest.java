@@ -72,8 +72,8 @@ public class MyPostControllerDocsTest extends DocsTest {
                 .buildWithoutSaving();
         회원_레포지토리를_모킹한다(회원);
 
-        final Post 게시글1 = new Post(1L, "제목1", "내용1", 1000L, 회원, PostImageInfos.create(), 0, 0);
-        final Post 게시글2 = new Post(2L, "제목2", "내용2", 2000L, 회원, PostImageInfos.create(), 0, 0);
+        final Post 게시글1 = new Post(1L, "제목1", "내용1", 1000L, 회원, PostImageInfos.create(), 0, 0, false);
+        final Post 게시글2 = new Post(2L, "제목2", "내용2", 2000L, 회원, PostImageInfos.create(), 0, 0, false);
 
         final MyPostResponse postResponse1 = MyPostResponse.of(게시글1, domain, PostConsumptionResponse.none());
         final MyPostResponse postResponse2 = MyPostResponse.of(게시글2, domain, PostConsumptionResponse.none());
