@@ -98,7 +98,7 @@ public class PostService {
         // todo: 소비내역 삭제할 때, 이벤트 대신 인터페이스로 변경
         applicationEventPublisher.publishEvent(new PostDeletionEvent(post.getId()));
         thumbsService.deleteAllThumbsInPost(postId);
-        commentService.deleteAllCommentsInPost(postId); //영속성 컨텍스트와 관련있는 bulk 연산이라 맨 뒤에 둠
+        commentService.deleteAllCommentsInPost(postId);
         post.delete();
     }
 
