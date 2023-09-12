@@ -1,6 +1,7 @@
 package com.app.edonymyeon.data.datasource.post
 
 import com.app.edonymyeon.data.dto.request.PostEditorRequest
+import com.app.edonymyeon.data.dto.response.CommentsResponse
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
 import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.Posts
@@ -25,4 +26,17 @@ interface PostDataSource {
     ): Response<PostEditorResponse>
 
     suspend fun getHotPosts(): Response<Posts>
+
+    suspend fun getComments(postId: Long): Response<CommentsResponse>
+
+    suspend fun postComment(
+        id: Long,
+        image: File?,
+        comment: String,
+    ): Response<Unit>
+
+    suspend fun deleteComment(
+        postId: Long,
+        commentId: Long,
+    ): Response<Unit>
 }

@@ -12,6 +12,5 @@ data class Post(
     val writer: Writer,
     val reactionCount: ReactionCount,
     val recommendation: Recommendation,
-    val isScrap: Boolean,
     val isWriter: Boolean,
 )
