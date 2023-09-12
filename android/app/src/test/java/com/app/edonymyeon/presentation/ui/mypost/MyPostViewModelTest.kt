@@ -3,8 +3,10 @@ package com.app.edonymyeon.presentation.ui.mypost
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.app.edonymyeon.mapper.toUiModel
 import com.domain.edonymyeon.model.Consumption
+import com.domain.edonymyeon.model.Count
 import com.domain.edonymyeon.model.MyPost
 import com.domain.edonymyeon.model.MyPosts
+import com.domain.edonymyeon.model.ReactionCount
 import com.domain.edonymyeon.repository.PostRepository
 import com.domain.edonymyeon.repository.ProfileRepository
 import io.mockk.coEvery
@@ -26,9 +28,9 @@ class MyPostViewModelTest {
     private lateinit var profileRepository: ProfileRepository
     private lateinit var postRepository: PostRepository
 
-    private val fakeMyPost = listOf(
+    private val fakeMyPost = List(3) {
         MyPost(
-            id = 1L,
+            id = (it + 1).toLong(),
             title = "가나다라",
             image = "",
             content = "아야하언ㅇㄹㄴㅇㄹ",
@@ -39,34 +41,9 @@ class MyPostViewModelTest {
                 year = 0,
                 month = 0,
             ),
-        ),
-        MyPost(
-            id = 2L,
-            title = "가나다라",
-            image = "",
-            content = "아야하언ㅇㄹㄴㅇㄹ",
-            createdAt = "1일전",
-            consumption = Consumption(
-                type = "PURCHASE",
-                purchasePrice = 1000,
-                year = 2023,
-                month = 7,
-            ),
-        ),
-        MyPost(
-            id = 3L,
-            title = "가나다라",
-            image = "",
-            content = "아야하언ㅇㄹㄴㅇㄹ",
-            createdAt = "1일전",
-            consumption = Consumption(
-                type = "SAVING",
-                purchasePrice = 0,
-                year = 2023,
-                month = 4,
-            ),
-        ),
-    )
+            reactionCount = ReactionCount(Count(0), Count(0)),
+        )
+    }
 
     private val fakeMyPosts = MyPosts(
         fakeMyPost,

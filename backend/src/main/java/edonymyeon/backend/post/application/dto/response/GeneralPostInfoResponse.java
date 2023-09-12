@@ -1,4 +1,4 @@
-package edonymyeon.backend.post.application.dto;
+package edonymyeon.backend.post.application.dto.response;
 
 import edonymyeon.backend.post.domain.Post;
 import java.time.LocalDateTime;
@@ -17,13 +17,11 @@ public record GeneralPostInfoResponse(
         return new GeneralPostInfoResponse(
                 post.getId(),
                 post.getTitle(),
-                post.getPostImageInfos().size() == 0 ? null : domain + post.getPostImageInfos().get(0).getStoreName(),
+                post.hasThumbnail() ? domain + post.getThumbnailName() : null,
                 post.getContent(),
                 new WriterResponse(post.getMember().getNickname()),
                 post.getCreatedAt(),
-                new ReactionCountResponse(post.getViewCount(), 0, 0)
-                // TODO: 스크랩 수
-                // TODO: 댓글 수
+                new ReactionCountResponse(post.getViewCount(), post.getCommentCount())
         );
     }
 }

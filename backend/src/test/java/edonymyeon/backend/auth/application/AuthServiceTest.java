@@ -1,6 +1,8 @@
 package edonymyeon.backend.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
@@ -14,8 +16,11 @@ import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.auth.application.dto.LogoutRequest;
+import edonymyeon.backend.auth.application.dto.MemberResponse;
+import edonymyeon.backend.auth.domain.PasswordEncoder;
 import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.domain.SocialInfo;
 import edonymyeon.backend.setting.application.SettingService;
 import edonymyeon.backend.support.IntegrationTest;
 import jakarta.persistence.EntityManager;
@@ -48,6 +53,9 @@ class AuthServiceTest {
 
     @Autowired
     private AuthService authService;
+
+    @SpyBean
+    private PasswordEncoder passwordEncoder;
 
     @Test
     void 회원가입시_사용한_디바이스_정보를_함께_저장한다(@Autowired EntityManager entityManager) {
@@ -98,5 +106,53 @@ class AuthServiceTest {
                         .content(objectMapper.writeValueAsString(new LogoutRequest("testDeviceTokenblabla"))))
                 .andExpect(status().isOk())
                 .andExpect(header().doesNotExist(HttpHeaders.AUTHORIZATION));
+    }
+
+    @Test
+    void 기본_회원가입시_DB에_암호화된_비밀번호가_저장된다() {
+        final JoinRequest request = new JoinRequest("example@email.com", "password1234!", "nickname", "");
+        final Member member = authService.joinMember(request);
+
+        assertSoftly(soft -> {
+            soft.assertThat(request.email()).isEqualTo(member.getEmail());
+            soft.assertThat(request.password()).isNotEqualTo(member.getPassword());
+            verify(passwordEncoder, atLeastOnce()).encode(any());
+        });
+    }
+
+    @Test
+    void 카카오_회원가입시_DB에_암호화된_비밀번호가_저장된다() {
+        final SocialInfo socialInfo = SocialInfo.of(SocialInfo.SocialType.KAKAO, 1L);
+        authService.joinSocialMember(socialInfo);
+
+        verify(passwordEncoder, atLeastOnce()).encode(any());
+    }
+
+    @Test
+    void 기본_로그인시_DB에_암호화된_비밀번호와_입력받은_비밀번호를_검증한다() {
+        final JoinRequest request = new JoinRequest("example@email.com", "password1234!", "nickname", "");
+        authService.joinMember(request);
+
+        final LoginRequest loginRequest = new LoginRequest(request.email(), request.password(), "");
+
+        assertSoftly(soft -> {
+            assertDoesNotThrow(() -> authService.login(loginRequest));
+            verify(passwordEncoder, atLeastOnce()).encode(any());
+            verify(passwordEncoder, atLeastOnce()).matches(any(), any());
+        });
+    }
+
+    @Test
+    void 카카오_로그인시_DB에_암호화된_비밀번호와_입력받은_비밀번호를_검증한다() {
+        final SocialInfo socialInfo = SocialInfo.of(SocialInfo.SocialType.KAKAO, 1L);
+        final Member member = authService.joinSocialMember(socialInfo);
+
+        final KakaoLoginResponse kakaoLoginResponse = new KakaoLoginResponse(socialInfo.getSocialId());
+        final MemberResponse memberResponse = authService.loginByKakao(kakaoLoginResponse, "");
+
+        assertSoftly(soft -> {
+            soft.assertThat(member.getEmail()).isEqualTo(memberResponse.email());
+            soft.assertThat(member.getPassword()).isEqualTo(memberResponse.password());
+        });
     }
 }

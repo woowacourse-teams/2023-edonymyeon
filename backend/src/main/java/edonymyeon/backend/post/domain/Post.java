@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.Formula;
 
 import java.util.List;
 import java.util.Objects;
@@ -52,6 +53,9 @@ public class Post extends TemporalRecord {
 
     @ColumnDefault("0")
     private int viewCount;
+
+    @Formula("(select count(c.id) from comment c where c.post_id = id and c.deleted = false)")
+    private int commentCount;
 
     public Post(
             final Long id,
@@ -157,6 +161,14 @@ public class Post extends TemporalRecord {
 
     public Member getMember() {
         return member;
+    }
+
+    public boolean hasThumbnail() {
+        return !this.postImageInfos.isEmpty();
+    }
+
+    public String getThumbnailName() {
+        return this.postImageInfos.getThumbnailName();
     }
 
     public List<PostImageInfo> getPostImageInfos() {

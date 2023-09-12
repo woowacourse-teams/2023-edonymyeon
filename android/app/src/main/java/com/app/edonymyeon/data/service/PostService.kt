@@ -1,5 +1,6 @@
 package com.app.edonymyeon.data.service
 
+import com.app.edonymyeon.data.dto.response.CommentsResponse
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
 import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.Posts
@@ -47,4 +48,23 @@ interface PostService {
 
     @GET("/posts/hot")
     suspend fun getHotPosts(): Response<Posts>
+
+    @GET("/posts/{postId}/comments")
+    suspend fun getComments(
+        @Path("postId") postId: Long,
+    ): Response<CommentsResponse>
+
+    @Multipart
+    @POST("/posts/{postId}/comments")
+    suspend fun postComment(
+        @Path("postId") postId: Long,
+        @Part image: MultipartBody.Part?,
+        @Part("comment") comment: RequestBody,
+    ): Response<Unit>
+
+    @DELETE("/posts/{postId}/comments/{commentId}")
+    suspend fun deleteComment(
+        @Path("postId") postId: Long,
+        @Path("commentId") commentId: Long,
+    ): Response<Unit>
 }
