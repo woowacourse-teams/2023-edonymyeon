@@ -2,6 +2,7 @@ package edonymyeon.backend.auth.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_DUPLICATE;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_NOT_FOUND;
+import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_IS_DELETED;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_NOT_MATCH;
@@ -16,6 +17,7 @@ import edonymyeon.backend.auth.application.event.LogoutEvent;
 import edonymyeon.backend.auth.domain.PasswordEncoder;
 import edonymyeon.backend.auth.domain.ValidateType;
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
@@ -41,6 +43,8 @@ public class AuthService {
     private final MemberRepository memberRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final MemberService memberService;
 
     public MemberId login(final LoginRequest loginRequest) {
         final Member member = authenticateMember(loginRequest.email(), loginRequest.password());
@@ -155,5 +159,13 @@ public class AuthService {
 
     public void logout(String deviceToken) {
         publisher.publishEvent(new LogoutEvent(deviceToken));
+    }
+
+    @Transactional
+    public void deleteMember(final MemberId memberId) {
+        final Member member = memberRepository.findById(memberId.id())
+                .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
+        memberService.deleteProfileImage(member);
+        member.withdraw();
     }
 }

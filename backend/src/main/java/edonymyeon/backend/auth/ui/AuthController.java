@@ -2,6 +2,7 @@ package edonymyeon.backend.auth.ui;
 
 import static edonymyeon.backend.auth.ui.SessionConst.USER;
 
+import edonymyeon.backend.auth.annotation.AuthPrincipal;
 import edonymyeon.backend.auth.application.AuthService;
 import edonymyeon.backend.auth.application.KakaoAuthResponseProvider;
 import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
@@ -17,6 +18,7 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -71,6 +73,13 @@ public class AuthController {
     public ResponseEntity<Void> join(@RequestBody JoinRequest joinRequest) {
         authService.joinMember(joinRequest);
         return ResponseEntity.created(URI.create("/login")).build();
+    }
+
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<Void> withdraw(@AuthPrincipal MemberId memberId) {
+        authService.deleteMember(memberId);
+        return ResponseEntity.noContent()
+                .build();
     }
 
     @PostMapping("/logout")
