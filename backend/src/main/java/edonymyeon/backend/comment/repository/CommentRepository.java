@@ -17,7 +17,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @EntityGraph(attributePaths = {"post", "member", "commentImageInfo"})
     List<Comment> findAllByPostId(final Long postId);
 
-    @Modifying(flushAutomatically = true, clearAutomatically = false)
+    @Modifying //todo: 옵션.. 이대로 괜찮은가?
     @Query("update Comment c set c.deleted = true where c.post.id = :postId")
     void deleteAllByPostId(@Param("postId") Long postId);
 }
