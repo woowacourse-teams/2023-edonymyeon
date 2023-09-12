@@ -1,6 +1,5 @@
 package edonymyeon.backend.consumption.integration;
 
-import static edonymyeon.backend.support.IntegrationFixture.ConsumptionSteps.특정_기간의_소비금액을_확인한다;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import edonymyeon.backend.consumption.domain.Consumption;
