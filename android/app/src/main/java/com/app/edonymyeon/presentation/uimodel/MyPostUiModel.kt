@@ -7,4 +7,5 @@ data class MyPostUiModel(
     val content: String,
     val createdAt: DateUiModel,
     val consumption: ConsumptionUiModel,
+    val reactionCount: ReactionCountUiModel,
 )
