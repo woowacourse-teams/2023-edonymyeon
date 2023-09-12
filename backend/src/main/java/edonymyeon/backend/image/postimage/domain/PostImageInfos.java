@@ -43,35 +43,47 @@ public class PostImageInfos {
         return new PostImageInfos(postImageInfos);
     }
 
-    private void validateImageCount(final int imageCount) {
+    public void validateImageCount(final int imageCount) {
         if (isInvalidImageCount(imageCount)) {
             throw new EdonymyeonException(POST_IMAGE_COUNT_INVALID);
         }
+    }
+
+    private boolean isInvalidImageCount(final Integer imageCount) {
+        System.out.println("imageCount = " + imageCount);
+        return imageCount > MAX_IMAGE_COUNT;
+    }
+
+    public void addAll(final List<PostImageInfo> imagesToAdd) {
+        validateImageCount(this.postImageInfos.size() + imagesToAdd.size());
+        this.postImageInfos.addAll(imagesToAdd);
     }
 
     public void add(final PostImageInfo postImageInfo) {
         if (this.postImageInfos.contains(postImageInfo)) {
             return;
         }
-        validateImageAdditionCount(1);
+        validateImageAdditionCount();
         this.postImageInfos.add(postImageInfo);
     }
 
-    public void validateImageAdditionCount(final Integer imageAdditionCount) {
-        if (isInvalidImageCount(this.postImageInfos.size() + imageAdditionCount)) {
+    private void validateImageAdditionCount() {
+        if (isInvalidImageCount(this.postImageInfos.size() + 1)) {
             throw new EdonymyeonException(POST_IMAGE_COUNT_INVALID);
         }
     }
 
-    public void addAll(final List<PostImageInfo> postImageInfos) {
-        postImageInfos.forEach(this::add);
+    public void update(final List<String> remainedStoreNames, final List<PostImageInfo> newPostImageInfos) {
+        final List<PostImageInfo> imagesToDelete = findImagesToDelete(remainedStoreNames);
+        int updatedImageCount = this.postImageInfos.size() - imagesToDelete.size() + newPostImageInfos.size();
+        validateImageCount(updatedImageCount);
+
+        imagesToDelete.forEach(PostImageInfo::delete);
+        postImageInfos.removeAll(imagesToDelete);
+        postImageInfos.addAll(newPostImageInfos);
     }
 
-    private boolean isInvalidImageCount(final Integer imageCount) {
-        return imageCount > MAX_IMAGE_COUNT;
-    }
-
-    public List<PostImageInfo> findImagesToDelete(final List<String> remainedStoreNames) {
+    private List<PostImageInfo> findImagesToDelete(final List<String> remainedStoreNames) {
         final List<PostImageInfo> unmatchedPostImageInfos = this.postImageInfos.stream().
                 filter(postImageInfo -> !remainedStoreNames.contains(postImageInfo.getStoreName()))
                 .toList();

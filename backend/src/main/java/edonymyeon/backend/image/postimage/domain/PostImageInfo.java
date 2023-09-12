@@ -32,7 +32,7 @@ public class PostImageInfo extends ImageInfo {
 
     public static PostImageInfo of(final ImageInfo imageInfo, final Post post) {
         final PostImageInfo postImageInfo = new PostImageInfo(imageInfo.getStoreName(), post);
-        post.addPostImageInfo(postImageInfo);
+        //post.addPostImageInfo(postImageInfo);
         return postImageInfo;
     }
 

@@ -7,7 +7,6 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMB
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.domain.Domain;
-import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberId;
@@ -19,7 +18,6 @@ import edonymyeon.backend.post.application.dto.response.PostIdResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.thumbs.application.event.PostDeletionEvent;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -64,11 +62,10 @@ public class PostService {
         if (isImagesEmpty(postRequest.newImages())) {
             return new PostIdResponse(post.getId());
         }
-        post.validateImageAdditionCount(postRequest.newImages().size());
+        post.validateImageCount(postRequest.newImages().size());
 
         final PostImageInfos postImageInfos = PostImageInfos.of(post,
                 imageFileUploader.uploadFiles(postRequest.newImages()));
-        post.updateImages(postImageInfos);
         postImageInfoRepository.saveAll(postImageInfos.getPostImageInfos());
 
         return new PostIdResponse(post.getId());
@@ -96,7 +93,7 @@ public class PostService {
         final Post post = findPostById(postId);
         checkWriter(member, post);
 
-        //todo: 주석 처리된 부분은 이미지를 soft delete 시킬 때, 실제 이미지도 지울 것인가? 입니다.
+        //todo: 주석 처리된 부분은 이미지를 soft delete 시킬 때, 실제 이미지는 보관된다.
         //final List<PostImageInfo> postImageInfos = post.getPostImageInfos();
         //final ArrayList<PostImageInfo> copyOfPostImageInfos = new ArrayList<>(postImageInfos);
         // todo: 추천/비추천과 소비내역은 물리적 삭제로 진행
@@ -131,21 +128,17 @@ public class PostService {
 
         post.update(request.title(), request.content(), request.price());
 
-        final List<String> imageStoreNames = convertUrlToStoreName(request.originalImages());
-        final List<PostImageInfo> deletedImagesOfPost = post.findImagesToDelete(imageStoreNames);
-        final ArrayList<PostImageInfo> copyOfDeletedImagesOfPost = new ArrayList<>(deletedImagesOfPost);
+        final List<MultipartFile> imageFilesToAdd = request.newImages();
+        final List<String> remainedImageNames = convertUrlToStoreName(request.originalImages());
 
-        post.removePostImageInfos(deletedImagesOfPost);
-        postImageInfoRepository.deleteAll(deletedImagesOfPost);
-
-        if (isImagesEmpty(request.newImages())) {
-            copyOfDeletedImagesOfPost.forEach(imageFileUploader::removeFile);
-            return new PostIdResponse(postId);
+        if(isImagesEmpty(imageFilesToAdd)) {
+            post.updateImages(remainedImageNames);
+            new PostIdResponse(postId);
         }
 
-        post.validateImageAdditionCount(request.newImages().size());
-        updateImagesOfPost(request, post);
-        deletedImagesOfPost.forEach(imageFileUploader::removeFile);
+        final PostImageInfos imagesToAdd = PostImageInfos.of(post, imageFileUploader.uploadFiles(imageFilesToAdd));
+        post.updateImages(remainedImageNames, imagesToAdd); //이때 기존 이미지중 삭제되는 것들은 softDelete
+        postImageInfoRepository.saveAll(imagesToAdd.getPostImageInfos()); // //새로 추가된 이미지들을 DB에 저장
         return new PostIdResponse(postId);
     }
 
@@ -154,12 +147,5 @@ public class PostService {
             return Collections.emptyList();
         }
         return domain.removeDomainFromUrl(originalImageUrls);
-    }
-
-    private void updateImagesOfPost(final PostModificationRequest request, final Post post) {
-        final PostImageInfos updatedPostImageInfos = PostImageInfos.of(post,
-                imageFileUploader.uploadFiles(request.newImages()));
-        post.updateImages(updatedPostImageInfos);
-        postImageInfoRepository.saveAll(updatedPostImageInfos.getPostImageInfos());
     }
 }
