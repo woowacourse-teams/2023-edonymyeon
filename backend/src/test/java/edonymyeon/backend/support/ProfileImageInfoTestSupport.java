@@ -1,5 +1,6 @@
 package edonymyeon.backend.support;
 
+import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.image.profileimage.repository.ProfileImageInfoRepository;
 import java.util.UUID;
@@ -26,9 +27,10 @@ public class ProfileImageInfoTestSupport {
         }
 
         public ProfileImageInfo build() {
+            final ImageInfo imageInfo = new ImageInfo(storeName == null ? UUID.randomUUID().toString() : storeName);
             return profileImageInfoRepository.save(
-                    new ProfileImageInfo(
-                            storeName == null ? UUID.randomUUID().toString() : storeName
+                    ProfileImageInfo.from(
+                            imageInfo
                     )
             );
         }
