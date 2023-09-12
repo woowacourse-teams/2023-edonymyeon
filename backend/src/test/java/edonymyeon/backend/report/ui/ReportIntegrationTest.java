@@ -26,15 +26,7 @@ class ReportIntegrationTest extends IntegrationFixture implements ImageFileClean
 
         final ReportRequest reportRequest = new ReportRequest("POST", postId, 4, null);
 
-        final ExtractableResponse<Response> 게시글_신고_응답 = RestAssured
-                .given()
-                .sessionId(sessionId)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reportRequest)
-                .when()
-                .post("/report")
-                .then()
-                .extract();
+        final ExtractableResponse<Response> 게시글_신고_응답 = 신고를_한다(member, reportRequest);
 
         assertThat(게시글_신고_응답.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(게시글_신고_응답.header("location")).isNotNull();
@@ -47,17 +39,7 @@ class ReportIntegrationTest extends IntegrationFixture implements ImageFileClean
 
         final ReportRequest reportRequest = new ReportRequest("COMMENT", 댓글.getId(), 4, null);
 
-        final String sessionId = 로그인(member);
-
-        final ExtractableResponse<Response> 댓글_신고_응답 = RestAssured
-                .given()
-                .sessionId(sessionId)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reportRequest)
-                .when()
-                .post("/report")
-                .then()
-                .extract();
+        final ExtractableResponse<Response> 댓글_신고_응답 = 신고를_한다(member, reportRequest);
 
         assertThat(댓글_신고_응답.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(댓글_신고_응답.header("location")).isNotNull();
@@ -94,17 +76,7 @@ class ReportIntegrationTest extends IntegrationFixture implements ImageFileClean
         // then
         final ReportRequest reportRequest = new ReportRequest(null, postId, 4, null);
 
-        final String sessionId = 로그인(member);
-
-        final ExtractableResponse<Response> 게시글_신고_응답 = RestAssured
-                .given()
-                .sessionId(sessionId)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reportRequest)
-                .when()
-                .post("/report")
-                .then()
-                .extract();
+        final ExtractableResponse<Response> 게시글_신고_응답 = 신고를_한다(member, reportRequest);
 
         assertThat(게시글_신고_응답.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
@@ -122,15 +94,7 @@ class ReportIntegrationTest extends IntegrationFixture implements ImageFileClean
         // then
         final ReportRequest reportRequest = new ReportRequest(null, postId, 10, null);
 
-        final ExtractableResponse<Response> 게시글_신고_응답 = RestAssured
-                .given()
-                .sessionId(sessionId)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reportRequest)
-                .when()
-                .post("/report")
-                .then()
-                .extract();
+        final ExtractableResponse<Response> 게시글_신고_응답 = 신고를_한다(member, reportRequest);
 
         assertThat(게시글_신고_응답.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
