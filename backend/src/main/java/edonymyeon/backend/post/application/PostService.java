@@ -93,16 +93,13 @@ public class PostService {
         final Post post = findPostById(postId);
         checkWriter(member, post);
 
-        //todo: 주석 처리된 부분은 이미지를 soft delete 시킬 때, 실제 이미지는 보관된다.
-        //final List<PostImageInfo> postImageInfos = post.getPostImageInfos();
-        //final ArrayList<PostImageInfo> copyOfPostImageInfos = new ArrayList<>(postImageInfos);
-        // todo: 추천/비추천과 소비내역은 물리적 삭제로 진행
+        // soft delete 시킬 때, 실제 이미지는 보관된다.
+        // todo: 이미지 삭제.. 한번에..
         // todo: 소비내역 삭제할 때, 이벤트 대신 인터페이스로 변경
         applicationEventPublisher.publishEvent(new PostDeletionEvent(post.getId()));
         thumbsService.deleteAllThumbsInPost(postId);
-        commentService.deleteAllCommentsInPost(postId);
         post.delete();
-        //copyOfPostImageInfos.forEach(imageFileUploader::removeFile);
+        commentService.deleteAllCommentsInPost(postId); //영속성 컨텍스트와 관련있는 bulk 연산이라 맨 뒤에 둠
     }
 
     private Post findPostById(final Long postId) {

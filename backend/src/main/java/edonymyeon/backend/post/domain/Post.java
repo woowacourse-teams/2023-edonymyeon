@@ -220,7 +220,8 @@ public class Post extends TemporalRecord {
     }
 
     public void delete() {
-        this.deleted = true;
+        //lazyLoading 문제로 repository를 통해 직접 postImageInfos를 제거해주는 것이 필요하다.
         this.postImageInfos.deleteAll();
+        this.deleted = true;
     }
 }
