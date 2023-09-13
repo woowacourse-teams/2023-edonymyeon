@@ -194,8 +194,8 @@ public class PostCommentCountIntegrationTest extends IntegrationFixture {
 
         assertSoftly(softly -> {
             softly.assertThat(jsonPath.getList("content")).hasSize(2);
-            softly.assertThat(jsonPath.getInt("content[0].reactionCount.commentCount")).isEqualTo(게시글2.getCommentCount());
-            softly.assertThat(jsonPath.getInt("content[1].reactionCount.commentCount")).isEqualTo(게시글1.getCommentCount());
+            softly.assertThat(jsonPath.getInt("content[0].reactionCount.commentCount")).isEqualTo(20);
+            softly.assertThat(jsonPath.getInt("content[1].reactionCount.commentCount")).isEqualTo(10);
         });
     }
 }

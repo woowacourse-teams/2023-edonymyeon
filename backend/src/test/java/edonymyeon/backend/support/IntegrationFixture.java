@@ -157,7 +157,7 @@ public class IntegrationFixture {
                 .extract();
     }
 
-    public ExtractableResponse<Response> 게시물에_대한_댓글을_모두_조회한다(
+    protected ExtractableResponse<Response> 게시물에_대한_댓글을_모두_조회한다(
             final Long 게시글_id,
             final Member 사용자
     ) {
@@ -165,6 +165,16 @@ public class IntegrationFixture {
                 .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
                 .when()
                 .get("/posts/{postId}/comments", 게시글_id)
+                .then()
+                .extract();
+    }
+
+    protected ExtractableResponse<Response> 내가_쓴_글을_조회한다(final Member member) {
+        return RestAssured
+                .given()
+                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .when()
+                .get("/profile/my-posts")
                 .then()
                 .extract();
     }
