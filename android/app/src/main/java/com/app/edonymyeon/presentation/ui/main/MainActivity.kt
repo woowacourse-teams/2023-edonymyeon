@@ -122,7 +122,7 @@ class MainActivity : AppCompatActivity() {
         private const val FRAGMENT_ALARM = "alarm"
         private const val FRAGMENT_MY_PAGE = "myPage"
 
-        private const val NOTIFICATION_CLICK_EVENT = "click_action"
+        private const val NOTIFICATION_CLICK_EVENT = "navigateTo"
         private const val NOTIFICATION_CLICK_EVENT_POST = "POST"
         private const val NOTIFICATION_CLICK_EVENT_MYPOST = "MYPOST"
         private const val NOTIFICATION_POST_ID = "postId"
