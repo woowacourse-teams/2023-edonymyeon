@@ -22,9 +22,10 @@ import jakarta.persistence.ManyToOne;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -194,6 +195,10 @@ public class Post extends TemporalRecord {
         return member;
     }
 
+    public Long getWriterId() {
+        return this.member.getId();
+    }
+
     public boolean hasThumbnail() {
         return !this.postImageInfos.isEmpty();
     }
@@ -223,5 +228,9 @@ public class Post extends TemporalRecord {
         //lazyLoading 문제로 repository를 통해 직접 postImageInfos를 제거해주는 것이 필요하다.
         this.postImageInfos.deleteAll();
         this.deleted = true;
+    }
+
+    public Optional<String> getDeviceTokenFromWriter() {
+        return this.member.getActiveDeviceToken();
     }
 }
