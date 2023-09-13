@@ -19,23 +19,26 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.Where;
 
 @Getter
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @DynamicInsert
+@Where(clause = "deleted = false")
 @Entity
 public class Post extends TemporalRecord {
 
@@ -70,6 +73,9 @@ public class Post extends TemporalRecord {
 
     @Formula("(select count(c.id) from comment c where c.post_id = id and c.deleted = false)")
     private int commentCount;
+
+    @ColumnDefault("false")
+    private boolean deleted;
 
     public Post(
             final Long id,
@@ -136,8 +142,8 @@ public class Post extends TemporalRecord {
         this.postImageInfos.add(postImageInfo);
     }
 
-    public void validateImageAdditionCount(final Integer imageAdditionCount) {
-        this.postImageInfos.validateImageAdditionCount(imageAdditionCount);
+    public void validateImageCount(final Integer imageCount) {
+        this.postImageInfos.validateImageCount(imageCount);
     }
 
     public void update(final String title, final String content, final Long price) {
@@ -161,8 +167,20 @@ public class Post extends TemporalRecord {
         this.price = price;
     }
 
-    public void updateImages(final PostImageInfos postImageInfos) {
-        this.postImageInfos.addAll(postImageInfos.getPostImageInfos());
+    /**
+     * 게시글 수정시 사용, 새로 추가되는 이미지가 없고 기존 이미지에 대한 수정만 일어나는 경우
+     * -> imageNamesToMaintain을 제외하고 삭제한다.
+     */
+    public void updateImages(final List<String> remainedImageNames) {
+        postImageInfos.update(remainedImageNames, Collections.emptyList());
+    }
+
+    /**
+     * 게시글 수정시 사용, 새로 추가되는 이미지도 있는 경우
+     * -> imageNamesToMaintain을 제외하고 삭제 후, imagesToAdd를 추가한다.
+     */
+    public void updateImages(final List<String> remainedImageNames, final PostImageInfos imagesToAdd) {
+        this.postImageInfos.update(remainedImageNames, imagesToAdd.getPostImageInfos());
     }
 
     public boolean isSameMember(final Member member) {
@@ -212,6 +230,12 @@ public class Post extends TemporalRecord {
             return;
         }
         this.viewCount++;
+    }
+
+    public void delete() {
+        //lazyLoading 문제로 repository를 통해 직접 postImageInfos를 제거해주는 것이 필요하다.
+        this.postImageInfos.deleteAll();
+        this.deleted = true;
     }
 
     public Optional<String> getDeviceTokenFromWriter() {

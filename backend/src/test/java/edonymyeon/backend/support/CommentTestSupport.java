@@ -3,6 +3,8 @@ package edonymyeon.backend.support;
 import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.comment.repository.CommentRepository;
 import edonymyeon.backend.image.commentimage.domain.CommentImageInfo;
+import edonymyeon.backend.image.commentimage.repository.CommentImageInfoRepository;
+import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.domain.Post;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,8 @@ public class CommentTestSupport {
 
     private final CommentRepository commentRepository;
 
+    private final CommentImageInfoRepository commentImageInfoRepository;
+
     public CommentTestSupport.CommentBuilder builder() {
         return new CommentTestSupport.CommentBuilder();
     }
@@ -28,7 +32,7 @@ public class CommentTestSupport {
 
         private String content;
 
-        private CommentImageInfo commentImageInfo;
+        private String imageStoreName;
 
         private Member member;
 
@@ -42,8 +46,8 @@ public class CommentTestSupport {
             return this;
         }
 
-        public CommentTestSupport.CommentBuilder commentImageInfo(final CommentImageInfo commentImageInfo) {
-            this.commentImageInfo = commentImageInfo;
+        public CommentTestSupport.CommentBuilder imageStoreName(final String imageStoreName) {
+            this.imageStoreName = imageStoreName;
             return this;
         }
 
@@ -57,7 +61,8 @@ public class CommentTestSupport {
                     new Comment(
                             post == null ? postTestSupport.builder().build() : post,
                             content == null ? "댓글이지롱" : content,
-                            commentImageInfo == null ? null : commentImageInfo,
+                            imageStoreName == null ? null : commentImageInfoRepository.save(
+                                    CommentImageInfo.from(new ImageInfo(imageStoreName))),
                             member == null ? memberTestSupport.builder().build() : member
                     )
             );

@@ -82,6 +82,10 @@ public class Comment extends TemporalRecord {
         return this.member.hasId(memberId);
     }
 
+    public boolean hasImage() {
+        return commentImageInfo != null;
+    }
+
     public Optional<String> getDeviceTokenFromPostWriter() {
         return this.post.getDeviceTokenFromWriter();
     }
