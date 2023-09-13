@@ -211,14 +211,6 @@ public class Post extends TemporalRecord {
         return this.postImageInfos.getPostImageInfos();
     }
 
-    public List<PostImageInfo> findImagesToDelete(final List<String> remainedStoreNames) {
-        return this.postImageInfos.findImagesToDelete(remainedStoreNames);
-    }
-
-    public void removePostImageInfos(final List<PostImageInfo> deletedPostImageInfos) {
-        this.postImageInfos.remove(deletedPostImageInfos);
-    }
-
     public void validateWriter(final Long memberId) {
         if (!isSameMember(memberId)) {
             throw new EdonymyeonException(POST_MEMBER_NOT_SAME);
