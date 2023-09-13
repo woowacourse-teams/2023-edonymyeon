@@ -54,6 +54,9 @@ dependencies {
 	// rest assured 추가
 	testImplementation 'io.rest-assured:rest-assured:5.3.1'
 
+	// 스케줄러 테스트 의존성
+	testImplementation 'org.awaitility:awaitility:4.2.0'
+
 	implementation 'com.mysql:mysql-connector-j'
 
 	// actuator 추가

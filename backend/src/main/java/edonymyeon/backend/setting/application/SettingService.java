@@ -84,4 +84,9 @@ public class SettingService {
         final List<Setting> settings = settingRepository.findByMemberId(memberId.id());
         return SettingsResponse.from(settings);
     }
+
+    public boolean isSettingActive(final MemberId memberId, final SettingType settingType) {
+        final Setting setting = settingRepository.findByMemberIdAndSettingType(memberId.id(), settingType);
+        return setting.isActive();
+    }
 }

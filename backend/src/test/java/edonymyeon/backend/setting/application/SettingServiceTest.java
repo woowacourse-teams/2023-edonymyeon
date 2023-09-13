@@ -144,6 +144,23 @@ class SettingServiceTest extends IntegrationFixture {
                 .isActive()).isTrue();
     }
 
+    @Test
+    void 회원의_주어진_설정이_활성화_되어_있다면_true를_응답한다() {
+        final Member member = 회원을_저장하고_기본설정을_부여한다();
+        settingService.toggleSetting(SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING.getSerialNumber(), new ActiveMemberId(member.getId()));
+
+        assertThat(settingService.isSettingActive(new ActiveMemberId(member.getId()),
+                SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING)).isTrue();
+    }
+
+    @Test
+    void 회원의_주어진_설정이_비활성화_되어_있다면_false를_응답한다() {
+        final Member member = 회원을_저장하고_기본설정을_부여한다();
+
+        assertThat(settingService.isSettingActive(new ActiveMemberId(member.getId()),
+                SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING)).isFalse();
+    }
+
     @NotNull
     private Member 회원을_저장하고_기본설정을_부여한다() {
         final Member member = memberTestSupport.builder().build();
