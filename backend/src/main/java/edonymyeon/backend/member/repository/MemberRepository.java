@@ -5,7 +5,7 @@ import edonymyeon.backend.member.domain.SocialInfo;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberCustomRepository {
 
     Optional<Member> findByEmail(final String email);
 
