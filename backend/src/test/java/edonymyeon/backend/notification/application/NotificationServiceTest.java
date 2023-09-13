@@ -208,7 +208,6 @@ class NotificationServiceTest extends IntegrationFixture {
     }
 
     @Test
-    @Disabled("Post Soft DELETE 머지된 이후 테스트할 수 있음")
     void 게시글이_삭제되면_그와_관련된_알림_내역도_함께_삭제된다(
             @Autowired AuthService authService,
             @Autowired CommentService commentService,
@@ -226,8 +225,7 @@ class NotificationServiceTest extends IntegrationFixture {
 
         assertThat(notificationRepository.count()).isEqualTo(1);
 
-//        postService.deletePost(new ActiveMemberId(writer.getId()), post.getId());
-//        TODO: Post Soft DELETE 머지된 이후 테스트할 수 있음
+        postService.deletePost(new ActiveMemberId(writer.getId()), post.getId());
 
         assertThat(notificationRepository.count()).isZero();
     }
