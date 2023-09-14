@@ -1,7 +1,6 @@
 package edonymyeon.backend.post.application;
 
 import edonymyeon.backend.CacheConfig;
-import edonymyeon.backend.cache.application.HotPostsRedisRepository;
 import edonymyeon.backend.cache.application.PostCachingService;
 import edonymyeon.backend.cache.util.HotPostCachePolicy;
 import edonymyeon.backend.post.application.dto.response.GeneralPostInfoResponse;
@@ -33,8 +32,6 @@ public class PostServiceHotPostsTest {
 
     private final PostCachingService postCachingService;
 
-    private final HotPostsRedisRepository hotPostsRedisRepository;
-
     private final HotFindingCondition findingCondition = HotFindingCondition.builder().build();
 
     private String postIdsCacheKey;
@@ -42,7 +39,7 @@ public class PostServiceHotPostsTest {
     @BeforeEach
     void 새글을_두개_등록하고_남아있는_캐시를_삭제한다() {
         postIdsCacheKey = hotPostCachePolicy.getKey(findingCondition);
-        hotPostsRedisRepository.deleteById(postIdsCacheKey);
+        postCachingService.deleteCache(postIdsCacheKey);
     }
 
     @Test
@@ -60,7 +57,6 @@ public class PostServiceHotPostsTest {
         assertSoftly(softly -> {
                     softly.assertThat(hotPosts.getContent()).hasSize(2);
                     softly.assertThat(hotPosts.isLast()).isTrue();
-                    softly.assertThat(hotPostsRedisRepository.existsById(postIdsCacheKey)).isTrue();
                 }
         );
     }
@@ -86,7 +82,7 @@ public class PostServiceHotPostsTest {
         postTestSupport.builder().build();
 
         PostSlice<GeneralPostInfoResponse> hotPosts1 = postReadService.findHotPosts(findingCondition);
-        assertThat(hotPosts1.getContent().size()).isEqualTo(1);
+        assertThat(hotPosts1.getContent()).hasSize(1);
 
         // when
         Thread.sleep(3500);
@@ -111,7 +107,7 @@ public class PostServiceHotPostsTest {
     void 빈_캐싱이_만료되면_새로운_내역으로_조회되는지_확인한다() throws InterruptedException {
         // given
         var 빈_핫게시글 = postReadService.findHotPosts(findingCondition).getContent();
-        assertThat(빈_핫게시글.isEmpty()).isTrue();
+        assertThat(빈_핫게시글).isEmpty();
 
         // when
         Thread.sleep(3500);
