@@ -140,15 +140,15 @@ public class NotificationService {
      */
     private void sendNotification(final Member notifyingTarget, final ScreenType notifyingType, final Long redirectId,
                                   final NotificationMessage notificationMessage) {
+        if (notifyingTarget.isDeleted()) {
+            log.warn("탈퇴한 회원에 대한 알림 전송 시도입니다.");
+            return;
+        }
+
         final Long notificationId = saveNotification(notifyingTarget, notifyingType, redirectId, notificationMessage);
 
         final Optional<String> deviceToken = notifyingTarget.getActiveDeviceToken();
         if (deviceToken.isEmpty()) {
-            return;
-        }
-
-        if (notifyingTarget.isDeleted()) {
-            log.warn("탈퇴한 회원에 대한 알림 전송 시도입니다.");
             return;
         }
 

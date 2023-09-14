@@ -188,7 +188,10 @@ class NotificationServiceTest extends IntegrationFixture {
         commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
                 new CommentRequest(null, "Test Commentary"));
 
-        verify(super.notificationSender, never()).sendNotification(any(), any());
+        Assertions.assertAll(
+                () -> verify(notificationSender, never()).sendNotification(any(), any()),
+                () -> assertThat(notificationRepository.count()).isZero()
+        );
     }
 
     @Test
