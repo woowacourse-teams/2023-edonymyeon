@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.LiveData
@@ -63,20 +62,18 @@ class AlarmService : FirebaseMessagingService() {
             }
         }
 
-        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.mipmap.ic_edonymyeon_round)
-            .setContentTitle(message.notification?.title)
-            .setContentText(message.notification?.body)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setContentIntent(
-                PendingIntent.getActivity(
-                    this,
-                    0,
-                    intent,
-                    PendingIntent.FLAG_MUTABLE,
-                ),
-            )
-            .setAutoCancel(true)
+        val builder =
+            NotificationCompat.Builder(this, CHANNEL_ID).setSmallIcon(R.mipmap.ic_edonymyeon_round)
+                .setContentTitle(message.notification?.title)
+                .setContentText(message.notification?.body)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT).setContentIntent(
+                    PendingIntent.getActivity(
+                        this,
+                        0,
+                        intent,
+                        PendingIntent.FLAG_MUTABLE,
+                    ),
+                ).setAutoCancel(true)
 
         with(NotificationManagerCompat.from(this)) {
             // notificationId is a unique int for each notification that you must define

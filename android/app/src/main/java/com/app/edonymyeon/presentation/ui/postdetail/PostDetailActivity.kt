@@ -286,6 +286,11 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
             includeBinding.clGalleryImage.visibility = View.GONE
             viewModel.setCommentImage(null)
         }
+
+        binding.srlRefresh.setOnRefreshListener {
+            binding.srlRefresh.isRefreshing = false
+            viewModel.getComments(id)
+        }
     }
 
     private fun saveComment(id: Long, image: Uri?, comment: String) {

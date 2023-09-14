@@ -3,7 +3,6 @@ package com.app.edonymyeon.presentation.ui.alarmsetting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.domain.edonymyeon.repository.PreferenceRepository
-import com.domain.edonymyeon.repository.ProfileRepository
 
 class AlarmSettingViewModelFactory(private val repository: PreferenceRepository) :
     ViewModelProvider.Factory {
