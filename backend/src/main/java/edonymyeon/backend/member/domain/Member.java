@@ -193,9 +193,9 @@ public class Member extends TemporalRecord {
         throw new BusinessLogicException(ENCODED_PASSWORD_INVALID);
     }
 
-    // todo
-    // 실제로 비밀번호가 변경하고 싶을 때는 UpdateMemberInfo라는 회원 정보 변경 클래스를 받아서 수정하도록
-//    public void updateMember(final UpdateMemberRequest updateMember) {
-//
-//    }
+    public void updateMember(final String nickname, final ProfileImageInfo profileImageInfo) {
+        validateNickName(nickname);
+        this.nickname = nickname;
+        this.profileImageInfo = profileImageInfo;
+    }
 }
