@@ -2,6 +2,7 @@ package edonymyeon.backend.cache.application;
 
 import edonymyeon.backend.cache.application.dto.CachedPostResponse;
 import edonymyeon.backend.cache.domain.CachedHotPost;
+import edonymyeon.backend.cache.repository.HotPostsRepository;
 import edonymyeon.backend.cache.util.HotPostCachePolicy;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.post.application.HotFindingCondition;
@@ -12,9 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.CACHE_NOT_FOUND;
 
@@ -24,26 +22,21 @@ public class PostCachingService {
 
     private final HotPostCachePolicy hotPostPolicy;
 
-    private static final Map<String, CachedHotPost> cacheStorage = new ConcurrentHashMap<>();
-
     public boolean isNotCached(final HotFindingCondition hotFindingCondition) {
-        return !cacheStorage.containsKey(hotPostPolicy.getKey(hotFindingCondition));
+        return ! HotPostsRepository.hasKey(hotPostPolicy.getKey(hotFindingCondition));
     }
 
     public boolean shouldRefreshCache(final HotFindingCondition hotFindingCondition) {
-        final CachedHotPost cachedHotPost = cacheStorage.get(hotPostPolicy.getKey(hotFindingCondition));
-        if (Objects.isNull(cachedHotPost)) {
-            throw new EdonymyeonException(CACHE_NOT_FOUND);
-        }
+        final CachedHotPost cachedHotPost = HotPostsRepository.get(hotPostPolicy.getKey(hotFindingCondition))
+                .orElseThrow(() -> new EdonymyeonException(CACHE_NOT_FOUND));
+
         return cachedHotPost.shouldRefresh(hotPostPolicy.getExpiredSeconds());
 
     }
 
     public CachedPostResponse findCachedPosts(HotFindingCondition hotFindingCondition) {
-        final CachedHotPost cachedHotPost = cacheStorage.get(hotPostPolicy.getKey(hotFindingCondition));
-        if (Objects.isNull(cachedHotPost)) {
-            throw new EdonymyeonException(CACHE_NOT_FOUND);
-        }
+        final CachedHotPost cachedHotPost = HotPostsRepository.get(hotPostPolicy.getKey(hotFindingCondition))
+                .orElseThrow(() -> new EdonymyeonException(CACHE_NOT_FOUND));
         return new CachedPostResponse(cachedHotPost.getPostIds(), cachedHotPost.isLast());
     }
 
@@ -57,9 +50,10 @@ public class PostCachingService {
             return;
         }
 
-        final CachedHotPost cachedHotPost = cacheStorage.get(hotPostPolicy.getKey(hotFindingCondition));
+        final CachedHotPost cachedHotPost = HotPostsRepository.get(hotPostPolicy.getKey(hotFindingCondition))
+                .orElseThrow(() -> new EdonymyeonException(CACHE_NOT_FOUND));
         cachedHotPost.refreshData(hotPostIds, hotPost.isLast());
-        cacheStorage.put(hotPostPolicy.getKey(hotFindingCondition), cachedHotPost);
+        HotPostsRepository.save(hotPostPolicy.getKey(hotFindingCondition), cachedHotPost);
     }
 
     private void saveHotPost(HotFindingCondition hotFindingCondition, Slice<Post> hotPost, List<Long> hotPostIds) {
@@ -68,10 +62,6 @@ public class PostCachingService {
                 hotPost.isLast(),
                 LocalDateTime.now()
         );
-        cacheStorage.put(hotPostPolicy.getKey(hotFindingCondition), hotPosts);
-    }
-
-    public void deleteCache(final String key) {
-        cacheStorage.remove(key);
+        HotPostsRepository.save(hotPostPolicy.getKey(hotFindingCondition), hotPosts);
     }
 }

@@ -2,6 +2,7 @@ package edonymyeon.backend.post.application;
 
 import edonymyeon.backend.CacheConfig;
 import edonymyeon.backend.cache.application.PostCachingService;
+import edonymyeon.backend.cache.repository.HotPostsRepository;
 import edonymyeon.backend.cache.util.HotPostCachePolicy;
 import edonymyeon.backend.post.application.dto.response.GeneralPostInfoResponse;
 import edonymyeon.backend.post.domain.Post;
@@ -39,7 +40,7 @@ public class PostServiceHotPostsTest {
     @BeforeEach
     void 새글을_두개_등록하고_남아있는_캐시를_삭제한다() {
         postIdsCacheKey = hotPostCachePolicy.getKey(findingCondition);
-        postCachingService.deleteCache(postIdsCacheKey);
+        HotPostsRepository.delete(postIdsCacheKey);
     }
 
     @Test
