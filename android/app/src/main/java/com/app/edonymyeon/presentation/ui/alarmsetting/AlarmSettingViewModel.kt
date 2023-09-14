@@ -2,15 +2,15 @@ package com.app.edonymyeon.presentation.ui.alarmsetting
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.domain.edonymyeon.model.NotificationPreference
 import com.domain.edonymyeon.repository.PreferenceRepository
 import kotlinx.coroutines.launch
 
 class AlarmSettingViewModel(
     private val preferenceRepository: PreferenceRepository,
-) : ViewModel() {
+) : BaseViewModel() {
     private val _alarmPreference = MutableLiveData<List<NotificationPreference>>()
     val alarmPreference: LiveData<List<NotificationPreference>> get() = _alarmPreference
 
@@ -28,7 +28,7 @@ class AlarmSettingViewModel(
     val isConfirmConsumptionAlarmOn: LiveData<Boolean> get() = _isConsumptionConfirmAlarmOn
 
     fun onPushAlarmSwitchEvent() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             preferenceRepository.saveNotificationPreference("0001").onSuccess { response ->
                 response.map {
                     setNotificationSetting(it)
@@ -38,7 +38,7 @@ class AlarmSettingViewModel(
     }
 
     fun onOneReactionAlarmSwitchEvent() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             preferenceRepository.saveNotificationPreference("1003").onSuccess { response ->
                 response.map {
                     setNotificationSetting(it)
@@ -48,7 +48,7 @@ class AlarmSettingViewModel(
     }
 
     fun onTenReactionAlarmSwitchEvent() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             preferenceRepository.saveNotificationPreference("1002").onSuccess { response ->
                 response.map {
                     setNotificationSetting(it)
@@ -58,7 +58,7 @@ class AlarmSettingViewModel(
     }
 
     fun onCommentAlarmSwitchEvent() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             preferenceRepository.saveNotificationPreference("2001").onSuccess { response ->
                 response.map {
                     setNotificationSetting(it)
@@ -68,7 +68,7 @@ class AlarmSettingViewModel(
     }
 
     fun onConsumptionConfirmAlarmSwitchClicked() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             preferenceRepository.saveNotificationPreference("5001").onSuccess { response ->
                 response.map {
                     setNotificationSetting(it)
@@ -78,7 +78,7 @@ class AlarmSettingViewModel(
     }
 
     fun getPushAlarmSetting() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             preferenceRepository.getNotificationPreference().onSuccess { response ->
                 response.map {
                     setNotificationSetting(it)

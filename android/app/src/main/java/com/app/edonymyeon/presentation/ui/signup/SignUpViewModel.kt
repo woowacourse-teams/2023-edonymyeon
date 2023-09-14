@@ -2,9 +2,9 @@ package com.app.edonymyeon.presentation.ui.signup
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.service.fcm.FCMToken
+import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.domain.edonymyeon.model.Email
 import com.domain.edonymyeon.model.Nickname
 import com.domain.edonymyeon.model.Password
@@ -12,7 +12,7 @@ import com.domain.edonymyeon.model.UserRegistration
 import com.domain.edonymyeon.repository.AuthRepository
 import kotlinx.coroutines.launch
 
-class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() {
+class SignUpViewModel(private val authRepository: AuthRepository) : BaseViewModel() {
     private val _isEmailValid = MutableLiveData<Boolean>()
     val isEmailValid: LiveData<Boolean> get() = _isEmailValid
 
@@ -33,7 +33,7 @@ class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() 
 
     fun signUp(email: String, password: String, nickname: String) {
         FCMToken.getFCMToken {
-            viewModelScope.launch {
+            viewModelScope.launch(exceptionHandler) {
                 authRepository.signUp(
                     UserRegistration(
                         Email.create(email),
@@ -83,7 +83,7 @@ class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() 
     }
 
     fun verifyEmail(email: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             authRepository.checkDuplicate(EMAIL, email.trim()).onSuccess {
                 _isEmailValid.value = it && Email.validate(email)
             }.onFailure {
@@ -93,7 +93,7 @@ class SignUpViewModel(private val authRepository: AuthRepository) : ViewModel() 
     }
 
     fun verifyNickname(nickname: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             authRepository.checkDuplicate(NICKNAME, nickname.trim()).onSuccess {
                 _isNicknameValid.value = it && Nickname.validate(nickname)
             }.onFailure {
