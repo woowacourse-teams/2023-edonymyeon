@@ -33,22 +33,28 @@ class AlarmFragment : Fragment() {
         AlarmAdapter(onClick = {
             when (it.navigateTo) {
                 "POST" -> {
-                    navigateToPostDetail(it.postId)
+                    navigateToPostDetail(it.postId, it.id)
                 }
 
                 "MYPOST" -> {
-                    navigateToMyPost()
+                    navigateToMyPost(it.id)
                 }
             }
         })
     }
 
-    private fun navigateToMyPost() {
-        startActivity(MyPostActivity.newIntent(requireContext()))
+    private fun navigateToMyPost(notificationId: Long) {
+        startActivity(MyPostActivity.newIntent(requireContext(), notificationId))
     }
 
-    private fun navigateToPostDetail(postId: Long) {
-        startActivity(PostDetailActivity.newIntent(context = requireContext(), postId = postId))
+    private fun navigateToPostDetail(postId: Long, notificationId: Long) {
+        startActivity(
+            PostDetailActivity.newIntent(
+                context = requireContext(),
+                postId = postId,
+                notificationId,
+            ),
+        )
     }
 
     override fun onCreateView(

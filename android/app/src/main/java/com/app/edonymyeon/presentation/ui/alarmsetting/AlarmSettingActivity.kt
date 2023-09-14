@@ -10,8 +10,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityAlarmSettingBinding
-import com.app.edonymyeon.data.datasource.profile.ProfileRemoteDataSource
-import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
+import com.app.edonymyeon.data.datasource.preference.PreferenceRemoteDataSource
+import com.app.edonymyeon.data.repository.PreferenceRepositoryImpl
 import com.app.edonymyeon.presentation.util.PermissionUtil
 import com.app.edonymyeon.presentation.util.makeSnackbar
 
@@ -22,21 +22,15 @@ class AlarmSettingActivity : AppCompatActivity() {
 
     private val viewModel: AlarmSettingViewModel by viewModels {
         AlarmSettingViewModelFactory(
-            ProfileRepositoryImpl(ProfileRemoteDataSource()), // 수정해야함
+            PreferenceRepositoryImpl(PreferenceRemoteDataSource()),
         )
     }
 
-    // 권한으로 최상단 push alarm 수신 여부를 설정한다.
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission(),
     ) { isGranted: Boolean ->
         if (isGranted.not()) {
-            binding.switchAlarmSetting.isChecked = false
             binding.root.makeSnackbar(getString(R.string.alarm_setting_request_alarm_permission))
-        } else {
-            // viewModel.setPushAlarmSetting
-            // viewModel.getPushAlarmSetting?
-            setAlarmSettingIsClickable(true)
         }
     }
 
@@ -46,6 +40,8 @@ class AlarmSettingActivity : AppCompatActivity() {
         initBinding()
         setNavigationClickListener()
         setObserver()
+
+        viewModel.getPushAlarmSetting()
     }
 
     override fun onStart() {
@@ -69,23 +65,9 @@ class AlarmSettingActivity : AppCompatActivity() {
                         requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                         return@observe
                     }
-                    // viewModel.setPushAlarmSetting
-                    // viewModel.getPushAlarmSetting
-                    setAlarmSettingIsClickable(true)
-                } else {
-                    setAlarmSettingIsClickable(false)
                 }
             }
         }
-    }
-
-    private fun setAlarmSettingIsClickable(isClickable: Boolean) {
-        binding.switchTenReaction.isClickable = isClickable
-        binding.switchOneReaction.isClickable = isClickable
-        binding.switchConfirmConsumption.isClickable = isClickable
-    }
-
-    private fun setNotificationGrantedUiState() {
     }
 
     private fun setNavigationClickListener() {
