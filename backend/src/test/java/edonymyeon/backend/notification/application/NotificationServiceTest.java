@@ -19,6 +19,7 @@ import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.ScreenType;
@@ -262,6 +263,28 @@ class NotificationServiceTest extends IntegrationFixture {
 
         commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
                 new CommentRequest(null, "Test Commentary"));
+
+        Assertions.assertAll(
+                () -> verify(notificationSender, never()).sendNotification(any(), any()),
+                () -> assertThat(notificationRepository.count()).isZero()
+        );
+    }
+
+    @Test
+    void 소비절약_확정이_완료된_게시글에는_반응알림을_보내지_않는다(
+            @Autowired MemberService memberService,
+            @Autowired ThumbsService thumbsService
+    ) {
+        final Member writer = getJoinedMember(authService);
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_THUMBS.getSerialNumber(), new ActiveMemberId(writer.getId()));
+
+        final Post post = postTestSupport.builder().member(writer).build();
+        memberService.confirmPurchase(new ActiveMemberId(writer.getId()), post.getId(),
+                new PurchaseConfirmRequest(4000L, 2023, 8));
+
+        final Member liker = memberTestSupport.builder().build();
+
+        thumbsService.thumbsUp(new ActiveMemberId(liker.getId()), post.getId());
 
         Assertions.assertAll(
                 () -> verify(notificationSender, never()).sendNotification(any(), any()),

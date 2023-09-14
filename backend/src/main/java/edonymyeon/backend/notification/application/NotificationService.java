@@ -6,6 +6,7 @@ import static edonymyeon.backend.notification.domain.NotificationMessage.THUMBS_
 
 import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.global.exception.BusinessLogicException;
+import edonymyeon.backend.member.application.MemberConsumptionService;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
@@ -51,6 +52,8 @@ public class NotificationService {
 
     private final ThumbsService thumbsService;
 
+    private final MemberConsumptionService memberConsumptionService;
+
     /**
      * 특정 회원이 받은 알림 내역을 조회합니다.
      * @param memberId 알림 내역을 조회할 회원의 식별자
@@ -73,6 +76,10 @@ public class NotificationService {
     public void sendThumbsNotificationToWriter(final Post post) {
         final Optional<String> deviceToken = post.getMember().getActiveDeviceToken();
         if (deviceToken.isEmpty()) {
+            return;
+        }
+
+        if (memberConsumptionService.isPostConfirmed(post.getId())) {
             return;
         }
 

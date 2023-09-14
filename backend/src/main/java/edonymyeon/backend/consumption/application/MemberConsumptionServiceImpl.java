@@ -90,6 +90,11 @@ public class MemberConsumptionServiceImpl implements MemberConsumptionService {
         consumptionRepository.delete(consumption);
     }
 
+    @Override
+    public boolean isPostConfirmed(final Long postId) {
+        return consumptionRepository.existsByPostId(postId);
+    }
+
     private Consumption findConsumptionByPostID(final Long postId) {
         return consumptionRepository.findByPostId(postId)
                 .orElseThrow(() -> new EdonymyeonException(CONSUMPTION_POST_ID_NOT_FOUND));
