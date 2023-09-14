@@ -11,10 +11,16 @@ import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.support.DocsTest;
 import edonymyeon.backend.support.TestMemberBuilder;
+import jakarta.servlet.http.Part;
+import java.nio.charset.StandardCharsets;
+import org.apache.http.entity.ContentType;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.mock.web.MockPart;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -30,17 +36,20 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class MemberControllerDocsTest extends DocsTest {
+class MemberControllerDocsTest extends DocsTest {
 
     private final TestMemberBuilder testMemberBuilder = new TestMemberBuilder(null);
 
@@ -200,6 +209,42 @@ public class MemberControllerDocsTest extends DocsTest {
 
         this.mockMvc.perform(회원_탈퇴_요청)
                 .andExpect(status().isNoContent())
+                .andDo(문서화);
+    }
+
+    @Test
+    void 회원정보를_수정한다() throws Exception {
+        final Member 회원 = testMemberBuilder.builder().id(1L).buildWithoutSaving();
+        회원_레포지토리를_모킹한다(회원);
+        when(memberRepository.findById(회원.getId())).thenReturn(Optional.of(회원));
+
+        MockMultipartFile profileImage = new MockMultipartFile("profileImage", "image.jpg", ContentType.IMAGE_JPEG.getMimeType(),
+                "이미지 파일입니다".getBytes(StandardCharsets.UTF_8));
+        Part nickname = new MockPart("nickname", null, "수정할 닉네임".getBytes(StandardCharsets.UTF_8));
+
+        final MockHttpServletRequestBuilder 회원_정보_수정_요청 = multipart("/profile")
+                .part(nickname)
+                .file(profileImage)
+                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
+                .header(HttpHeaders.AUTHORIZATION, "Basic "
+                        + java.util.Base64.getEncoder()
+                        .encodeToString((회원.getEmail() + ":" + 회원.getPassword()).getBytes()))
+                .with(request -> {
+                    request.setMethod(HttpMethod.PUT.name());
+                    return request;
+                });
+
+        final RestDocumentationResultHandler 문서화 = document("profile-update",
+                requestHeaders(
+                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")),
+                requestParts(
+                        partWithName("nickname").description("수정할 닉네임"),
+                        partWithName("profileImage").description("수정할 프로필 사진")
+                )
+        );
+
+        this.mockMvc.perform(회원_정보_수정_요청)
+                .andExpect(status().isOk())
                 .andDo(문서화);
     }
 }

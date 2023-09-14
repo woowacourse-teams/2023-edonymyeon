@@ -8,6 +8,7 @@
 operation::my-posts[snippets='request-headers,query-parameters,http-request,response-fields,http-response']
 
 === 회원 정보 수정
+operation::profile-update[snippets='request-headers,request-parts,http-request,http-response']
 
 === 최근 1개월/6개월 간 절약/소비 금액 확인
 
