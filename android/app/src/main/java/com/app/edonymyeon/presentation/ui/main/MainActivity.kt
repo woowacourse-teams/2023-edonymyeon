@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity() {
         private const val NOTIFICATION_CLICK_EVENT_POST = "POST"
         private const val NOTIFICATION_CLICK_EVENT_MYPOST = "MYPOST"
         private const val NOTIFICATION_POST_ID = "postId"
-        private const val NOTIFICATION_ID = "id"
+        private const val NOTIFICATION_ID = "notificationId"
 
         fun newIntent(context: Context): Intent {
             return Intent(context, MainActivity::class.java)

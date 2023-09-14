@@ -41,7 +41,7 @@ class AlarmService : FirebaseMessagingService() {
                 PostDetailActivity.newIntent(
                     this,
                     message.data["postId"]?.toLong() ?: 0,
-                    message.data["id"]?.toLong() ?: 0,
+                    message.data["notificationId"]?.toLong() ?: 0,
                 ).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 }
@@ -50,7 +50,7 @@ class AlarmService : FirebaseMessagingService() {
             "MYPOST" -> {
                 MyPostActivity.newIntent(
                     this,
-                    message.data["id"]?.toLong() ?: 0,
+                    message.data["notificationId"]?.toLong() ?: 0,
                 ).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 }

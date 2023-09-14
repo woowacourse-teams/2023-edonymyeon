@@ -189,7 +189,7 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
     }
 
     private fun getPost() {
-        viewModel.getPostDetail(id, intent.getLongExtra(KEY_POST_ID, -1))
+        viewModel.getPostDetail(id, intent.getLongExtra(KEY_NOTIFICATION_ID, -1))
         viewModel.getComments(id)
     }
 
