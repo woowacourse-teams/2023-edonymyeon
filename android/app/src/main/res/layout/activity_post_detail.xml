@@ -110,12 +110,13 @@
 
                     <TextView
                         android:id="@+id/tv_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:text="@{postViewModel.post.title}"
                         android:textColor="@color/black_434343"
                         android:textSize="20sp"
                         android:textStyle="bold"
+                        app:layout_constraintEnd_toStartOf="@+id/space_content_end"
                         app:layout_constraintStart_toEndOf="@id/space_content_start"
                         app:layout_constraintTop_toBottomOf="@id/space_image_bottom"
                         tools:text="립스틱 살까말까 고민 중인데..." />

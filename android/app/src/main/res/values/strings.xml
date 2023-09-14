@@ -48,6 +48,8 @@
     <string name="post_detail_dialog_yes">예</string>
     <string name="post_detail_dialog_no">아니요</string>
     <string name="post_detail_loading">로딩 중입니다</string>
+    <string name="post_detail_deleted_dialog_title">삭제된 게시글입니다</string>
+    <string name="post_detail_deleted_dialog_yes">확인</string>
 
     <!--post report dialog -->
     <string name="post_report_dialog_title">신고 사유</string>

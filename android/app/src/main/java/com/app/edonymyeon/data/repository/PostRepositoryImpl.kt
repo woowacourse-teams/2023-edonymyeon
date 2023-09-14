@@ -1,6 +1,7 @@
 package com.app.edonymyeon.data.repository
 
 import com.app.edonymyeon.data.common.CustomThrowable
+import com.app.edonymyeon.data.common.createCustomThrowableFromResponse
 import com.app.edonymyeon.data.datasource.post.PostDataSource
 import com.app.edonymyeon.data.dto.response.CommentsResponse
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
@@ -19,7 +20,8 @@ class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepos
         return if (result.isSuccessful) {
             Result.success((result.body() as PostDetailResponse).toDomain())
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 

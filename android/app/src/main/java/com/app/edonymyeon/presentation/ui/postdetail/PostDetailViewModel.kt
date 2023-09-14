@@ -77,6 +77,9 @@ class PostDetailViewModel(
     private val _reportSaveMessage = MutableLiveData<String>()
     val reportSaveMessage: LiveData<String>
         get() = _reportSaveMessage
+    private val _isPostDeleted = MutableLiveData(false)
+    val isPostDeleted: LiveData<Boolean>
+        get() = _isPostDeleted
 
     fun getPostDetail(
         postId: Long,
@@ -92,8 +95,15 @@ class PostDetailViewModel(
                     _isPostLoadingSuccess.value = true
                     checkLoadingSuccess()
                 }.onFailure {
-                    it as CustomThrowable
-                    _isPostLoadingSuccess.value = false
+                    val customThrowable = it as CustomThrowable
+                    when (customThrowable.code) {
+                        2000 -> {
+                            _isPostDeleted.value = true
+                            _isLoadingSuccess.value = true
+                        }
+
+                        else -> _isPostLoadingSuccess.value = false
+                    }
                 }
         }
     }
