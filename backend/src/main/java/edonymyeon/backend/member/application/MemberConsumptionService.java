@@ -19,6 +19,4 @@ public interface MemberConsumptionService {
     );
 
     void removeConfirm(final MemberId memberId, final Long postId);
-
-    boolean isPostConfirmed(Long postId);
 }
