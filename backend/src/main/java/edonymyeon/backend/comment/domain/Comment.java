@@ -95,7 +95,7 @@ public class Comment extends TemporalRecord {
         return this.post.getId();
     }
 
-    public Member getWriter() {
+    public Member getPostWriter() {
         return this.post.getMember();
     }
 

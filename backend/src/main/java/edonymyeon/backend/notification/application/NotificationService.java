@@ -74,11 +74,6 @@ public class NotificationService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void sendThumbsNotificationToWriter(final Post post) {
-        final Optional<String> deviceToken = post.getMember().getActiveDeviceToken();
-        if (deviceToken.isEmpty()) {
-            return;
-        }
-
         if (memberConsumptionService.isPostConfirmed(post.getId())) {
             return;
         }
@@ -111,12 +106,7 @@ public class NotificationService {
         if (settingService.isSettingActive(new ActiveMemberId(comment.getPost().getWriterId()), SettingType.NOTIFICATION_PER_COMMENT)) {
             comment = entityManager.merge(comment);
 
-            final Optional<String> deviceToken = comment.getDeviceTokenFromPostWriter();
-            if (deviceToken.isEmpty()) {
-                return;
-            }
-
-            sendNotification(comment.getWriter(), ScreenType.POST, comment.findPostId(), COMMENT_NOTIFICATION_TITLE);
+            sendNotification(comment.getPostWriter(), ScreenType.POST, comment.findPostId(), COMMENT_NOTIFICATION_TITLE);
         }
     }
 
@@ -151,6 +141,11 @@ public class NotificationService {
     private void sendNotification(final Member notifyingTarget, final ScreenType notifyingType, final Long redirectId,
                                   final NotificationMessage notificationMessage) {
         final Long notificationId = saveNotification(notifyingTarget, notifyingType, redirectId, notificationMessage);
+
+        final Optional<String> deviceToken = notifyingTarget.getActiveDeviceToken();
+        if (deviceToken.isEmpty()) {
+            return;
+        }
 
         if (notifyingTarget.isDeleted()) {
             log.warn("탈퇴한 회원에 대한 알림 전송 시도입니다.");

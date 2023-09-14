@@ -266,7 +266,9 @@ class NotificationServiceTest extends IntegrationFixture {
 
         Assertions.assertAll(
                 () -> verify(notificationSender, never()).sendNotification(any(), any()),
-                () -> assertThat(notificationRepository.count()).isZero()
+                () -> assertThat(notificationRepository.count())
+                        .as("알림은 발송하지 않았더라도 알림 내역은 저장해야지!")
+                        .isEqualTo(1)
         );
     }
 
