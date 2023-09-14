@@ -98,6 +98,11 @@ class PostActivity : AppCompatActivity() {
                 ) { navigateToLogin() }
             }
         }
+
+        binding.srlRefresh.setOnRefreshListener {
+            binding.srlRefresh.isRefreshing = false
+            loadNewData()
+        }
     }
 
     private fun loadNewData() {

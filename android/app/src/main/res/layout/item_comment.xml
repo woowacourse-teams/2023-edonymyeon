@@ -60,7 +60,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:text="@{comment.nicknameUiModel.nickname}"
+            android:text="@{comment.nicknameUiModel.toString()}"
             android:textColor="@color/gray_666666"
             android:textSize="13sp"
             app:layout_constraintStart_toStartOf="parent"
