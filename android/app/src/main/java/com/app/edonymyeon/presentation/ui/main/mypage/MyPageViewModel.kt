@@ -2,7 +2,6 @@ package com.app.edonymyeon.presentation.ui.main.mypage
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
@@ -11,6 +10,7 @@ import com.app.edonymyeon.data.service.fcm.FCMToken
 import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
+import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.ConsumptionAmountUiModel
 import com.app.edonymyeon.presentation.uimodel.ConsumptionStatisticsUiModel
 import com.app.edonymyeon.presentation.uimodel.NicknameUiModel
@@ -26,7 +26,7 @@ class MyPageViewModel(
     private val profileRepository: ProfileRepository,
     private val consumptionsRepository: ConsumptionsRepository,
     private val authRepository: AuthRepository,
-) : ViewModel() {
+) : BaseViewModel() {
     private val _profile = MutableLiveData<WriterUiModel>()
     val profile: LiveData<WriterUiModel>
         get() = _profile
@@ -50,7 +50,7 @@ class MyPageViewModel(
         get() = _isLogoutSuccess
 
     fun getUserProfile() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             profileRepository.getProfile().onSuccess {
                 it as Writer
                 _profile.value = it.toUiModel()
@@ -66,7 +66,7 @@ class MyPageViewModel(
     }
 
     fun setConsumptions(period: Int) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             consumptionsRepository.getConsumptions(period).onSuccess {
                 it as ConsumptionStatistics
                 _consumptions.value = it.toUiModel()
@@ -79,7 +79,7 @@ class MyPageViewModel(
 
     fun logout() {
         FCMToken.getFCMToken {
-            viewModelScope.launch {
+            viewModelScope.launch(exceptionHandler) {
                 authRepository.logout(it ?: "").onSuccess {
                     _isLogoutSuccess.value = true
                 }.onFailure {
@@ -90,7 +90,7 @@ class MyPageViewModel(
     }
 
     fun withdraw() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             profileRepository.withdraw()
                 .onFailure {
                     it as CustomThrowable

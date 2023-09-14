@@ -2,10 +2,10 @@ package com.app.edonymyeon.presentation.ui.mypost
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.mapper.toUiModel
+import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.ConsumptionUiModel
 import com.app.edonymyeon.presentation.uimodel.MyPostUiModel
 import com.domain.edonymyeon.model.Date
@@ -19,7 +19,7 @@ import java.time.LocalDateTime
 import java.time.YearMonth
 
 class MyPostViewModel(val repository: ProfileRepository, val postRepository: PostRepository) :
-    ViewModel() {
+    BaseViewModel() {
 
     private var currentPage = Page()
     private var isLastPage = false
@@ -36,9 +36,9 @@ class MyPostViewModel(val repository: ProfileRepository, val postRepository: Pos
     val price: LiveData<String>
         get() = _price
 
-    fun getMyPosts() {
-        viewModelScope.launch {
-            repository.getMyPosts(currentPage.value).onSuccess {
+    fun getMyPosts(notificationId: Long) {
+        viewModelScope.launch(exceptionHandler) {
+            repository.getMyPosts(currentPage.value, notificationId).onSuccess {
                 _posts.value = posts.value.orEmpty() + it.posts.map { post ->
                     post.toUiModel()
                 }
@@ -67,7 +67,7 @@ class MyPostViewModel(val repository: ProfileRepository, val postRepository: Pos
                 month = month,
             ),
         )
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             repository.postPurchaseConfirm(id, purchasePrice, year, month).onSuccess {
             }.onFailure {
                 it as CustomThrowable
@@ -82,7 +82,7 @@ class MyPostViewModel(val repository: ProfileRepository, val postRepository: Pos
             id,
             ConsumptionUiModel(type = SAVING_TYPE, purchasePrice = 0, year = year, month = month),
         )
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             repository.postSavingConfirm(id, year, month).onSuccess {
             }
                 .onFailure {
@@ -98,7 +98,7 @@ class MyPostViewModel(val repository: ProfileRepository, val postRepository: Pos
             id,
             ConsumptionUiModel(type = NONE_TYPE, purchasePrice = 0, year = 0, month = 0),
         )
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             repository.deleteConfirm(id).onSuccess {
             }
                 .onFailure {
@@ -138,7 +138,7 @@ class MyPostViewModel(val repository: ProfileRepository, val postRepository: Pos
     }
 
     fun getPostPrice(id: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             postRepository.getPostDetail(id).onSuccess {
                 _price.value = (it as Post).price.toString()
             }.onFailure {

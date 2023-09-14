@@ -3,7 +3,6 @@ package com.app.edonymyeon.presentation.ui.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
@@ -45,21 +44,21 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateByIntent() {
-        Log.d("testToken", intent.extras?.getString("click_action").toString() + "this2")
-        when (intent.extras?.getString("click_action")) {
-            "POST" -> {
-                val postId = intent.extras?.getLong("postId")
-                navigateToPostDetail(postId)
+        when (intent.extras?.getString(NOTIFICATION_CLICK_EVENT)) {
+            NOTIFICATION_CLICK_EVENT_POST -> {
+                val postId = (intent.extras?.getString(NOTIFICATION_POST_ID) ?: "0").toLong()
+                val notificationId = (intent.extras?.getString(NOTIFICATION_ID) ?: "0").toLong()
+                navigateToPostDetail(postId, notificationId)
             }
 
-            "MYPOST" -> {
+            NOTIFICATION_CLICK_EVENT_MYPOST -> {
                 navigateToMyPost()
             }
         }
     }
 
-    private fun navigateToPostDetail(postId: Long?) {
-        startActivity(PostDetailActivity.newIntent(this, postId ?: 0))
+    private fun navigateToPostDetail(postId: Long?, notificationId: Long?) {
+        startActivity(PostDetailActivity.newIntent(this, postId ?: 0, notificationId ?: -1))
     }
 
     private fun navigateToMyPost() {
@@ -122,6 +121,12 @@ class MainActivity : AppCompatActivity() {
         private const val FRAGMENT_HOME = "home"
         private const val FRAGMENT_ALARM = "alarm"
         private const val FRAGMENT_MY_PAGE = "myPage"
+
+        private const val NOTIFICATION_CLICK_EVENT = "navigateTo"
+        private const val NOTIFICATION_CLICK_EVENT_POST = "POST"
+        private const val NOTIFICATION_CLICK_EVENT_MYPOST = "MYPOST"
+        private const val NOTIFICATION_POST_ID = "postId"
+        private const val NOTIFICATION_ID = "notificationId"
 
         fun newIntent(context: Context): Intent {
             return Intent(context, MainActivity::class.java)
