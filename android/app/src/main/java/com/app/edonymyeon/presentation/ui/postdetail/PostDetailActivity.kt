@@ -15,7 +15,6 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.viewpager2.widget.ViewPager2
@@ -35,6 +34,7 @@ import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.CommentAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
+import com.app.edonymyeon.presentation.ui.postdetail.dialog.PostDeletedDialog
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.ReportDialog
 import com.app.edonymyeon.presentation.ui.postdetail.listener.CommentClickListener
 import com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity
@@ -81,6 +81,12 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
 
     private val loadingDialog: LoadingDialog by lazy {
         LoadingDialog(getString(R.string.post_detail_loading))
+    }
+
+    private val postDeletedDialog: PostDeletedDialog by lazy {
+        PostDeletedDialog {
+            finish()
+        }
     }
 
     private val adapter: CommentAdapter by lazy {
@@ -253,7 +259,7 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
 
         viewModel.isPostDeleted.observe(this) {
             if (it) {
-                createPostDeletedDialog()
+                postDeletedDialog.show(supportFragmentManager, "PostDeletedDialog")
             }
         }
     }
@@ -397,14 +403,6 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
         } else {
             makeLoginSnackbar()
         }
-    }
-
-    private fun createPostDeletedDialog() {
-        AlertDialog.Builder(this)
-            .setMessage("삭제된 게시글입니다.")
-            .setPositiveButton(
-                "확인",
-            ) { _, _ -> finish() }.create().show()
     }
 
     companion object {
