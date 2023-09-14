@@ -23,6 +23,9 @@ class MyPostActivity :
         ActivityMyPostBinding.inflate(it)
     }),
     MyPostClickListener {
+    private val notificationId by lazy {
+        intent.getLongExtra(KEY_NOTIFICATION_ID, -1)
+    }
 
     private val adapter: MyPostAdapter by lazy {
         MyPostAdapter(this)
@@ -76,7 +79,7 @@ class MyPostActivity :
                     return
                 }
                 if (!binding.rvMyPost.canScrollVertically(1)) {
-                    viewModel.getMyPosts()
+                    viewModel.getMyPosts(notificationId)
                 }
             }
         })
@@ -99,7 +102,7 @@ class MyPostActivity :
 
     private fun loadNewData() {
         viewModel.clearResult()
-        viewModel.getMyPosts()
+        viewModel.getMyPosts(notificationId)
     }
 
     override fun onMyPostClick(id: Long) {
@@ -140,8 +143,15 @@ class MyPostActivity :
     }
 
     companion object {
+        private const val KEY_NOTIFICATION_ID = "key_notification_id"
         fun newIntent(context: Context): Intent {
             return Intent(context, MyPostActivity::class.java)
+        }
+
+        fun newIntent(context: Context, notificationId: Long): Intent {
+            return Intent(context, MyPostActivity::class.java).apply {
+                putExtra(KEY_NOTIFICATION_ID, notificationId)
+            }
         }
     }
 }

@@ -6,9 +6,15 @@ import com.app.edonymyeon.data.dto.request.ReportRequest
 import com.domain.edonymyeon.repository.ReportRepository
 
 class ReportRepositoryImpl(private val reportDataSource: ReportDataSource) : ReportRepository {
-    override suspend fun postReport(postId: Long, repostId: Int, content: String?): Result<Unit> {
+    override suspend fun postReport(
+        type: String,
+        postId: Long,
+        repostId: Int,
+        content: String?,
+    ): Result<Unit> {
         val result = reportDataSource.postReport(
             ReportRequest(
+                type,
                 postId,
                 repostId,
                 content,

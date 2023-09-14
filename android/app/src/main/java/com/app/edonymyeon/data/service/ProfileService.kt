@@ -18,6 +18,7 @@ interface ProfileService {
     suspend fun getMyPost(
         @Query("size") size: Int,
         @Query("page") page: Int,
+        @Query("notificated") notificated: Long,
     ): Response<MyPostsResponse>
 
     @POST("/profile/my-posts/{postId}/purchase-confirm")

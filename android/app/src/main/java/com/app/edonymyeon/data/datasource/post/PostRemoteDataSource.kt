@@ -1,6 +1,7 @@
 package com.app.edonymyeon.data.datasource.post
 
 import com.app.edonymyeon.data.dto.request.PostEditorRequest
+import com.app.edonymyeon.data.dto.response.CommentsResponse
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
 import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.Posts
@@ -18,8 +19,11 @@ class PostRemoteDataSource : PostDataSource {
     private val postService: PostService =
         RetrofitClient.getInstance().create(PostService::class.java)
 
-    override suspend fun getPostDetail(postId: Long): Response<PostDetailResponse> {
-        return postService.getPost(postId)
+    override suspend fun getPostDetail(
+        postId: Long,
+        notificationId: Long,
+    ): Response<PostDetailResponse> {
+        return postService.getPost(postId, notificationId)
     }
 
     override suspend fun deletePost(postId: Long): Response<Unit> {
@@ -67,6 +71,22 @@ class PostRemoteDataSource : PostDataSource {
 
     override suspend fun getHotPosts(): Response<Posts> {
         return postService.getHotPosts()
+    }
+
+    override suspend fun getComments(postId: Long): Response<CommentsResponse> {
+        return postService.getComments(postId)
+    }
+
+    override suspend fun postComment(id: Long, image: File?, comment: String): Response<Unit> {
+        val requestFile = image?.asRequestBody("image/*".toMediaTypeOrNull())
+        val multipartFile =
+            requestFile?.let { MultipartBody.Part.createFormData("image", image.name, it) }
+        val requestBody = comment.createRequestBody()
+        return postService.postComment(id, if (image == null) null else multipartFile, requestBody)
+    }
+
+    override suspend fun deleteComment(postId: Long, commentId: Long): Response<Unit> {
+        return postService.deleteComment(postId, commentId)
     }
 
     private fun List<String>.generateMultiPartFromUrl() =

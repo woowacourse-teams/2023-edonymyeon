@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -79,5 +80,21 @@ public class Comment extends TemporalRecord {
 
     public boolean isSameMember(final Long memberId) {
         return this.member.hasId(memberId);
+    }
+
+    public boolean hasImage() {
+        return commentImageInfo != null;
+    }
+
+    public Optional<String> getDeviceTokenFromPostWriter() {
+        return this.post.getDeviceTokenFromWriter();
+    }
+
+    public Long findPostId() {
+        return this.post.getId();
+    }
+
+    public Member getWriter() {
+        return this.post.getMember();
     }
 }

@@ -65,7 +65,6 @@ class PostActivity : BaseActivity<ActivityPostBinding, PostViewModel>(
     private fun setPostAdapter() {
         val postAdapter = PostAdapter(onClick = { postId ->
             startActivity(PostDetailActivity.newIntent(this, postId))
-            finish()
         })
         binding.rvPost.adapter = postAdapter
         setObserver(postAdapter)
@@ -101,6 +100,11 @@ class PostActivity : BaseActivity<ActivityPostBinding, PostViewModel>(
                     eventTitle = getString(R.string.login_title),
                 ) { navigateToLogin() }
             }
+        }
+
+        binding.srlRefresh.setOnRefreshListener {
+            binding.srlRefresh.isRefreshing = false
+            loadNewData()
         }
     }
 

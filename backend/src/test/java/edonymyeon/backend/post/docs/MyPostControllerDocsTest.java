@@ -72,8 +72,8 @@ public class MyPostControllerDocsTest extends DocsTest {
                 .buildWithoutSaving();
         회원_레포지토리를_모킹한다(회원);
 
-        final Post 게시글1 = new Post(1L, "제목1", "내용1", 1000L, 회원, PostImageInfos.create(), 0, 0);
-        final Post 게시글2 = new Post(2L, "제목2", "내용2", 2000L, 회원, PostImageInfos.create(), 0, 0);
+        final Post 게시글1 = new Post(1L, "제목1", "내용1", 1000L, 회원, PostImageInfos.create(), 0, 0, false);
+        final Post 게시글2 = new Post(2L, "제목2", "내용2", 2000L, 회원, PostImageInfos.create(), 0, 0, false);
 
         final MyPostResponse postResponse1 = MyPostResponse.of(게시글1, domain, PostConsumptionResponse.none());
         final MyPostResponse postResponse2 = MyPostResponse.of(게시글2, domain, PostConsumptionResponse.none());
@@ -123,6 +123,8 @@ public class MyPostControllerDocsTest extends DocsTest {
                 fieldWithPath("content[].consumption.purchasePrice").description("소비 확정시 구매 가격 (확정 x의 경우: 0)"),
                 fieldWithPath("content[].consumption.year").description("소비 확정 연도 (확정 x의 경우: 0)"),
                 fieldWithPath("content[].consumption.month").description("소비 확정 달 (확정 x의 경우: 0)"),
+                fieldWithPath("content[].reactionCount.viewCount").description("조회수"),
+                fieldWithPath("content[].reactionCount.commentCount").description("댓글 수"),
                 fieldWithPath("last").description("현재 요청한 페이지가 마지막 페이지인지")
         };
 

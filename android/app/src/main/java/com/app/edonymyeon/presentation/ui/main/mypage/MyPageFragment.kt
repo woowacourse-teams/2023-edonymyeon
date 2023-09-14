@@ -16,6 +16,7 @@ import com.app.edonymyeon.data.repository.AuthRepositoryImpl
 import com.app.edonymyeon.data.repository.ConsumptionsRepositoryImpl
 import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
 import com.app.edonymyeon.presentation.common.fragment.BaseFragment
+import com.app.edonymyeon.presentation.ui.alarmsetting.AlarmSettingActivity
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
 import com.app.edonymyeon.presentation.ui.main.MainActivity
 import com.app.edonymyeon.presentation.ui.main.mypage.chart.LineChartManager
@@ -175,8 +176,8 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
     }
 
     private fun navigateToAlarmSetting() {
-        binding.root.makeSnackbar(getString(R.string.all_preparing_feature))
-//        startActivity(AlarmSettingActivity.newIntent(requireContext()))
+//        binding.root.makeSnackbar(getString(R.string.all_preparing_feature))
+        startActivity(AlarmSettingActivity.newIntent(requireContext()))
     }
 
     private fun navigateToLogin() {
