@@ -5,26 +5,29 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityAlarmSettingBinding
 import com.app.edonymyeon.data.datasource.preference.PreferenceRemoteDataSource
 import com.app.edonymyeon.data.repository.PreferenceRepositoryImpl
+import com.app.edonymyeon.presentation.common.activity.BaseActivity
 import com.app.edonymyeon.presentation.util.PermissionUtil
 import com.app.edonymyeon.presentation.util.makeSnackbar
 
-class AlarmSettingActivity : AppCompatActivity() {
-    private val binding by lazy {
-        ActivityAlarmSettingBinding.inflate(layoutInflater)
-    }
+class AlarmSettingActivity : BaseActivity<ActivityAlarmSettingBinding, AlarmSettingViewModel>(
+    {
+        ActivityAlarmSettingBinding.inflate(it)
+    },
+) {
 
-    private val viewModel: AlarmSettingViewModel by viewModels {
+    override val viewModel: AlarmSettingViewModel by viewModels {
         AlarmSettingViewModelFactory(
             PreferenceRepositoryImpl(PreferenceRemoteDataSource()),
         )
     }
+    override val inflater: LayoutInflater by lazy { LayoutInflater.from(this) }
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission(),

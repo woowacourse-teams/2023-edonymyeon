@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
@@ -12,6 +11,7 @@ import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.common.imageutil.processAndAdjustImage
+import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.CommentUiModel
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
@@ -27,7 +27,7 @@ class PostDetailViewModel(
     private val postRepository: PostRepository,
     private val recommendRepository: RecommendRepository,
     private val reportRepository: ReportRepository,
-) : ViewModel() {
+) : BaseViewModel() {
 
     private val _post = MutableLiveData<PostUiModel>()
     val post: LiveData<PostUiModel>
@@ -81,11 +81,8 @@ class PostDetailViewModel(
     val isPostDeleted: LiveData<Boolean>
         get() = _isPostDeleted
 
-    fun getPostDetail(
-        postId: Long,
-        notificationId: Long,
-    ) {
-        viewModelScope.launch {
+    fun getPostDetail(postId: Long, notificationId: Long) {
+        viewModelScope.launch(exceptionHandler) {
             postRepository.getPostDetail(postId, notificationId)
                 .onSuccess {
                     it as Post
@@ -109,7 +106,7 @@ class PostDetailViewModel(
     }
 
     fun deletePost(postId: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             postRepository.deletePost(postId)
                 .onSuccess {}
                 .onFailure {
@@ -119,8 +116,9 @@ class PostDetailViewModel(
     }
 
     fun postReport(type: ReportType, postId: Long, reportId: Int, content: String?) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             reportRepository.postReport(type.toString(), postId, reportId, content)
+                .onSuccess { }
                 .onSuccess {
                     _reportSaveMessage.value = MESSAGE_REPORT_SUCCESS
                 }
@@ -213,7 +211,7 @@ class PostDetailViewModel(
         postId: Long,
         event: suspend RecommendRepository.(Long) -> Result<Any>,
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             recommendRepository.event(postId)
                 .onSuccess {
                     _isRecommendationRequestDone.value = true
