@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 class AlarmService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        Log.d("testToken", "token: $token")
     }
 
     // background는 MainActivity, forground는 아래 로직을 탐
@@ -36,7 +35,6 @@ class AlarmService : FirebaseMessagingService() {
         CoroutineScope(Dispatchers.Main).launch {
             alarmOn.value = true
         }
-        Log.d("testToken", "message: ${message.data["click_action"]}" + "this1")
 
         val intent = when (message.data["navigateTo"].toString()) {
             "POST" -> {
