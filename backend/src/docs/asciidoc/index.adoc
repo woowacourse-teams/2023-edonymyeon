@@ -1,4 +1,4 @@
-= 이돈이면 API 명세서 (새로운 버전이 잘 바영되는지 테스트!!)
+= 이돈이면 API 명세서
 :toc: left
 :toclevels: 2
 :doctype: book
