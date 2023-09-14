@@ -31,7 +31,6 @@ import edonymyeon.backend.thumbs.application.ThumbsService;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -228,6 +227,26 @@ class NotificationServiceTest extends IntegrationFixture {
         postService.deletePost(new ActiveMemberId(writer.getId()), post.getId());
 
         assertThat(notificationRepository.count()).isZero();
+    }
+
+    @Test
+    void 자신의_게시글에_자신이_댓글을_남기면_알림이_가지_않는다(
+            @Autowired AuthService authService,
+            @Autowired CommentService commentService
+    ) {
+        final Member writer = getJoinedMember(authService);
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_COMMENT.getSerialNumber(),
+                new ActiveMemberId(writer.getId()));
+
+        final Post post = postTestSupport.builder().member(writer).build();
+
+        commentService.createComment(new ActiveMemberId(writer.getId()), post.getId(),
+                new CommentRequest(null, "Test Commentary"));
+
+        Assertions.assertAll(
+                () -> verify(notificationSender, never()).sendNotification(any(), any()),
+                () -> assertThat(notificationRepository.count()).isZero()
+        );
     }
 
     private static Member getJoinedMember(final AuthService authService) {

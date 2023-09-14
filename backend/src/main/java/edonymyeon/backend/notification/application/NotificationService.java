@@ -97,6 +97,10 @@ public class NotificationService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void sendCommentNotificationToPostWriter(Comment comment) {
+        if (comment.isWrittenSelf()) {
+            return;
+        }
+
         if (settingService.isSettingActive(new ActiveMemberId(comment.getPost().getWriterId()), SettingType.NOTIFICATION_PER_COMMENT)) {
             comment = entityManager.merge(comment);
 
