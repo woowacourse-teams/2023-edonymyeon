@@ -91,7 +91,7 @@ public class MemberService {
         rePersistedMember.activateDevice(deviceToken);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void deactivateDevice(final String deviceToken) {
         final Optional<Device> device = deviceRepository.findByDeviceToken(deviceToken);
         device.ifPresent(Device::deactivate);

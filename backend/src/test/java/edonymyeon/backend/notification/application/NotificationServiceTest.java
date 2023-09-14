@@ -1,6 +1,7 @@
 package edonymyeon.backend.notification.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.Mockito.any;
@@ -241,6 +242,25 @@ class NotificationServiceTest extends IntegrationFixture {
         final Post post = postTestSupport.builder().member(writer).build();
 
         commentService.createComment(new ActiveMemberId(writer.getId()), post.getId(),
+                new CommentRequest(null, "Test Commentary"));
+
+        Assertions.assertAll(
+                () -> verify(notificationSender, never()).sendNotification(any(), any()),
+                () -> assertThat(notificationRepository.count()).isZero()
+        );
+    }
+
+    @Test
+    void 로그아웃한_사용자에게_알림을_보내지_않는다(@Autowired CommentService commentService) {
+        final Member writer = getJoinedMember(authService);
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_COMMENT.getSerialNumber(), new ActiveMemberId(writer.getId()));
+
+        final Member commenter = memberTestSupport.builder().build();
+        final Post post = postTestSupport.builder().member(writer).build();
+
+        authService.logout(writer.getActiveDeviceToken().orElseGet(() -> fail("활성화된 디바이스 토큰이 존재하지 않음")));
+
+        commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
                 new CommentRequest(null, "Test Commentary"));
 
         Assertions.assertAll(
