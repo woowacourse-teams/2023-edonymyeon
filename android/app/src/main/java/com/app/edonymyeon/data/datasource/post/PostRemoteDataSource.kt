@@ -19,8 +19,11 @@ class PostRemoteDataSource : PostDataSource {
     private val postService: PostService =
         RetrofitClient.getInstance().create(PostService::class.java)
 
-    override suspend fun getPostDetail(postId: Long): Response<PostDetailResponse> {
-        return postService.getPost(postId)
+    override suspend fun getPostDetail(
+        postId: Long,
+        notificationId: Long,
+    ): Response<PostDetailResponse> {
+        return postService.getPost(postId, notificationId)
     }
 
     override suspend fun deletePost(postId: Long): Response<Unit> {

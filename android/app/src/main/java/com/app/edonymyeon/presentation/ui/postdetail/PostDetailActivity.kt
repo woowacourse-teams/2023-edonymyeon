@@ -34,6 +34,7 @@ import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.CommentAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
+import com.app.edonymyeon.presentation.ui.postdetail.dialog.PostDeletedDialog
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.ReportDialog
 import com.app.edonymyeon.presentation.ui.postdetail.listener.CommentClickListener
 import com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity
@@ -80,6 +81,12 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
 
     private val loadingDialog: LoadingDialog by lazy {
         LoadingDialog(getString(R.string.post_detail_loading))
+    }
+
+    private val postDeletedDialog: PostDeletedDialog by lazy {
+        PostDeletedDialog {
+            finish()
+        }
     }
 
     private val adapter: CommentAdapter by lazy {
@@ -189,7 +196,7 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
     }
 
     private fun getPost() {
-        viewModel.getPostDetail(id)
+        viewModel.getPostDetail(id, intent.getLongExtra(KEY_NOTIFICATION_ID, -1))
         viewModel.getComments(id)
     }
 
@@ -248,6 +255,12 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
 
         viewModel.reportSaveMessage.observe(this) {
             binding.root.makeSnackbar(it)
+        }
+
+        viewModel.isPostDeleted.observe(this) {
+            if (it) {
+                postDeletedDialog.show(supportFragmentManager, "PostDeletedDialog")
+            }
         }
     }
 
@@ -398,9 +411,15 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
     }
 
     companion object {
-        const val KEY_POST_ID = "key_post_id"
+        private const val KEY_POST_ID = "key_post_id"
+        private const val KEY_NOTIFICATION_ID = "key_notification_id"
         fun newIntent(context: Context, postId: Long): Intent {
             return Intent(context, PostDetailActivity::class.java).putExtra(KEY_POST_ID, postId)
+        }
+
+        fun newIntent(context: Context, postId: Long, notificationId: Long): Intent {
+            return Intent(context, PostDetailActivity::class.java).putExtra(KEY_POST_ID, postId)
+                .putExtra(KEY_NOTIFICATION_ID, notificationId)
         }
     }
 }

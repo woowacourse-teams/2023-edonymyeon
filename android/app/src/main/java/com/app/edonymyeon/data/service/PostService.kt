@@ -19,7 +19,10 @@ import retrofit2.http.Query
 
 interface PostService {
     @GET("/posts/{postId}")
-    suspend fun getPost(@Path("postId") postId: Long): Response<PostDetailResponse>
+    suspend fun getPost(
+        @Path("postId") postId: Long,
+        @Query("notificated") notificated: Long,
+    ): Response<PostDetailResponse>
 
     @DELETE("/posts/{postId}")
     suspend fun deletePost(@Path("postId") postId: Long): Response<Unit>

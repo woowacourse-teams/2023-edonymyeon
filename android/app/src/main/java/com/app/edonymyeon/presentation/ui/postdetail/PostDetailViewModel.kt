@@ -77,10 +77,16 @@ class PostDetailViewModel(
     private val _reportSaveMessage = MutableLiveData<String>()
     val reportSaveMessage: LiveData<String>
         get() = _reportSaveMessage
+    private val _isPostDeleted = MutableLiveData(false)
+    val isPostDeleted: LiveData<Boolean>
+        get() = _isPostDeleted
 
-    fun getPostDetail(postId: Long) {
+    fun getPostDetail(
+        postId: Long,
+        notificationId: Long,
+    ) {
         viewModelScope.launch {
-            postRepository.getPostDetail(postId)
+            postRepository.getPostDetail(postId, notificationId)
                 .onSuccess {
                     it as Post
                     _recommendation.value = it.recommendation.toUiModel()
@@ -89,8 +95,15 @@ class PostDetailViewModel(
                     _isPostLoadingSuccess.value = true
                     checkLoadingSuccess()
                 }.onFailure {
-                    it as CustomThrowable
-                    _isPostLoadingSuccess.value = false
+                    val customThrowable = it as CustomThrowable
+                    when (customThrowable.code) {
+                        2000 -> {
+                            _isPostDeleted.value = true
+                            _isLoadingSuccess.value = true
+                        }
+
+                        else -> _isPostLoadingSuccess.value = false
+                    }
                 }
         }
     }
