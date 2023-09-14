@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 class AlarmService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        Log.d("testToken", "token: $token")
     }
 
     // background는 MainActivity, forground는 아래 로직을 탐
@@ -36,17 +35,23 @@ class AlarmService : FirebaseMessagingService() {
         CoroutineScope(Dispatchers.Main).launch {
             alarmOn.value = true
         }
-        Log.d("testToken", "message: ${message.data["click_action"]}" + "this1")
 
-        val intent = when (message.data["click_action"].toString()) {
+        val intent = when (message.data["navigateTo"].toString()) {
             "POST" -> {
-                PostDetailActivity.newIntent(this, message.data["id"]?.toLong() ?: 0).apply {
+                PostDetailActivity.newIntent(
+                    this,
+                    message.data["postId"]?.toLong() ?: 0,
+                    message.data["notificationId"]?.toLong() ?: 0,
+                ).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 }
             }
 
             "MYPOST" -> {
-                MyPostActivity.newIntent(this).apply {
+                MyPostActivity.newIntent(
+                    this,
+                    message.data["notificationId"]?.toLong() ?: 0,
+                ).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 }
             }
@@ -57,10 +62,11 @@ class AlarmService : FirebaseMessagingService() {
                 }
             }
         }
+
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_bottom_nav_alarm_off)
-            .setContentTitle(message.data["title"])
-            .setContentText(message.data["content"])
+            .setSmallIcon(R.mipmap.ic_edonymyeon_round)
+            .setContentTitle(message.notification?.title)
+            .setContentText(message.notification?.body)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(
                 PendingIntent.getActivity(
@@ -96,9 +102,5 @@ class AlarmService : FirebaseMessagingService() {
         private val alarmOn: MutableLiveData<Boolean> = MutableLiveData()
         val isAlarmOn: LiveData<Boolean>
             get() = alarmOn
-
-        fun setAlarmOff() {
-            alarmOn.value = false
-        }
     }
 }

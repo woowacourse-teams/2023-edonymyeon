@@ -36,9 +36,9 @@ class MyPostViewModel(val repository: ProfileRepository, val postRepository: Pos
     val price: LiveData<String>
         get() = _price
 
-    fun getMyPosts() {
+    fun getMyPosts(notificationId: Long) {
         viewModelScope.launch {
-            repository.getMyPosts(currentPage.value).onSuccess {
+            repository.getMyPosts(currentPage.value, notificationId).onSuccess {
                 _posts.value = posts.value.orEmpty() + it.posts.map { post ->
                     post.toUiModel()
                 }
