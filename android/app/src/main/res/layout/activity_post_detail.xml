@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="postViewModel"
             type="com.app.edonymyeon.presentation.ui.postdetail.PostDetailViewModel" />
@@ -23,378 +24,391 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/sv_post_detail"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/srl_refresh"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@color/gray_f5f5f5"
-            android:fillViewport="true"
-            android:descendantFocusability="afterDescendants"
             app:layout_constraintBottom_toTopOf="@id/cl_comment_input"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tb_post_detail">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_post_all_detail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/sv_post_detail"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/gray_f5f5f5"
+                android:descendantFocusability="afterDescendants"
+                android:fillViewport="true"
+                app:layout_constraintBottom_toTopOf="@id/cl_comment_input"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tb_post_detail">
+
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_post_detail"
+                    android:id="@+id/cl_post_all_detail"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white_ffffff"
-                    android:elevation="4dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:layout_editor_absoluteX="98dp">
+                    android:layout_height="wrap_content">
 
-                    <ImageView
-                        android:id="@+id/iv_default_image"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:src="@drawable/ic_edonymyeon_foreground"
-                        app:layout_constraintDimensionRatio="H,360:248"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <androidx.viewpager2.widget.ViewPager2
-                        android:id="@+id/vp_image_slider"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="H,360:248"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <LinearLayout
-                        android:id="@+id/ll_indicators"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:gravity="center_horizontal"
-                        android:orientation="horizontal"
-                        app:layout_constraintBottom_toBottomOf="@id/vp_image_slider"
-                        app:layout_constraintDimensionRatio="H,172:10"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintWidth_percent="0.5" />
-
-                    <Space
-                        android:id="@+id/space_image_bottom"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="H,360:16"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/ll_indicators" />
-
-                    <Space
-                        android:id="@+id/space_content_start"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="H,16:44"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_price"
-                        app:layout_constraintWidth_percent="0.0444" />
-
-                    <Space
-                        android:id="@+id/space_content_end"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="H,16:44"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_price"
-                        app:layout_constraintWidth_percent="0.0444" />
-
-                    <TextView
-                        android:id="@+id/tv_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:text="@{postViewModel.post.title}"
-                        android:textColor="@color/black_434343"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toEndOf="@id/space_content_start"
-                        app:layout_constraintTop_toBottomOf="@id/space_image_bottom"
-                        tools:text="립스틱 살까말까 고민 중인데..." />
-
-                    <Space
-                        android:id="@+id/space_title_bottom"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="H,360:16"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_title" />
-
-                    <ImageView
-                        android:id="@+id/iv_user_profile"
-                        imgUrlCircleCrop="@{postViewModel.post.writer.profileImage}"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="H, 1:1"
-                        app:layout_constraintStart_toEndOf="@id/space_content_start"
-                        app:layout_constraintTop_toBottomOf="@id/space_title_bottom"
-                        app:layout_constraintWidth_percent="0.1"
-                        tools:src="@mipmap/ic_launcher_round" />
-
-                    <TextView
-                        android:id="@+id/tv_user_nickname"
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="16dp"
-                        android:text="@{postViewModel.post.writer.nickname.toString()}"
-                        android:textColor="@color/black_434343"
-                        android:textSize="16sp"
-                        app:layout_constraintStart_toEndOf="@id/iv_user_profile"
-                        app:layout_constraintTop_toTopOf="@id/iv_user_profile"
-                        tools:text="하티" />
-
-                    <TextView
-                        android:id="@+id/tv_post_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="16dp"
-                        android:text="@{postViewModel.post.createdAt.toString()}"
-                        android:textSize="12sp"
-                        app:layout_constraintStart_toEndOf="@id/iv_user_profile"
-                        app:layout_constraintTop_toBottomOf="@id/tv_user_nickname"
-                        tools:text="1시간 전" />
-
-                    <Space
-                        android:id="@+id/space_price_top"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="H,360:20"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_post_time" />
-
-                    <TextView
-                        android:id="@+id/tv_price"
-                        android:layout_width="wrap_content"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_post_detail"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{@string/all_price_long(postViewModel.post.price)}"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toEndOf="@id/space_content_start"
-                        app:layout_constraintTop_toBottomOf="@id/space_price_top"
-                        tools:text="가격: 13,000원" />
+                        android:background="@color/white_ffffff"
+                        android:elevation="4dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:layout_editor_absoluteX="98dp">
 
+                        <ImageView
+                            android:id="@+id/iv_default_image"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:src="@drawable/ic_edonymyeon_foreground"
+                            app:layout_constraintDimensionRatio="H,360:248"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.viewpager2.widget.ViewPager2
+                            android:id="@+id/vp_image_slider"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="H,360:248"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <LinearLayout
+                            android:id="@+id/ll_indicators"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:gravity="center_horizontal"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toBottomOf="@id/vp_image_slider"
+                            app:layout_constraintDimensionRatio="H,172:10"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintWidth_percent="0.5" />
+
+                        <Space
+                            android:id="@+id/space_image_bottom"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="H,360:16"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/ll_indicators" />
+
+                        <Space
+                            android:id="@+id/space_content_start"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="H,16:44"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tv_price"
+                            app:layout_constraintWidth_percent="0.0444" />
+
+                        <Space
+                            android:id="@+id/space_content_end"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="H,16:44"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tv_price"
+                            app:layout_constraintWidth_percent="0.0444" />
+
+                        <TextView
+                            android:id="@+id/tv_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:text="@{postViewModel.post.title}"
+                            android:textColor="@color/black_434343"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toEndOf="@id/space_content_start"
+                            app:layout_constraintTop_toBottomOf="@id/space_image_bottom"
+                            tools:text="립스틱 살까말까 고민 중인데..." />
+
+                        <Space
+                            android:id="@+id/space_title_bottom"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="H,360:16"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+                        <ImageView
+                            android:id="@+id/iv_user_profile"
+                            imgUrlCircleCrop="@{postViewModel.post.writer.profileImage}"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="H, 1:1"
+                            app:layout_constraintStart_toEndOf="@id/space_content_start"
+                            app:layout_constraintTop_toBottomOf="@id/space_title_bottom"
+                            app:layout_constraintWidth_percent="0.1"
+                            tools:src="@mipmap/ic_launcher_round" />
+
+                        <TextView
+                            android:id="@+id/tv_user_nickname"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="16dp"
+                            android:text="@{postViewModel.post.writer.nickname.toString()}"
+                            android:textColor="@color/black_434343"
+                            android:textSize="16sp"
+                            app:layout_constraintStart_toEndOf="@id/iv_user_profile"
+                            app:layout_constraintTop_toTopOf="@id/iv_user_profile"
+                            tools:text="하티" />
+
+                        <TextView
+                            android:id="@+id/tv_post_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_marginStart="16dp"
+                            android:text="@{postViewModel.post.createdAt.toString()}"
+                            android:textSize="12sp"
+                            app:layout_constraintStart_toEndOf="@id/iv_user_profile"
+                            app:layout_constraintTop_toBottomOf="@id/tv_user_nickname"
+                            tools:text="1시간 전" />
+
+                        <Space
+                            android:id="@+id/space_price_top"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="H,360:20"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tv_post_time" />
+
+                        <TextView
+                            android:id="@+id/tv_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{@string/all_price_long(postViewModel.post.price)}"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toEndOf="@id/space_content_start"
+                            app:layout_constraintTop_toBottomOf="@id/space_price_top"
+                            tools:text="가격: 13,000원" />
+
+
+                        <Space
+                            android:id="@+id/space_price_bottom"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="H,360:12"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tv_price" />
+
+                        <TextView
+                            android:id="@+id/tv_content"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="@{postViewModel.post.content}"
+                            android:textColor="@color/black_434343"
+                            android:textSize="14sp"
+                            app:layout_constraintEnd_toStartOf="@id/space_content_end"
+                            app:layout_constraintStart_toEndOf="@id/space_content_start"
+                            app:layout_constraintTop_toBottomOf="@id/space_price_bottom"
+                            tools:text="안녕하세요! 립스틱을 사야할지 말아야할지 고민이 되는데 어떻게 하는게 좋을까요?" />
+
+                        <Space
+                            android:id="@+id/space_reaction_top"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="H,360:8"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tv_content" />
+
+                        <com.app.edonymyeon.presentation.common.customview.PostReactionView
+                            android:id="@+id/prv_post_reaction"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="H, 360:24"
+                            app:layout_constraintEnd_toStartOf="@id/space_content_end"
+                            app:layout_constraintStart_toEndOf="@id/space_content_start"
+                            app:layout_constraintTop_toBottomOf="@id/space_reaction_top" />
+
+                        <Space
+                            android:id="@+id/space_reaction_bottom"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="H, 360:16"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/prv_post_reaction" />
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:id="@+id/div_post_and_comment"
+                            android:layout_width="0dp"
+                            android:layout_height="0.5dp"
+                            app:dividerColor="@color/blue_576b9e"
+                            app:layout_constraintEnd_toStartOf="@id/space_content_end"
+                            app:layout_constraintStart_toEndOf="@id/space_content_start"
+                            app:layout_constraintTop_toBottomOf="@id/space_reaction_bottom" />
+
+                        <Space
+                            android:id="@+id/space_divider_bottom"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="H, 360:16"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/div_post_and_comment" />
+
+                        <Space
+                            android:id="@+id/space_up_start"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="H,24:48"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/space_divider_bottom"
+                            app:layout_constraintWidth_percent="0.07" />
+
+                        <Space
+                            android:id="@+id/space_down_end"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="H,24:48"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/space_divider_bottom"
+                            app:layout_constraintWidth_percent="0.07" />
+
+                        <CheckBox
+                            android:id="@+id/cb_up"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:background="@drawable/selector_cb_reaction_up"
+                            android:button="@null"
+                            android:checked="@{postViewModel.recommendation.isUp}"
+                            app:layout_constraintBottom_toBottomOf="@id/space_up_start"
+                            app:layout_constraintDimensionRatio="H,1:1"
+                            app:layout_constraintStart_toEndOf="@id/space_up_start"
+                            app:layout_constraintTop_toTopOf="@id/space_up_start"
+                            app:layout_constraintWidth_percent="0.08" />
+
+                        <CheckBox
+                            android:id="@+id/cb_down"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:background="@drawable/selector_cb_reaction_down"
+                            android:button="@null"
+                            android:checked="@{postViewModel.recommendation.isDown}"
+                            app:layout_constraintBottom_toBottomOf="@id/space_up_start"
+                            app:layout_constraintDimensionRatio="H,1:1"
+                            app:layout_constraintEnd_toStartOf="@id/space_down_end"
+                            app:layout_constraintTop_toTopOf="@id/space_up_start"
+                            app:layout_constraintWidth_percent="0.08" />
+
+                        <ProgressBar
+                            android:id="@+id/pb_up_down"
+                            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginHorizontal="8dp"
+                            android:progress="@{postViewModel.recommendation.progress}"
+                            android:progressDrawable="@drawable/bg_reaction_progress"
+                            app:layout_constraintBottom_toBottomOf="@id/space_up_start"
+                            app:layout_constraintDimensionRatio="H, 240:12"
+                            app:layout_constraintEnd_toStartOf="@id/cb_down"
+                            app:layout_constraintStart_toEndOf="@id/cb_up"
+                            app:layout_constraintTop_toTopOf="@id/space_up_start"
+                            tools:progress="60" />
+
+                        <TextView
+                            android:id="@+id/tv_up_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:text="@{Integer.toString(postViewModel.recommendation.upCount)}"
+                            android:textColor="@color/blue_576b9e"
+                            app:layout_constraintStart_toStartOf="@id/pb_up_down"
+                            app:layout_constraintTop_toBottomOf="@id/cb_up"
+                            tools:text="5" />
+
+                        <TextView
+                            android:id="@+id/tv_down_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:text="@{Integer.toString(postViewModel.recommendation.downCount)}"
+                            android:textColor="@color/red_ba3030"
+                            app:layout_constraintEnd_toEndOf="@id/pb_up_down"
+                            app:layout_constraintTop_toBottomOf="@id/cb_down"
+                            tools:text="11" />
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="H,360:16"
+                            app:layout_constraintTop_toBottomOf="@id/tv_down_count" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <Space
-                        android:id="@+id/space_price_bottom"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="H,360:12"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_price" />
-
-                    <TextView
-                        android:id="@+id/tv_content"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="@{postViewModel.post.content}"
-                        android:textColor="@color/black_434343"
-                        android:textSize="14sp"
-                        app:layout_constraintEnd_toStartOf="@id/space_content_end"
-                        app:layout_constraintStart_toEndOf="@id/space_content_start"
-                        app:layout_constraintTop_toBottomOf="@id/space_price_bottom"
-                        tools:text="안녕하세요! 립스틱을 사야할지 말아야할지 고민이 되는데 어떻게 하는게 좋을까요?" />
-
-                    <Space
-                        android:id="@+id/space_reaction_top"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="H,360:8"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/tv_content" />
-
-                    <com.app.edonymyeon.presentation.common.customview.PostReactionView
-                        android:id="@+id/prv_post_reaction"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="H, 360:24"
-                        app:layout_constraintEnd_toStartOf="@id/space_content_end"
-                        app:layout_constraintStart_toEndOf="@id/space_content_start"
-                        app:layout_constraintTop_toBottomOf="@id/space_reaction_top" />
-
-                    <Space
-                        android:id="@+id/space_reaction_bottom"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="H, 360:16"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/prv_post_reaction" />
-
-                    <com.google.android.material.divider.MaterialDivider
-                        android:id="@+id/div_post_and_comment"
-                        android:layout_width="0dp"
-                        android:layout_height="0.5dp"
-                        app:dividerColor="@color/blue_576b9e"
-                        app:layout_constraintEnd_toStartOf="@id/space_content_end"
-                        app:layout_constraintStart_toEndOf="@id/space_content_start"
-                        app:layout_constraintTop_toBottomOf="@id/space_reaction_bottom" />
-
-                    <Space
-                        android:id="@+id/space_divider_bottom"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="H, 360:16"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/div_post_and_comment" />
-
-                    <Space
-                        android:id="@+id/space_up_start"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="H,24:48"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/space_divider_bottom"
-                        app:layout_constraintWidth_percent="0.07" />
-
-                    <Space
-                        android:id="@+id/space_down_end"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="H,24:48"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/space_divider_bottom"
-                        app:layout_constraintWidth_percent="0.07" />
-
-                    <CheckBox
-                        android:id="@+id/cb_up"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:background="@drawable/selector_cb_reaction_up"
-                        android:button="@null"
-                        android:checked="@{postViewModel.recommendation.isUp}"
-                        app:layout_constraintBottom_toBottomOf="@id/space_up_start"
-                        app:layout_constraintDimensionRatio="H,1:1"
-                        app:layout_constraintStart_toEndOf="@id/space_up_start"
-                        app:layout_constraintTop_toTopOf="@id/space_up_start"
-                        app:layout_constraintWidth_percent="0.08" />
-
-                    <CheckBox
-                        android:id="@+id/cb_down"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:background="@drawable/selector_cb_reaction_down"
-                        android:button="@null"
-                        android:checked="@{postViewModel.recommendation.isDown}"
-                        app:layout_constraintBottom_toBottomOf="@id/space_up_start"
-                        app:layout_constraintDimensionRatio="H,1:1"
-                        app:layout_constraintEnd_toStartOf="@id/space_down_end"
-                        app:layout_constraintTop_toTopOf="@id/space_up_start"
-                        app:layout_constraintWidth_percent="0.08" />
-
-                    <ProgressBar
-                        android:id="@+id/pb_up_down"
-                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginHorizontal="8dp"
-                        android:progress="@{postViewModel.recommendation.progress}"
-                        android:progressDrawable="@drawable/bg_reaction_progress"
-                        app:layout_constraintBottom_toBottomOf="@id/space_up_start"
-                        app:layout_constraintDimensionRatio="H, 240:12"
-                        app:layout_constraintEnd_toStartOf="@id/cb_down"
-                        app:layout_constraintStart_toEndOf="@id/cb_up"
-                        app:layout_constraintTop_toTopOf="@id/space_up_start"
-                        tools:progress="60" />
-
-                    <TextView
-                        android:id="@+id/tv_up_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:text="@{Integer.toString(postViewModel.recommendation.upCount)}"
-                        android:textColor="@color/blue_576b9e"
-                        app:layout_constraintStart_toStartOf="@id/pb_up_down"
-                        app:layout_constraintTop_toBottomOf="@id/cb_up"
-                        tools:text="5" />
-
-                    <TextView
-                        android:id="@+id/tv_down_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:text="@{Integer.toString(postViewModel.recommendation.downCount)}"
-                        android:textColor="@color/red_ba3030"
-                        app:layout_constraintEnd_toEndOf="@id/pb_up_down"
-                        app:layout_constraintTop_toBottomOf="@id/cb_down"
-                        tools:text="11" />
-
-                    <Space
+                        android:id="@+id/space_comment_layout_top"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         app:layout_constraintDimensionRatio="H,360:16"
-                        app:layout_constraintTop_toBottomOf="@id/tv_down_count" />
+                        app:layout_constraintTop_toBottomOf="@id/cl_post_detail" />
 
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cl_comment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_ffffff_radius_top_10dp"
+                        app:layout_constraintTop_toBottomOf="@id/space_comment_layout_top">
+
+                        <Space
+                            android:id="@+id/space_comment_title_top"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="H, 360:16"
+                            app:layout_constraintTop_toTopOf="@id/cl_comment" />
+
+                        <TextView
+                            android:id="@+id/tv_comment_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:text="@string/post_detail_comment_title"
+                            android:textColor="@color/gray_434343"
+                            android:textSize="20sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/space_comment_title_top" />
+
+                        <Space
+                            android:id="@+id/space_comment_title_bottom"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="H, 360:20"
+                            app:layout_constraintTop_toBottomOf="@id/tv_comment_title" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rv_comment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                            app:layout_constraintTop_toBottomOf="@id/space_comment_title_bottom"
+                            tools:listitem="@layout/item_comment" />
+
+                        <Space
+                            android:id="@+id/space_comment_bottom"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            app:layout_constraintDimensionRatio="H, 360:16"
+                            app:layout_constraintTop_toBottomOf="@id/rv_comment" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
 
-                <Space
-                    android:id="@+id/space_comment_layout_top"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintDimensionRatio="H,360:16"
-                    app:layout_constraintTop_toBottomOf="@id/cl_post_detail" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_comment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_ffffff_radius_top_10dp"
-                    app:layout_constraintTop_toBottomOf="@id/space_comment_layout_top">
-
-                    <Space
-                        android:id="@+id/space_comment_title_top"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="H, 360:16"
-                        app:layout_constraintTop_toTopOf="@id/cl_comment" />
-
-                    <TextView
-                        android:id="@+id/tv_comment_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:text="@string/post_detail_comment_title"
-                        android:textColor="@color/gray_434343"
-                        android:textSize="20sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/space_comment_title_top" />
-
-                    <Space
-                        android:id="@+id/space_comment_title_bottom"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="H, 360:20"
-                        app:layout_constraintTop_toBottomOf="@id/tv_comment_title" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_comment"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        app:layout_constraintTop_toBottomOf="@id/space_comment_title_bottom"
-                        tools:listitem="@layout/item_comment" />
-
-                    <Space
-                        android:id="@+id/space_comment_bottom"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        app:layout_constraintDimensionRatio="H, 360:16"
-                        app:layout_constraintTop_toBottomOf="@id/rv_comment" />
-
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.core.widget.NestedScrollView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <include
             android:id="@+id/cl_comment_input"
@@ -402,6 +416,5 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
