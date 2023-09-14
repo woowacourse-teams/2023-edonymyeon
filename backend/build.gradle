@@ -100,11 +100,18 @@ asciidoctor {
 
 tasks.register('copyDocument', Copy) {
 	dependsOn asciidoctor
-	from ("${asciidoctor.outputDir}/html5") {
-		into 'static/docs'
-	}
+	from asciidoctor.outputDir
+	into 'build/resources/main/static/docs'
+}
+
+jar {
+	dependsOn copyDocument
 }
 
 bootJar {
+	dependsOn copyDocument
+}
+
+resolveMainClassName {
 	dependsOn copyDocument
 }
