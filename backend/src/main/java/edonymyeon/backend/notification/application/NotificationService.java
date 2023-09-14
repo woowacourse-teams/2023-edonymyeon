@@ -114,7 +114,7 @@ public class NotificationService {
      * 소비/절약 확정을 하지 않은 게시글 작성자들에게 오후 8시마다 리마인드 알림을 발송합니다.
      */
     // 매일 오후 8시
-    @Scheduled(cron = "0 55 0 * * *")
+    @Scheduled(cron = "0 0 1 * * *")
     @Transactional
     public void remindConfirmingConsumptions() {
         final List<Member> membersHavingUnConfirmedPost = memberRepository.findAllHavingUnConfirmedPost();
