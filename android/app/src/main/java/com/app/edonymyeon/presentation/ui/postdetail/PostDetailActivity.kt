@@ -34,6 +34,7 @@ import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.CommentAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
+import com.app.edonymyeon.presentation.ui.postdetail.dialog.PostDeletedDialog
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.ReportDialog
 import com.app.edonymyeon.presentation.ui.postdetail.listener.CommentClickListener
 import com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity
@@ -80,6 +81,12 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
 
     private val loadingDialog: LoadingDialog by lazy {
         LoadingDialog(getString(R.string.post_detail_loading))
+    }
+
+    private val postDeletedDialog: PostDeletedDialog by lazy {
+        PostDeletedDialog {
+            finish()
+        }
     }
 
     private val adapter: CommentAdapter by lazy {
@@ -248,6 +255,12 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
 
         viewModel.reportSaveMessage.observe(this) {
             binding.root.makeSnackbar(it)
+        }
+
+        viewModel.isPostDeleted.observe(this) {
+            if (it) {
+                postDeletedDialog.show(supportFragmentManager, "PostDeletedDialog")
+            }
         }
     }
 
