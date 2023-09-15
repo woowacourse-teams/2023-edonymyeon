@@ -1,6 +1,7 @@
 package edonymyeon.backend.post.ui;
 
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
+import edonymyeon.backend.global.version.ApiVersion;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.HotFindingCondition;
@@ -23,9 +24,11 @@ public class PostReadController {
 
     private final PostReadService postReadService;
 
-    @GetMapping("/posts")
+    @ApiVersion(value = {1})
+    @GetMapping(value = "/posts")
     public ResponseEntity<PostSlice<GeneralPostInfoResponse>> findAllPosts(
             @PostPaging GeneralFindingCondition generalFindingCondition) {
+        System.out.println("version1");
         PostSlice<GeneralPostInfoResponse> posts = postReadService.findPostsByPagingCondition(generalFindingCondition);
         return ResponseEntity.ok()
                 .body(posts);
