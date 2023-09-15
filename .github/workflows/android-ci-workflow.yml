@@ -98,7 +98,7 @@ jobs:
         slack_token: ${{ secrets.ANDROID_CD_BOT_KEY }}
         channels: ${{ secrets.SLACK_ANDROID_CD_WEBHOOK_URL }}
         file_path: 'app/build/outputs/apk/debug/app-debug.apk'
-        file_name: 'app-debug.apk'
+        file_name: 'app-debug'
         file_type: 'apk'
         initial_comment: '${{ github.ref }} 테스트 앱 슬랙 배포 성공'
 
