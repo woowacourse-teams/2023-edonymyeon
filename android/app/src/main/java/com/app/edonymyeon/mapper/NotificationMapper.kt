@@ -9,7 +9,7 @@ fun NotificationDataModel.toDomain(): Notification {
         id = id,
         title = title,
         navigateTo = navigateTo,
-        postId = postId,
+        postId = postId ?: -1,
         read = read,
     )
 }
