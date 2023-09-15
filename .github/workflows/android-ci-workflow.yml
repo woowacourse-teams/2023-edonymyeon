@@ -108,15 +108,6 @@ jobs:
         name: app-slack-debug.apk
         path: android/app/build/outputs/apk/debug/app-debug.apk
 
-    - name: action-slack
-      uses: 8398a7/action-slack@v3.8.0
-      with:
-        status: ${{ job.status }}
-        author_name: 빌드 알림
-      env:
-         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ANDROID_CD_WEBHOOK_URL }}
-      if: success()
-
     # Gradle 캐시 제거
     - name: Cleanup Gradle Cache
       if: always()
