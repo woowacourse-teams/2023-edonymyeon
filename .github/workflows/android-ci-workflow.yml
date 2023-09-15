@@ -96,7 +96,7 @@ jobs:
     - uses: MeilCli/slack-upload-file@v1
       with:
         slack_token: ${{ secrets.ANDROID_CD_BOT_KEY }}
-        channels: ${{ secrets.SLACK_ANDROID_CD_WEBHOOK_URL }}
+        channels: ${{ secrets.ANDROID_CD_CHANNEL_NAME }}
         file_path: 'android/app/build/outputs/apk/debug/app-debug.apk'
         file_name: 'app-debug.apk'
         file_type: 'apk'
@@ -114,7 +114,7 @@ jobs:
         status: ${{ job.status }}
         author_name: 빌드 알림
       env:
-         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ANDROID_CD_WEBHOOK_URL }}
       if: success()
 
     # Gradle 캐시 제거
