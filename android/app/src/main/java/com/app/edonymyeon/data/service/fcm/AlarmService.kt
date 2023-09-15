@@ -31,6 +31,7 @@ class AlarmService : FirebaseMessagingService() {
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
         createNotificationChannel()
+
         CoroutineScope(Dispatchers.Main).launch {
             alarmOn.value = true
         }
