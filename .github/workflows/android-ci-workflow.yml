@@ -85,6 +85,38 @@ jobs:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_ANDROID_CI_WEBHOOK_URL }} # required
       if: failure() 
 
+    - name: Get current date
+      id: date
+      run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
+    - name: Build APK
+      run: bash ./gradlew assembleDebug --stacktrace
+
+    - run: './gradlew assembleDebug'
+    - uses: MeilCli/slack-upload-file@v1
+      with:
+        slack_token: ${{ secrets.ANDROID_CD_BOT_KEY }}
+        channels: ${{ secrets.SLACK_ANDROID_CD_WEBHOOK_URL }}
+        file_path: 'app/build/outputs/apk/debug/app-debug.apk'
+        file_name: 'app-debug.apk'
+        file_type: 'apk'
+        initial_comment: '${{ github.ref }} 테스트 앱 슬랙 배포 성공'
+
+    - name: 테스트용 apk artifact 업로드
+      uses: actions/upload-artifact@v2
+      with:
+        name: app-debug.apk
+        path: app/build/outputs/apk/debug/app-debug.apk
+
+    - name: action-slack
+      uses: 8398a7/action-slack@v3.8.0
+      with:
+        status: ${{ job.status }}
+        author_name: 빌드 알림
+      env:
+         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      if: success()
+
     # Gradle 캐시 제거
     - name: Cleanup Gradle Cache
       if: always()
