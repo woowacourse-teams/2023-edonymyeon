@@ -103,7 +103,7 @@ class AlarmFragment : BaseFragment<FragmentAlarmBinding, AlarmViewModel>(
     private fun setScrollListener() {
         binding.rvAlarmList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                if (viewModel.hasNextPage()) {
+                if (!viewModel.hasNextPage()) {
                     return
                 }
                 if (!binding.rvAlarmList.canScrollVertically(1)) {
