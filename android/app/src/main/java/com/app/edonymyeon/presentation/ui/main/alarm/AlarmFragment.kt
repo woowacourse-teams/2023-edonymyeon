@@ -37,7 +37,6 @@ class AlarmFragment : BaseFragment<FragmentAlarmBinding, AlarmViewModel>(
                 "POST" -> {
                     navigateToPostDetail(it.postId, it.id)
                 }
-
                 "MYPOST" -> {
                     navigateToMyPost(it.id)
                 }
