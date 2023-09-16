@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         override fun handleOnBackPressed() {
             if (System.currentTimeMillis() - backClickedTime >= 1500) {
                 backClickedTime = System.currentTimeMillis()
-                binding.root.makeSnackbar("뒤로가기 버튼을 한번 더 누르면 종료됩니다")
+                binding.root.makeSnackbar(getString(R.string.main_ask_back_click))
             } else {
                 finish()
             }

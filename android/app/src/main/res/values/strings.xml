@@ -23,6 +23,9 @@
     <string name="login_logo_description">로그인 로고</string>
     <string name="login_check_logininfo_input">이메일과 비밀번호는 필수 입력사항입니다.</string>
 
+    <!-- main activity -->
+    <string name="main_ask_back_click">뒤로 버튼을 한번 더 누르시면 종료됩니다</string>
+
     <!-- bottom navigation title    -->
     <string name="bottom_navigation_home_title">홈</string>
     <string name="bottom_navigation_search_title">검색</string>
@@ -155,6 +158,5 @@
     <string name="alarm_title">알림</string>
     <string name="alarm_period_explanation">최근 3개월 내  푸시 알림 내역입니다</string>
     <string name="post_detail_comment_title">댓글</string>
-
 
 </resources>
