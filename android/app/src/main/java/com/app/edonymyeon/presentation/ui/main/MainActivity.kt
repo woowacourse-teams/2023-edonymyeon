@@ -63,28 +63,6 @@ class MainActivity : AppCompatActivity() {
         this.onBackPressedDispatcher.addCallback(this, backPressedCallback)
     }
 
-    private fun navigateByIntent() {
-        when (intent.extras?.getString(NOTIFICATION_CLICK_EVENT)) {
-            NOTIFICATION_CLICK_EVENT_POST -> {
-                val postId = (intent.extras?.getString(NOTIFICATION_POST_ID) ?: "0").toLong()
-                val notificationId = (intent.extras?.getString(NOTIFICATION_ID) ?: "0").toLong()
-                navigateToPostDetail(postId, notificationId)
-            }
-
-            NOTIFICATION_CLICK_EVENT_MYPOST -> {
-                navigateToMyPost()
-            }
-        }
-    }
-
-    private fun navigateToPostDetail(postId: Long?, notificationId: Long?) {
-        startActivity(PostDetailActivity.newIntent(this, postId ?: 0, notificationId ?: -1))
-    }
-
-    private fun navigateToMyPost() {
-        startActivity(MyPostActivity.newIntent(this))
-    }
-
     private fun initFragmentContainerView() {
         supportFragmentManager.commit {
             add(R.id.fcv_main, HomeFragment(), FRAGMENT_HOME)
@@ -121,6 +99,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun getTag(itemId: Int): String = when (itemId) {
+        R.id.bottom_menu_search -> FRAGMENT_SEARCH
+        R.id.bottom_menu_home -> FRAGMENT_HOME
+        R.id.bottom_menu_alarm -> FRAGMENT_ALARM
+        R.id.bottom_menu_my_page -> FRAGMENT_MY_PAGE
+        else -> throw IllegalArgumentException()
+    }
+
     fun refreshActivity() {
         finish()
         overridePendingTransition(0, 0)
@@ -128,12 +114,26 @@ class MainActivity : AppCompatActivity() {
         overridePendingTransition(0, 0)
     }
 
-    private fun getTag(itemId: Int): String = when (itemId) {
-        R.id.bottom_menu_search -> FRAGMENT_SEARCH
-        R.id.bottom_menu_home -> FRAGMENT_HOME
-        R.id.bottom_menu_alarm -> FRAGMENT_ALARM
-        R.id.bottom_menu_my_page -> FRAGMENT_MY_PAGE
-        else -> throw IllegalArgumentException()
+    private fun navigateByIntent() {
+        when (intent.extras?.getString(NOTIFICATION_CLICK_EVENT)) {
+            NOTIFICATION_CLICK_EVENT_POST -> {
+                val postId = (intent.extras?.getString(NOTIFICATION_POST_ID) ?: "0").toLong()
+                val notificationId = (intent.extras?.getString(NOTIFICATION_ID) ?: "0").toLong()
+                navigateToPostDetail(postId, notificationId)
+            }
+
+            NOTIFICATION_CLICK_EVENT_MYPOST -> {
+                navigateToMyPost()
+            }
+        }
+    }
+
+    private fun navigateToPostDetail(postId: Long?, notificationId: Long?) {
+        startActivity(PostDetailActivity.newIntent(this, postId ?: 0, notificationId ?: -1))
+    }
+
+    private fun navigateToMyPost() {
+        startActivity(MyPostActivity.newIntent(this))
     }
 
     companion object {
