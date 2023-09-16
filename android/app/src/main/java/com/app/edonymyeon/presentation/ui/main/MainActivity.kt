@@ -49,14 +49,8 @@ class MainActivity : AppCompatActivity() {
         setOnBackCallback()
         initFragmentContainerView()
         setBottomNavigationView()
+        setAlarmObserver()
         navigateByIntent()
-
-        AlarmService.isAlarmOn.observe(this) {
-            if (it) {
-                binding.bnvMain.menu.findItem(R.id.bottom_menu_alarm)
-                    .setIcon(R.drawable.ic_bottom_nav_alarm_on)
-            }
-        }
     }
 
     private fun setOnBackCallback() {
@@ -105,6 +99,15 @@ class MainActivity : AppCompatActivity() {
         R.id.bottom_menu_alarm -> FRAGMENT_ALARM
         R.id.bottom_menu_my_page -> FRAGMENT_MY_PAGE
         else -> throw IllegalArgumentException()
+    }
+
+    private fun setAlarmObserver() {
+        AlarmService.isAlarmOn.observe(this) {
+            if (it) {
+                binding.bnvMain.menu.findItem(R.id.bottom_menu_alarm)
+                    .setIcon(R.drawable.ic_bottom_nav_alarm_on)
+            }
+        }
     }
 
     fun refreshActivity() {
