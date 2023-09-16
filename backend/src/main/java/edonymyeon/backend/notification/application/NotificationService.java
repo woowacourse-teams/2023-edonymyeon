@@ -117,7 +117,7 @@ public class NotificationService {
     @Scheduled(cron = "0 0 20 * * *")
     @Transactional
     public void remindConfirmingConsumptions() {
-        final List<Member> membersHavingUnConfirmedPost = memberRepository.findAllHavingUnConfirmedPost();
+        final List<Member> membersHavingUnConfirmedPost = memberRepository.findAllHavingUnConfirmedPostWithInDays(31);
 
         for (Member member : membersHavingUnConfirmedPost) {
             remindConfirmingConsumptions(member);
