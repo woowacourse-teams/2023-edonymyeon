@@ -3,6 +3,7 @@ package com.app.edonymyeon.presentation.ui.main
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
@@ -15,6 +16,7 @@ import com.app.edonymyeon.presentation.ui.main.mypage.MyPageFragment
 import com.app.edonymyeon.presentation.ui.main.search.SearchFragment
 import com.app.edonymyeon.presentation.ui.mypost.MyPostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
+import com.app.edonymyeon.presentation.util.makeSnackbar
 
 class MainActivity : AppCompatActivity() {
     private val fragments = mapOf(
@@ -28,9 +30,23 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
+    private var backClickedTime = 0L
+
+    private val backPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            if (System.currentTimeMillis() - backClickedTime >= 1500) {
+                backClickedTime = System.currentTimeMillis()
+                binding.root.makeSnackbar("뒤로가기 버튼을 한번 더 누르면 종료됩니다")
+            } else {
+                finish()
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        setOnBackCallback()
         initFragmentContainerView()
         setBottomNavigationView()
         navigateByIntent()
@@ -41,6 +57,10 @@ class MainActivity : AppCompatActivity() {
                     .setIcon(R.drawable.ic_bottom_nav_alarm_on)
             }
         }
+    }
+
+    private fun setOnBackCallback() {
+        this.onBackPressedDispatcher.addCallback(this, backPressedCallback)
     }
 
     private fun navigateByIntent() {
