@@ -39,11 +39,6 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
     ) {
         final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
         final HttpSession session = request.getSession();
-
-        if (Objects.isNull(session)) {
-            return getAnonymousMemberId(parameter);
-        }
-
         final Long userId = getUserId(session);
 
         if (Objects.isNull(userId)) {

@@ -13,7 +13,6 @@ import edonymyeon.backend.auth.application.dto.LogoutRequest;
 import edonymyeon.backend.member.application.dto.MemberId;
 import jakarta.servlet.http.HttpSession;
 import java.net.URI;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -75,9 +74,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestBody LogoutRequest logoutRequest, HttpSession session) {
-        if (Objects.nonNull(session)) {
-            session.invalidate();
-        }
+        session.invalidate();
         authService.logout(logoutRequest.deviceToken());
         return ResponseEntity.ok().build();
     }
