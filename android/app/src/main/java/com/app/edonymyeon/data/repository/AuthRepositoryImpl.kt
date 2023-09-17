@@ -44,7 +44,7 @@ class AuthRepositoryImpl(
         val result = authRemoteDataSource.login(LoginDataModel(email, password, deviceToken))
 
         return if (result.isSuccessful) {
-            authLocalDataSource.setAuthToken(result.headers()["Authorization"] as String)
+            authLocalDataSource.setAuthToken(result.headers()["Set-Cookie"] as String)
             Result.success(result.body() ?: Unit)
         } else {
             val customThrowable = createCustomThrowableFromResponse(result)
@@ -56,7 +56,7 @@ class AuthRepositoryImpl(
         val result = authRemoteDataSource.loginByKakao(TokenRequest(accessToken, deviceToken))
 
         return if (result.isSuccessful) {
-            authLocalDataSource.setAuthToken(result.headers()["Authorization"] as String)
+            authLocalDataSource.setAuthToken(result.headers()["Set-Cookie"] as String)
             Result.success(result.body() ?: Unit)
         } else {
             val errorResponse = result.errorBody()?.string()
