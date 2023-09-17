@@ -350,10 +350,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
         추천_서비스를_모킹한다(글쓴이, 게시글);
 
         final var 게시글_상세_조회_요청 = get("/posts/{postId}", 게시글.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((글쓴이.getEmail() + ":" + 글쓴이.getPassword()).getBytes()));
+                .contentType(MediaType.APPLICATION_JSON_VALUE);
 
         final RestDocumentationResultHandler 문서화 = document("post-findOne",
                 preprocessResponse(prettyPrint())
