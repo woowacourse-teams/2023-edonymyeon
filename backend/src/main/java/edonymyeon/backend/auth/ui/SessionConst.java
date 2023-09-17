@@ -2,7 +2,7 @@ package edonymyeon.backend.auth.ui;
 
 public enum SessionConst {
 
-    USER("userId", 30 * 60);
+    USER("userId", 30 * Constants.DAY);
 
     private final String sessionId;
     private final int validatedTime;
@@ -18,5 +18,10 @@ public enum SessionConst {
 
     public int getValidatedTime() {
         return validatedTime;
+    }
+
+    private static class Constants {
+
+        private static final int DAY = 86400;
     }
 }
