@@ -134,7 +134,7 @@ class PostServiceTest implements ImageFileCleaner {
                     "사도 돼요?",
                     "얼마 안해요",
                     100_000L,
-                    Collections.emptyList()
+                    null
             );
 
             final PostIdResponse target = postService.createPost(memberId, request);
@@ -274,7 +274,7 @@ class PostServiceTest implements ImageFileCleaner {
                     "I love you",
                     "He wisely contented himself with his family and his love of nature.",
                     13_000L,
-                    Collections.emptyList()
+                    null
             );
             final PostIdResponse post = postService.createPost(memberId, postRequest);
 
@@ -290,7 +290,7 @@ class PostServiceTest implements ImageFileCleaner {
                     "change!!",
                     26_000L,
                     Collections.emptyList(),
-                    Collections.emptyList()
+                   null
             );
             assertThatThrownBy(
                     () -> postService.updatePost(new ActiveMemberId(다른_사람.getId()), post.id(), updatedPostRequest))
@@ -314,7 +314,7 @@ class PostServiceTest implements ImageFileCleaner {
                     "change!!",
                     26_000L,
                     Collections.emptyList(),
-                    Collections.emptyList()
+                    null
             );
             postService.updatePost(memberId, post.id(), updatedPostRequest);
 
@@ -337,7 +337,7 @@ class PostServiceTest implements ImageFileCleaner {
                     "I love you",
                     "He wisely contented himself with his family and his love of nature.",
                     13_000L,
-                    Collections.emptyList()
+                    null
             );
 
             이미지를_수정하는_경우() throws IOException {
@@ -420,7 +420,7 @@ class PostServiceTest implements ImageFileCleaner {
                         "change!!",
                         26_000L,
                         Collections.emptyList(),
-                        Collections.emptyList()
+                        null
                 );
                 postService.updatePost(memberId, post.id(), 이미지가_없는_요청);
 
