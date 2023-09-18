@@ -5,6 +5,9 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_DOM
 import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_STORE_NAME_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_IMAGE_COUNT_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
+import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.ConsumptionSteps.MemberConsumptionSteps.*;
+import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.ConsumptionSteps.MemberConsumptionSteps.구매_확정_요청을_보낸다;
+import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.댓글을_생성한다_이미지없이;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -21,6 +24,7 @@ import edonymyeon.backend.post.application.dto.response.SpecificPostInfoResponse
 import edonymyeon.backend.report.application.ReportRequest;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.IntegrationFixture;
+import edonymyeon.backend.support.IntegrationFixture.CommentSteps.ConsumptionSteps.MemberConsumptionSteps;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -188,7 +192,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
         final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
         final PurchaseConfirmRequest 구매_확정_요청 = new PurchaseConfirmRequest(10000L, 2023, 7);
-        MemberConsumptionSteps.구매_확정_요청을_보낸다(작성자, 게시글_id, 구매_확정_요청);
+        구매_확정_요청을_보낸다(작성자, 게시글_id, 구매_확정_요청);
 
         final String sessionId = 로그인(작성자);
         //when
@@ -416,7 +420,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
                 () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("downCount")).isEqualTo(게시글.downCount()),
                 () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isUp")).isEqualTo(게시글.isUp()),
                 () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isDown")).isEqualTo(게시글.isDown()),
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isWriter")).isEqualTo(false)
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isWriter")).isFalse()
         );
     }
 
@@ -458,7 +462,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
                     assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("downCount")).isEqualTo(게시글.downCount());
                     assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isUp")).isEqualTo(게시글.isUp());
                     assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isDown")).isEqualTo(게시글.isDown());
-                    assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isWriter")).isEqualTo(true);
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isWriter")).isTrue();
                 }
         );
     }

@@ -2,6 +2,7 @@ package edonymyeon.backend.post.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.TestConfig;
@@ -223,21 +224,21 @@ class PostServiceTest implements ImageFileCleaner {
             final Post post = postRepository.findById(postIdResponse.id()).get();
 
             consumptionTestSupport.builder().post(post).build();
-            assertThat(consumptionRepository.findByPostId(post.getId()).isPresent()).isTrue();
+            assertThat(consumptionRepository.findByPostId(post.getId())).isPresent();
 
             postService.deletePost(memberId, postIdResponse.id());
-            assertThat(consumptionRepository.findByPostId(post.getId()).isEmpty()).isTrue();
+            assertThat(consumptionRepository.findByPostId(post.getId())).isEmpty();
         }
 
-        @Test
-        void 게시글이_삭제되면_디렉토리에_있는_이미지도_삭제된다() throws IOException {
-            final PostIdResponse postIdResponse = postService.createPost(memberId, getPostRequest());
-            final PostImageInfo postImageInfo = postImageInfoRepository.findAllByPostId(postIdResponse.id()).get(0);
-            assertThat(new File(imageFileUploader.getFullPath(postImageInfo.getStoreName())).canRead()).isTrue();
-
-            postService.deletePost(memberId, postIdResponse.id());
-            assertThat(new File(imageFileUploader.getFullPath(postImageInfo.getStoreName())).canRead()).isFalse();
-        }*/
+//        @Test
+//        void 게시글이_삭제되면_디렉토리에_있는_이미지도_삭제된다() throws IOException {
+//            final PostIdResponse postIdResponse = postService.createPost(memberId, getPostRequest());
+//            final PostImageInfo postImageInfo = postImageInfoRepository.findAllByPostId(postIdResponse.id()).get(0);
+//            assertThat(new File(imageFileUploader.getFullPath(postImageInfo.getStoreName())).canRead()).isTrue();
+//
+//            postService.deletePost(memberId, postIdResponse.id());
+//            assertThat(new File(imageFileUploader.getFullPath(postImageInfo.getStoreName())).canRead()).isFalse();
+//        }
 
         @Test
         void 게시글이_삭제되면_조회되지_않는다() throws IOException {
@@ -359,7 +360,7 @@ class PostServiceTest implements ImageFileCleaner {
 
                 // when
                 assertThatCode(() -> postService.updatePost(memberId, post.id(), request)).doesNotThrowAnyException();
-                assertThat(getFetchedPostWithPostImageInfos(entityManager, post).getPostImageInfos().size()).isEqualTo(images.size());
+                assertThat(getFetchedPostWithPostImageInfos(entityManager, post).getPostImageInfos()).hasSameSizeAs(images);
             }
 
             @Test
@@ -380,7 +381,7 @@ class PostServiceTest implements ImageFileCleaner {
                 assertThatThrownBy(() -> postService.updatePost(memberId, post.id(), request)).isInstanceOf(
                                 EdonymyeonException.class)
                         .hasMessage(ExceptionInformation.POST_IMAGE_COUNT_INVALID.getMessage());
-                assertThat(getFetchedPostWithPostImageInfos(entityManager, post).getPostImageInfos().size()).isEqualTo(0);
+                assertThat(getFetchedPostWithPostImageInfos(entityManager, post).getPostImageInfos()).isEmpty();
             }
 
             @Test
@@ -403,7 +404,7 @@ class PostServiceTest implements ImageFileCleaner {
 
                 // then
                 final Post findPost = getFetchedPostWithPostImageInfos(entityManager, 게시글_생성_결과);
-                assertThat(findPost.getPostImageInfos().size()).isEqualTo(
+                assertThat(findPost.getPostImageInfos()).hasSize(
                         request.newImages().size() + request.originalImages().size());
             }
 
@@ -424,7 +425,7 @@ class PostServiceTest implements ImageFileCleaner {
 
                 // then
                 final Post findPost = getFetchedPostWithPostImageInfos(entityManager, post);
-                assertThat(findPost.getPostImageInfos().size()).isEqualTo(0);
+                assertThat(findPost.getPostImageInfos()).isEmpty();
             }
 
             @Test
@@ -489,7 +490,7 @@ class PostServiceTest implements ImageFileCleaner {
 
                 // when
                 assertThatCode(() -> postService.updatePost(memberId, post.id(), modificationRequest)).doesNotThrowAnyException();
-                assertThat(fetchedPostImages.size()).isEqualTo(newImages.size());
+                assertThat(fetchedPostImages).hasSameClassAs(newImages);
             }
 
             private List<MultipartFile> createImages(final int count) throws IOException {
