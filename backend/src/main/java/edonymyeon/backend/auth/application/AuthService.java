@@ -2,6 +2,7 @@ package edonymyeon.backend.auth.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_DUPLICATE;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_NOT_FOUND;
+import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_IS_DELETED;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_NOT_MATCH;
@@ -43,13 +44,13 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final MemberService memberService;
+
     /**
      * 일반적인 로그인 작업을 수행합니다.
      * @param loginRequest 로그인에 필요한 정보
      * @return 로그인한 사용자의 식별자
      */
-    private final MemberService memberService;
-
     public MemberId login(final LoginRequest loginRequest) {
         final Member member = authenticateMember(loginRequest.email(), loginRequest.password());
         publisher.publishEvent(new LoginEvent(member, loginRequest.deviceToken()));
