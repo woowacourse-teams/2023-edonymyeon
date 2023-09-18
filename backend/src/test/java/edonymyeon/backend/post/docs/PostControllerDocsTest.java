@@ -157,6 +157,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
                 .part(가격)
                 .part(유지하는_이미지)
                 .file(추가되는_이미지)
+                .header("X-API-VERSION", 1)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .sessionAttr(USER.getSessionId(), 글쓴이.getId());
 
@@ -201,6 +202,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
         final MockHttpServletRequestBuilder 게시글_삭제_요청 = delete("/posts/{postId}", 게시글.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("X-API-VERSION", 1)
                 .sessionAttr(USER.getSessionId(), 글쓴이.getId());
 
         final RestDocumentationResultHandler 문서화 = document("post-delete",
@@ -227,7 +229,8 @@ public class PostControllerDocsTest implements ImageFileCleaner {
         final var 게시글_전체_조회_요청 = get("/posts")
                 .param("size", "10")
                 .param("page", "0")
-                .contentType(MediaType.APPLICATION_JSON_VALUE);
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("X-API-VERSION", 1);
 
         final RestDocumentationResultHandler 문서화 = document("post-findAll",
                 preprocessResponse(prettyPrint()),
@@ -261,7 +264,8 @@ public class PostControllerDocsTest implements ImageFileCleaner {
                 .queryParam("size", findingCondition.getSize().toString())
                 .queryParam("sort-by", findingCondition.getSortBy().getName())
                 .queryParam("sort-direction", findingCondition.getSortDirection().name())
-                .contentType(MediaType.APPLICATION_JSON_VALUE);
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("X-API-VERSION", 1);
 
         FieldDescriptor[] 응답 = {
                 fieldWithPath("content").description("게시글 목록"),
@@ -309,7 +313,8 @@ public class PostControllerDocsTest implements ImageFileCleaner {
         final var 핫_게시글_조회_요청 = get("/posts/hot")
                 .queryParam("page", findingCondition.getPage().toString())
                 .queryParam("size", findingCondition.getSize().toString())
-                .contentType(MediaType.APPLICATION_JSON_VALUE);
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("X-API-VERSION", 1);
 
         FieldDescriptor[] 응답 = {
                 fieldWithPath("content").description("게시글 목록"),
@@ -350,7 +355,8 @@ public class PostControllerDocsTest implements ImageFileCleaner {
         추천_서비스를_모킹한다(글쓴이, 게시글);
 
         final var 게시글_상세_조회_요청 = get("/posts/{postId}", 게시글.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE);
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("X-API-VERSION", 1);
 
         final RestDocumentationResultHandler 문서화 = document("post-findOne",
                 preprocessResponse(prettyPrint())

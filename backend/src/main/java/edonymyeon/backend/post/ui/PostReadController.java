@@ -34,6 +34,7 @@ public class PostReadController {
                 .body(posts);
     }
 
+    @ApiVersion(value = {1})
     @GetMapping("/posts/{postId}")
     public ResponseEntity<SpecificPostInfoResponse> findSpecificPost(
             @AuthPrincipal(required = false) MemberId memberId, @PathVariable Long postId) {
@@ -42,6 +43,7 @@ public class PostReadController {
                 .body(specificPost);
     }
 
+    @ApiVersion(value = {1})
     @GetMapping("/posts/hot")
     public ResponseEntity<PostSlice<GeneralPostInfoResponse>> findHotPosts(
             @HotPostSizing HotFindingCondition hotFindingCondition
@@ -51,6 +53,7 @@ public class PostReadController {
                 .body(hotPosts);
     }
 
+    @ApiVersion(value = {1})
     @GetMapping("/search")
     public ResponseEntity<PostSlice<GeneralPostInfoResponse>> searchPosts(
             @RequestParam String query,

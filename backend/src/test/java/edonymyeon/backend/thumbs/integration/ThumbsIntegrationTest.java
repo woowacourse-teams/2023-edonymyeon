@@ -1,6 +1,5 @@
 package edonymyeon.backend.thumbs.integration;
 
-import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
@@ -10,6 +9,7 @@ import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.request.PostRequest;
 import edonymyeon.backend.post.application.dto.response.PostIdResponse;
+import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
@@ -68,7 +68,9 @@ public class ThumbsIntegrationTest extends IntegrationFixture {
 
     @Test
     void 로그인_되어있지_않다면_추천기능을_사용할_수_없다_401_UNAUTHORIZED() {
-        given().log().all()
+        EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .when()
                 .put("posts/" + postId + "/up")
                 .then()
@@ -207,8 +209,10 @@ public class ThumbsIntegrationTest extends IntegrationFixture {
     private ExtractableResponse<Response> requestThumbs(String upOrDown, Member member, Long postId) {
         final String sessionId = 로그인(member);
 
-        return given()
+        return EdonymyeonRestAssured.builder()
+                .version(1)
                 .sessionId(sessionId)
+                .build()
                 .when()
                 .put("posts/" + postId + "/" + upOrDown)
                 .then()
@@ -219,8 +223,10 @@ public class ThumbsIntegrationTest extends IntegrationFixture {
     private ExtractableResponse<Response> requestDeleteThumbs(String upOrDown, Member member, Long postId) {
         final String sessionId = 로그인(member);
 
-        return given()
+        return EdonymyeonRestAssured.builder()
+                .version(1)
                 .sessionId(sessionId)
+                .build()
                 .when()
                 .delete("posts/" + postId + "/" + upOrDown)
                 .then()

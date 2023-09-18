@@ -59,6 +59,7 @@ public class PostCreationDocsTest implements ImageFileCleaner {
                 .file(이미지)
                 .file(이미지)
                 .file(이미지)
+                .header("X-API-VERSION", 1)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .sessionAttr(USER.getSessionId(), 글쓴이.getId());
 
