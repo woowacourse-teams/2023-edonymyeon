@@ -3,6 +3,8 @@ package edonymyeon.backend.comment.integration;
 import static edonymyeon.backend.global.exception.ExceptionInformation.COMMENT_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.COMMENT_MEMBER_NOT_SAME;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
+import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.*;
+import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.댓글을_생성한다_이미지없이;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 

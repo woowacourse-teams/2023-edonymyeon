@@ -1,7 +1,9 @@
 package edonymyeon.backend.support;
 
+import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.member.domain.Member;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.io.File;
@@ -19,9 +21,9 @@ public class PostIntegrationTestSupport {
 
     private static final int DEFAULT_PRICE = 1_000;
 
-    private static File DEFAULT_IMAGE1 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
+    private static final File DEFAULT_IMAGE1 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
 
-    private static File DEFAULT_IMAGE2 = new File("./src/test/resources/static/img/file/test_image_2.jpg");
+    private static final File DEFAULT_IMAGE2 = new File("./src/test/resources/static/img/file/test_image_2.jpg");
 
     private final TestMemberBuilder memberTestSupport;
 
@@ -78,9 +80,21 @@ public class PostIntegrationTestSupport {
         public ExtractableResponse<Response> build() {
             Member member = this.member == null ? memberTestSupport.builder().build() : this.member;
 
+            final LoginRequest request = new LoginRequest(member.getEmail(), TestMemberBuilder.getRawPassword(),
+                    "testToken");
+            final String sessionId = RestAssured
+                    .given()
+                    .contentType(ContentType.JSON)
+                    .body(request)
+                    .when()
+                    .post("/login")
+                    .then()
+                    .extract()
+                    .sessionId();
+
             return RestAssured
                     .given()
-                    .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                    .sessionId(sessionId)
                     .multiPart("title", this.title == null ? DEFAULT_TITLE : this.title)
                     .multiPart("content", this.content == null ? DEFAULT_CONTENT : this.content)
                     .multiPart("price", this.price == null ? DEFAULT_PRICE : this.price)

@@ -3,10 +3,11 @@ package edonymyeon.backend.auth.application;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_IS_DELETED;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.support.IntegrationTest;
+import edonymyeon.backend.support.TestMemberBuilder;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
@@ -33,13 +34,13 @@ class AuthDeleteServiceTest {
                 .builder()
                 .id(1L)
                 .email("test@email.com")
-                .password("passwrod1234!")
                 .nickname("null")
                 .deleted(true)
                 .build();
 
-        final String email = member.getEmail();
-        assertThatThrownBy(() -> authService.getAuthenticatedUser(email))
+        final LoginRequest request = new LoginRequest(member.getEmail(), TestMemberBuilder.getRawPassword(),
+                "");
+        assertThatThrownBy(() -> authService.login(request))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(MEMBER_IS_DELETED.getMessage());
     }
