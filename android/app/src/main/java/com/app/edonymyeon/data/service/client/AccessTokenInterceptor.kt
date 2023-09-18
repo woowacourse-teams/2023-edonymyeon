@@ -10,7 +10,7 @@ class AccessTokenInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response = with(chain) {
         val newRequest: Request = if (token != null) {
             request().newBuilder()
-                .addHeader("Authorization", token!!)
+                .addHeader("Cookie", token!!)
                 .build()
         } else {
             request()
