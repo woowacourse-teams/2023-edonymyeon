@@ -34,7 +34,7 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
             @Autowired AuthService authService,
             @Autowired SettingService settingService
     ) {
-        final var 글쓴이 = authService.joinMember(new JoinRequest("test@gmail.com", "password123!", "backfoxxx", "testDevice123"));
+        final var 글쓴이 = 사용자를_하나_만든다();
         settingService.toggleSetting(SettingType.NOTIFICATION_PER_THUMBS.getSerialNumber(), new ActiveMemberId(글쓴이.getId()));
 
         final var 열람인 = 사용자를_하나_만든다();
