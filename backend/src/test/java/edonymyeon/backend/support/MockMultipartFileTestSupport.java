@@ -37,17 +37,7 @@ public class MockMultipartFileTestSupport {
             return this;
         }
 
-        public MockMultipartFile buildImagesForCreatePost() throws IOException {
-            final InputStream file1InputStream = getClass().getResourceAsStream("/static/img/file/test_image_1.jpg");
-            return new MockMultipartFile(
-                    "images",
-                    originalFilename == null ? "test_image_1.jpg" : originalFilename,
-                    contentType == null ? "image/jpg" : contentType,
-                    contentStream == null ? file1InputStream : contentStream
-            );
-        }
-
-        public MockMultipartFile buildImagesForUpdatePost() throws IOException {
+        public MockMultipartFile buildImageForPost() throws IOException {
             final InputStream file1InputStream = getClass().getResourceAsStream("/static/img/file/test_image_2.jpg");
             return new MockMultipartFile(
                     "newImages",

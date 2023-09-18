@@ -2,8 +2,10 @@ package com.app.edonymyeon.presentation.ui.postdetail
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -11,9 +13,9 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.viewpager2.widget.ViewPager2
 import app.edonymyeon.R
@@ -25,31 +27,37 @@ import com.app.edonymyeon.data.datasource.report.ReportRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.data.repository.RecommendRepositoryImpl
 import com.app.edonymyeon.data.repository.ReportRepositoryImpl
+import com.app.edonymyeon.presentation.common.activity.BaseActivity
+import com.app.edonymyeon.presentation.common.activityutil.hideKeyboard
 import com.app.edonymyeon.presentation.common.dialog.LoadingDialog
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
 import com.app.edonymyeon.presentation.ui.post.PostActivity
+import com.app.edonymyeon.presentation.ui.postdetail.adapter.CommentAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
+import com.app.edonymyeon.presentation.ui.postdetail.dialog.PostDeletedDialog
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.ReportDialog
+import com.app.edonymyeon.presentation.ui.postdetail.listener.CommentClickListener
 import com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.util.makeSnackbar
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 
-class PostDetailActivity : AppCompatActivity() {
+class PostDetailActivity :
+    BaseActivity<ActivityPostDetailBinding, PostDetailViewModel>({
+        ActivityPostDetailBinding.inflate(it)
+    }),
+    CommentClickListener {
+
     private val id: Long by lazy {
         intent.getLongExtra(KEY_POST_ID, -1)
-    }
-
-    private val binding: ActivityPostDetailBinding by lazy {
-        ActivityPostDetailBinding.inflate(layoutInflater)
     }
 
     private val includeBinding: ViewCommentInputBinding by lazy {
         binding.clCommentInput
     }
 
-    private val viewModel: PostDetailViewModel by viewModels<PostDetailViewModel> {
+    override val viewModel: PostDetailViewModel by viewModels {
         PostDetailViewModelFactory(
             PostRepositoryImpl(PostRemoteDataSource()),
             RecommendRepositoryImpl(RecommendRemoteDataSource()),
@@ -57,16 +65,14 @@ class PostDetailActivity : AppCompatActivity() {
         )
     }
 
+    override val inflater: LayoutInflater by lazy { LayoutInflater.from(this) }
+
     private val pickGalleryImage =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == RESULT_OK) {
                 setGalleryImages(it.data)
             }
         }
-
-    private val reportDialog: ReportDialog by lazy {
-        ReportDialog(id, viewModel)
-    }
 
     private val deleteDialog: DeleteDialog by lazy {
         DeleteDialog {
@@ -81,6 +87,16 @@ class PostDetailActivity : AppCompatActivity() {
         LoadingDialog(getString(R.string.post_detail_loading))
     }
 
+    private val postDeletedDialog: PostDeletedDialog by lazy {
+        PostDeletedDialog {
+            finish()
+        }
+    }
+
+    private val adapter: CommentAdapter by lazy {
+        CommentAdapter(this, viewModel.isLogin)
+    }
+
     private val isMyPost: Boolean
         get() = viewModel.post.value?.isWriter == true
 
@@ -92,6 +108,7 @@ class PostDetailActivity : AppCompatActivity() {
         initAppbar()
         setViewLogin()
         getPost()
+        setCommentsAdapter()
         setObserver()
         setListener()
         setRecommendationCheckedListener()
@@ -107,7 +124,12 @@ class PostDetailActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_report -> {
-                reportDialog.show(supportFragmentManager, "ReportDialog")
+                if (!viewModel.isLogin) {
+                    makeLoginSnackbar()
+                } else {
+                    ReportDialog(id, ReportType.POST, viewModel)
+                        .show(supportFragmentManager, "ReportDialog")
+                }
                 true
             }
 
@@ -178,7 +200,12 @@ class PostDetailActivity : AppCompatActivity() {
     }
 
     private fun getPost() {
-        viewModel.getPostDetail(id)
+        viewModel.getPostDetail(id, intent.getLongExtra(KEY_NOTIFICATION_ID, -1))
+        viewModel.getComments(id)
+    }
+
+    private fun setCommentsAdapter() {
+        binding.rvComment.adapter = adapter
     }
 
     private fun setObserver() {
@@ -197,11 +224,10 @@ class PostDetailActivity : AppCompatActivity() {
                 setImageSlider(post)
                 setImageIndicators()
             }
-            hideInputCommentForWriter(post)
         }
 
         viewModel.reactionCount.observe(this) {
-            binding.postReactionCtv.reactionCount = it
+            binding.prvPostReaction.reactionCount = it
         }
 
         // 추천/비추천 체크박스 클릭 시 활성화/비활성화
@@ -209,11 +235,36 @@ class PostDetailActivity : AppCompatActivity() {
             binding.cbUp.isEnabled = it
             binding.cbDown.isEnabled = it
         }
-    }
 
-    private fun hideInputCommentForWriter(post: PostUiModel) {
-        if (post.isWriter) {
-            binding.clCommentInput.clCommentInput.isVisible = false
+        viewModel.isCommentSave.observe(this) { isSave ->
+            if (isSave) {
+                saveComment(
+                    id,
+                    viewModel.commentImage.value,
+                    includeBinding.etComment.text.toString(),
+                )
+            }
+        }
+        viewModel.comments.observe(this) {
+            adapter.setComments(it)
+        }
+
+        viewModel.isCommentLoadingSuccess.observe(this) {
+            if (it && viewModel.isCommentSaveSuccess.value == true) {
+                binding.svPostDetail.post {
+                    binding.svPostDetail.fullScroll(ScrollView.FOCUS_DOWN)
+                }
+            }
+        }
+
+        viewModel.reportSaveMessage.observe(this) {
+            binding.root.makeSnackbar(it)
+        }
+
+        viewModel.isPostDeleted.observe(this) {
+            if (it) {
+                postDeletedDialog.show(supportFragmentManager, "PostDeletedDialog")
+            }
         }
     }
 
@@ -229,11 +280,29 @@ class PostDetailActivity : AppCompatActivity() {
             }
         }
         includeBinding.ivCommentSave.setOnClickListener {
-            if (!viewModel.isLogin) makeLoginSnackbar()
+            if (!viewModel.isLogin) {
+                makeLoginSnackbar()
+            } else {
+                viewModel.checkCommentValidate(includeBinding.etComment.text.toString())
+            }
         }
         includeBinding.cvContentImage.ivPostGalleryImageRemove.setOnClickListener {
             includeBinding.clGalleryImage.visibility = View.GONE
+            viewModel.setCommentImage(null)
         }
+
+        binding.srlRefresh.setOnRefreshListener {
+            binding.srlRefresh.isRefreshing = false
+            viewModel.getComments(id)
+        }
+    }
+
+    private fun saveComment(id: Long, image: Uri?, comment: String) {
+        viewModel.postComment(this, id, image, comment)
+        includeBinding.etComment.setText("")
+        hideKeyboard()
+        includeBinding.clGalleryImage.isVisible = false
+        viewModel.setCommentImage(null)
     }
 
     private fun navigateToGallery() {
@@ -317,6 +386,7 @@ class PostDetailActivity : AppCompatActivity() {
         data?.data?.let { imageUri ->
             includeBinding.cvContentImage.postEditorImage = imageUri.toString()
             includeBinding.clGalleryImage.isVisible = true
+            viewModel.setCommentImage(imageUri)
         }
     }
 
@@ -331,10 +401,29 @@ class PostDetailActivity : AppCompatActivity() {
         startActivity(LoginActivity.newIntent(this))
     }
 
+    override fun onDeleteComment(commentId: Long) {
+        viewModel.deleteComment(id, commentId)
+    }
+
+    override fun onReportComment(commentId: Long) {
+        if (viewModel.isLogin) {
+            ReportDialog(commentId, ReportType.COMMENT, viewModel)
+                .show(supportFragmentManager, "ReportDialog")
+        } else {
+            makeLoginSnackbar()
+        }
+    }
+
     companion object {
-        const val KEY_POST_ID = "key_post_id"
+        private const val KEY_POST_ID = "key_post_id"
+        private const val KEY_NOTIFICATION_ID = "key_notification_id"
         fun newIntent(context: Context, postId: Long): Intent {
             return Intent(context, PostDetailActivity::class.java).putExtra(KEY_POST_ID, postId)
+        }
+
+        fun newIntent(context: Context, postId: Long, notificationId: Long): Intent {
+            return Intent(context, PostDetailActivity::class.java).putExtra(KEY_POST_ID, postId)
+                .putExtra(KEY_NOTIFICATION_ID, notificationId)
         }
     }
 }

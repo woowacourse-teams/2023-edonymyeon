@@ -62,7 +62,7 @@
 
         <androidx.appcompat.widget.SwitchCompat
             android:checked="@{viewModel.isPushAlarmOn()}"
-            android:onCheckedChanged="@{(buttonView, isChecked) -> viewModel.onPushAlarmSwitchEvent(isChecked)}"
+            android:onClick="@{() -> viewModel.onPushAlarmSwitchEvent()}"
             android:id="@+id/switch_alarm_setting"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -100,7 +100,7 @@
 
         <androidx.appcompat.widget.SwitchCompat
             android:checked="@{viewModel.isOneReactionAlarmOn()}"
-            android:onCheckedChanged="@{(buttonView, isChecked) -> viewModel.onOneReactionAlarmSwitchEvent(isChecked)}"
+            android:onClick="@{() -> viewModel.onOneReactionAlarmSwitchEvent()}"
             android:id="@+id/switch_one_reaction"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -127,7 +127,7 @@
 
         <androidx.appcompat.widget.SwitchCompat
             android:checked="@{viewModel.isTenReactionAlarmOn()}"
-            android:onCheckedChanged="@{(buttonView, isChecked) -> viewModel.onTenReactionAlarmSwitchEvent(isChecked)}"
+            android:onClick="@{() -> viewModel.onTenReactionAlarmSwitchEvent()}"
             android:id="@+id/switch_ten_reaction"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -141,6 +141,33 @@
             app:track="@drawable/selector_switch_track" />
 
         <TextView
+            android:id="@+id/tv_comment_alarm_setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp"
+            android:includeFontPadding="false"
+            android:text="@string/alarm_setting_comment"
+            android:textColor="@color/black_000000"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@id/tv_alarm_setting_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_ten_reaction_alarm_setting" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_comment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="16dp"
+            android:checked="@{viewModel.isCommentAlarmOn()}"
+            android:onClick="@{() -> viewModel.onCommentAlarmSwitchEvent()}"
+            android:thumb="@drawable/selector_switch_thumb"
+            app:layout_constraintBottom_toBottomOf="@id/tv_comment_alarm_setting"
+            app:layout_constraintDimensionRatio="H,40:24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_comment_alarm_setting"
+            app:layout_constraintWidth_percent="0.11"
+            app:track="@drawable/selector_switch_track" />
+
+        <TextView
             android:id="@+id/tv_confirm_consumption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -150,11 +177,11 @@
             android:textColor="@color/black_000000"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="@id/tv_alarm_setting_title"
-            app:layout_constraintTop_toBottomOf="@id/tv_ten_reaction_alarm_setting" />
+            app:layout_constraintTop_toBottomOf="@id/tv_comment_alarm_setting" />
 
         <androidx.appcompat.widget.SwitchCompat
+            android:onClick="@{() -> viewModel.onConsumptionConfirmAlarmSwitchClicked()}"
             android:checked="@{viewModel.isConfirmConsumptionAlarmOn()}"
-            android:onCheckedChanged="@{(buttonView, isChecked) -> viewModel.onConsumptionConfirmAlarmSwitchClicked(isChecked)}"
             android:id="@+id/switch_confirm_consumption"
             android:layout_width="0dp"
             android:layout_height="0dp"

@@ -2,6 +2,8 @@ package edonymyeon.backend.notification.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import edonymyeon.backend.auth.application.AuthService;
+import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.domain.Notification;
@@ -9,6 +11,8 @@ import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.PostSlice;
+import edonymyeon.backend.setting.application.SettingService;
+import edonymyeon.backend.setting.domain.SettingType;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.application.ThumbsService;
 import io.restassured.RestAssured;
@@ -26,8 +30,13 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
     private final ThumbsService thumbsService;
 
     @Test
-    void 사용자가_받은_알림_목록을_조회한다() {
-        final var 글쓴이 = 사용자를_하나_만든다();
+    void 사용자가_받은_알림_목록을_조회한다(
+            @Autowired AuthService authService,
+            @Autowired SettingService settingService
+    ) {
+        final var 글쓴이 = authService.joinMember(new JoinRequest("test@gmail.com", "password123!", "backfoxxx", "testDevice123"));
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_THUMBS.getSerialNumber(), new ActiveMemberId(글쓴이.getId()));
+
         final var 열람인 = 사용자를_하나_만든다();
         final var 열람인2 = 사용자를_하나_만든다();
         final var 게시글id = 응답의_location헤더에서_id를_추출한다(게시글을_하나_만든다(글쓴이));

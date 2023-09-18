@@ -3,21 +3,26 @@ package com.app.edonymyeon.presentation.ui.post
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostBinding
 import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
 import com.app.edonymyeon.data.repository.PostRepositoryImpl
+import com.app.edonymyeon.presentation.common.activity.BaseActivity
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
 import com.app.edonymyeon.presentation.ui.post.adapter.PostAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 
-class PostActivity : AppCompatActivity() {
+class PostActivity : BaseActivity<ActivityPostBinding, PostViewModel>(
+    {
+        ActivityPostBinding.inflate(it)
+    },
+) {
     private val activityLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == PostEditorActivity.RESULT_RELOAD_CODE) {
@@ -25,13 +30,11 @@ class PostActivity : AppCompatActivity() {
             }
         }
 
-    private val binding: ActivityPostBinding by lazy {
-        ActivityPostBinding.inflate(layoutInflater)
-    }
-
-    private val viewModel: PostViewModel by lazy {
+    override val viewModel: PostViewModel by lazy {
         PostViewModelFactory(PostRepositoryImpl(PostRemoteDataSource())).create(PostViewModel::class.java)
     }
+
+    override val inflater: LayoutInflater by lazy { LayoutInflater.from(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +65,6 @@ class PostActivity : AppCompatActivity() {
     private fun setPostAdapter() {
         val postAdapter = PostAdapter(onClick = { postId ->
             startActivity(PostDetailActivity.newIntent(this, postId))
-            finish()
         })
         binding.rvPost.adapter = postAdapter
         setObserver(postAdapter)
@@ -98,6 +100,11 @@ class PostActivity : AppCompatActivity() {
                     eventTitle = getString(R.string.login_title),
                 ) { navigateToLogin() }
             }
+        }
+
+        binding.srlRefresh.setOnRefreshListener {
+            binding.srlRefresh.isRefreshing = false
+            loadNewData()
         }
     }
 

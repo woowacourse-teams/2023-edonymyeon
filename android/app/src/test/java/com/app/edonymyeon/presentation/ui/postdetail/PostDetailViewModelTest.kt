@@ -35,6 +35,7 @@ class PostDetailViewModelTest() {
     private lateinit var reportRepository: ReportRepository
 
     private val postId = 1L
+    private val notificationId = 1L
     private fun createPost(
         id: Long = postId,
         title: String = "title",
@@ -52,7 +53,6 @@ class PostDetailViewModelTest() {
             commentCount = Count(0),
         ),
         recommendation: Recommendation,
-        isScrap: Boolean = false,
         isWriter: Boolean = false,
     ) = Post(
         id,
@@ -64,7 +64,6 @@ class PostDetailViewModelTest() {
         writer,
         reactionCount,
         recommendation,
-        isScrap,
         isWriter,
     )
 
@@ -98,10 +97,15 @@ class PostDetailViewModelTest() {
                 isDown = false,
             ),
         )
-        coEvery { postRepository.getPostDetail(postId) } returns Result.success(post)
+        coEvery {
+            postRepository.getPostDetail(
+                postId,
+                notificationId,
+            )
+        } returns Result.success(post)
 
         // when
-        viewModel.getPostDetail(postId)
+        viewModel.getPostDetail(postId, notificationId)
 
         // then
         assertEquals(post.toUiModel(), viewModel.post.value)
@@ -118,11 +122,16 @@ class PostDetailViewModelTest() {
                 isDown = false,
             ),
         )
-        coEvery { postRepository.getPostDetail(postId) } returns Result.success(post)
+        coEvery {
+            postRepository.getPostDetail(
+                postId,
+                notificationId,
+            )
+        } returns Result.success(post)
         coEvery { recommendRepository.saveRecommendUp(postId) } returns Result.success(Unit)
 
         // when
-        viewModel.getPostDetail(postId)
+        viewModel.getPostDetail(postId, notificationId)
         viewModel.updateRecommendationUi(
             postId = postId,
             isChecked = true,
@@ -150,11 +159,16 @@ class PostDetailViewModelTest() {
                 isDown = false,
             ),
         )
-        coEvery { postRepository.getPostDetail(postId) } returns Result.success(post)
+        coEvery {
+            postRepository.getPostDetail(
+                postId,
+                notificationId,
+            )
+        } returns Result.success(post)
         coEvery { recommendRepository.saveRecommendDown(postId) } returns Result.success(Unit)
 
         // when
-        viewModel.getPostDetail(postId)
+        viewModel.getPostDetail(postId, notificationId)
         viewModel.updateRecommendationUi(
             postId = postId,
             isChecked = true,
@@ -182,11 +196,16 @@ class PostDetailViewModelTest() {
                 isDown = false,
             ),
         )
-        coEvery { postRepository.getPostDetail(postId) } returns Result.success(post)
+        coEvery {
+            postRepository.getPostDetail(
+                postId,
+                notificationId,
+            )
+        } returns Result.success(post)
         coEvery { recommendRepository.deleteRecommendUp(postId) } returns Result.success(Unit)
 
         // when
-        viewModel.getPostDetail(postId)
+        viewModel.getPostDetail(postId, notificationId)
         viewModel.updateRecommendationUi(
             postId = postId,
             isChecked = false,
@@ -214,11 +233,16 @@ class PostDetailViewModelTest() {
                 isDown = true,
             ),
         )
-        coEvery { postRepository.getPostDetail(postId) } returns Result.success(post)
+        coEvery {
+            postRepository.getPostDetail(
+                postId,
+                notificationId,
+            )
+        } returns Result.success(post)
         coEvery { recommendRepository.saveRecommendUp(postId) } returns Result.success(Unit)
 
         // when
-        viewModel.getPostDetail(postId)
+        viewModel.getPostDetail(postId, notificationId)
         viewModel.updateRecommendationUi(
             postId = postId,
             isChecked = true,
@@ -251,11 +275,16 @@ class PostDetailViewModelTest() {
                 isDown = true,
             ),
         )
-        coEvery { postRepository.getPostDetail(postId) } returns Result.success(post)
+        coEvery {
+            postRepository.getPostDetail(
+                postId,
+                notificationId,
+            )
+        } returns Result.success(post)
         coEvery { recommendRepository.deleteRecommendDown(postId) } returns Result.success(Unit)
 
         // when
-        viewModel.getPostDetail(postId)
+        viewModel.getPostDetail(postId, notificationId)
         viewModel.updateRecommendationUi(
             postId = postId,
             isChecked = false,
@@ -283,11 +312,16 @@ class PostDetailViewModelTest() {
                 isDown = false,
             ),
         )
-        coEvery { postRepository.getPostDetail(postId) } returns Result.success(post)
+        coEvery {
+            postRepository.getPostDetail(
+                postId,
+                notificationId,
+            )
+        } returns Result.success(post)
         coEvery { recommendRepository.saveRecommendDown(postId) } returns Result.success(Unit)
 
         // when
-        viewModel.getPostDetail(postId)
+        viewModel.getPostDetail(postId, notificationId)
         viewModel.updateRecommendationUi(
             postId = postId,
             isChecked = false,
@@ -321,14 +355,19 @@ class PostDetailViewModelTest() {
                 isDown = false,
             ),
         )
-        coEvery { postRepository.getPostDetail(postId) } returns Result.success(post)
+        coEvery {
+            postRepository.getPostDetail(
+                postId,
+                notificationId,
+            )
+        } returns Result.success(post)
         coEvery { recommendRepository.saveRecommendUp(postId) } coAnswers {
             delay(3000L)
             Result.success(Unit)
         }
 
         // when & then
-        viewModel.getPostDetail(postId)
+        viewModel.getPostDetail(postId, notificationId)
 
         // isRecommendationRequestDone의 기본값은 true이다.
         assertEquals(true, viewModel.isRecommendationRequestDone.value)

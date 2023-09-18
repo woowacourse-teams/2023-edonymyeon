@@ -82,7 +82,7 @@ public class ReportDocsTest implements ImageFileCleaner {
                 .email("email@email.com")
                 .nickname("nickname")
                 .buildWithoutSaving();
-        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0, 0);
+        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0, 0, false);
 
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);
