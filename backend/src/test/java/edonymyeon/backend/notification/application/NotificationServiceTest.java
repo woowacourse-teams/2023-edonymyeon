@@ -173,8 +173,7 @@ class NotificationServiceTest extends IntegrationFixture {
     @Test
     void 탈퇴한_회원에게는_알림을_발송하면_안된다(
             @Autowired AuthService authService,
-            @Autowired CommentService commentService,
-            @Autowired MemberService memberService
+            @Autowired CommentService commentService
     ) {
         final Member writer = getJoinedMember(authService);
         settingService.toggleSetting(SettingType.NOTIFICATION_PER_COMMENT.getSerialNumber(),
@@ -183,7 +182,7 @@ class NotificationServiceTest extends IntegrationFixture {
         final Member commenter = memberTestSupport.builder().build();
         final Post post = postTestSupport.builder().member(writer).build();
 
-        memberService.deleteMember(writer.getId());
+        authService.withdraw(new ActiveMemberId(writer.getId()));
 
         commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
                 new CommentRequest(null, "Test Commentary"));
