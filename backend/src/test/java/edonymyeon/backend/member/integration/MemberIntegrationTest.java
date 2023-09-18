@@ -29,9 +29,11 @@ public class MemberIntegrationTest extends IntegrationFixture {
         final Member member = memberTestSupport.builder()
                 .build();
 
+        final String sessionId = 로그인(member);
+
         final ExtractableResponse<Response> response = RestAssured
                 .given()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .sessionId(sessionId)
                 .when()
                 .get("/profile")
                 .then()
@@ -46,13 +48,58 @@ public class MemberIntegrationTest extends IntegrationFixture {
     }
 
     @Test
+    void 자신이_작성한_게시글을_조회하면_OK를_응답한다() {
+        final Member member = memberTestSupport.builder()
+                .build();
+
+        final Post post1 = postTestSupport.builder()
+                .member(member)
+                .build();
+        final Post post2 = postTestSupport.builder()
+                .member(member)
+                .build();
+
+        postTestSupport.builder()
+                .member(member)
+                .build();
+
+        consumptionTestSupport.builder()
+                .post(post1)
+                .build();
+
+        consumptionTestSupport.builder()
+                .post(post2)
+                .build();
+
+        final String sessionId = 로그인(member);
+
+        final ExtractableResponse<Response> response = RestAssured
+                .given()
+                .sessionId(sessionId)
+                .when()
+                .get("/profile/my-posts")
+                .then()
+                .extract();
+
+        final var jsonPath = response.body().jsonPath();
+        final List<MyPostResponse> content = jsonPath.getList("content", MyPostResponse.class);
+
+        assertSoftly(softly -> {
+            softly.assertThat(content.size()).isEqualTo(3);
+            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+        });
+    }
+
+    @Test
     void 삭제된_회원이_로그인시_오류발생() {
         final Member member = memberTestSupport.builder()
                 .build();
 
+        final String sessionId = 로그인(member);
+
         RestAssured
                 .given()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .sessionId(sessionId)
                 .when()
                 .delete("/withdraw");
 
@@ -87,9 +134,11 @@ public class MemberIntegrationTest extends IntegrationFixture {
                 .member(member)
                 .build();
 
+        final String sessionId = 로그인(member);
+
         RestAssured
                 .given()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .sessionId(sessionId)
                 .when()
                 .delete("/withdraw");
 

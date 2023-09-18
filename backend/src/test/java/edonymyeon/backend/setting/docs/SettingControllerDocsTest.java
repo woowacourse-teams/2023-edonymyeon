@@ -1,8 +1,7 @@
 package edonymyeon.backend.setting.docs;
 
+import static edonymyeon.backend.auth.ui.SessionConst.USER;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -27,7 +26,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MockMvc;
@@ -55,7 +53,8 @@ public class SettingControllerDocsTest extends DocsTest {
         when(settingService.findSettingsByMemberId(new ActiveMemberId(회원.getId()))).thenReturn(new SettingsResponse(
                 List.of(
                         new SettingResponse(SettingType.NOTIFICATION.getSerialNumber(), false),
-                        new SettingResponse(SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING.getSerialNumber(), false),
+                        new SettingResponse(
+                                SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING.getSerialNumber(), false),
                         new SettingResponse(SettingType.NOTIFICATION_PER_COMMENT.getSerialNumber(), false),
                         new SettingResponse(SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber(), false),
                         new SettingResponse(SettingType.NOTIFICATION_PER_THUMBS.getSerialNumber(), false)
@@ -64,15 +63,10 @@ public class SettingControllerDocsTest extends DocsTest {
 
         final MockHttpServletRequestBuilder 설정_조회_요청 = get("/preference/notification")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((회원.getEmail() + ":" + 회원.getPassword()).getBytes()));
+                .sessionAttr(USER.getSessionId(), 회원.getId());
 
         final RestDocumentationResultHandler 문서화 = document("notification-findAll",
                 preprocessRequest(prettyPrint()),
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
-                ),
                 responseFields(
                         fieldWithPath("notifications").description("사용자가 수정 가능한 설정의 리스트"),
                         fieldWithPath("notifications[].preferenceType").description("설정의 고유 식별자"),
@@ -93,7 +87,8 @@ public class SettingControllerDocsTest extends DocsTest {
         when(settingService.findSettingsByMemberId(new ActiveMemberId(회원.getId()))).thenReturn(new SettingsResponse(
                 List.of(
                         new SettingResponse(SettingType.NOTIFICATION.getSerialNumber(), true),
-                        new SettingResponse(SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING.getSerialNumber(), false),
+                        new SettingResponse(
+                                SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING.getSerialNumber(), false),
                         new SettingResponse(SettingType.NOTIFICATION_PER_COMMENT.getSerialNumber(), false),
                         new SettingResponse(SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber(), true),
                         new SettingResponse(SettingType.NOTIFICATION_PER_THUMBS.getSerialNumber(), false)
@@ -102,16 +97,12 @@ public class SettingControllerDocsTest extends DocsTest {
 
         final MockHttpServletRequestBuilder 설정_조회_요청 = post("/preference/notification")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((회원.getEmail() + ":" + 회원.getPassword()).getBytes()))
-                .content(objectMapper.writeValueAsString(new SettingRequest(SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber())));
+                .sessionAttr(USER.getSessionId(), 회원.getId())
+                .content(objectMapper.writeValueAsString(
+                        new SettingRequest(SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber())));
 
         final RestDocumentationResultHandler 문서화 = document("notification-toggle",
                 preprocessRequest(prettyPrint()),
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
-                ),
                 requestFields(
                         fieldWithPath("preferenceType").description("활성화 또는 비활성화한 설정의 고유 식별자")
                 ),

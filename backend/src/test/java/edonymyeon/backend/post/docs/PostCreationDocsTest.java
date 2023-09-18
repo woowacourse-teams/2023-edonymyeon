@@ -1,7 +1,6 @@
 package edonymyeon.backend.post.docs;
 
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static edonymyeon.backend.auth.ui.SessionConst.USER;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -14,10 +13,10 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import edonymyeon.backend.support.TestMemberBuilder;
-import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
+import edonymyeon.backend.support.IntegrationTest;
+import edonymyeon.backend.support.TestMemberBuilder;
 import jakarta.servlet.http.Part;
 import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +24,6 @@ import org.apache.http.entity.ContentType;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
@@ -62,16 +60,11 @@ public class PostCreationDocsTest implements ImageFileCleaner {
                 .file(이미지)
                 .file(이미지)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((글쓴이.getEmail() + ":" + 글쓴이.getPassword()).getBytes()));
+                .sessionAttr(USER.getSessionId(), 글쓴이.getId());
 
         final RestDocumentationResultHandler 문서화 = document("post-create",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
-                ),
                 requestParts(
                         partWithName("title").description("제목"),
                         partWithName("content").description("내용"),
