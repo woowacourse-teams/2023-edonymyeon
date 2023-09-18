@@ -185,7 +185,7 @@ class AuthServiceTest {
 
         // when
         final ActiveMemberId memberId = new ActiveMemberId(member.getId());
-        authService.deleteMember(memberId);
+        authService.withdraw(memberId);
 
         // then
         SoftAssertions.assertSoftly(
@@ -213,7 +213,7 @@ class AuthServiceTest {
         // then
         SoftAssertions.assertSoftly(
                 soft -> {
-                    soft.assertThatThrownBy(() -> authService.deleteMember(memberId));
+                    soft.assertThatThrownBy(() -> authService.withdraw(memberId));
                     verify(memberService, atLeastOnce()).deleteProfileImage(mockedMember);
                     verify(uploader, never()).removeFile(any());
                 }

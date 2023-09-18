@@ -172,7 +172,7 @@ public class AuthService {
     }
 
     @Transactional
-    public void deleteMember(final MemberId memberId) {
+    public void withdraw(final MemberId memberId) {
         final Member member = memberRepository.findById(memberId.id())
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
         memberService.deleteProfileImage(member);
