@@ -1,5 +1,6 @@
 package edonymyeon.backend.post.integration;
 
+import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.*;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.CacheConfig;

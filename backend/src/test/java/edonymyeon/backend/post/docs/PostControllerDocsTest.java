@@ -1,5 +1,26 @@
 package edonymyeon.backend.post.docs;
 
+import static edonymyeon.backend.auth.ui.SessionConst.USER;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import edonymyeon.backend.CacheConfig;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
@@ -18,6 +39,10 @@ import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.thumbs.application.PostThumbsServiceImpl;
 import jakarta.servlet.http.Part;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.entity.ContentType;
 import org.junit.jupiter.api.Test;
@@ -38,25 +63,6 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -152,9 +158,8 @@ public class PostControllerDocsTest implements ImageFileCleaner {
                 .part(유지하는_이미지)
                 .file(추가되는_이미지)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((글쓴이.getEmail() + ":" + 글쓴이.getPassword()).getBytes()));
+                .sessionAttr(USER.getSessionId(), 글쓴이.getId());
+
         게시글_수정_요청.with(request -> {
             request.setMethod(HttpMethod.PUT.name());
             return request;
@@ -162,9 +167,6 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
         final RestDocumentationResultHandler 문서화 = document("post-update",
                 preprocessResponse(prettyPrint()),
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
-                ),
                 pathParameters(
                         parameterWithName("postId").description("게시글 id")
                 ),
@@ -199,14 +201,9 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
         final MockHttpServletRequestBuilder 게시글_삭제_요청 = delete("/posts/{postId}", 게시글.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((글쓴이.getEmail() + ":" + 글쓴이.getPassword()).getBytes()));
+                .sessionAttr(USER.getSessionId(), 글쓴이.getId());
 
         final RestDocumentationResultHandler 문서화 = document("post-delete",
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
-                ),
                 pathParameters(
                         parameterWithName("postId").description("게시글 id")
                 )
@@ -353,10 +350,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
         추천_서비스를_모킹한다(글쓴이, 게시글);
 
         final var 게시글_상세_조회_요청 = get("/posts/{postId}", 게시글.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((글쓴이.getEmail() + ":" + 글쓴이.getPassword()).getBytes()));
+                .contentType(MediaType.APPLICATION_JSON_VALUE);
 
         final RestDocumentationResultHandler 문서화 = document("post-findOne",
                 preprocessResponse(prettyPrint())

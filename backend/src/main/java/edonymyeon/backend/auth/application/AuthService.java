@@ -10,7 +10,6 @@ import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
-import edonymyeon.backend.auth.application.dto.MemberResponse;
 import edonymyeon.backend.auth.application.event.JoinMemberEvent;
 import edonymyeon.backend.auth.application.event.LoginEvent;
 import edonymyeon.backend.auth.application.event.LogoutEvent;
@@ -27,7 +26,6 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,17 +59,6 @@ public class AuthService {
         return member;
     }
 
-    /**
-     * 주어진 이메일로 가입되어 있는 회원의 식별자를 찾아냅니다.
-     * @param email 찾고자 하는 이메일
-     * @return 이메일로 가입한 회원의 식별자
-     */
-    public MemberId getAuthenticatedUser(final String email) {
-        final Member member = findByEmail(email);
-        return new ActiveMemberId(member.getId());
-    }
-
-    @NotNull
     private Member findByEmail(final String email) {
         final Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_EMAIL_NOT_FOUND));
@@ -116,9 +103,8 @@ public class AuthService {
      * @param deviceToken 로그인하는 디바이스의 토큰 값
      * @return 가입 완료된 회원의 정보
      */
-    //todo session으로
     @Transactional
-    public MemberResponse loginByKakao(final KakaoLoginResponse kakaoLoginResponse, final String deviceToken) {
+    public MemberId loginByKakao(final KakaoLoginResponse kakaoLoginResponse, final String deviceToken) {
         final SocialInfo socialInfo = SocialInfo.of(SocialType.KAKAO, kakaoLoginResponse.id());
         final Member member = memberRepository.findBySocialInfo(socialInfo)
                 .orElseGet(() -> joinSocialMember(socialInfo));
@@ -127,7 +113,7 @@ public class AuthService {
         }
 
         publisher.publishEvent(new LoginEvent(member, deviceToken));
-        return new MemberResponse(member.getEmail(), member.getPassword());
+        return new ActiveMemberId(member.getId());
     }
 
     /**
