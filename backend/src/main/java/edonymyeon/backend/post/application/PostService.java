@@ -130,7 +130,7 @@ public class PostService {
 
         if(isImagesEmpty(imageFilesToAdd)) {
             post.updateImages(remainedImageNames);
-            new PostIdResponse(postId);
+            return new PostIdResponse(postId);
         }
 
         final PostImageInfos imagesToAdd = PostImageInfos.of(post, imageFileUploader.uploadFiles(imageFilesToAdd));

@@ -74,4 +74,8 @@ public class ConsumptionService {
         final int lastDayOfThisMonth = thisMonth.lengthOfMonth();
         return thisMonth.withDayOfMonth(lastDayOfThisMonth);
     }
+
+    public boolean isPostConfirmed(final Long postId) {
+        return consumptionRepository.existsByPostId(postId);
+    }
 }
