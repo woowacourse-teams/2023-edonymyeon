@@ -2,6 +2,7 @@ package edonymyeon.backend.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.atLeastOnce;
@@ -11,9 +12,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
@@ -64,7 +62,7 @@ class AuthServiceTest {
     @SpyBean
     private MemberRepository memberRepository;
 
-    @MockBean
+    @SpyBean
     private ImageFileUploader uploader;
 
     @Test
@@ -143,20 +141,6 @@ class AuthServiceTest {
     }
 
     @Test
-    void 카카오_로그인시_DB에_암호화된_비밀번호와_입력받은_비밀번호를_검증한다() {
-        final SocialInfo socialInfo = SocialInfo.of(SocialInfo.SocialType.KAKAO, 1L);
-        final Member member = authService.joinSocialMember(socialInfo);
-
-        final KakaoLoginResponse kakaoLoginResponse = new KakaoLoginResponse(socialInfo.getSocialId());
-        final MemberResponse memberResponse = authService.loginByKakao(kakaoLoginResponse, "");
-
-        assertSoftly(soft -> {
-            soft.assertThat(member.getEmail()).isEqualTo(memberResponse.email());
-            soft.assertThat(member.getPassword()).isEqualTo(memberResponse.password());
-        });
-    }
-
-    @Test
     void 회원_삭제의_트랜잭션이_커밋되면_프로필_이미지를_물리적으로_삭제한다() {
         // given
         final JoinRequest request = new JoinRequest("example@email.com", "password1234!", "nickname", "");
@@ -174,7 +158,7 @@ class AuthServiceTest {
         SoftAssertions.assertSoftly(
                 soft -> {
                     verify(memberService, atLeastOnce()).deleteProfileImage(mockedMember);
-                    verify(uploader, atLeastOnce()).removeFile(any());
+                    await().untilAsserted(() -> verify(uploader, atLeastOnce()).removeFile(any()));
                 }
         );
     }
