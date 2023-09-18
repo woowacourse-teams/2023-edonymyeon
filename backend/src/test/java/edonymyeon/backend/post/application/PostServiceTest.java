@@ -490,7 +490,7 @@ class PostServiceTest implements ImageFileCleaner {
 
                 // when
                 assertThatCode(() -> postService.updatePost(memberId, post.id(), modificationRequest)).doesNotThrowAnyException();
-                assertThat(fetchedPostImages).hasSameClassAs(newImages);
+                assertThat(fetchedPostImages).hasSameSizeAs(newImages);
             }
 
             private List<MultipartFile> createImages(final int count) throws IOException {
