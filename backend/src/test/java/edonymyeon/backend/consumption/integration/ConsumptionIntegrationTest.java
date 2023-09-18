@@ -1,5 +1,6 @@
 package edonymyeon.backend.consumption.integration;
 
+import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.ConsumptionSteps.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import edonymyeon.backend.consumption.domain.Consumption;
@@ -10,6 +11,7 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.ConsumptionTestSupport;
 import edonymyeon.backend.support.IntegrationFixture;
+import edonymyeon.backend.support.IntegrationFixture.CommentSteps.ConsumptionSteps;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.time.LocalDate;
@@ -203,8 +205,8 @@ public class ConsumptionIntegrationTest extends IntegrationFixture {
                     assertThat(조회_응답.jsonPath().getString("startMonth")).isEqualTo(최근_년_달);
                     assertThat(조회_응답.jsonPath().getString("endMonth")).isEqualTo(최근_년_달);
                     assertThat(조회_응답.jsonPath().getList("consumptions")).hasSize(1);
-                    assertThat(조회_응답.jsonPath().getLong("consumptions[0].savingPrice")).isEqualTo(0);
-                    assertThat(조회_응답.jsonPath().getLong("consumptions[0].purchasePrice")).isEqualTo(0);
+                    assertThat(조회_응답.jsonPath().getLong("consumptions[0].savingPrice")).isZero();
+                    assertThat(조회_응답.jsonPath().getLong("consumptions[0].purchasePrice")).isZero();
                 }
         );
     }

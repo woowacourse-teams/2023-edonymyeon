@@ -1,5 +1,6 @@
 package edonymyeon.backend.support;
 
+import edonymyeon.backend.auth.domain.SimplePasswordEncoder;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
@@ -28,6 +29,10 @@ public class TestMemberBuilder {
 
     private final MemberRepository memberRepository;
 
+    public static String getRawPassword() {
+        return DEFAULT_PASSWORD;
+    }
+
     public MemberBuilder builder() {
         return new MemberBuilder();
     }
@@ -37,8 +42,6 @@ public class TestMemberBuilder {
         private Long id;
 
         private String email;
-
-        private String password;
 
         private String nickname;
 
@@ -57,11 +60,6 @@ public class TestMemberBuilder {
 
         public MemberBuilder email(final String email) {
             this.email = email;
-            return this;
-        }
-
-        public MemberBuilder password(final String password) {
-            this.password = password;
             return this;
         }
 
@@ -93,11 +91,13 @@ public class TestMemberBuilder {
         public Member build() {
             final Member member = new Member(
                     this.email != null ? this.email : DEFAULT_EMAIL + emailCount++,
-                    this.password != null ? this.password : DEFAULT_PASSWORD,
+                    DEFAULT_PASSWORD,
                     this.nickname != null ? this.nickname : DEFAULT_NICK_NAME + nickNameCount++,
                     this.profileImageInfo,
                     List.of()
             );
+            encryptPassword(member);
+
             setField(member, "id", this.id, null);
             setField(member, "socialInfo", this.socialInfo, null);
             setField(member, "devices", this.devices, List.of(new Device("testToken", member)));
@@ -105,10 +105,16 @@ public class TestMemberBuilder {
             return memberRepository.save(member);
         }
 
+        private void encryptPassword(final Member member) {
+            final SimplePasswordEncoder encoder = new SimplePasswordEncoder();
+            final String encodedPassword = encoder.encode(DEFAULT_PASSWORD);
+            member.encrypt(encodedPassword);
+        }
+
         public Member buildWithoutSaving() {
             final Member member = new Member(
                     this.email != null ? this.email : DEFAULT_EMAIL + emailCount++,
-                    this.password != null ? this.password : DEFAULT_PASSWORD,
+                    DEFAULT_PASSWORD,
                     this.nickname != null ? this.nickname : DEFAULT_NICK_NAME + nickNameCount++,
                     this.profileImageInfo,
                     List.of()
@@ -130,5 +136,4 @@ public class TestMemberBuilder {
             ReflectionUtils.setField(field, member, orElse);
         }
     }
-
 }

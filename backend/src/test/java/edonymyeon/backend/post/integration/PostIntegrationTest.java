@@ -5,6 +5,9 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_DOM
 import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_STORE_NAME_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_IMAGE_COUNT_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
+import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.ConsumptionSteps.MemberConsumptionSteps.*;
+import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.ConsumptionSteps.MemberConsumptionSteps.구매_확정_요청을_보낸다;
+import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.댓글을_생성한다_이미지없이;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -21,6 +24,7 @@ import edonymyeon.backend.post.application.dto.response.SpecificPostInfoResponse
 import edonymyeon.backend.report.application.ReportRequest;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.IntegrationFixture;
+import edonymyeon.backend.support.IntegrationFixture.CommentSteps.ConsumptionSteps.MemberConsumptionSteps;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -65,12 +69,13 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
     @Test
     void 게시글을_작성할_때_내용은_0자_이상_가능하다() {
         final Member 작성자 = 사용자를_하나_만든다();
+        final String sessionId = 로그인(작성자);
         final var response = RestAssured.given()
                 .multiPart("title", "this is title")
                 .multiPart("content", "")
                 .multiPart("price", 1000)
                 .multiPart("images", 이미지1, MediaType.IMAGE_JPEG_VALUE)
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
+                .sessionId(sessionId)
                 .when()
                 .post("/posts")
                 .then()
@@ -82,6 +87,8 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
     @Test
     void 게시글을_작성할때_이미지가_10개_이상이면_예외가_발생한다() {
         final Member 작성자 = 사용자를_하나_만든다();
+        final String sessionId = 로그인(작성자);
+
         final ExtractableResponse<Response> 게시글_작성_응답 = RestAssured.given()
                 .multiPart("title", "제목")
                 .multiPart("content", "내용")
@@ -98,7 +105,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
                 .multiPart("newImages", 이미지1)
                 .multiPart("newImages", 이미지1)
                 .when()
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
+                .sessionId(sessionId)
                 .post("/posts")
                 .then()
                 .extract();
@@ -118,8 +125,10 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
         final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
 
+        final String sessionId = 로그인(작성자);
+
         RestAssured.given()
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
+                .sessionId(sessionId)
                 .when()
                 .delete("/posts/" + 게시글_id)
                 .then()
@@ -133,8 +142,9 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
 
         final Member 작성자가_아닌_사람 = 사용자를_하나_만든다();
+        final String sessionId = 로그인(작성자가_아닌_사람);
         RestAssured.given()
-                .auth().preemptive().basic(작성자가_아닌_사람.getEmail(), 작성자가_아닌_사람.getPassword())
+                .sessionId(sessionId)
                 .when()
                 .delete("/posts/" + 게시글_id)
                 .then()
@@ -148,15 +158,24 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
         final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
         final Member 추천하는_사람 = 사용자를_하나_만든다();
+
+        final String sessionId1 = 로그인(추천하는_사람);
+        final String sessionId2 = 로그인(작성자);
+
         RestAssured.given()
-                .auth().preemptive().basic(추천하는_사람.getEmail(), 추천하는_사람.getPassword())
+                .sessionId(sessionId1)
                 .when()
                 .put("posts/" + 게시글_id + "/up")
                 .then()
                 .statusCode(HttpStatus.OK.value());
 
         //when
-        final ExtractableResponse<Response> 게시글_삭제_응답 = 게시글을_삭제한다(작성자, 게시글_id);
+        final ExtractableResponse<Response> 게시글_삭제_응답 = RestAssured.given()
+                .sessionId(sessionId2)
+                .when()
+                .delete("posts/" + 게시글_id)
+                .then()
+                .extract();
 
         //then
         assertSoftly(softly -> {
@@ -175,8 +194,14 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final PurchaseConfirmRequest 구매_확정_요청 = new PurchaseConfirmRequest(10000L, 2023, 7);
         구매_확정_요청을_보낸다(작성자, 게시글_id, 구매_확정_요청);
 
+        final String sessionId = 로그인(작성자);
         //when
-        final ExtractableResponse<Response> 게시글_삭제_응답 = 게시글을_삭제한다(작성자, 게시글_id);
+        final ExtractableResponse<Response> 게시글_삭제_응답 = RestAssured.given()
+                .sessionId(sessionId)
+                .when()
+                .delete("posts/" + 게시글_id)
+                .then()
+                .extract();
 
         //then
         assertSoftly(softly -> {
@@ -395,7 +420,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
                 () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("downCount")).isEqualTo(게시글.downCount()),
                 () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isUp")).isEqualTo(게시글.isUp()),
                 () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isDown")).isEqualTo(게시글.isDown()),
-                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isWriter")).isEqualTo(false)
+                () -> assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isWriter")).isFalse()
         );
     }
 
@@ -437,7 +462,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
                     assertThat(게시글_상세_조회_응답.body().jsonPath().getInt("downCount")).isEqualTo(게시글.downCount());
                     assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isUp")).isEqualTo(게시글.isUp());
                     assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isDown")).isEqualTo(게시글.isDown());
-                    assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isWriter")).isEqualTo(true);
+                    assertThat(게시글_상세_조회_응답.body().jsonPath().getBoolean("isWriter")).isTrue();
                 }
         );
     }
@@ -506,14 +531,17 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final ExtractableResponse<Response> 게시글_상세_조회_응답 = 게시글_하나를_상세_조회한다(작성자, 게시글_id);
 
         final String 유지할_이미지의_url = 게시글_상세_조회_응답.body().jsonPath().getString("images[0]");
+
+        final String sessionId = 로그인(작성자);
+
         final ExtractableResponse<Response> 게시글_수정_응답 = RestAssured.given()
                 .multiPart("title", "제목을 수정하자")
                 .multiPart("content", "내용을 수정하자")
                 .multiPart("price", 10000)
                 .multiPart("originalImages", 유지할_이미지의_url)
                 .multiPart("newImages", 이미지1)
+                .sessionId(sessionId)
                 .when()
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
                 .put("/posts/" + 게시글_id)
                 .then()
                 .extract();
@@ -531,15 +559,17 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final ExtractableResponse<Response> 게시글_상세_조회_응답 = 게시글_하나를_상세_조회한다(작성자, 게시글_id);
 
         final String 유지할_이미지의_url = 게시글_상세_조회_응답.body().jsonPath().getString("images[0]");
-        System.out.println("유지할_이미지의_url = " + 유지할_이미지의_url);
+
+        final String sessionId = 로그인(작성자가_아닌_사람);
+
         final ExtractableResponse<Response> 게시글_수정_응답 = RestAssured.given()
                 .multiPart("title", "제목을 수정하자")
                 .multiPart("content", "내용을 수정하자")
                 .multiPart("price", 10000)
                 .multiPart("originalImages", 유지할_이미지의_url)
                 .multiPart("newImages", 이미지1)
+                .sessionId(sessionId)
                 .when()
-                .auth().preemptive().basic(작성자가_아닌_사람.getEmail(), 작성자가_아닌_사람.getPassword())
                 .put("/posts/" + 게시글_id)
                 .then()
                 .extract();
@@ -567,6 +597,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
                 .extract();
 
         final String 유지할_이미지의_url = 게시글_상세_조회_응답.body().jsonPath().getString("images[0]");
+
         final ExtractableResponse<Response> 게시글_수정_응답 = RestAssured.given()
                 .multiPart("title", "제목을 수정하자")
                 .multiPart("content", "내용을 수정하자")
@@ -593,14 +624,16 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
         final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
 
+        final String sessionId = 로그인(작성자);
+
         final ExtractableResponse<Response> 게시글_수정_응답 = RestAssured.given()
                 .multiPart("title", "제목을 수정하자")
                 .multiPart("content", "내용을 수정하자")
                 .multiPart("price", 10000)
                 .multiPart("originalImages", "이상한url이지롱")
                 .multiPart("newImages", 이미지1)
+                .sessionId(sessionId)
                 .when()
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
                 .put("/posts/" + 게시글_id)
                 .then()
                 .extract();
@@ -620,14 +653,16 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final ExtractableResponse<Response> 게시글_생성_응답 = 게시글을_하나_만든다(작성자);
         final long 게시글_id = 응답의_location헤더에서_id를_추출한다(게시글_생성_응답);
 
+        final String sessionId = 로그인(작성자);
+
         final ExtractableResponse<Response> 게시글_수정_응답 = RestAssured.given()
                 .multiPart("title", "제목을 수정하자")
                 .multiPart("content", "내용을 수정하자")
                 .multiPart("price", 10000)
                 .multiPart("originalImages", domain + "없는이미지.jpg")
                 .multiPart("newImages", 이미지1)
+                .sessionId(sessionId)
                 .when()
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
                 .put("/posts/" + 게시글_id)
                 .then()
                 .extract();
@@ -650,6 +685,8 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
 
         final String 유지할_이미지의_url = 게시글_상세_조회_응답.body().jsonPath().getString("images[0]");
 
+        final String sessionId = 로그인(작성자);
+
         final ExtractableResponse<Response> 게시글_수정_응답 = RestAssured.given()
                 .multiPart("title", "제목을 수정하자")
                 .multiPart("content", "내용을 수정하자")
@@ -665,8 +702,8 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
                 .multiPart("newImages", 이미지1)
                 .multiPart("newImages", 이미지1)
                 .multiPart("newImages", 이미지1)
+                .sessionId(sessionId)
                 .when()
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
                 .put("/posts/" + 게시글_id)
                 .then()
                 .extract();
