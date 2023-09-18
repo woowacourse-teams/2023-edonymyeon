@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import app.edonymyeon.R
 import app.edonymyeon.databinding.FragmentMyPageBinding
@@ -16,6 +15,8 @@ import com.app.edonymyeon.data.datasource.profile.ProfileRemoteDataSource
 import com.app.edonymyeon.data.repository.AuthRepositoryImpl
 import com.app.edonymyeon.data.repository.ConsumptionsRepositoryImpl
 import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
+import com.app.edonymyeon.presentation.common.fragment.BaseFragment
+import com.app.edonymyeon.presentation.ui.alarmsetting.AlarmSettingActivity
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
 import com.app.edonymyeon.presentation.ui.main.MainActivity
 import com.app.edonymyeon.presentation.ui.main.mypage.chart.LineChartManager
@@ -27,12 +28,12 @@ import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 
-class MyPageFragment : Fragment() {
-    private val binding: FragmentMyPageBinding by lazy {
-        FragmentMyPageBinding.inflate(layoutInflater)
-    }
-
-    private val viewModel: MyPageViewModel by viewModels {
+class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
+    {
+        FragmentMyPageBinding.inflate(it)
+    },
+) {
+    override val viewModel: MyPageViewModel by viewModels {
         MyPageViewModelFactory(
             ProfileRepositoryImpl(ProfileRemoteDataSource()),
             ConsumptionsRepositoryImpl(ConsumptionsRemoteDataSource()),
@@ -42,6 +43,7 @@ class MyPageFragment : Fragment() {
             ),
         )
     }
+    override val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
 
     private val withdrawDialog: WithdrawDialog by lazy {
         WithdrawDialog {
@@ -174,8 +176,8 @@ class MyPageFragment : Fragment() {
     }
 
     private fun navigateToAlarmSetting() {
-        binding.root.makeSnackbar(getString(R.string.all_preparing_feature))
-//        startActivity(AlarmSettingActivity.newIntent(requireContext()))
+//        binding.root.makeSnackbar(getString(R.string.all_preparing_feature))
+        startActivity(AlarmSettingActivity.newIntent(requireContext()))
     }
 
     private fun navigateToLogin() {

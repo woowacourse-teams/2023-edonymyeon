@@ -3,12 +3,14 @@ package edonymyeon.backend.support;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 
+import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.application.NotificationSender;
 import edonymyeon.backend.report.application.ReportRequest;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.io.File;
@@ -51,7 +53,7 @@ public class IntegrationFixture {
     protected CommentTestSupport commentTestSupport;
 
     @MockBean
-    private NotificationSender notificationSender;
+    protected NotificationSender notificationSender;
 
     @LocalServerPort
     private int port;
@@ -79,6 +81,33 @@ public class IntegrationFixture {
     /**
      * 게시글
      */
+    public String 로그인(final Member member) {
+        final LoginRequest request = new LoginRequest(member.getEmail(), TestMemberBuilder.getRawPassword(),
+                "testToken");
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(request)
+                .when()
+                .post("/login")
+                .then()
+                .extract()
+                .sessionId();
+    }
+
+    public String 로그인(final String email, final String password) {
+        final LoginRequest request = new LoginRequest(email, password, "testToken");
+        return RestAssured
+                .given()
+                .contentType(ContentType.JSON)
+                .body(request)
+                .when()
+                .post("/login")
+                .then()
+                .extract()
+                .sessionId();
+    }
+
     protected ExtractableResponse<Response> 게시글을_하나_만든다(final Member member) {
         return postIntegrationTestSupport.builder()
                 .member(member)
@@ -91,8 +120,11 @@ public class IntegrationFixture {
     }
 
     protected ExtractableResponse<Response> 게시글을_삭제한다(final Member 작성자, final long 게시글_id) {
-        return RestAssured.given()
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
+        final String sessionId = 로그인(작성자);
+
+        return RestAssured
+                .given()
+                .sessionId(sessionId)
                 .when()
                 .delete("posts/" + 게시글_id)
                 .then()
@@ -100,147 +132,245 @@ public class IntegrationFixture {
     }
 
     protected ExtractableResponse<Response> 게시글_하나를_상세_조회한다(final Member 열람인, final long 게시글_id) {
+        final String sessionId = 로그인(열람인);
+
         return RestAssured
                 .given()
+                .sessionId(sessionId)
                 .when()
-                .auth().preemptive().basic(열람인.getEmail(), 열람인.getPassword())
                 .get("/posts/" + 게시글_id)
                 .then()
                 .extract();
     }
 
-    /**
-     * 댓글
-     */
-    protected ExtractableResponse<Response> 댓글을_생성한다_이미지포함(
-            final Long 게시글_id,
-            final File 이미지,
-            final String 내용,
-            final Member 사용자
-    ) {
-        return RestAssured.given()
-                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
-                .multiPart("image", 이미지)
-                .multiPart("comment", 내용)
-                .when()
-                .post("/posts/{postId}/comments", 게시글_id)
-                .then()
-                .extract();
-    }
+    public class CommentSteps {
 
-    protected ExtractableResponse<Response> 댓글을_생성한다_이미지없이(
-            final Long 게시글_id,
-            final String 내용,
-            final Member 사용자
-    ) throws IOException {
-        final File 빈_이미지 = File.createTempFile("empty", "");
-        return RestAssured.given()
-                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
-                .multiPart("image", 빈_이미지)
-                .multiPart("comment", 내용)
-                .when()
-                .post("/posts/{postId}/comments", 게시글_id)
-                .then()
-                .extract();
-    }
+        public static ExtractableResponse<Response> 댓글을_생성한다(
+                final Long 게시글_id,
+                final File 이미지,
+                final String 내용,
+                final Member 사용자
+        ) {
+            final String sessionId = 로그인(사용자);
 
-    protected ExtractableResponse<Response> 댓글을_삭제한다(
-            final Long 게시글_id,
-            final Long 댓글_id,
-            final Member 사용자
-    ) {
-        return RestAssured.given()
-                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
-                .when()
-                .delete("/posts/{postId}/comments/{commentId}", 게시글_id, 댓글_id)
-                .then()
-                .extract();
-    }
+            return RestAssured.given()
+                    .sessionId(sessionId)
+                    .multiPart("image", 이미지)
+                    .multiPart("comment", 내용)
+                    .when()
+                    .post("/posts/{postId}/comments", 게시글_id)
+                    .then()
+                    .extract();
+        }
 
-    public ExtractableResponse<Response> 게시물에_대한_댓글을_모두_조회한다(
-            final Long 게시글_id,
-            final Member 사용자
-    ) {
-        return RestAssured.given()
-                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
-                .when()
-                .get("/posts/{postId}/comments", 게시글_id)
-                .then()
-                .extract();
-    }
+        /**
+         * 댓글
+         */
+        public static ExtractableResponse<Response> 댓글을_생성한다_이미지포함(
+                final Long 게시글_id,
+                final File 이미지,
+                final String 내용,
+                final Member 사용자
+        ) {
+            final String sessionId = 로그인(사용자);
 
-    /**
-     * 소비 확정, 절약 확정
-     */
-    protected ExtractableResponse<Response> 특정_기간의_소비금액을_확인한다(final Integer 기간, final Member 사용자) {
-        final ExtractableResponse<Response> 조회_응답 = RestAssured
-                .given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
-                .when()
-                .get("/consumptions?period-month={periodMonth}", 기간)
-                .then()
-                .extract();
-        return 조회_응답;
-    }
+            return RestAssured.given()
+                    .sessionId(sessionId)
+                    .multiPart("image", 이미지)
+                    .multiPart("comment", 내용)
+                    .when()
+                    .post("/posts/{postId}/comments", 게시글_id)
+                    .then()
+                    .extract();
+        }
 
-    protected ExtractableResponse<Response> 구매_확정_요청을_보낸다(
-            final Member 사용자,
-            final Long 게시글_id,
-            final PurchaseConfirmRequest 구매_확정_요청
-    ) {
-        return RestAssured
-                .given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(구매_확정_요청)
-                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
-                .when()
-                .post("/profile/my-posts/{postId}/purchase-confirm", 게시글_id)
-                .then()
-                .extract();
-    }
+        private static String 로그인(final Member 사용자) {
+            final LoginRequest request = new LoginRequest(사용자.getEmail(), TestMemberBuilder.getRawPassword(),
+                    "testToken");
 
-    protected ExtractableResponse<Response> 절약_확정_요청을_보낸다(
-            final Member 사용자,
-            final Long 게시글_id,
-            final SavingConfirmRequest 절약_확정_요청
-    ) {
-        return RestAssured
-                .given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(절약_확정_요청)
-                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
-                .when()
-                .post("/profile/my-posts/{postId}/saving-confirm", 게시글_id)
-                .then()
-                .extract();
-    }
+            final String sessionId = RestAssured
+                    .given()
+                    .contentType(ContentType.JSON)
+                    .body(request)
+                    .when()
+                    .post("/login")
+                    .then()
+                    .extract()
+                    .sessionId();
+            return sessionId;
+        }
 
-    protected ExtractableResponse<Response> 확정_취소_요청을_보낸다(final Member 사용자, final Long 게시글_id) {
-        return RestAssured
-                .given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
-                .when()
-                .delete("/profile/my-posts/{postId}/confirm-remove", 게시글_id)
-                .then()
-                .log().all()
-                .extract();
-    }
+        public static ExtractableResponse<Response> 댓글을_삭제한다(
+                final Long 게시글_id,
+                final Long 댓글_id,
+                final Member 사용자
+        ) {
+            final String sessionId = 로그인(사용자);
 
-    /**
-     * 신고
-     */
-    protected ExtractableResponse<Response> 신고를_한다(final Member member, final ReportRequest reportRequest) {
-        return RestAssured
-                .given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(reportRequest)
-                .when()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
-                .post("/report")
-                .then()
-                .extract();
+            return RestAssured.given()
+                    .sessionId(sessionId)
+                    .when()
+                    .delete("/posts/{postId}/comments/{commentId}", 게시글_id, 댓글_id)
+                    .then()
+                    .extract();
+        }
+
+        public static ExtractableResponse<Response> 댓글을_생성한다_이미지없이(
+                final Long 게시글_id,
+                final String 내용,
+                final Member 사용자
+        ) throws IOException {
+            final File 빈_이미지 = File.createTempFile("empty", "");
+            final String sessionId = 로그인(사용자);
+            return RestAssured.given()
+                    .sessionId(sessionId)
+                    .multiPart("image", 빈_이미지)
+                    .multiPart("comment", 내용)
+                    .when()
+                    .post("/posts/{postId}/comments", 게시글_id)
+                    .then()
+                    .extract();
+        }
+
+        public static ExtractableResponse<Response> 게시물에_대한_댓글을_모두_조회한다(
+                final Long 게시글_id,
+                final Member 사용자
+        ) {
+            final String sessionId = 로그인(사용자);
+
+            return RestAssured.given()
+                    .sessionId(sessionId)
+                    .when()
+                    .get("/posts/{postId}/comments", 게시글_id)
+                    .then()
+                    .extract();
+        }
+
+        public static ExtractableResponse<Response> 내가_쓴_글을_조회한다(final Member member) {
+            final String sessionId = 로그인(member);
+
+            return RestAssured
+                    .given()
+                    .sessionId(sessionId)
+                    .when()
+                    .get("/profile/my-posts")
+                    .then()
+                    .extract();
+        }
+
+        public static class ConsumptionSteps {
+
+            public static ExtractableResponse<Response> 특정_기간의_소비금액을_확인한다(final Integer 기간, final Member 사용자) {
+                final String sessionId = 로그인(사용자);
+
+                final ExtractableResponse<Response> 조회_응답 = RestAssured
+                        .given()
+                        .sessionId(sessionId)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .when()
+                        .get("/consumptions?period-month={periodMonth}", 기간)
+                        .then()
+                        .extract();
+                return 조회_응답;
+            }
+
+            private static String 로그인(final Member member) {
+                final LoginRequest request = new LoginRequest(member.getEmail(), TestMemberBuilder.getRawPassword(),
+                        "testToken");
+                return RestAssured
+                        .given()
+                        .contentType(ContentType.JSON)
+                        .body(request)
+                        .when()
+                        .post("/login")
+                        .then()
+                        .extract()
+                        .sessionId();
+            }
+
+            public class MemberConsumptionSteps {
+
+                public static ExtractableResponse<Response> 구매_확정_요청을_보낸다(
+                        final Member 사용자,
+                        final Long 게시글_id,
+                        final PurchaseConfirmRequest 구매_확정_요청
+                ) {
+                    final String sessionId = 로그인(사용자);
+
+                    return RestAssured
+                            .given()
+                            .sessionId(sessionId)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .body(구매_확정_요청)
+                            .when()
+                            .post("/profile/my-posts/{postId}/purchase-confirm", 게시글_id)
+                            .then()
+                            .extract();
+                }
+
+                public static String 로그인(final Member member) {
+                    final LoginRequest request = new LoginRequest(member.getEmail(), TestMemberBuilder.getRawPassword(),
+                            "testToken");
+                    return RestAssured
+                            .given()
+                            .contentType(ContentType.JSON)
+                            .body(request)
+                            .when()
+                            .post("/login")
+                            .then()
+                            .extract()
+                            .sessionId();
+                }
+
+                public static ExtractableResponse<Response> 절약_확정_요청을_보낸다(
+                        final Member 사용자,
+                        final Long 게시글_id,
+                        final SavingConfirmRequest 절약_확정_요청
+                ) {
+                    final String sessionId = 로그인(사용자);
+
+                    return RestAssured
+                            .given()
+                            .sessionId(sessionId)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .body(절약_확정_요청)
+                            .when()
+                            .post("/profile/my-posts/{postId}/saving-confirm", 게시글_id)
+                            .then()
+                            .extract();
+                }
+
+                public static ExtractableResponse<Response> 확정_취소_요청을_보낸다(final Member 사용자, final Long 게시글_id) {
+                    final String sessionId = 로그인(사용자);
+
+                    return RestAssured
+                            .given()
+                            .sessionId(sessionId)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .when()
+                            .delete("/profile/my-posts/{postId}/confirm-remove", 게시글_id)
+                            .then()
+                            .log().all()
+                            .extract();
+                }
+
+                /**
+                 * 신고
+                 */
+                public static ExtractableResponse<Response> 신고를_한다(final Member member, final ReportRequest reportRequest) {
+                    final String sessionId = 로그인(member);
+
+                    return RestAssured
+                            .given()
+                            .sessionId(sessionId)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
+                            .body(reportRequest)
+                            .when()
+                            .post("/report")
+                            .then()
+                            .extract();
+                }
+            }
+        }
     }
 }
-

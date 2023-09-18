@@ -15,12 +15,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
-import edonymyeon.backend.auth.application.dto.LogoutRequest;
-import edonymyeon.backend.auth.application.dto.MemberResponse;
 import edonymyeon.backend.auth.domain.PasswordEncoder;
 import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
@@ -42,11 +39,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -113,16 +106,6 @@ class AuthServiceTest {
         authService.loginByKakao(new KakaoLoginResponse(1L), "testDeviceToken");
 
         verify(memberService, atLeastOnce()).activateDevice(any(), any());
-    }
-
-    @Test
-    void 로그아웃시_인증정보가_담긴_쿠키가_사라진다(@Autowired MockMvc mockMvc, @Autowired ObjectMapper objectMapper) throws Exception {
-        mockMvc.perform(post("/logout")
-                        .header(HttpHeaders.AUTHORIZATION, "Basic ekjnjknnjkn124124")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(new LogoutRequest("testDeviceTokenblabla"))))
-                .andExpect(status().isOk())
-                .andExpect(header().doesNotExist(HttpHeaders.AUTHORIZATION));
     }
 
     @Test

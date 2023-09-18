@@ -22,7 +22,7 @@ public record MyPostResponse(
                 post.getContent(),
                 post.getCreatedAt(),
                 postConsumptionResponse,
-                new ReactionCountResponse(post.getViewCount(), post.getViewCount())
+                new ReactionCountResponse(post.getViewCount(), post.getCommentCount())
         );
     }
 }

@@ -29,9 +29,11 @@ public class MemberIntegrationTest extends IntegrationFixture {
         final Member member = memberTestSupport.builder()
                 .build();
 
+        final String sessionId = 로그인(member);
+
         final ExtractableResponse<Response> response = RestAssured
                 .given()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .sessionId(sessionId)
                 .when()
                 .get("/profile")
                 .then()
@@ -69,9 +71,11 @@ public class MemberIntegrationTest extends IntegrationFixture {
                 .post(post2)
                 .build();
 
+        final String sessionId = 로그인(member);
+
         final ExtractableResponse<Response> response = RestAssured
                 .given()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .sessionId(sessionId)
                 .when()
                 .get("/profile/my-posts")
                 .then()
@@ -91,9 +95,11 @@ public class MemberIntegrationTest extends IntegrationFixture {
         final Member member = memberTestSupport.builder()
                 .build();
 
+        final String sessionId = 로그인(member);
+
         RestAssured
                 .given()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .sessionId(sessionId)
                 .when()
                 .delete("/withdraw");
 
@@ -128,9 +134,11 @@ public class MemberIntegrationTest extends IntegrationFixture {
                 .member(member)
                 .build();
 
+        final String sessionId = 로그인(member);
+
         RestAssured
                 .given()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+                .sessionId(sessionId)
                 .when()
                 .delete("/withdraw");
 

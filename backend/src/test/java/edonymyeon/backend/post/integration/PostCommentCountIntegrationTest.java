@@ -1,5 +1,6 @@
 package edonymyeon.backend.post.integration;
 
+import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.댓글을_삭제한다;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
@@ -181,10 +182,11 @@ public class PostCommentCountIntegrationTest extends IntegrationFixture {
         final Post 게시글1 = 댓글이_달린_게시글을_만든다(사용자, 10);
         final Post 게시글2 = 댓글이_달린_게시글을_만든다(사용자, 20);
 
+        final String sessionId = 로그인(사용자);
         final var 검색된_게시글_조회_결과 = RestAssured
                 .given()
+                .sessionId(sessionId)
                 .when()
-                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
                 .get("/profile/my-posts")
                 .then()
                 .log().all()
@@ -194,8 +196,8 @@ public class PostCommentCountIntegrationTest extends IntegrationFixture {
 
         assertSoftly(softly -> {
             softly.assertThat(jsonPath.getList("content")).hasSize(2);
-            softly.assertThat(jsonPath.getInt("content[0].reactionCount.commentCount")).isEqualTo(게시글2.getCommentCount());
-            softly.assertThat(jsonPath.getInt("content[1].reactionCount.commentCount")).isEqualTo(게시글1.getCommentCount());
+            softly.assertThat(jsonPath.getInt("content[0].reactionCount.commentCount")).isEqualTo(20);
+            softly.assertThat(jsonPath.getInt("content[1].reactionCount.commentCount")).isEqualTo(10);
         });
     }
 }

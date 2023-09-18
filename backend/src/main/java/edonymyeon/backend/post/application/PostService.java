@@ -15,9 +15,9 @@ import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.dto.request.PostModificationRequest;
 import edonymyeon.backend.post.application.dto.request.PostRequest;
 import edonymyeon.backend.post.application.dto.response.PostIdResponse;
+import edonymyeon.backend.post.application.event.PostDeletionEvent;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
-import edonymyeon.backend.thumbs.application.event.PostDeletionEvent;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -130,7 +130,7 @@ public class PostService {
 
         if(isImagesEmpty(imageFilesToAdd)) {
             post.updateImages(remainedImageNames);
-            new PostIdResponse(postId);
+            return new PostIdResponse(postId);
         }
 
         final PostImageInfos imagesToAdd = PostImageInfos.of(post, imageFileUploader.uploadFiles(imageFilesToAdd));

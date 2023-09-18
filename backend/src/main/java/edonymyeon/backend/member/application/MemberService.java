@@ -84,9 +84,18 @@ public class MemberService {
             return;
         }
         rePersistedMember.activateDevice(deviceToken);
+
+        deactivateOtherDevices(member, deviceToken);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void deactivateOtherDevices(final Member member, final String deviceToken) {
+        deviceRepository.findAllByDeviceToken(deviceToken)
+                .stream().filter(device -> !device.isOwner(member))
+                .forEach(Device::deactivate);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void deactivateDevice(final String deviceToken) {
         final Optional<Device> device = deviceRepository.findByDeviceToken(deviceToken);
         device.ifPresent(Device::deactivate);
