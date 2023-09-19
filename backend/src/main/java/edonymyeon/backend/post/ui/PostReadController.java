@@ -28,7 +28,6 @@ public class PostReadController {
     @GetMapping(value = "/posts")
     public ResponseEntity<PostSlice<GeneralPostInfoResponse>> findAllPosts(
             @PostPaging GeneralFindingCondition generalFindingCondition) {
-        System.out.println("version1");
         PostSlice<GeneralPostInfoResponse> posts = postReadService.findPostsByPagingCondition(generalFindingCondition);
         return ResponseEntity.ok()
                 .body(posts);
