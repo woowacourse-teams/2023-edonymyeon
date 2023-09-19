@@ -18,6 +18,8 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.domain.SocialInfo;
 import edonymyeon.backend.member.domain.SocialInfo.SocialType;
 import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.support.EdonymyeonRestAssured;
+import edonymyeon.backend.support.EdonymyeonRestAssured.EdonymyeonRestAssuredBuilder;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.support.TestMemberBuilder;
 import io.restassured.RestAssured;
@@ -26,6 +28,7 @@ import io.restassured.http.Header;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +45,9 @@ class AuthIntegrationTest extends IntegrationFixture {
 
     @Test
     void 이메일_중복을_체크한다_중복X() {
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .param("target", "email")
                 .param("value", "email@naver.com")
                 .when()
@@ -65,8 +69,9 @@ class AuthIntegrationTest extends IntegrationFixture {
                 .email("email@naver.com")
                 .build();
 
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .param("target", "email")
                 .param("value", member.getEmail())
                 .when()
@@ -84,8 +89,9 @@ class AuthIntegrationTest extends IntegrationFixture {
 
     @Test
     void 닉네임_중복을_체크한다_중복X() {
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .param("target", "nickname")
                 .param("value", "2rinebabo")
                 .when()
@@ -107,8 +113,9 @@ class AuthIntegrationTest extends IntegrationFixture {
                 .nickname("2rinebabo")
                 .build();
 
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .param("target", "nickname")
                 .param("value", member.getNickname())
                 .when()
@@ -128,8 +135,9 @@ class AuthIntegrationTest extends IntegrationFixture {
     void 회원가입_성공() {
         final JoinRequest request = new JoinRequest("email@naver.com", "password123!", "kerrobabo", "unknownDevice");
 
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
@@ -150,8 +158,9 @@ class AuthIntegrationTest extends IntegrationFixture {
 
         final JoinRequest request = new JoinRequest(duplicatedEmail, "password123!", "kerrobabo", "unknownDevice");
 
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
@@ -172,8 +181,9 @@ class AuthIntegrationTest extends IntegrationFixture {
 
         final JoinRequest request = new JoinRequest("foxbabo", "password123!", duplicatedNickname, "unknownDevice");
 
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
@@ -192,8 +202,9 @@ class AuthIntegrationTest extends IntegrationFixture {
         final LoginRequest request = new LoginRequest(joinRequest.email(), joinRequest.password(),
                 joinRequest.deviceToken());
 
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
@@ -220,8 +231,9 @@ class AuthIntegrationTest extends IntegrationFixture {
 
         final KakaoLoginRequest kakaoLoginRequest = new KakaoLoginRequest("accessToken", "testDeviceToken");
 
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(kakaoLoginRequest)
                 .when()
@@ -243,8 +255,9 @@ class AuthIntegrationTest extends IntegrationFixture {
 
         final KakaoLoginRequest kakaoLoginRequest = new KakaoLoginRequest("accessToken", "testDeviceToken");
 
-        RestAssured
-                .given()
+        EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(kakaoLoginRequest)
                 .when()
@@ -269,9 +282,10 @@ class AuthIntegrationTest extends IntegrationFixture {
 
         로그아웃_요청(member, header);
 
-        final ExtractableResponse<Response> 내가_쓴글_조회 = RestAssured
-                .given()
-                .header(header)
+        final ExtractableResponse<Response> 내가_쓴글_조회 = EdonymyeonRestAssured.builder()
+                .version(1)
+                .sessionId(cookieValue)
+                .build()
                 .when()
                 .get("/profile/my-posts")
                 .then()
@@ -293,8 +307,9 @@ class AuthIntegrationTest extends IntegrationFixture {
         final LoginRequest loginRequest = new LoginRequest(member.getEmail(), TestMemberBuilder.getRawPassword(),
                 deviceToken);
 
-        return RestAssured
-                .given()
+        return EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .contentType(ContentType.JSON)
                 .body(loginRequest)
                 .when()
@@ -307,10 +322,11 @@ class AuthIntegrationTest extends IntegrationFixture {
         final String deviceToken = member.getDevices().get(0).getDeviceToken();
         final LogoutRequest logoutRequest = new LogoutRequest(deviceToken);
 
-        return RestAssured
-                .given()
+        return EdonymyeonRestAssured.builder()
+                .version(1)
+                .sessionId(header.getValue())
+                .build()
                 .contentType(ContentType.JSON)
-                .header(header)
                 .body(logoutRequest)
                 .when()
                 .post("/logout")

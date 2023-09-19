@@ -1,14 +1,11 @@
 package edonymyeon.backend.post.integration;
 
-import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.*;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.CacheConfig;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.IntegrationFixture;
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import jakarta.persistence.EntityManager;
@@ -16,7 +13,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")

@@ -83,6 +83,7 @@ public class MyPostControllerDocsTest extends DocsTest {
 
         final MockHttpServletRequestBuilder 내_게시글_조회_요청 = get("/profile/my-posts")
                 .sessionAttr(USER.getSessionId(), 회원.getId())
+                .header("X-API-VERSION", 1)
                 .queryParam("page", findingCondition.getPage().toString())
                 .queryParam("size", findingCondition.getSize().toString())
                 .queryParam("sort-by", findingCondition.getSortBy().getName())

@@ -87,6 +87,7 @@ public class MemberControllerDocsTest extends DocsTest {
 
         final MockHttpServletRequestBuilder 구매_확정_요청 = post("/profile/my-posts/{postId}/purchase-confirm", 게시글.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("X-API-VERSION", 1)
                 .sessionAttr(USER.getSessionId(), 회원.getId())
                 .content(objectMapper.writeValueAsString(request));
 
@@ -121,6 +122,7 @@ public class MemberControllerDocsTest extends DocsTest {
 
         final MockHttpServletRequestBuilder 절약_확정_요청 = post("/profile/my-posts/{postId}/saving-confirm", 게시글.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("X-API-VERSION", 1)
                 .sessionAttr(USER.getSessionId(), 회원.getId())
                 .content(objectMapper.writeValueAsString(request));
 
@@ -152,6 +154,7 @@ public class MemberControllerDocsTest extends DocsTest {
 
         final MockHttpServletRequestBuilder 확정_취소_요청 = delete("/profile/my-posts/{postId}/confirm-remove", 게시글.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("X-API-VERSION", 1)
                 .sessionAttr(USER.getSessionId(), 회원.getId());
 
         final RestDocumentationResultHandler 문서화 = document("confirm-remove",
@@ -172,6 +175,7 @@ public class MemberControllerDocsTest extends DocsTest {
         when(memberRepository.findById(회원.getId())).thenReturn(Optional.of(회원));
 
         final MockHttpServletRequestBuilder 회원_탈퇴_요청 = delete("/withdraw")
+                .header("X-API-VERSION", 1)
                 .sessionAttr(USER.getSessionId(), 회원.getId());
 
         final RestDocumentationResultHandler 문서화 = document("withdraw");

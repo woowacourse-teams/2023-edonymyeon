@@ -1,6 +1,5 @@
 package edonymyeon.backend.consumption.integration;
 
-import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.ConsumptionSteps.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import edonymyeon.backend.consumption.domain.Consumption;
@@ -11,7 +10,6 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.ConsumptionTestSupport;
 import edonymyeon.backend.support.IntegrationFixture;
-import edonymyeon.backend.support.IntegrationFixture.CommentSteps.ConsumptionSteps;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.time.LocalDate;
