@@ -11,6 +11,7 @@ class AccessTokenInterceptor : Interceptor {
         val newRequest: Request = if (token != null) {
             request().newBuilder()
                 .addHeader("Cookie", token!!)
+                .addHeader(" X-API-VERSION", "1")
                 .build()
         } else {
             request()
