@@ -24,7 +24,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name="com.app.edonymyeon.presentation.common.activity.PictureActivity"
+            android:name="com.app.edonymyeon.presentation.ui.imagedetail.ImageDetailActivity"
             android:exported="false" />
         <activity
             android:name="com.app.edonymyeon.presentation.ui.alarmsetting.AlarmSettingActivity"
