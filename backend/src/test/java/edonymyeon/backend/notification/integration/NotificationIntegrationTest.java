@@ -13,6 +13,7 @@ import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.PostSlice;
 import edonymyeon.backend.setting.application.SettingService;
 import edonymyeon.backend.setting.domain.SettingType;
+import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.application.ThumbsService;
 import io.restassured.RestAssured;
@@ -45,8 +46,10 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
         thumbsService.thumbsUp(new ActiveMemberId(열람인.getId()), 게시글id);
         thumbsService.thumbsDown(new ActiveMemberId(열람인2.getId()), 게시글id);
 
-        final var 알림목록_조회결과 = RestAssured.given()
+        final var 알림목록_조회결과 = EdonymyeonRestAssured.builder()
+                .version(1)
                 .sessionId(sessionId)
+                .build()
                 .when()
                 .get("/notification")
                 .then()
@@ -71,7 +74,9 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
                 not -> assertThat(not.isRead()).isFalse(),
                 Assertions::fail);
 
-        RestAssured.given()
+        EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .when()
                 .get("/posts/{postId}?notificated={notificationId}",
                         Map.of("postId", 게시글id, "notificationId", 알림id))

@@ -71,6 +71,7 @@ public class CommentControllerDocsTest {
         final MockHttpServletRequestBuilder 댓글_작성_요청 = multipart("/posts/{postId}/comments", 1L)
                 .part(내용)
                 .file(이미지)
+                .header("X-API-VERSION", 1)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .sessionAttr(USER.getSessionId(), 사용자.getId());
 
@@ -99,6 +100,7 @@ public class CommentControllerDocsTest {
 
         final MockHttpServletRequestBuilder 댓글_삭제_요청 = delete("/posts/{postId}/comments/{commentId}", 1L, 1L)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("X-API-VERSION", 1)
                 .sessionAttr(USER.getSessionId(), 사용자.getId());
 
         final RestDocumentationResultHandler 문서화 = document("comment-delete",
@@ -147,7 +149,8 @@ public class CommentControllerDocsTest {
         when(commentService.findCommentsByPostId(any(), anyLong())).thenReturn(commentsResponse);
 
         final MockHttpServletRequestBuilder 댓글_조회_요청 = get("/posts/{postId}/comments", 1L)
-                .contentType(MediaType.APPLICATION_JSON_VALUE);
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("X-API-VERSION", 1);
 
         final RestDocumentationResultHandler 문서화 = document("comment-findAllByPost",
                 preprocessRequest(prettyPrint()),

@@ -9,8 +9,8 @@ import edonymyeon.backend.auth.application.AuthService;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.setting.application.dto.SettingRequest;
 import edonymyeon.backend.setting.domain.SettingType;
+import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.io.IOException;
@@ -41,10 +41,12 @@ class SettingIntegrationTest extends IntegrationFixture {
         authService.joinMember(new JoinRequest(email, password, "nickname", "testDeviceToken"));
 
         final String sessionId = 로그인(email, password);
+        System.out.println("sessionId = " + sessionId);
 
-        ExtractableResponse<Response> response = RestAssured
-                .given()
+        ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
                 .sessionId(sessionId)
+                .build()
                 .when()
                 .get("/preference/notification")
                 .then()
@@ -69,10 +71,11 @@ class SettingIntegrationTest extends IntegrationFixture {
         final String sessionId = 로그인(이메일, 비밀번호);
 
         final SettingType 반응_열건당_알림_설정정보 = SettingType.NOTIFICATION_PER_10_THUMBS;
-        ExtractableResponse<Response> response = RestAssured
-                .given()
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
+        ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
                 .sessionId(sessionId)
+                .build()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(new SettingRequest(반응_열건당_알림_설정정보.getSerialNumber()))
                 .when()
                 .post("/preference/notification")
