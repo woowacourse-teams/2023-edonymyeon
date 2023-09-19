@@ -30,6 +30,10 @@ class ImageDetailActivity : AppCompatActivity() {
         intent.getParcelableExtraCompat(KEY_COMMENT) as? CommentUiModel
     }
 
+    private val position by lazy {
+        intent.getIntExtra(KEY_POSITION, 0)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -41,37 +45,40 @@ class ImageDetailActivity : AppCompatActivity() {
 
     private fun processImageData(data: Parcelable?) {
         data?.let {
-            setImageSlider(it)
+            setImageSlider(it, position)
             setImageIndicators()
         }
     }
 
-    private fun setListener() {
-        binding.ivClose.setOnClickListener {
-            finish()
-        }
+    fun setImageSlider(data: Parcelable, position: Int) {
+        setupImageSlider()
+        setImageSliderAdapter(data)
+        setCurrentImageItem(position)
     }
 
-    private fun setImageSlider(data: Parcelable) {
-        binding.vpImageSlider.offscreenPageLimit = 1
-        binding.vpImageSlider.adapter = when (data) {
-            is PostUiModel -> ImageDetailAdapter(data.images)
-            is CommentUiModel -> {
-                data.image?.let {
-                    ImageDetailAdapter(listOf(it))
-                }
-            }
-
-            else -> throw IllegalArgumentException("Unexpected data type: $data")
-        }
-        binding.vpImageSlider.registerOnPageChangeCallback(
-            object : ViewPager2.OnPageChangeCallback() {
+    private fun setupImageSlider() {
+        with(binding.vpImageSlider) {
+            offscreenPageLimit = 1
+            registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
                     super.onPageSelected(position)
                     updateCurrentIndicator(position)
                 }
-            },
-        )
+            })
+        }
+    }
+
+    private fun setImageSliderAdapter(data: Parcelable) {
+        val adapter = when (data) {
+            is PostUiModel -> ImageDetailAdapter(data.images)
+            is CommentUiModel -> ImageDetailAdapter(listOfNotNull(data.image))
+            else -> throw IllegalArgumentException("Unexpected data type: $data")
+        }
+        binding.vpImageSlider.adapter = adapter
+    }
+
+    private fun setCurrentImageItem(position: Int) {
+        binding.vpImageSlider.setCurrentItem(position, false)
     }
 
     private fun setImageIndicators() {
@@ -81,7 +88,7 @@ class ImageDetailActivity : AppCompatActivity() {
         ).apply { setMargins(8, 0, 8, 0) }
 
         addIndicatorViews(params)
-        updateCurrentIndicator(0)
+        updateCurrentIndicator(position)
     }
 
     private fun addIndicatorViews(params: LinearLayout.LayoutParams) {
@@ -103,6 +110,12 @@ class ImageDetailActivity : AppCompatActivity() {
             } else {
                 indicatorView.setImageResource(R.drawable.ic_bcc4d8_indicator_focus_off)
             }
+        }
+    }
+
+    private fun setListener() {
+        binding.ivClose.setOnClickListener {
+            finish()
         }
     }
 
