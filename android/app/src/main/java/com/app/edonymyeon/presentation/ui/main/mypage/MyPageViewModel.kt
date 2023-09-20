@@ -20,9 +20,12 @@ import com.domain.edonymyeon.model.Writer
 import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.ConsumptionsRepository
 import com.domain.edonymyeon.repository.ProfileRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MyPageViewModel(
+@HiltViewModel
+class MyPageViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val consumptionsRepository: ConsumptionsRepository,
     private val authRepository: AuthRepository,

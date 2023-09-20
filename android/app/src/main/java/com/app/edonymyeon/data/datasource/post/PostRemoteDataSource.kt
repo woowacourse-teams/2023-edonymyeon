@@ -14,8 +14,9 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Response
 import java.io.File
+import javax.inject.Inject
 
-class PostRemoteDataSource : PostDataSource {
+class PostRemoteDataSource @Inject constructor() : PostDataSource {
     private val postService: PostService =
         RetrofitClient.getInstance().create(PostService::class.java)
 

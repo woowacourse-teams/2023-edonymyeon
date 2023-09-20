@@ -9,9 +9,12 @@ import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.NotificationUiModel
 import com.domain.edonymyeon.model.Page
 import com.domain.edonymyeon.repository.NotificationRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AlarmViewModel(
+@HiltViewModel
+class AlarmViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository,
 ) : BaseViewModel() {
     private var currentPage = Page()
