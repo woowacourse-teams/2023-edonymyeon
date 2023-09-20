@@ -21,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -92,13 +91,6 @@ public class AuthController {
     public ResponseEntity<Void> logout(@RequestBody LogoutRequest logoutRequest, HttpSession session) {
         session.invalidate();
         authService.logout(logoutRequest.deviceToken());
-        return ResponseEntity.ok().build();
-    }
-
-    // todo DB에 비밀번호 암호화 후 삭제
-    @PutMapping("/auth/encrypt")
-    public ResponseEntity<Void> encryptAllMember() {
-        authService.updatePasswordToEncrypt();
         return ResponseEntity.ok().build();
     }
 }
