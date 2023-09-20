@@ -8,16 +8,14 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import app.edonymyeon.databinding.ActivityMyPostBinding
-import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
-import com.app.edonymyeon.data.datasource.profile.ProfileRemoteDataSource
-import com.app.edonymyeon.data.repository.PostRepositoryImpl
-import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
 import com.app.edonymyeon.presentation.common.activity.BaseActivity
 import com.app.edonymyeon.presentation.ui.mypost.adapter.MyPostAdapter
 import com.app.edonymyeon.presentation.ui.mypost.dialog.ConsumptionDialog
 import com.app.edonymyeon.presentation.ui.mypost.listener.MyPostClickListener
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MyPostActivity :
     BaseActivity<ActivityMyPostBinding, MyPostViewModel>({
         ActivityMyPostBinding.inflate(it)
@@ -33,12 +31,7 @@ class MyPostActivity :
 
     private lateinit var dialog: ConsumptionDialog
 
-    override val viewModel: MyPostViewModel by viewModels {
-        MyPostViewModelFactory(
-            ProfileRepositoryImpl(ProfileRemoteDataSource()),
-            PostRepositoryImpl(PostRemoteDataSource()),
-        )
-    }
+    override val viewModel: MyPostViewModel by viewModels()
 
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(this) }
     override fun onCreate(savedInstanceState: Bundle?) {

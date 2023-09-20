@@ -11,6 +11,10 @@ import com.app.edonymyeon.data.datasource.recommend.RecommendDataSource
 import com.app.edonymyeon.data.datasource.recommend.RecommendRemoteDataSource
 import com.app.edonymyeon.data.datasource.report.ReportDataSource
 import com.app.edonymyeon.data.datasource.report.ReportRemoteDataSource
+import com.app.edonymyeon.data.datasource.profile.ProfileDataSource
+import com.app.edonymyeon.data.datasource.profile.ProfileRemoteDataSource
+import com.app.edonymyeon.data.datasource.search.SearchDataSource
+import com.app.edonymyeon.data.datasource.search.SearchRemoteDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -48,4 +52,14 @@ abstract class DataSourceModule {
     abstract fun bindReportDataSource(
         remoteDataSource: ReportRemoteDataSource,
     ): ReportDataSource
+
+    @Binds
+    abstract fun bindSearchDataSource(
+        remoteImpl: SearchRemoteDataSource,
+    ): SearchDataSource
+
+    @Binds
+    abstract fun bindProfileDataSource(
+        remoteImpl: ProfileRemoteDataSource,
+    ): ProfileDataSource
 }

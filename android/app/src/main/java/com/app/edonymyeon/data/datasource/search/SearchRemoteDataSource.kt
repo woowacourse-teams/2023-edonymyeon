@@ -4,8 +4,9 @@ import com.app.edonymyeon.data.dto.response.Posts
 import com.app.edonymyeon.data.service.SearchService
 import com.app.edonymyeon.data.service.client.RetrofitClient
 import retrofit2.Response
+import javax.inject.Inject
 
-class SearchRemoteDataSource : SearchDataSource {
+class SearchRemoteDataSource @Inject constructor() : SearchDataSource {
     private val searchService: SearchService =
         RetrofitClient.getInstance().create(SearchService::class.java)
 
