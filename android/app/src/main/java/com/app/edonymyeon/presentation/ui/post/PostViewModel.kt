@@ -10,9 +10,14 @@ import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
 import com.domain.edonymyeon.model.Page
 import com.domain.edonymyeon.repository.PostRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PostViewModel(private val repository: PostRepository) : BaseViewModel() {
+@HiltViewModel
+class PostViewModel @Inject constructor(
+    private val repository: PostRepository,
+) : BaseViewModel() {
     private var currentPage = Page()
     private var isLastPage = false
 
