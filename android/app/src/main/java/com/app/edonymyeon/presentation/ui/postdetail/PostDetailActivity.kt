@@ -21,12 +21,6 @@ import androidx.viewpager2.widget.ViewPager2
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostDetailBinding
 import app.edonymyeon.databinding.ViewCommentInputBinding
-import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
-import com.app.edonymyeon.data.datasource.recommend.RecommendRemoteDataSource
-import com.app.edonymyeon.data.datasource.report.ReportRemoteDataSource
-import com.app.edonymyeon.data.repository.PostRepositoryImpl
-import com.app.edonymyeon.data.repository.RecommendRepositoryImpl
-import com.app.edonymyeon.data.repository.ReportRepositoryImpl
 import com.app.edonymyeon.presentation.common.activity.BaseActivity
 import com.app.edonymyeon.presentation.common.activityutil.hideKeyboard
 import com.app.edonymyeon.presentation.common.dialog.LoadingDialog
@@ -42,7 +36,9 @@ import com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.util.makeSnackbar
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PostDetailActivity :
     BaseActivity<ActivityPostDetailBinding, PostDetailViewModel>({
         ActivityPostDetailBinding.inflate(it)
@@ -57,13 +53,7 @@ class PostDetailActivity :
         binding.clCommentInput
     }
 
-    override val viewModel: PostDetailViewModel by viewModels {
-        PostDetailViewModelFactory(
-            PostRepositoryImpl(PostRemoteDataSource()),
-            RecommendRepositoryImpl(RecommendRemoteDataSource()),
-            ReportRepositoryImpl(ReportRemoteDataSource()),
-        )
-    }
+    override val viewModel: PostDetailViewModel by viewModels()
 
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(this) }
 

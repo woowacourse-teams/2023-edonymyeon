@@ -3,8 +3,9 @@ package com.app.edonymyeon.data.repository
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.datasource.recommend.RecommendDataSource
 import com.domain.edonymyeon.repository.RecommendRepository
+import javax.inject.Inject
 
-class RecommendRepositoryImpl(
+class RecommendRepositoryImpl @Inject constructor(
     private val recommendDataSource: RecommendDataSource,
 ) : RecommendRepository {
     override suspend fun saveRecommendUp(postId: Long): Result<Any> {
