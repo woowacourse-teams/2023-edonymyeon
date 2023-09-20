@@ -22,8 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MyPostViewModel @Inject constructor(
-    val repository: ProfileRepository,
-    val postRepository: PostRepository,
+    private val profileRepository: ProfileRepository,
+    private val postRepository: PostRepository,
 ) :
     BaseViewModel() {
 
@@ -44,7 +44,7 @@ class MyPostViewModel @Inject constructor(
 
     fun getMyPosts(notificationId: Long) {
         viewModelScope.launch(exceptionHandler) {
-            repository.getMyPosts(currentPage.value, notificationId).onSuccess {
+            profileRepository.getMyPosts(currentPage.value, notificationId).onSuccess {
                 _posts.value = posts.value.orEmpty() + it.posts.map { post ->
                     post.toUiModel()
                 }
@@ -74,7 +74,7 @@ class MyPostViewModel @Inject constructor(
             ),
         )
         viewModelScope.launch(exceptionHandler) {
-            repository.postPurchaseConfirm(id, purchasePrice, year, month).onSuccess {
+            profileRepository.postPurchaseConfirm(id, purchasePrice, year, month).onSuccess {
             }.onFailure {
                 it as CustomThrowable
                 when (it.code) {
@@ -89,7 +89,7 @@ class MyPostViewModel @Inject constructor(
             ConsumptionUiModel(type = SAVING_TYPE, purchasePrice = 0, year = year, month = month),
         )
         viewModelScope.launch(exceptionHandler) {
-            repository.postSavingConfirm(id, year, month).onSuccess {
+            profileRepository.postSavingConfirm(id, year, month).onSuccess {
             }
                 .onFailure {
                     it as CustomThrowable
@@ -105,7 +105,7 @@ class MyPostViewModel @Inject constructor(
             ConsumptionUiModel(type = NONE_TYPE, purchasePrice = 0, year = 0, month = 0),
         )
         viewModelScope.launch(exceptionHandler) {
-            repository.deleteConfirm(id).onSuccess {
+            profileRepository.deleteConfirm(id).onSuccess {
             }
                 .onFailure {
                     it as CustomThrowable
