@@ -23,6 +23,7 @@ import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.domain.SocialInfo;
+import edonymyeon.backend.member.domain.SocialInfo.SocialType;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.setting.application.SettingService;
 import edonymyeon.backend.support.IntegrationTest;
@@ -88,6 +89,14 @@ class AuthServiceTest {
     }
 
     @Test
+    void 소셜_회원가입_이후_설정초기화_작업을_수행한다() {
+        doNothing().when(settingService).initializeSettings(any());
+
+        authService.joinSocialMember(SocialInfo.of(SocialType.KAKAO, 1L), "testDeviceToken");
+        verify(settingService, atLeastOnce()).initializeSettings(any());
+    }
+
+    @Test
     void 로그인_이후_디바이스_교체_작업을_수행한다() {
         doNothing().when(memberService).activateDevice(any(), any());
 
@@ -121,7 +130,7 @@ class AuthServiceTest {
     @Test
     void 카카오_회원가입시_DB에_암호화된_비밀번호가_저장된다() {
         final SocialInfo socialInfo = SocialInfo.of(SocialInfo.SocialType.KAKAO, 1L);
-        authService.joinSocialMember(socialInfo);
+        authService.joinSocialMember(socialInfo, "testDevice");
 
         verify(passwordEncoder, atLeastOnce()).encode(any());
     }
