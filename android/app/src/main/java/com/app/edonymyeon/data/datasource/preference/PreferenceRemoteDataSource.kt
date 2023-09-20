@@ -5,8 +5,9 @@ import com.app.edonymyeon.data.dto.response.NotificationPreferenceResponse
 import com.app.edonymyeon.data.service.PreferenceService
 import com.app.edonymyeon.data.service.client.RetrofitClient
 import retrofit2.Response
+import javax.inject.Inject
 
-class PreferenceRemoteDataSource : PreferenceDataSource {
+class PreferenceRemoteDataSource @Inject constructor() : PreferenceDataSource {
     private val preferenceService =
         RetrofitClient.getInstance().create(PreferenceService::class.java)
 

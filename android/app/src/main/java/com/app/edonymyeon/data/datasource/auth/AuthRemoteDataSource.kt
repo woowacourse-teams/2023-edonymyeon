@@ -9,8 +9,9 @@ import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
 import com.app.edonymyeon.data.service.AuthService
 import com.app.edonymyeon.data.service.client.RetrofitClient
 import retrofit2.Response
+import javax.inject.Inject
 
-class AuthRemoteDataSource : AuthDataSource.Remote {
+class AuthRemoteDataSource @Inject constructor() : AuthDataSource.Remote {
     private val authService: AuthService =
         RetrofitClient.getInstance().create(AuthService::class.java)
 

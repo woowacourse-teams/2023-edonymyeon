@@ -1,8 +1,9 @@
 package com.app.edonymyeon.data.datasource.auth
 
 import com.app.edonymyeon.data.util.PreferenceUtil
+import javax.inject.Inject
 
-class AuthLocalDataSource : AuthDataSource.Local {
+class AuthLocalDataSource @Inject constructor() : AuthDataSource.Local {
 
     override fun getAuthToken(): String? {
         return PreferenceUtil.getValue(USER_ACCESS_TOKEN)

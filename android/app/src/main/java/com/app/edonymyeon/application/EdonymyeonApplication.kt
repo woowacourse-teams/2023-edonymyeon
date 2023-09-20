@@ -7,7 +7,9 @@ import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.data.service.client.RetrofitClient
 import com.app.edonymyeon.data.util.PreferenceUtil
 import com.kakao.sdk.common.KakaoSdk
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class EdonymyeonApplication : Application() {
     override fun onCreate() {
         super.onCreate()

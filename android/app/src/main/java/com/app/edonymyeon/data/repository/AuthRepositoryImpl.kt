@@ -11,8 +11,9 @@ import com.app.edonymyeon.mapper.toDataModel
 import com.domain.edonymyeon.model.UserRegistration
 import com.domain.edonymyeon.repository.AuthRepository
 import org.json.JSONObject
+import javax.inject.Inject
 
-class AuthRepositoryImpl(
+class AuthRepositoryImpl @Inject constructor(
     private val authLocalDataSource: AuthDataSource.Local,
     private val authRemoteDataSource: AuthDataSource.Remote,
 ) : AuthRepository {
