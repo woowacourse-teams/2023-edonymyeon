@@ -159,22 +159,6 @@ public class AuthService {
         return saveMember(member);
     }
 
-    /**
-     * (삭제 예정) 암호화되지 않은 회원의 비밀번호를 암호화합니다.
-     */
-    // todo DB에 암호화 적용하고 삭제
-    @Transactional
-    public void updatePasswordToEncrypt() {
-        final List<Member> members = memberRepository.findAll();
-        for (Member member : members) {
-            final String encodedPassword = passwordEncoder.encode(member.getPassword());
-            try {
-                member.encrypt(encodedPassword);
-            } catch (EdonymyeonException e) {
-            }
-        }
-    }
-
     private void validateDuplicateEmail(final String email) {
         if (memberRepository.findByEmail(email).isPresent()) {
             throw new EdonymyeonException(MEMBER_EMAIL_DUPLICATE);
