@@ -5,6 +5,8 @@ import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.data.datasource.auth.AuthRemoteDataSource
 import com.app.edonymyeon.data.datasource.preference.PreferenceDataSource
 import com.app.edonymyeon.data.datasource.preference.PreferenceRemoteDataSource
+import com.app.edonymyeon.data.datasource.search.SearchDataSource
+import com.app.edonymyeon.data.datasource.search.SearchRemoteDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -27,4 +29,9 @@ abstract class DataSourceModule {
     abstract fun bindAuthLocalDataSource(
         remoteImpl: AuthLocalDataSource,
     ): AuthDataSource.Local
+
+    @Binds
+    abstract fun bindSearchDataSource(
+        remoteImpl: SearchRemoteDataSource,
+    ): SearchDataSource
 }
