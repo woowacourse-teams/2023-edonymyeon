@@ -1,9 +1,9 @@
 package com.app.edonymyeon.di
 
 import com.app.edonymyeon.data.repository.AuthRepositoryImpl
-import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.data.repository.ConsumptionsRepositoryImpl
 import com.app.edonymyeon.data.repository.NotificationRepositoryImpl
+import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.data.repository.PreferenceRepositoryImpl
 import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
 import com.app.edonymyeon.data.repository.RecommendRepositoryImpl
@@ -63,7 +63,7 @@ abstract class RepositoryModule {
 
     @Binds
     abstract fun bindProfileRepository(
-        impl: PostRepositoryImpl,
+        impl: ProfileRepositoryImpl,
     ): ProfileRepository
 
     @Binds
