@@ -2,29 +2,34 @@ package edonymyeon.backend.auth.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.when;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
-import edonymyeon.backend.auth.application.dto.LogoutRequest;
-import edonymyeon.backend.auth.application.dto.MemberResponse;
 import edonymyeon.backend.auth.domain.PasswordEncoder;
+import edonymyeon.backend.image.ImageFileUploader;
+import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.member.application.MemberService;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.domain.SocialInfo;
+import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.setting.application.SettingService;
 import edonymyeon.backend.support.IntegrationTest;
 import jakarta.persistence.EntityManager;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.Test;
@@ -33,9 +38,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -56,6 +58,12 @@ class AuthServiceTest {
 
     @SpyBean
     private PasswordEncoder passwordEncoder;
+
+    @SpyBean
+    private MemberRepository memberRepository;
+
+    @SpyBean
+    private ImageFileUploader uploader;
 
     @Test
     void 회원가입시_사용한_디바이스_정보를_함께_저장한다(@Autowired EntityManager entityManager) {
@@ -99,16 +107,6 @@ class AuthServiceTest {
     }
 
     @Test
-    void 로그아웃시_인증정보가_담긴_쿠키가_사라진다(@Autowired MockMvc mockMvc, @Autowired ObjectMapper objectMapper) throws Exception {
-        mockMvc.perform(post("/logout")
-                        .header(HttpHeaders.AUTHORIZATION, "Basic ekjnjknnjkn124124")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(new LogoutRequest("testDeviceTokenblabla"))))
-                .andExpect(status().isOk())
-                .andExpect(header().doesNotExist(HttpHeaders.AUTHORIZATION));
-    }
-
-    @Test
     void 기본_회원가입시_DB에_암호화된_비밀번호가_저장된다() {
         final JoinRequest request = new JoinRequest("example@email.com", "password1234!", "nickname", "");
         final Member member = authService.joinMember(request);
@@ -143,16 +141,49 @@ class AuthServiceTest {
     }
 
     @Test
-    void 카카오_로그인시_DB에_암호화된_비밀번호와_입력받은_비밀번호를_검증한다() {
-        final SocialInfo socialInfo = SocialInfo.of(SocialInfo.SocialType.KAKAO, 1L);
-        final Member member = authService.joinSocialMember(socialInfo);
+    void 회원_삭제의_트랜잭션이_커밋되면_프로필_이미지를_물리적으로_삭제한다() {
+        // given
+        final JoinRequest request = new JoinRequest("example@email.com", "password1234!", "nickname", "");
+        final Member member = authService.joinMember(request);
 
-        final KakaoLoginResponse kakaoLoginResponse = new KakaoLoginResponse(socialInfo.getSocialId());
-        final MemberResponse memberResponse = authService.loginByKakao(kakaoLoginResponse, "");
+        final Member mockedMember = mock(Member.class);
+        when(memberRepository.findById(member.getId())).thenReturn(Optional.of(mockedMember));
+        when(mockedMember.getProfileImageInfo()).thenReturn(new ProfileImageInfo("storeName"));
 
-        assertSoftly(soft -> {
-            soft.assertThat(member.getEmail()).isEqualTo(memberResponse.email());
-            soft.assertThat(member.getPassword()).isEqualTo(memberResponse.password());
-        });
+        // when
+        final ActiveMemberId memberId = new ActiveMemberId(member.getId());
+        authService.withdraw(memberId);
+
+        // then
+        SoftAssertions.assertSoftly(
+                soft -> {
+                    verify(memberService, atLeastOnce()).deleteProfileImage(mockedMember);
+                    await().untilAsserted(() -> verify(uploader, atLeastOnce()).removeFile(any()));
+                }
+        );
+    }
+
+    @Test
+    void 회원_삭제의_트랜잭션이_롤백되면_프로필_이미지를_물리적으로_삭제하지않는다() {
+        // given
+        final var request = new JoinRequest("example@email.com", "password1234!", "nickname", "");
+        final var member = authService.joinMember(request);
+
+        final var mockedMember = mock(Member.class);
+        when(memberRepository.findById(member.getId())).thenReturn(Optional.of(mockedMember));
+        when(mockedMember.getProfileImageInfo()).thenReturn(new ProfileImageInfo("storeName"));
+        doThrow(new RuntimeException("롤백용 예외")).when(mockedMember).withdraw();
+
+        // when
+        final ActiveMemberId memberId = new ActiveMemberId(member.getId());
+
+        // then
+        SoftAssertions.assertSoftly(
+                soft -> {
+                    soft.assertThatThrownBy(() -> authService.withdraw(memberId));
+                    verify(memberService, atLeastOnce()).deleteProfileImage(mockedMember);
+                    verify(uploader, never()).removeFile(any());
+                }
+        );
     }
 }

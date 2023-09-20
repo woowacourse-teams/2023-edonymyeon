@@ -1,6 +1,7 @@
 package edonymyeon.backend.member.ui;
 
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
+import edonymyeon.backend.global.version.ApiVersion;
 import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
@@ -21,19 +22,14 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @DeleteMapping("/withdraw")
-    public ResponseEntity<Void> withdraw(@AuthPrincipal MemberId memberId) {
-        memberService.deleteMember(memberId.id());
-        return ResponseEntity.noContent()
-                .build();
-    }
-
+    @ApiVersion(value = {1})
     @GetMapping("/profile")
     public ResponseEntity<MyPageResponse> findMemberInfo(@AuthPrincipal MemberId memberId) {
         final MyPageResponse memberInfo = memberService.findMemberInfoById(memberId.id());
         return ResponseEntity.ok(memberInfo);
     }
 
+    @ApiVersion(value = {1})
     @PostMapping("/profile/my-posts/{postId}/purchase-confirm")
     public ResponseEntity<Void> confirmPurchase(@AuthPrincipal final MemberId memberId,
                                                 @PathVariable final Long postId,
@@ -42,6 +38,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+    @ApiVersion(value = {1})
     @PostMapping("/profile/my-posts/{postId}/saving-confirm")
     public ResponseEntity<Void> confirmSaving(@AuthPrincipal final MemberId memberId,
                                               @PathVariable final Long postId,
@@ -50,6 +47,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
+    @ApiVersion(value = {1})
     @DeleteMapping("/profile/my-posts/{postId}/confirm-remove")
     public ResponseEntity<Void> removeConfirm(@AuthPrincipal final MemberId memberId,
                                               @PathVariable final Long postId) {

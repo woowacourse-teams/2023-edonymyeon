@@ -10,9 +10,12 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.Where;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.*;
 
@@ -21,8 +24,9 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @DynamicInsert
-@Entity
 @Table(indexes = @Index(name = "i_post_created_at", columnList = "createdAt"))
+@Where(clause = "deleted = false")
+@Entity
 public class Post extends TemporalRecord {
 
     public static final int DEFAULT_BATCH_SIZE = 20;
@@ -56,6 +60,9 @@ public class Post extends TemporalRecord {
 
     @Formula("(select count(c.id) from comment c where c.post_id = id and c.deleted = false)")
     private int commentCount;
+
+    @ColumnDefault("false")
+    private boolean deleted;
 
     public Post(
             final Long id,
@@ -122,8 +129,8 @@ public class Post extends TemporalRecord {
         this.postImageInfos.add(postImageInfo);
     }
 
-    public void validateImageAdditionCount(final Integer imageAdditionCount) {
-        this.postImageInfos.validateImageAdditionCount(imageAdditionCount);
+    public void validateImageCount(final Integer imageCount) {
+        this.postImageInfos.validateImageCount(imageCount);
     }
 
     public void update(final String title, final String content, final Long price) {
@@ -147,8 +154,20 @@ public class Post extends TemporalRecord {
         this.price = price;
     }
 
-    public void updateImages(final PostImageInfos postImageInfos) {
-        this.postImageInfos.addAll(postImageInfos.getPostImageInfos());
+    /**
+     * 게시글 수정시 사용, 새로 추가되는 이미지가 없고 기존 이미지에 대한 수정만 일어나는 경우
+     * -> imageNamesToMaintain을 제외하고 삭제한다.
+     */
+    public void updateImages(final List<String> remainedImageNames) {
+        postImageInfos.update(remainedImageNames, Collections.emptyList());
+    }
+
+    /**
+     * 게시글 수정시 사용, 새로 추가되는 이미지도 있는 경우
+     * -> imageNamesToMaintain을 제외하고 삭제 후, imagesToAdd를 추가한다.
+     */
+    public void updateImages(final List<String> remainedImageNames, final PostImageInfos imagesToAdd) {
+        this.postImageInfos.update(remainedImageNames, imagesToAdd.getPostImageInfos());
     }
 
     public boolean isSameMember(final Member member) {
@@ -163,6 +182,10 @@ public class Post extends TemporalRecord {
         return member;
     }
 
+    public Long getWriterId() {
+        return this.member.getId();
+    }
+
     public boolean hasThumbnail() {
         return !this.postImageInfos.isEmpty();
     }
@@ -173,14 +196,6 @@ public class Post extends TemporalRecord {
 
     public List<PostImageInfo> getPostImageInfos() {
         return this.postImageInfos.getPostImageInfos();
-    }
-
-    public List<PostImageInfo> findImagesToDelete(final List<String> remainedStoreNames) {
-        return this.postImageInfos.findImagesToDelete(remainedStoreNames);
-    }
-
-    public void removePostImageInfos(final List<PostImageInfo> deletedPostImageInfos) {
-        this.postImageInfos.remove(deletedPostImageInfos);
     }
 
     public void validateWriter(final Long memberId) {
@@ -194,5 +209,15 @@ public class Post extends TemporalRecord {
             return;
         }
         this.viewCount++;
+    }
+
+    public void delete() {
+        //lazyLoading 문제로 repository를 통해 직접 postImageInfos를 제거해주는 것이 필요하다.
+        this.postImageInfos.deleteAll();
+        this.deleted = true;
+    }
+
+    public Optional<String> getDeviceTokenFromWriter() {
+        return this.member.getActiveDeviceToken();
     }
 }

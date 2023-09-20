@@ -25,6 +25,7 @@ import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Slf4j
@@ -32,7 +33,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FCMNotificationSender implements NotificationSender {
 
-    public static final String FIREBASE_ADMIN_KEY_PATH = "/firebase/edonymyeon-firebase.json";
     private static final String API_URL = "https://fcm.googleapis.com/v1/projects/edonymyeon-5c344/messages:send";
     private final ObjectMapper objectMapper;
     @Value("${file.firebaseTokenDir}")
@@ -47,6 +47,7 @@ public class FCMNotificationSender implements NotificationSender {
     }
 
     @Override
+    @Async
     public void sendNotification(final Receiver receiver, final String title) {
         try {
             final String requestBody = makeFCMNotificationRequestBody(receiver.getToken(), title, receiver.getData());

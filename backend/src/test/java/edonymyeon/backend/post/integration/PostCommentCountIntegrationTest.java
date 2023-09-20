@@ -1,6 +1,5 @@
 package edonymyeon.backend.post.integration;
 
-import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.댓글을_삭제한다;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
@@ -11,6 +10,7 @@ import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.application.HotFindingCondition;
 import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
@@ -87,11 +87,7 @@ public class PostCommentCountIntegrationTest extends IntegrationFixture {
         Post post4 = 댓글이_달린_게시글을_만든다(4);
         Post post5 = 댓글이_달린_게시글을_만든다(5);
 
-        final var 게시글_전체_조회_응답 = RestAssured
-                .when()
-                .get("/posts")
-                .then()
-                .extract();
+        final var 게시글_전체_조회_응답 = 게시글을_전체_조회한다();
 
         final var jsonPath = 게시글_전체_조회_응답.body().jsonPath();
 
@@ -124,8 +120,9 @@ public class PostCommentCountIntegrationTest extends IntegrationFixture {
         Post post4 = 댓글이_달린_게시글을_만든다(4);
         Post post5 = 댓글이_달린_게시글을_만든다(5);
 
-        JsonPath jsonPath = RestAssured.given()
-                .when()
+        JsonPath jsonPath = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .get("posts/hot")
                 .then()
                 .extract()
@@ -159,8 +156,9 @@ public class PostCommentCountIntegrationTest extends IntegrationFixture {
         commentTestSupport.builder().post(게시글).build();
         commentTestSupport.builder().post(게시글).build();
 
-        final var 검색된_게시글_조회_결과 = RestAssured
-                .given()
+        final var 검색된_게시글_조회_결과 = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .when()
                 .queryParam("query", "사과")
                 .get("/search")
@@ -182,10 +180,12 @@ public class PostCommentCountIntegrationTest extends IntegrationFixture {
         final Post 게시글1 = 댓글이_달린_게시글을_만든다(사용자, 10);
         final Post 게시글2 = 댓글이_달린_게시글을_만든다(사용자, 20);
 
-        final var 검색된_게시글_조회_결과 = RestAssured
-                .given()
+        final String sessionId = 로그인(사용자);
+        final var 검색된_게시글_조회_결과 = EdonymyeonRestAssured.builder()
+                .version(1)
+                .sessionId(sessionId)
+                .build()
                 .when()
-                .auth().preemptive().basic(사용자.getEmail(), 사용자.getPassword())
                 .get("/profile/my-posts")
                 .then()
                 .log().all()
@@ -195,8 +195,8 @@ public class PostCommentCountIntegrationTest extends IntegrationFixture {
 
         assertSoftly(softly -> {
             softly.assertThat(jsonPath.getList("content")).hasSize(2);
-            softly.assertThat(jsonPath.getInt("content[0].reactionCount.commentCount")).isEqualTo(게시글2.getCommentCount());
-            softly.assertThat(jsonPath.getInt("content[1].reactionCount.commentCount")).isEqualTo(게시글1.getCommentCount());
+            softly.assertThat(jsonPath.getInt("content[0].reactionCount.commentCount")).isEqualTo(20);
+            softly.assertThat(jsonPath.getInt("content[1].reactionCount.commentCount")).isEqualTo(10);
         });
     }
 }

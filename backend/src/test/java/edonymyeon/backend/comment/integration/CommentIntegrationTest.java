@@ -3,9 +3,6 @@ package edonymyeon.backend.comment.integration;
 import static edonymyeon.backend.global.exception.ExceptionInformation.COMMENT_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.COMMENT_MEMBER_NOT_SAME;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
-import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.게시물에_대한_댓글을_모두_조회한다;
-import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.댓글을_삭제한다;
-import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.댓글을_생성한다;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
@@ -13,6 +10,7 @@ import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -40,7 +38,7 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
         final Member 댓글_작성자 = memberTestSupport.builder().build();
 
         final File 이미지 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
-        final ExtractableResponse<Response> 댓글_생성_응답 = 댓글을_생성한다(게시글.getId(), 이미지, "댓글이다", 댓글_작성자);
+        final ExtractableResponse<Response> 댓글_생성_응답 = 댓글을_생성한다_이미지포함(게시글.getId(), 이미지, "댓글이다", 댓글_작성자);
 
         assertThat(댓글_생성_응답.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -50,8 +48,7 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
         final Post 게시글 = postTestSupport.builder().build();
         final Member 댓글_작성자 = memberTestSupport.builder().build();
 
-        final File 빈_이미지 = File.createTempFile("empty", "");
-        final ExtractableResponse<Response> 댓글_생성_응답 = 댓글을_생성한다(게시글.getId(), 빈_이미지, "댓글이다", 댓글_작성자);
+        final ExtractableResponse<Response> 댓글_생성_응답 = 댓글을_생성한다_이미지없이(게시글.getId(), "댓글이다", 댓글_작성자);
 
         assertThat(댓글_생성_응답.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -61,7 +58,7 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
         final Member 댓글_작성자 = memberTestSupport.builder().build();
 
         final File 이미지 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
-        final ExtractableResponse<Response> 댓글_생성_응답 = 댓글을_생성한다(-1L, 이미지, "댓글이다", 댓글_작성자);
+        final ExtractableResponse<Response> 댓글_생성_응답 = 댓글을_생성한다_이미지포함(-1L, 이미지, "댓글이다", 댓글_작성자);
 
         assertSoftly(
                 softAssertions -> {
@@ -77,7 +74,7 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
         final Post 게시글 = postTestSupport.builder().build();
         final Member 댓글_작성자 = memberTestSupport.builder().build();
         final File 이미지 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
-        final ExtractableResponse<Response> 댓글_생성_응답 = 댓글을_생성한다(게시글.getId(), 이미지, "댓글이다", 댓글_작성자);
+        final ExtractableResponse<Response> 댓글_생성_응답 = 댓글을_생성한다_이미지포함(게시글.getId(), 이미지, "댓글이다", 댓글_작성자);
 
         final long 댓글_id = 응답의_location헤더에서_id를_추출한다(댓글_생성_응답);
         final ExtractableResponse<Response> 댓글_삭제_응답 = 댓글을_삭제한다(게시글.getId(), 댓글_id, 댓글_작성자);
@@ -90,7 +87,7 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
         final Post 게시글 = postTestSupport.builder().build();
         final Member 댓글_작성자 = memberTestSupport.builder().build();
         final File 이미지 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
-        final ExtractableResponse<Response> 댓글_생성_응답 = 댓글을_생성한다(게시글.getId(), 이미지, "댓글이다", 댓글_작성자);
+        final ExtractableResponse<Response> 댓글_생성_응답 = 댓글을_생성한다_이미지포함(게시글.getId(), 이미지, "댓글이다", 댓글_작성자);
         final Member 수상한_사람 = memberTestSupport.builder().build();
 
         final long 댓글_id = 응답의_location헤더에서_id를_추출한다(댓글_생성_응답);
@@ -111,7 +108,7 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
         final Post 게시글 = postTestSupport.builder().build();
         final Member 댓글_작성자 = memberTestSupport.builder().build();
         final File 이미지 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
-        final ExtractableResponse<Response> 댓글_생성_응답 = 댓글을_생성한다(게시글.getId(), 이미지, "댓글이다", 댓글_작성자);
+        final ExtractableResponse<Response> 댓글_생성_응답 = 댓글을_생성한다_이미지포함(게시글.getId(), 이미지, "댓글이다", 댓글_작성자);
 
         final long 댓글_id = 응답의_location헤더에서_id를_추출한다(댓글_생성_응답);
         final ExtractableResponse<Response> 댓글_삭제_응답 = 댓글을_삭제한다(게시글.getId() + 1, 댓글_id, 댓글_작성자);
@@ -131,17 +128,13 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
         final Post 게시글 = postTestSupport.builder().build();
         final Member 댓글_작성자 = memberTestSupport.builder().build();
         final File 이미지 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
-        final ExtractableResponse<Response> 댓글1 = 댓글을_생성한다(게시글.getId(), 이미지, "this is comment1", 댓글_작성자);
-        final ExtractableResponse<Response> 댓글2 = 댓글을_생성한다(게시글.getId(), 이미지, "this is comment2", 댓글_작성자);
+        final ExtractableResponse<Response> 댓글1 = 댓글을_생성한다_이미지포함(게시글.getId(), 이미지, "this is comment1", 댓글_작성자);
+        final ExtractableResponse<Response> 댓글2 = 댓글을_생성한다_이미지포함(게시글.getId(), 이미지, "this is comment2", 댓글_작성자);
 
         final long 댓글1_id = 응답의_location헤더에서_id를_추출한다(댓글1);
         final long 댓글2_id = 응답의_location헤더에서_id를_추출한다(댓글2);
 
-        final ExtractableResponse<Response> 댓글_조회_응답 = RestAssured.given()
-                .when()
-                .get("/posts/{postId}/comments", 게시글.getId())
-                .then()
-                .extract();
+        final ExtractableResponse<Response> 댓글_조회_응답 = 게시물에_대한_댓글을_모두_조회한다(게시글.getId());
 
         Pattern 이미지_형식 = Pattern.compile(domain + "test-inserting\\d+\\.(png|jpg)");
 
@@ -175,8 +168,8 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
         final Post 게시글 = postTestSupport.builder().build();
         final Member 댓글_작성자 = memberTestSupport.builder().build();
         final File 이미지 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
-        final ExtractableResponse<Response> 댓글1 = 댓글을_생성한다(게시글.getId(), 이미지, "this is comment1", 댓글_작성자);
-        final ExtractableResponse<Response> 댓글2 = 댓글을_생성한다(게시글.getId(), 이미지, "this is comment2", 댓글_작성자);
+        final ExtractableResponse<Response> 댓글1 = 댓글을_생성한다_이미지포함(게시글.getId(), 이미지, "this is comment1", 댓글_작성자);
+        final ExtractableResponse<Response> 댓글2 = 댓글을_생성한다_이미지포함(게시글.getId(), 이미지, "this is comment2", 댓글_작성자);
 
         final long 댓글1_id = 응답의_location헤더에서_id를_추출한다(댓글1);
         final long 댓글2_id = 응답의_location헤더에서_id를_추출한다(댓글2);
@@ -216,7 +209,7 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
         final Member 댓글_작성자 = memberTestSupport.builder().build();
         final File 이미지 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
 
-        final ExtractableResponse<Response> 댓글 = 댓글을_생성한다(게시글.getId(), 이미지, "this is comment1", 댓글_작성자);
+        final ExtractableResponse<Response> 댓글 = 댓글을_생성한다_이미지포함(게시글.getId(), 이미지, "this is comment1", 댓글_작성자);
         final long 댓글_id = 응답의_location헤더에서_id를_추출한다(댓글);
         댓글을_삭제한다(게시글.getId(), 댓글_id, 댓글_작성자);
         final ExtractableResponse<Response> 댓글_조회_응답 = 게시물에_대한_댓글을_모두_조회한다(게시글.getId(), 댓글_작성자);
@@ -283,7 +276,7 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
         String 엄청긴내용 = "https://www.google.com/search?q=%EA%B5%AD%EB%B0%A5&sca_esv=563011930&sxsrf=AB5stBiDy2a0MwlQmu6VB-8YpfjsEyjxEQ:1693986737909&tbm=isch&source=iu&ictx=1&vet=1&fir=sIvtHEk9_U_o5M%252CpD1Tq-sHZpN7AM%252C%252Fg%252F12392002%253B4HF-UXGBj8FhYM%252CE9uWSBBha3D_gM%252C_%253BJYaErMf7-y-c_M%252CrSd-S_vLxb3sGM%252C_%253BpkfPdVq-V8ZlSM%252CMMk5hcmb_gk_3M%252C_%253BdzDN-T5gf8f6bM%252CP3XbliiGuxt2fM%252C_%253BJNdLHh8L8dOAEM%252CGCZOxBwC4UaqpM%252C_&usg=AI4_-kQ5oFr6wN3omZLxhEDp75ruIzRELQ&sa=X&sqi=2&ved=2ahUKEwjSrpGuwJWBAxWI-2EKHaIzD84Q_B16BAhHEAE#imgrc=sIvtHEk9_U_o5M";
 
         final File 이미지 = new File("./src/test/resources/static/img/file/test_image_1.jpg");
-        final ExtractableResponse<Response> 댓글_생성_응답 = 댓글을_생성한다(게시글.getId(), 이미지, 엄청긴내용, 댓글_작성자);
+        final ExtractableResponse<Response> 댓글_생성_응답 = 댓글을_생성한다_이미지포함(게시글.getId(), 이미지, 엄청긴내용, 댓글_작성자);
 
         assertThat(댓글_생성_응답.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
