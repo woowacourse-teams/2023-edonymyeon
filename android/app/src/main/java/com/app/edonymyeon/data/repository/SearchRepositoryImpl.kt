@@ -5,8 +5,11 @@ import com.app.edonymyeon.data.datasource.search.SearchDataSource
 import com.app.edonymyeon.mapper.toDomain
 import com.domain.edonymyeon.model.PostItems
 import com.domain.edonymyeon.repository.SearchRepository
+import javax.inject.Inject
 
-class SearchRepositoryImpl(private val searchDataSource: SearchDataSource) : SearchRepository {
+class SearchRepositoryImpl @Inject constructor(
+    private val searchDataSource: SearchDataSource,
+) : SearchRepository {
     override suspend fun getSearchResult(query: String, page: Int): Result<PostItems> {
         val result = searchDataSource.getSearchResult(query, page)
         return if (result.isSuccessful && result.body() != null) {

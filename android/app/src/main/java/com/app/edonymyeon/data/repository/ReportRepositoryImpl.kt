@@ -4,8 +4,9 @@ import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.datasource.report.ReportDataSource
 import com.app.edonymyeon.data.dto.request.ReportRequest
 import com.domain.edonymyeon.repository.ReportRepository
+import javax.inject.Inject
 
-class ReportRepositoryImpl(private val reportDataSource: ReportDataSource) : ReportRepository {
+class ReportRepositoryImpl @Inject constructor(private val reportDataSource: ReportDataSource) : ReportRepository {
     override suspend fun postReport(
         type: String,
         postId: Long,

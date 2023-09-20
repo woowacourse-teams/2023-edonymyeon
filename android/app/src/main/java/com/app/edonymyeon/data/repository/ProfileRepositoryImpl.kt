@@ -12,7 +12,9 @@ import com.domain.edonymyeon.repository.ProfileRepository
 import org.json.JSONObject
 import javax.inject.Inject
 
-class ProfileRepositoryImpl @Inject constructor(private val profileDataSource: ProfileDataSource) : ProfileRepository {
+class ProfileRepositoryImpl @Inject constructor(
+    private val profileDataSource: ProfileDataSource,
+) : ProfileRepository {
     override suspend fun getMyPosts(page: Int, notificationId: Long): Result<MyPosts> {
         val result = profileDataSource.getMyPosts(page, notificationId)
         return if (result.isSuccessful) {

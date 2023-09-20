@@ -1,16 +1,23 @@
 package com.app.edonymyeon.di
 
 import com.app.edonymyeon.data.repository.AuthRepositoryImpl
+import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.data.repository.ConsumptionsRepositoryImpl
 import com.app.edonymyeon.data.repository.NotificationRepositoryImpl
-import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.data.repository.PreferenceRepositoryImpl
+import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
+import com.app.edonymyeon.data.repository.RecommendRepositoryImpl
+import com.app.edonymyeon.data.repository.ReportRepositoryImpl
+import com.app.edonymyeon.data.repository.SearchRepositoryImpl
 import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.ConsumptionsRepository
 import com.domain.edonymyeon.repository.NotificationRepository
 import com.domain.edonymyeon.repository.PostRepository
 import com.domain.edonymyeon.repository.PreferenceRepository
 import com.domain.edonymyeon.repository.ProfileRepository
+import com.domain.edonymyeon.repository.RecommendRepository
+import com.domain.edonymyeon.repository.ReportRepository
+import com.domain.edonymyeon.repository.SearchRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -30,14 +37,29 @@ abstract class RepositoryModule {
     ): AuthRepository
 
     @Binds
-    abstract fun bindNotificationRepository(
-        impl: NotificationRepositoryImpl,
-    ): NotificationRepository
+    abstract fun bindSearchRepository(
+        impl: SearchRepositoryImpl,
+    ): SearchRepository
 
     @Binds
     abstract fun bindPostRepository(
         impl: PostRepositoryImpl,
     ): PostRepository
+
+    @Binds
+    abstract fun bindRecommendRepository(
+        impl: RecommendRepositoryImpl,
+    ): RecommendRepository
+
+    @Binds
+    abstract fun bindReportRepository(
+        impl: ReportRepositoryImpl,
+    ): ReportRepository
+
+    @Binds
+    abstract fun bindNotificationRepository(
+        impl: NotificationRepositoryImpl,
+    ): NotificationRepository
 
     @Binds
     abstract fun bindProfileRepository(

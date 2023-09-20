@@ -4,8 +4,9 @@ import com.app.edonymyeon.data.dto.request.ReportRequest
 import com.app.edonymyeon.data.service.ReportService
 import com.app.edonymyeon.data.service.client.RetrofitClient
 import retrofit2.Response
+import javax.inject.Inject
 
-class ReportRemoteDataSource : ReportDataSource {
+class ReportRemoteDataSource @Inject constructor() : ReportDataSource {
 
     private val reportService: ReportService =
         RetrofitClient.getInstance().create(ReportService::class.java)
