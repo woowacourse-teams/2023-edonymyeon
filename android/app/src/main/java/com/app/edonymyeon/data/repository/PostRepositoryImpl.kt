@@ -13,8 +13,11 @@ import com.domain.edonymyeon.model.PostEditor
 import com.domain.edonymyeon.model.PostItems
 import com.domain.edonymyeon.repository.PostRepository
 import java.io.File
+import javax.inject.Inject
 
-class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepository {
+class PostRepositoryImpl @Inject constructor(
+    private val postDataSource: PostDataSource,
+) : PostRepository {
     override suspend fun getPostDetail(postId: Long, notificationId: Long): Result<Any> {
         val result = postDataSource.getPostDetail(postId, notificationId)
         return if (result.isSuccessful) {

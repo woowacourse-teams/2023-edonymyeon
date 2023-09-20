@@ -7,8 +7,9 @@ import com.app.edonymyeon.data.dto.response.ProfileResponse
 import com.app.edonymyeon.data.service.ProfileService
 import com.app.edonymyeon.data.service.client.RetrofitClient
 import retrofit2.Response
+import javax.inject.Inject
 
-class ProfileRemoteDataSource : ProfileDataSource {
+class ProfileRemoteDataSource @Inject constructor() : ProfileDataSource {
 
     private val profileService: ProfileService =
         RetrofitClient.getInstance().create(ProfileService::class.java)

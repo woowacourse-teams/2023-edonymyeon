@@ -14,11 +14,17 @@ import com.domain.edonymyeon.model.Page
 import com.domain.edonymyeon.model.Post
 import com.domain.edonymyeon.repository.PostRepository
 import com.domain.edonymyeon.repository.ProfileRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.YearMonth
+import javax.inject.Inject
 
-class MyPostViewModel(val repository: ProfileRepository, val postRepository: PostRepository) :
+@HiltViewModel
+class MyPostViewModel @Inject constructor(
+    val repository: ProfileRepository,
+    val postRepository: PostRepository,
+) :
     BaseViewModel() {
 
     private var currentPage = Page()
