@@ -111,7 +111,7 @@ public class AuthService {
     public MemberId loginByKakao(final KakaoLoginResponse kakaoLoginResponse, final String deviceToken) {
         final SocialInfo socialInfo = SocialInfo.of(SocialType.KAKAO, kakaoLoginResponse.id());
         final Member member = memberRepository.findBySocialInfo(socialInfo)
-                .orElseGet(() -> joinSocialMember(socialInfo));
+                .orElseGet(() -> joinSocialMember(socialInfo, deviceToken));
         if (member.isDeleted()) {
             throw new EdonymyeonException(MEMBER_IS_DELETED);
         }
@@ -122,13 +122,16 @@ public class AuthService {
 
     /**
      * 소셜 로그인 방식으로 회원가입을 합니다.
-     * @param socialInfo 소셜 회원가입에 필요한 정보
+     *
+     * @param socialInfo  소셜 회원가입에 필요한 정보
+     * @param deviceToken 회원가입 시 사용하는 디바이스 정보
      * @return 가입 완료된 회원
      */
     @Transactional
-    public Member joinSocialMember(final SocialInfo socialInfo) {
-        final Member member = Member.from(socialInfo);
-        return saveMember(member);
+    public Member joinSocialMember(final SocialInfo socialInfo, final String deviceToken) {
+        final Member member = saveMember(Member.from(socialInfo));
+        publisher.publishEvent(new JoinMemberEvent(member, deviceToken));
+        return member;
     }
 
     private Member saveMember(Member member) {
