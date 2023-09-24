@@ -1,5 +1,6 @@
 package com.app.edonymyeon.presentation.ui.login
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -29,7 +30,9 @@ class LoginViewModel(private val repository: AuthRepository) :
     }
 
     private fun login(email: String, password: String) {
+        Log.d("this", "1")
         FCMToken.getFCMToken {
+            Log.d("this", "2")
             viewModelScope.launch(exceptionHandler) {
                 repository.login(
                     email,

@@ -62,17 +62,19 @@ class AlarmService : FirebaseMessagingService() {
             }
         }
 
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            0,
+            intent,
+            PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+        )
+
         val builder =
             NotificationCompat.Builder(this, CHANNEL_ID).setSmallIcon(R.mipmap.ic_edonymyeon_round)
                 .setContentTitle(message.notification?.title)
                 .setContentText(message.notification?.body)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT).setContentIntent(
-                    PendingIntent.getActivity(
-                        this,
-                        0,
-                        intent,
-                        PendingIntent.FLAG_MUTABLE,
-                    ),
+                    pendingIntent,
                 ).setAutoCancel(true)
 
         with(NotificationManagerCompat.from(this)) {
