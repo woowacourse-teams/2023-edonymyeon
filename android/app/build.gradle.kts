@@ -7,7 +7,10 @@ plugins {
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
+
     kotlin("plugin.serialization") version "1.8.21"
+
+    id("com.google.dagger.hilt.android")
 }
 
 val localProperties = Properties()
@@ -157,4 +160,8 @@ dependencies {
 
     // swipeRefreshLayout
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    // hilt
+    implementation("com.google.dagger:hilt-android:2.48")
+    kapt("com.google.dagger:hilt-android-compiler:2.48")
 }

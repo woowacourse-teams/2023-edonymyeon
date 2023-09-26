@@ -8,18 +8,16 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import app.edonymyeon.databinding.FragmentSearchBinding
-import com.app.edonymyeon.data.datasource.search.SearchRemoteDataSource
-import com.app.edonymyeon.data.repository.SearchRepositoryImpl
 import com.app.edonymyeon.presentation.common.fragment.BaseFragment
 import com.app.edonymyeon.presentation.ui.main.search.adapter.SearchAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>({
     FragmentSearchBinding.inflate(it)
 }) {
-    override val viewModel: SearchViewModel by viewModels {
-        SearchViewModelFactory(SearchRepositoryImpl(SearchRemoteDataSource()))
-    }
+    override val viewModel: SearchViewModel by viewModels()
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
 
     override fun onCreateView(

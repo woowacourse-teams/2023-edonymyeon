@@ -10,9 +10,12 @@ import com.domain.edonymyeon.model.Nickname
 import com.domain.edonymyeon.model.Password
 import com.domain.edonymyeon.model.UserRegistration
 import com.domain.edonymyeon.repository.AuthRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SignUpViewModel(private val authRepository: AuthRepository) : BaseViewModel() {
+@HiltViewModel
+class SignUpViewModel @Inject constructor(private val authRepository: AuthRepository) : BaseViewModel() {
     private val _isEmailValid = MutableLiveData<Boolean>()
     val isEmailValid: LiveData<Boolean> get() = _isEmailValid
 

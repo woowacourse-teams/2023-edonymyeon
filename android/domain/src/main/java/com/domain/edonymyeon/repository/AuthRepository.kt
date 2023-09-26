@@ -3,6 +3,10 @@ package com.domain.edonymyeon.repository
 import com.domain.edonymyeon.model.UserRegistration
 
 interface AuthRepository {
+    fun getToken(): String?
+
+    fun setToken(token: String?)
+
     suspend fun login(email: String, password: String, deviceToken: String): Result<Unit>
 
     suspend fun loginByKakao(accessToken: String, deviceToken: String): Result<Unit>

@@ -8,9 +8,14 @@ import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
 import com.domain.edonymyeon.model.Page
 import com.domain.edonymyeon.repository.SearchRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SearchViewModel(private val searchRepository: SearchRepository) : BaseViewModel() {
+@HiltViewModel
+class SearchViewModel @Inject constructor(
+    private val searchRepository: SearchRepository,
+) : BaseViewModel() {
     private var currentPage = Page()
     private var isLastPage = false
 
