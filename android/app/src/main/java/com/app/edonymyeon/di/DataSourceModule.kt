@@ -23,55 +23,67 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DataSourceModule {
+
+    @Singleton
     @Binds
     abstract fun bindPreferenceDataSource(
         remoteImpl: PreferenceRemoteDataSource,
     ): PreferenceDataSource
 
+    @Singleton
     @Binds
     abstract fun bindAuthRemoteDataSource(
         remoteImpl: AuthRemoteDataSource,
     ): AuthDataSource.Remote
 
+    @Singleton
     @Binds
     abstract fun bindAuthLocalDataSource(
         remoteImpl: AuthLocalDataSource,
     ): AuthDataSource.Local
 
+    @Singleton
     @Binds
     abstract fun bindPostDataSource(
         remoteDataSource: PostRemoteDataSource,
     ): PostDataSource
 
+    @Singleton
     @Binds
     abstract fun bindRecommendDataSource(
         remoteDataSource: RecommendRemoteDataSource,
     ): RecommendDataSource
 
+    @Singleton
     @Binds
     abstract fun bindReportDataSource(
         remoteDataSource: ReportRemoteDataSource,
     ): ReportDataSource
 
+    @Singleton
     @Binds
     abstract fun bindSearchDataSource(
         remoteImpl: SearchRemoteDataSource,
     ): SearchDataSource
 
+    @Singleton
     @Binds
     abstract fun bindProfileDataSource(
         remoteImpl: ProfileRemoteDataSource,
     ): ProfileDataSource
 
+    @Singleton
     @Binds
     abstract fun bindNotificationDataSource(
         remoteImpl: NotificationRemoteDataSource,
     ): NotificationDataSource
 
+    @Singleton
     @Binds
     abstract fun bindConsumptionsDataSource(
         remoteImpl: ConsumptionsRemoteDataSource,

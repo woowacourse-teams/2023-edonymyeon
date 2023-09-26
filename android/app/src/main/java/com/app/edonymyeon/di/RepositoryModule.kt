@@ -22,50 +22,61 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
+
+    @Singleton
     @Binds
     abstract fun bindPreferenceRepository(
         impl: PreferenceRepositoryImpl,
     ): PreferenceRepository
 
+    @Singleton
     @Binds
     abstract fun bindAuthRepository(
         impl: AuthRepositoryImpl,
     ): AuthRepository
 
+    @Singleton
     @Binds
     abstract fun bindSearchRepository(
         impl: SearchRepositoryImpl,
     ): SearchRepository
 
+    @Singleton
     @Binds
     abstract fun bindPostRepository(
         impl: PostRepositoryImpl,
     ): PostRepository
 
+    @Singleton
     @Binds
     abstract fun bindRecommendRepository(
         impl: RecommendRepositoryImpl,
     ): RecommendRepository
 
+    @Singleton
     @Binds
     abstract fun bindReportRepository(
         impl: ReportRepositoryImpl,
     ): ReportRepository
 
+    @Singleton
     @Binds
     abstract fun bindNotificationRepository(
         impl: NotificationRepositoryImpl,
     ): NotificationRepository
 
+    @Singleton
     @Binds
     abstract fun bindProfileRepository(
         impl: ProfileRepositoryImpl,
     ): ProfileRepository
 
+    @Singleton
     @Binds
     abstract fun bindConsumptionsRepository(
         impl: ConsumptionsRepositoryImpl,
