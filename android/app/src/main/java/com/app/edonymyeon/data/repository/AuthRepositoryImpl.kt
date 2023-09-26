@@ -17,6 +17,15 @@ class AuthRepositoryImpl @Inject constructor(
     private val authLocalDataSource: AuthDataSource.Local,
     private val authRemoteDataSource: AuthDataSource.Remote,
 ) : AuthRepository {
+
+    override fun getToken(): String? {
+        return authLocalDataSource.getAuthToken()
+    }
+
+    override fun setToken(token: String?) {
+        authLocalDataSource.setAuthToken(token)
+    }
+
     override suspend fun signUp(userRegistration: UserRegistration): Result<Unit> {
         val result = authRemoteDataSource.signUp(
             userRegistration.toDataModel(),
@@ -70,7 +79,7 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun logout(deviceToken: String): Result<Unit> {
         val result = authRemoteDataSource.logout(LogoutRequest(deviceToken))
         return if (result.isSuccessful) {
-            authLocalDataSource.setAuthToken("")
+            authLocalDataSource.setAuthToken(null)
             Result.success(Unit)
         } else {
             Result.failure(CustomThrowable(result.code(), result.message()))

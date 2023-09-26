@@ -3,12 +3,11 @@ package com.app.edonymyeon.presentation.ui.post
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
-import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
 import com.domain.edonymyeon.model.Page
+import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -16,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PostViewModel @Inject constructor(
-    private val repository: PostRepository,
+    private val postRepository: PostRepository,
+    private val authRepository: AuthRepository,
 ) : BaseViewModel() {
     private var currentPage = Page()
     private var isLastPage = false
@@ -27,11 +27,12 @@ class PostViewModel @Inject constructor(
         get() = _posts
 
     val isLogin: Boolean
-        get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
+        get() = authRepository.getToken() != null
+//        get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
 
     fun getPosts() {
         viewModelScope.launch(exceptionHandler) {
-            repository.getPosts(20, currentPage.value).onSuccess { result ->
+            postRepository.getPosts(20, currentPage.value).onSuccess { result ->
                 _posts.value = posts.value.orEmpty() + result.posts.map {
                     it.toUiModel()
                 }

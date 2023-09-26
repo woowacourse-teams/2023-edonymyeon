@@ -6,8 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
-import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
-import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.common.imageutil.processAndAdjustImage
@@ -18,6 +16,7 @@ import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
 import com.app.edonymyeon.presentation.uimodel.RecommendationUiModel
 import com.domain.edonymyeon.model.Post
 import com.domain.edonymyeon.model.Recommendation
+import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.PostRepository
 import com.domain.edonymyeon.repository.RecommendRepository
 import com.domain.edonymyeon.repository.ReportRepository
@@ -30,6 +29,7 @@ class PostDetailViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val recommendRepository: RecommendRepository,
     private val reportRepository: ReportRepository,
+    private val authRepository: AuthRepository,
 ) : BaseViewModel() {
 
     private val _post = MutableLiveData<PostUiModel>()
@@ -53,7 +53,8 @@ class PostDetailViewModel @Inject constructor(
         get() = _isRecommendationRequestDone
 
     val isLogin: Boolean
-        get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
+        get() = authRepository.getToken() != null
+//        get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
 
     private val _isLoadingSuccess = MutableLiveData(false)
     val isLoadingSuccess: LiveData<Boolean>

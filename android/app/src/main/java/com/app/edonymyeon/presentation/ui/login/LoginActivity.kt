@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.activity.viewModels
 import app.edonymyeon.databinding.ActivityLoginBinding
-import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
-import com.app.edonymyeon.data.service.client.AccessTokenInterceptor
 import com.app.edonymyeon.presentation.common.activity.BaseActivity
 import com.app.edonymyeon.presentation.ui.signup.SignUpActivity
 import com.app.edonymyeon.presentation.util.loginByKakao
@@ -57,9 +55,12 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
     }
 
     private fun setRetrofitToken() {
-        AccessTokenInterceptor.setToken(
-            AuthLocalDataSource().getAuthToken(),
-        )
+//        AccessTokenInterceptor.setToken(
+//            AuthLocalDataSource().getAuthToken(),
+//        )
+//        AuthLocalDataSource.setAuthToken(
+//            AuthLocalDataSource().getAuthToken(),
+//        )
     }
 
     private fun setKakaoClickListener() {

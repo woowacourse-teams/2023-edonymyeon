@@ -4,10 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
-import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
-import com.app.edonymyeon.data.service.client.AccessTokenInterceptor
 import com.app.edonymyeon.data.service.fcm.FCMToken
-import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
@@ -43,7 +40,7 @@ class MyPageViewModel @Inject constructor(
         get() = _consumptionOnThisMonth
 
     val isLogin: Boolean
-        get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
+        get() = authRepository.getToken() != null
 
     fun getMonthLists(): List<String> =
         _consumptions.value?.toDomain()?.monthRange?.yearMonthList ?: emptyList()
@@ -102,7 +99,6 @@ class MyPageViewModel @Inject constructor(
     }
 
     fun clearToken() {
-        PreferenceUtil.setValue(AuthLocalDataSource.USER_ACCESS_TOKEN, null)
-        AccessTokenInterceptor.clearToken()
+        authRepository.setToken(null)
     }
 }
