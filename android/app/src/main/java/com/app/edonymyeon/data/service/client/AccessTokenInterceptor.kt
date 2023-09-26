@@ -4,9 +4,9 @@ import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 
-class AccessTokenInterceptor : Interceptor {
+object AccessTokenInterceptor : Interceptor {
     private var token: String? = null
-    private val apiVersion = "1"
+    private const val apiVersion = "1"
 
     override fun intercept(chain: Interceptor.Chain): Response = with(chain) {
         val newRequest: Request = if (token != null) {
