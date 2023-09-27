@@ -7,7 +7,7 @@ import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.post.application.PostConsumptionService;
 import edonymyeon.backend.post.application.dto.response.PostConsumptionResponse;
-import edonymyeon.backend.thumbs.application.event.PostDeletionEvent;
+import edonymyeon.backend.post.application.event.PostDeletionEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;

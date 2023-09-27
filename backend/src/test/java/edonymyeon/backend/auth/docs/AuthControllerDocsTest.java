@@ -1,13 +1,7 @@
 package edonymyeon.backend.auth.docs;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.responseHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -16,6 +10,8 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,12 +22,11 @@ import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
-import edonymyeon.backend.auth.application.dto.MemberResponse;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.support.DocsTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.headers.HeaderDescriptor;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.request.ParameterDescriptor;
@@ -39,7 +34,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class AuthControllerDocsTest extends DocsTest {
+class AuthControllerDocsTest extends DocsTest {
 
     @MockBean
     private AuthService authService;
@@ -54,11 +49,16 @@ public class AuthControllerDocsTest extends DocsTest {
 
     @Test
     void 로그인_문서화() throws Exception {
-        final LoginRequest request = new LoginRequest("example@example.com", "password1234!", "kj234jkn342kj");
+        final String email = "example@example.com";
+        final String password = "password1234!";
+        final String deviceToken = "deviceToken";
 
-        when(authService.login(request)).thenReturn(any());
+        final LoginRequest request = new LoginRequest(email, password, deviceToken);
+
+        when(authService.login(request)).thenReturn(new ActiveMemberId(1L));
 
         final MockHttpServletRequestBuilder 로그인_요청 = post("/login")
+                .header("X-API-VERSION", 1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request));
 
@@ -68,14 +68,9 @@ public class AuthControllerDocsTest extends DocsTest {
                 fieldWithPath("deviceToken").description("로그인시 사용한 디바이스 토큰")
         };
 
-        final HeaderDescriptor[] 응답_헤더 = {
-                headerWithName("Authorization").description("basic Auth 토큰 값")
-        };
-
         final RestDocumentationResultHandler 문서화 = document("login",
                 preprocessRequest(prettyPrint()),
-                requestFields(로그인_요청_파라미터),
-                responseHeaders(응답_헤더)
+                requestFields(로그인_요청_파라미터)
         );
 
         mockMvc.perform(로그인_요청)
@@ -87,12 +82,13 @@ public class AuthControllerDocsTest extends DocsTest {
     void 카카오_로그인_문서화() throws Exception {
         final KakaoLoginRequest kakaoLoginRequest = new KakaoLoginRequest("accessToken!!!!!", "deviceToken");
         final KakaoLoginResponse kakaoLoginResponse = new KakaoLoginResponse(1L);
-        final MemberResponse memberResponse = new MemberResponse("example@email.com", "password123!");
+        final ActiveMemberId activeMemberId = new ActiveMemberId(1L);
 
         when(kakaoAuthResponseProvider.request(kakaoLoginRequest)).thenReturn(kakaoLoginResponse);
-        when(authService.loginByKakao(kakaoLoginResponse, kakaoLoginRequest.deviceToken())).thenReturn(memberResponse);
+        when(authService.loginByKakao(kakaoLoginResponse, kakaoLoginRequest.deviceToken())).thenReturn(activeMemberId);
 
         final MockHttpServletRequestBuilder 로그인_요청 = post("/auth/kakao/login")
+                .header("X-API-VERSION", 1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(kakaoLoginRequest));
 
@@ -101,14 +97,9 @@ public class AuthControllerDocsTest extends DocsTest {
                 fieldWithPath("deviceToken").description("로그인 시 사용한 디바이스의 식별자")
         };
 
-        final HeaderDescriptor[] 응답_헤더 = {
-                headerWithName("Authorization").description("basic Auth 토큰 값")
-        };
-
         final RestDocumentationResultHandler 문서화 = document("kakao-login",
                 preprocessRequest(prettyPrint()),
-                requestFields(로그인_요청_파라미터),
-                responseHeaders(응답_헤더)
+                requestFields(로그인_요청_파라미터)
         );
 
         mockMvc.perform(로그인_요청)
@@ -124,6 +115,7 @@ public class AuthControllerDocsTest extends DocsTest {
         when(authService.checkDuplicate(target, value)).thenReturn(duplicateCheckResponse);
 
         final MockHttpServletRequestBuilder 중복_요청 = get("/join")
+                .header("X-API-VERSION", 1)
                 .queryParam("target", target)
                 .queryParam("value", value);
 
@@ -152,9 +144,8 @@ public class AuthControllerDocsTest extends DocsTest {
         final JoinRequest request = new JoinRequest("email@email.com", "password1234!", "testNickname",
                 "kj234jkn342kj");
 
-        doNothing().when(authService).joinMember(request);
-
         final MockHttpServletRequestBuilder 회원가입_요청 = post("/join")
+                .header("X-API-VERSION", 1)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request));
 

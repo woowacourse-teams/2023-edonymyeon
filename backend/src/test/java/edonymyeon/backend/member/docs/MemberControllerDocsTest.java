@@ -1,11 +1,10 @@
 package edonymyeon.backend.member.docs;
 
+import static edonymyeon.backend.auth.ui.SessionConst.USER;
 import static edonymyeon.backend.consumption.domain.ConsumptionType.SAVING;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -27,12 +26,10 @@ import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.support.DocsTest;
-import java.util.Base64;
-import java.util.List;
+import edonymyeon.backend.support.TestMemberBuilder;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MockMvc;
@@ -40,6 +37,8 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 @SuppressWarnings("NonAsciiCharacters")
 public class MemberControllerDocsTest extends DocsTest {
+
+    private final TestMemberBuilder testMemberBuilder = new TestMemberBuilder(null);
 
     @MockBean
     private MemberRepository memberRepository;
@@ -74,7 +73,9 @@ public class MemberControllerDocsTest extends DocsTest {
 
     @Test
     void 구매_확정한다() throws Exception {
-        final Member 회원 = new Member("email", "password123!", "nickname", null, List.of());
+        final Member 회원 = testMemberBuilder.builder()
+                .id(1L)
+                .buildWithoutSaving();
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 회원);
         final Consumption 소비 = Consumption.of(게시글, SAVING, null, 2023, 7);
 
@@ -86,16 +87,12 @@ public class MemberControllerDocsTest extends DocsTest {
 
         final MockHttpServletRequestBuilder 구매_확정_요청 = post("/profile/my-posts/{postId}/purchase-confirm", 게시글.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((회원.getEmail() + ":" + 회원.getPassword()).getBytes()))
+                .header("X-API-VERSION", 1)
+                .sessionAttr(USER.getSessionId(), 회원.getId())
                 .content(objectMapper.writeValueAsString(request));
 
         final RestDocumentationResultHandler 문서화 = document("purchase-confirm",
                 preprocessRequest(prettyPrint()),
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
-                ),
                 pathParameters(
                         parameterWithName("postId").description("게시글 id")
                 ),
@@ -113,7 +110,7 @@ public class MemberControllerDocsTest extends DocsTest {
 
     @Test
     void 절약_확정한다() throws Exception {
-        final Member 회원 = new Member("email", "password123!", "nickname", null, List.of());
+        final Member 회원 = testMemberBuilder.builder().id(1L).buildWithoutSaving();
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 회원);
         final Consumption 소비 = Consumption.of(게시글, SAVING, null, 2023, 7);
 
@@ -125,16 +122,12 @@ public class MemberControllerDocsTest extends DocsTest {
 
         final MockHttpServletRequestBuilder 절약_확정_요청 = post("/profile/my-posts/{postId}/saving-confirm", 게시글.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((회원.getEmail() + ":" + 회원.getPassword()).getBytes()))
+                .header("X-API-VERSION", 1)
+                .sessionAttr(USER.getSessionId(), 회원.getId())
                 .content(objectMapper.writeValueAsString(request));
 
         final RestDocumentationResultHandler 문서화 = document("saving-confirm",
                 preprocessRequest(prettyPrint()),
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
-                ),
                 pathParameters(
                         parameterWithName("postId").description("게시글 id")
                 ),
@@ -151,7 +144,7 @@ public class MemberControllerDocsTest extends DocsTest {
 
     @Test
     void 확정을_취소한다() throws Exception {
-        final Member 회원 = new Member("email", "password123!", "nickname", null, List.of());
+        final Member 회원 = testMemberBuilder.builder().id(1L).buildWithoutSaving();
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 회원);
         final Consumption 소비 = Consumption.of(게시글, SAVING, null, 2023, 7);
 
@@ -161,14 +154,10 @@ public class MemberControllerDocsTest extends DocsTest {
 
         final MockHttpServletRequestBuilder 확정_취소_요청 = delete("/profile/my-posts/{postId}/confirm-remove", 게시글.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((회원.getEmail() + ":" + 회원.getPassword()).getBytes()));
+                .header("X-API-VERSION", 1)
+                .sessionAttr(USER.getSessionId(), 회원.getId());
 
         final RestDocumentationResultHandler 문서화 = document("confirm-remove",
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
-                ),
                 pathParameters(
                         parameterWithName("postId").description("게시글 id")
                 )
@@ -181,19 +170,15 @@ public class MemberControllerDocsTest extends DocsTest {
 
     @Test
     void 회원_탈퇴한다() throws Exception {
-        final Member 회원 = new Member("email@email.com", "password123!", "nickname", null);
-
+        final Member 회원 = testMemberBuilder.builder().id(1L).buildWithoutSaving();
         회원_레포지토리를_모킹한다(회원);
         when(memberRepository.findById(회원.getId())).thenReturn(Optional.of(회원));
 
         final MockHttpServletRequestBuilder 회원_탈퇴_요청 = delete("/withdraw")
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + Base64.getEncoder()
-                        .encodeToString((회원.getEmail() + ":" + 회원.getPassword()).getBytes()));
+                .header("X-API-VERSION", 1)
+                .sessionAttr(USER.getSessionId(), 회원.getId());
 
-        final RestDocumentationResultHandler 문서화 = document("withdraw",
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")));
+        final RestDocumentationResultHandler 문서화 = document("withdraw");
 
         this.mockMvc.perform(회원_탈퇴_요청)
                 .andExpect(status().isNoContent())

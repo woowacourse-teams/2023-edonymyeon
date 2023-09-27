@@ -1,17 +1,19 @@
 package edonymyeon.backend.auth.ui.argumentresolver;
 
+import static edonymyeon.backend.auth.ui.SessionConst.USER;
 import static edonymyeon.backend.global.exception.ExceptionInformation.AUTHORIZATION_EMPTY;
 
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
-import edonymyeon.backend.auth.application.AuthService;
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.AnonymousMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.codec.binary.Base64;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -21,8 +23,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 @Component
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
-
-    private final AuthService authService;
 
     @Override
     public boolean supportsParameter(final MethodParameter parameter) {
@@ -37,35 +37,35 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
             final NativeWebRequest webRequest,
             final WebDataBinderFactory binderFactory
     ) {
-        String authorization = webRequest.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorization == null) {
-            if (!Objects.requireNonNull(parameter.getParameterAnnotation(AuthPrincipal.class)).required()) {
-                return new AnonymousMemberId();
-            }
-            throw new EdonymyeonException(AUTHORIZATION_EMPTY);
+        final HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
+        final HttpSession session = request.getSession();
+        final Long userId = getUserId(session);
+
+        if (Objects.isNull(userId)) {
+            return getAnonymousMemberId(parameter);
         }
 
-        String[] credentials = getCredentials(authorization);
-        String email = credentials[0];
-        String password = credentials[1];
-
-        if (Objects.isNull(email) || Objects.isNull(password)) {
-            throw new EdonymyeonException(AUTHORIZATION_EMPTY);
-        }
-
-        return authService.login(email, password);
+        session.setMaxInactiveInterval(USER.getValidatedTime());
+        return new ActiveMemberId(userId);
     }
 
-    private static String[] getCredentials(final String authorization) {
-        String[] authHeader = authorization.split(" ");
-        if (!authHeader[0].equalsIgnoreCase("basic")) {
+    @NotNull
+    private AnonymousMemberId getAnonymousMemberId(final MethodParameter parameter) {
+        if (authPrincipalFrom(parameter).required()) {
             throw new EdonymyeonException(AUTHORIZATION_EMPTY);
         }
+        return new AnonymousMemberId();
+    }
 
-        byte[] decodedBytes = Base64.decodeBase64(authHeader[1]);
-        String decodedString = new String(decodedBytes);
+    private AuthPrincipal authPrincipalFrom(final MethodParameter parameter) {
+        return Objects.requireNonNull(parameter.getParameterAnnotation(AuthPrincipal.class));
+    }
 
-        String[] credentials = decodedString.split(":");
-        return credentials;
+    private Long getUserId(final HttpSession session) {
+        try {
+            return (Long) session.getAttribute(USER.getSessionId());
+        } catch (IllegalStateException e) {
+            throw new EdonymyeonException(AUTHORIZATION_EMPTY);
+        }
     }
 }

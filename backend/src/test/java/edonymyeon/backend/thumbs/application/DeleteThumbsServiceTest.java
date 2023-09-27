@@ -5,21 +5,16 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_DO
 import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP_DELETE_FAIL_WHEN_THUMBS_DOWN;
 import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP_IS_NOT_EXIST;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.notification.application.NotificationSender;
 import edonymyeon.backend.post.application.PostService;
-import edonymyeon.backend.post.application.dto.PostRequest;
-import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.post.application.dto.request.PostRequest;
+import edonymyeon.backend.post.application.dto.response.PostIdResponse;
 import edonymyeon.backend.support.IntegrationFixture;
-import edonymyeon.backend.support.IntegrationTest;
-import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import java.util.Optional;
@@ -28,7 +23,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -40,7 +34,7 @@ public class DeleteThumbsServiceTest extends IntegrationFixture {
 
     private final PostService postService;
 
-    private PostResponse postResponse;
+    private PostIdResponse postIdResponse;
 
     @BeforeEach
     void 사전작업() {
@@ -57,18 +51,18 @@ public class DeleteThumbsServiceTest extends IntegrationFixture {
         );
 
         MemberId memberId = new ActiveMemberId(postWriter.getId());
-        postResponse = postService.createPost(memberId, postRequest);
+        postIdResponse = postService.createPost(memberId, postRequest);
     }
 
     @Test
     void 추천_취소(@Autowired ThumbsRepository thumbsRepository) {
         // given
         Member otherMember = registerMember();
-        thumbsUp(otherMember, postResponse);
+        thumbsUp(otherMember, postIdResponse);
 
         // when
-        deleteThumbsUp(otherMember, postResponse);
-        Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postResponse.id(),
+        deleteThumbsUp(otherMember, postIdResponse);
+        Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postIdResponse.id(),
                 otherMember.getId());
 
         // then
@@ -79,7 +73,7 @@ public class DeleteThumbsServiceTest extends IntegrationFixture {
     void 추천이_되어있지_않은경우_추천취소를_할_수_없다() {
         Member otherMember = registerMember();
 
-        assertThatThrownBy(() -> deleteThumbsUp(otherMember, postResponse))
+        assertThatThrownBy(() -> deleteThumbsUp(otherMember, postIdResponse))
                 .isExactlyInstanceOf(EdonymyeonException.class)
                 .hasMessage(THUMBS_UP_IS_NOT_EXIST.getMessage());
     }
@@ -87,9 +81,9 @@ public class DeleteThumbsServiceTest extends IntegrationFixture {
     @Test
     void 비추천인_상태일때_추천을_취소할_수_없다() {
         Member otherMember = registerMember();
-        thumbsDown(otherMember, postResponse);
+        thumbsDown(otherMember, postIdResponse);
 
-        assertThatThrownBy(() -> deleteThumbsUp(otherMember, postResponse))
+        assertThatThrownBy(() -> deleteThumbsUp(otherMember, postIdResponse))
                 .isExactlyInstanceOf(EdonymyeonException.class)
                 .hasMessage(THUMBS_UP_DELETE_FAIL_WHEN_THUMBS_DOWN.getMessage());
     }
@@ -98,11 +92,11 @@ public class DeleteThumbsServiceTest extends IntegrationFixture {
     void 비추천_취소(@Autowired ThumbsRepository thumbsRepository) {
         // given
         Member otherMember = registerMember();
-        thumbsDown(otherMember, postResponse);
+        thumbsDown(otherMember, postIdResponse);
 
         // when
-        deleteThumbsDown(otherMember, postResponse);
-        Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postResponse.id(),
+        deleteThumbsDown(otherMember, postIdResponse);
+        Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postIdResponse.id(),
                 otherMember.getId());
 
         // then
@@ -113,7 +107,7 @@ public class DeleteThumbsServiceTest extends IntegrationFixture {
     void 비추천이_되어있지_않은경우_비추천취소를_할_수_없다() {
         Member otherMember = registerMember();
 
-        assertThatThrownBy(() -> deleteThumbsDown(otherMember, postResponse))
+        assertThatThrownBy(() -> deleteThumbsDown(otherMember, postIdResponse))
                 .isExactlyInstanceOf(EdonymyeonException.class)
                 .hasMessage(THUMBS_DOWN_IS_NOT_EXIST.getMessage());
     }
@@ -121,29 +115,29 @@ public class DeleteThumbsServiceTest extends IntegrationFixture {
     @Test
     void 추천인_상태일때_비추천을_취소할_수_없다() {
         Member otherMember = registerMember();
-        thumbsUp(otherMember, postResponse);
+        thumbsUp(otherMember, postIdResponse);
 
-        assertThatThrownBy(() -> deleteThumbsDown(otherMember, postResponse))
+        assertThatThrownBy(() -> deleteThumbsDown(otherMember, postIdResponse))
                 .isExactlyInstanceOf(EdonymyeonException.class)
                 .hasMessage(THUMBS_DOWN_DELETE_FAIL_WHEN_THUMBS_UP.getMessage());
     }
 
-    private void thumbsUp(final Member member, final PostResponse post) {
+    private void thumbsUp(final Member member, final PostIdResponse post) {
         MemberId memberId = new ActiveMemberId(member.getId());
         thumbsService.thumbsUp(memberId, post.id());
     }
 
-    private void thumbsDown(final Member member, final PostResponse post) {
+    private void thumbsDown(final Member member, final PostIdResponse post) {
         MemberId memberId = new ActiveMemberId(member.getId());
         thumbsService.thumbsDown(memberId, post.id());
     }
 
-    private void deleteThumbsUp(final Member member, final PostResponse post) {
+    private void deleteThumbsUp(final Member member, final PostIdResponse post) {
         MemberId memberId = new ActiveMemberId(member.getId());
         thumbsService.deleteThumbsUp(memberId, post.id());
     }
 
-    private void deleteThumbsDown(final Member member, final PostResponse post) {
+    private void deleteThumbsDown(final Member member, final PostIdResponse post) {
         MemberId memberId = new ActiveMemberId(member.getId());
         thumbsService.deleteThumbsDown(memberId, post.id());
     }

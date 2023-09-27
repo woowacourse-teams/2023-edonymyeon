@@ -19,6 +19,5 @@ data class PostDetailResponse(
     @SerialName("downCount") val downCount: Int,
     @SerialName("isUp") val isUp: Boolean,
     @SerialName("isDown") val isDown: Boolean,
-    @SerialName("isScrap") val isScrap: Boolean,
     @SerialName("isWriter") val isWriter: Boolean,
 )

@@ -1,33 +1,114 @@
 package com.app.edonymyeon.presentation.ui.alarmsetting
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.domain.edonymyeon.repository.ProfileRepository
+import androidx.lifecycle.viewModelScope
+import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
+import com.domain.edonymyeon.model.NotificationPreference
+import com.domain.edonymyeon.repository.PreferenceRepository
+import kotlinx.coroutines.launch
 
-class AlarmSettingViewModel(private val alarmRepository: ProfileRepository) : ViewModel() {
+class AlarmSettingViewModel(
+    private val preferenceRepository: PreferenceRepository,
+) : BaseViewModel() {
+    private val _alarmPreference = MutableLiveData<List<NotificationPreference>>()
+    val alarmPreference: LiveData<List<NotificationPreference>> get() = _alarmPreference
+
     private val _isPushAlarmOn = MutableLiveData<Boolean>()
-    val isPushAlarmOn: MutableLiveData<Boolean> get() = _isPushAlarmOn
+    val isPushAlarmOn: LiveData<Boolean> get() = _isPushAlarmOn
     private val _isOneReactionAlarmOn = MutableLiveData<Boolean>()
-    val isOneReactionAlarmOn: MutableLiveData<Boolean> get() = _isOneReactionAlarmOn
+    val isOneReactionAlarmOn: LiveData<Boolean> get() = _isOneReactionAlarmOn
     private val _isTenReactionAlarmOn = MutableLiveData<Boolean>()
-    val isTenReactionAlarmOn: MutableLiveData<Boolean> get() = _isTenReactionAlarmOn
+    val isTenReactionAlarmOn: LiveData<Boolean> get() = _isTenReactionAlarmOn
+
+    private val _isCommentAlarmOn = MutableLiveData<Boolean>()
+    val isCommentAlarmOn: LiveData<Boolean> get() = _isCommentAlarmOn
 
     private val _isConsumptionConfirmAlarmOn = MutableLiveData<Boolean>()
-    val isConfirmConsumptionAlarmOn: MutableLiveData<Boolean> get() = _isConsumptionConfirmAlarmOn
+    val isConfirmConsumptionAlarmOn: LiveData<Boolean> get() = _isConsumptionConfirmAlarmOn
 
-    fun onPushAlarmSwitchEvent(isChecked: Boolean) {
-        _isPushAlarmOn.value = isChecked
+    fun onPushAlarmSwitchEvent() {
+        viewModelScope.launch(exceptionHandler) {
+            preferenceRepository.saveNotificationPreference("0001").onSuccess { response ->
+                response.map {
+                    setNotificationSetting(it)
+                }
+            }
+        }
     }
 
-    fun onOneReactionAlarmSwitchEvent(isChecked: Boolean) {
-        _isOneReactionAlarmOn.value = isChecked
+    fun onOneReactionAlarmSwitchEvent() {
+        viewModelScope.launch(exceptionHandler) {
+            preferenceRepository.saveNotificationPreference("1003").onSuccess { response ->
+                response.map {
+                    setNotificationSetting(it)
+                }
+            }
+        }
     }
 
-    fun onTenReactionAlarmSwitchEvent(isChecked: Boolean) {
-        _isTenReactionAlarmOn.value = isChecked
+    fun onTenReactionAlarmSwitchEvent() {
+        viewModelScope.launch(exceptionHandler) {
+            preferenceRepository.saveNotificationPreference("1002").onSuccess { response ->
+                response.map {
+                    setNotificationSetting(it)
+                }
+            }
+        }
     }
 
-    fun onConsumptionConfirmAlarmSwitchClicked(isChecked: Boolean) {
-        _isConsumptionConfirmAlarmOn.value = isChecked
+    fun onCommentAlarmSwitchEvent() {
+        viewModelScope.launch(exceptionHandler) {
+            preferenceRepository.saveNotificationPreference("2001").onSuccess { response ->
+                response.map {
+                    setNotificationSetting(it)
+                }
+            }
+        }
+    }
+
+    fun onConsumptionConfirmAlarmSwitchClicked() {
+        viewModelScope.launch(exceptionHandler) {
+            preferenceRepository.saveNotificationPreference("5001").onSuccess { response ->
+                response.map {
+                    setNotificationSetting(it)
+                }
+            }
+        }
+    }
+
+    fun getPushAlarmSetting() {
+        viewModelScope.launch(exceptionHandler) {
+            preferenceRepository.getNotificationPreference().onSuccess { response ->
+                response.map {
+                    setNotificationSetting(it)
+                }
+            }.onFailure {
+            }
+        }
+    }
+
+    private fun setNotificationSetting(it: NotificationPreference) {
+        when (it.preferenceType) {
+            "0001" -> {
+                _isPushAlarmOn.value = it.enabled
+            }
+
+            "1002" -> {
+                _isTenReactionAlarmOn.value = it.enabled
+            }
+
+            "1003" -> {
+                _isOneReactionAlarmOn.value = it.enabled
+            }
+
+            "2001" -> {
+                _isCommentAlarmOn.value = it.enabled
+            }
+
+            "5001" -> {
+                _isConsumptionConfirmAlarmOn.value = it.enabled
+            }
+        }
     }
 }

@@ -1,9 +1,8 @@
 package edonymyeon.backend.post.docs;
 
+import static edonymyeon.backend.auth.ui.SessionConst.USER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -26,6 +25,7 @@ import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.application.dto.response.PostConsumptionResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.DocsTest;
+import edonymyeon.backend.support.TestMemberBuilder;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -33,8 +33,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
-import org.springframework.http.HttpHeaders;
-import org.springframework.restdocs.headers.HeaderDescriptor;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.request.ParameterDescriptor;
@@ -46,8 +44,12 @@ public class MyPostControllerDocsTest extends DocsTest {
 
     @Autowired
     private final Domain domain;
+
+    TestMemberBuilder testMemberBuilder = new TestMemberBuilder(null);
+
     @MockBean
     private MyPostService myPostService;
+
     @MockBean
     private MemberRepository memberRepository;
 
@@ -62,11 +64,13 @@ public class MyPostControllerDocsTest extends DocsTest {
     void 내_게시글_조회_문서화() throws Exception {
         final GeneralFindingCondition findingCondition = GeneralFindingCondition.builder().build();
 
-        Member 회원 = new Member("example@example.com", "password11234!", "testNickname", null, List.of());
+        final Member 회원 = testMemberBuilder.builder()
+                .id(1L)
+                .buildWithoutSaving();
         회원_레포지토리를_모킹한다(회원);
 
-        final Post 게시글1 = new Post(1L, "제목1", "내용1", 1000L, 회원, PostImageInfos.create(), 0);
-        final Post 게시글2 = new Post(2L, "제목2", "내용2", 2000L, 회원, PostImageInfos.create(), 0);
+        final Post 게시글1 = new Post(1L, "제목1", "내용1", 1000L, 회원, PostImageInfos.create(), 0, 0, false);
+        final Post 게시글2 = new Post(2L, "제목2", "내용2", 2000L, 회원, PostImageInfos.create(), 0, 0, false);
 
         final MyPostResponse postResponse1 = MyPostResponse.of(게시글1, domain, PostConsumptionResponse.none());
         final MyPostResponse postResponse2 = MyPostResponse.of(게시글2, domain, PostConsumptionResponse.none());
@@ -78,17 +82,12 @@ public class MyPostControllerDocsTest extends DocsTest {
         when(myPostService.findMyPosts(any(), any())).thenReturn(PostSlice.from(result));
 
         final MockHttpServletRequestBuilder 내_게시글_조회_요청 = get("/profile/my-posts")
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((회원.getEmail() + ":" + 회원.getPassword()).getBytes()))
+                .sessionAttr(USER.getSessionId(), 회원.getId())
+                .header("X-API-VERSION", 1)
                 .queryParam("page", findingCondition.getPage().toString())
                 .queryParam("size", findingCondition.getSize().toString())
                 .queryParam("sort-by", findingCondition.getSortBy().getName())
                 .queryParam("sort-direction", findingCondition.getSortDirection().name());
-
-        HeaderDescriptor[] 요청_헤더 = new HeaderDescriptor[]{
-                headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
-        };
 
         ParameterDescriptor[] 요청_쿼리_파라미터 = {
                 parameterWithName("page")
@@ -116,12 +115,13 @@ public class MyPostControllerDocsTest extends DocsTest {
                 fieldWithPath("content[].consumption.purchasePrice").description("소비 확정시 구매 가격 (확정 x의 경우: 0)"),
                 fieldWithPath("content[].consumption.year").description("소비 확정 연도 (확정 x의 경우: 0)"),
                 fieldWithPath("content[].consumption.month").description("소비 확정 달 (확정 x의 경우: 0)"),
+                fieldWithPath("content[].reactionCount.viewCount").description("조회수"),
+                fieldWithPath("content[].reactionCount.commentCount").description("댓글 수"),
                 fieldWithPath("last").description("현재 요청한 페이지가 마지막 페이지인지")
         };
 
         final RestDocumentationResultHandler 문서화 = document("my-posts",
                 preprocessResponse(prettyPrint()),
-                requestHeaders(요청_헤더),
                 queryParameters(요청_쿼리_파라미터),
                 responseFields(응답)
         );

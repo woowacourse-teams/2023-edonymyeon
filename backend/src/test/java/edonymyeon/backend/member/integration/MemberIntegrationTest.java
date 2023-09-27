@@ -11,6 +11,7 @@ import edonymyeon.backend.member.application.dto.response.MyPageResponse;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -29,9 +30,12 @@ public class MemberIntegrationTest extends IntegrationFixture {
         final Member member = memberTestSupport.builder()
                 .build();
 
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+        final String sessionId = 로그인(member);
+
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .sessionId(sessionId)
+                .build()
                 .when()
                 .get("/profile")
                 .then()
@@ -69,9 +73,12 @@ public class MemberIntegrationTest extends IntegrationFixture {
                 .post(post2)
                 .build();
 
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+        final String sessionId = 로그인(member);
+
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .sessionId(sessionId)
+                .build()
                 .when()
                 .get("/profile/my-posts")
                 .then()
@@ -91,16 +98,20 @@ public class MemberIntegrationTest extends IntegrationFixture {
         final Member member = memberTestSupport.builder()
                 .build();
 
-        RestAssured
-                .given()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+        final String sessionId = 로그인(member);
+
+        EdonymyeonRestAssured.builder()
+                .version(1)
+                .sessionId(sessionId)
+                .build()
                 .when()
                 .delete("/withdraw");
 
         final LoginRequest request = new LoginRequest(member.getEmail(), member.getPassword(), "werwe");
 
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .contentType(ContentType.JSON)
                 .body(request)
                 .when()
@@ -128,14 +139,18 @@ public class MemberIntegrationTest extends IntegrationFixture {
                 .member(member)
                 .build();
 
-        RestAssured
-                .given()
-                .auth().preemptive().basic(member.getEmail(), member.getPassword())
+        final String sessionId = 로그인(member);
+
+        EdonymyeonRestAssured.builder()
+                .version(1)
+                .sessionId(sessionId)
+                .build()
                 .when()
                 .delete("/withdraw");
 
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .when()
                 .get("/posts/" + post.getId())
                 .then()

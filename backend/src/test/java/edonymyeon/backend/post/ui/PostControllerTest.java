@@ -1,24 +1,23 @@
 package edonymyeon.backend.post.ui;
 
+import static edonymyeon.backend.auth.ui.SessionConst.USER;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
-import edonymyeon.backend.post.application.dto.PostResponse;
-import edonymyeon.backend.support.MemberTestSupport;
+import edonymyeon.backend.post.application.dto.response.PostIdResponse;
+import edonymyeon.backend.support.IntegrationTest;
+import edonymyeon.backend.support.TestMemberBuilder;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
@@ -32,8 +31,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @IntegrationTest
 class PostControllerTest implements ImageFileCleaner {
 
-    private static MockMultipartFile 이미지1;
-    private static MockMultipartFile 이미지2;
+    private static final MockMultipartFile 이미지1;
+    private static final MockMultipartFile 이미지2;
 
     static {
         try {
@@ -54,15 +53,14 @@ class PostControllerTest implements ImageFileCleaner {
     }
 
     @Autowired
-    protected MemberTestSupport memberTestSupport;
+    protected TestMemberBuilder testMemberBuilder;
 
     @Autowired
     MockMvc mockMvc;
 
     @Test
     void 사진_첨부_성공_테스트() throws Exception {
-        final Member member = memberTestSupport.builder()
-                .build();
+        final Member member = testMemberBuilder.builder().build();
 
         mockMvc.perform(MockMvcRequestBuilders.multipart("/posts")
                         .file(이미지1)
@@ -70,10 +68,9 @@ class PostControllerTest implements ImageFileCleaner {
                         .param("title", "test title")
                         .param("content", "test content")
                         .param("price", "1000")
+                        .header("X-API-VERSION", 1)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .header(HttpHeaders.AUTHORIZATION, "Basic "
-                                + java.util.Base64.getEncoder()
-                                .encodeToString((member.getEmail() + ":" + member.getPassword()).getBytes()))
+                        .sessionAttr(USER.getSessionId(), member.getId())
                 )
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
@@ -86,6 +83,7 @@ class PostControllerTest implements ImageFileCleaner {
                         .param("title", "test title")
                         .param("content", "test content")
                         .param("price", "1000")
+                        .header("X-API-VERSION", 1)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                 )
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
@@ -93,8 +91,7 @@ class PostControllerTest implements ImageFileCleaner {
 
     @Test
     void 본인이_작성한_게시글_삭제_가능_테스트() throws Exception {
-        final Member member = memberTestSupport.builder()
-                .build();
+        final Member member = testMemberBuilder.builder().build();
 
         final MvcResult 게시글_생성_요청_결과 = mockMvc.perform(MockMvcRequestBuilders.multipart("/posts")
                         .file(이미지1)
@@ -102,19 +99,17 @@ class PostControllerTest implements ImageFileCleaner {
                         .param("title", "test title")
                         .param("content", "test content")
                         .param("price", "1000")
+                        .header("X-API-VERSION", 1)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .header(HttpHeaders.AUTHORIZATION, "Basic "
-                                + Base64.getEncoder()
-                                .encodeToString((member.getEmail() + ":" + member.getPassword()).getBytes()))
+                        .sessionAttr(USER.getSessionId(), member.getId())
                 )
                 .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
 
-        PostResponse 게시글_생성_응답 = extractResponseFromResult(게시글_생성_요청_결과, PostResponse.class);
+        PostIdResponse 게시글_생성_응답 = extractResponseFromResult(게시글_생성_요청_결과, PostIdResponse.class);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/posts/" + 게시글_생성_응답.id())
-                        .header(HttpHeaders.AUTHORIZATION, "Basic "
-                                + Base64.getEncoder()
-                                .encodeToString((member.getEmail() + ":" + member.getPassword()).getBytes())))
+                        .header("X-API-VERSION", 1)
+                        .sessionAttr(USER.getSessionId(), member.getId()))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
@@ -128,8 +123,7 @@ class PostControllerTest implements ImageFileCleaner {
 
     @Test
     void 본인이_작성하지_않은_게시글_삭제_불가능_테스트() throws Exception {
-        final Member member = memberTestSupport.builder()
-                .build();
+        final Member member = testMemberBuilder.builder().build();
 
         final MvcResult 게시글_생성_요청_결과 = mockMvc.perform(MockMvcRequestBuilders.multipart("/posts")
                         .file(이미지1)
@@ -137,21 +131,18 @@ class PostControllerTest implements ImageFileCleaner {
                         .param("title", "test title")
                         .param("content", "test content")
                         .param("price", "1000")
+                        .header("X-API-VERSION", 1)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
-                        .header(HttpHeaders.AUTHORIZATION, "Basic "
-                                + Base64.getEncoder()
-                                .encodeToString((member.getEmail() + ":" + member.getPassword()).getBytes()))
+                        .sessionAttr(USER.getSessionId(), member.getId())
                 )
                 .andExpect(MockMvcResultMatchers.status().isCreated()).andReturn();
 
-        PostResponse 게시글_생성_응답 = extractResponseFromResult(게시글_생성_요청_결과, PostResponse.class);
-        final Member otherMember = memberTestSupport.builder()
-                .build();
+        PostIdResponse 게시글_생성_응답 = extractResponseFromResult(게시글_생성_요청_결과, PostIdResponse.class);
+        final Member otherMember = testMemberBuilder.builder().build();
 
         final MvcResult 게시글_삭제_요청_결과 = mockMvc.perform(MockMvcRequestBuilders.delete("/posts/" + 게시글_생성_응답.id())
-                        .header(HttpHeaders.AUTHORIZATION, "Basic "
-                                + Base64.getEncoder()
-                                .encodeToString((otherMember.getEmail() + ":" + otherMember.getPassword()).getBytes())))
+                        .header("X-API-VERSION", 1)
+                        .sessionAttr(USER.getSessionId(), otherMember.getId()))
                 .andExpect(MockMvcResultMatchers.status().isForbidden())
                 .andReturn();
 

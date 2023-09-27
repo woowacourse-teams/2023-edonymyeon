@@ -1,5 +1,7 @@
 package edonymyeon.backend.report.docs;
 
+import static edonymyeon.backend.auth.ui.SessionConst.USER;
+import static edonymyeon.backend.report.domain.ReportType.POST;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -10,7 +12,6 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -21,6 +22,8 @@ import edonymyeon.backend.report.application.ReportRepository;
 import edonymyeon.backend.report.application.ReportRequest;
 import edonymyeon.backend.report.domain.AbusingType;
 import edonymyeon.backend.report.domain.Report;
+import edonymyeon.backend.support.IntegrationTest;
+import edonymyeon.backend.support.TestMemberBuilder;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +32,6 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.SliceImpl;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MockMvc;
@@ -44,6 +46,8 @@ public class ReportDocsTest implements ImageFileCleaner {
     private final MockMvc mockMvc;
 
     private final ObjectMapper objectMapper;
+
+    private final TestMemberBuilder testMemberBuilder;
 
     @MockBean
     private MemberRepository memberRepository;
@@ -68,26 +72,30 @@ public class ReportDocsTest implements ImageFileCleaner {
 
     private void 신고_서비스를_모킹한다(final Report 신고) {
         when(reportRepository.save(any()))
-                .thenReturn(new Report(1L, 신고.getPost(), 신고.getPost().getMember(), AbusingType.OBSCENITY, ""));
+                .thenReturn(new Report(POST, 신고.getReferenceId(), 신고.getReporter(), AbusingType.OBSCENITY, ""));
     }
 
     @Test
     void 게시글을_상세_조회한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of(), false);
-        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0);
+        final Member 글쓴이 = testMemberBuilder.builder()
+                .id(1L)
+                .email("email@email.com")
+                .nickname("nickname")
+                .buildWithoutSaving();
+        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0, 0, false);
 
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);
-        신고_서비스를_모킹한다(new Report(null, 게시글, 글쓴이, AbusingType.OBSCENITY, ""));
+        신고_서비스를_모킹한다(new Report(POST, 게시글.getId(), 글쓴이, AbusingType.OBSCENITY, ""));
 
-        final ReportRequest reportRequest = new ReportRequest(게시글.getId(), AbusingType.OBSCENITY.getTypeCode(), "");
+        final ReportRequest reportRequest = new ReportRequest("POST", 게시글.getId(), AbusingType.OBSCENITY.getTypeCode(),
+                "");
 
         final var 게시글_상세_조회_요청 = post("/report")
+                .header("X-API-VERSION", 1)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(reportRequest))
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((글쓴이.getEmail() + ":" + 글쓴이.getPassword()).getBytes()));
+                .sessionAttr(USER.getSessionId(), 글쓴이.getId());
 
         final RestDocumentationResultHandler 문서화 = document("report-save",
                 preprocessRequest(prettyPrint())

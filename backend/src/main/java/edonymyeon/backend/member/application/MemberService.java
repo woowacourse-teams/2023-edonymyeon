@@ -3,19 +3,20 @@ package edonymyeon.backend.member.application;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.profileimage.repository.ProfileImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.application.dto.YearMonthDto;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.application.dto.response.MyPageResponse;
+import edonymyeon.backend.member.application.event.ProfileImageDeletionEvent;
 import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +34,7 @@ public class MemberService {
 
     private final ProfileImageInfoRepository profileImageInfoRepository;
 
-    private final ImageFileUploader imageFileUploader;
+    private final ApplicationEventPublisher publisher;
 
     public MyPageResponse findMemberInfoById(final Long id) {
         final Member member = memberRepository.findById(id)
@@ -42,17 +43,11 @@ public class MemberService {
     }
 
     @Transactional
-    public void deleteMember(final Long id) {
-        final Member member = memberRepository.findById(id)
-                .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
-
+    public void deleteProfileImage(final Member member) {
         if (Objects.nonNull(member.getProfileImageInfo())) {
             profileImageInfoRepository.delete(member.getProfileImageInfo());
-            imageFileUploader.removeFile(member.getProfileImageInfo());
+            publisher.publishEvent(new ProfileImageDeletionEvent(member.getProfileImageInfo()));
         }
-
-        member.withdraw();
-        memberRepository.save(member);
     }
 
     @Transactional
@@ -89,9 +84,18 @@ public class MemberService {
             return;
         }
         rePersistedMember.activateDevice(deviceToken);
+
+        deactivateOtherDevices(member, deviceToken);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void deactivateOtherDevices(final Member member, final String deviceToken) {
+        deviceRepository.findAllByDeviceToken(deviceToken)
+                .stream().filter(device -> !device.isOwner(member))
+                .forEach(Device::deactivate);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void deactivateDevice(final String deviceToken) {
         final Optional<Device> device = deviceRepository.findByDeviceToken(deviceToken);
         device.ifPresent(Device::deactivate);

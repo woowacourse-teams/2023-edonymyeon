@@ -18,7 +18,15 @@ class AllPostAdapter(
         holder.bind(currentList[position])
     }
 
+    override fun getItemCount(): Int {
+        return super.getItemCount().coerceAtMost(MAX_ITEM_COUNT)
+    }
+
     fun setAllPosts(allPosts: List<AllPostItemUiModel>) {
         submitList(allPosts)
+    }
+
+    companion object {
+        private const val MAX_ITEM_COUNT = 5
     }
 }

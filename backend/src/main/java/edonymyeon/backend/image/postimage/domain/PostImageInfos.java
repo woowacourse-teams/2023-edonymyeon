@@ -43,35 +43,46 @@ public class PostImageInfos {
         return new PostImageInfos(postImageInfos);
     }
 
-    private void validateImageCount(final int imageCount) {
+    public void validateImageCount(final int imageCount) {
         if (isInvalidImageCount(imageCount)) {
             throw new EdonymyeonException(POST_IMAGE_COUNT_INVALID);
         }
-    }
-
-    public void add(final PostImageInfo postImageInfo) {
-        if (this.postImageInfos.contains(postImageInfo)) {
-            return;
-        }
-        validateImageAdditionCount(1);
-        this.postImageInfos.add(postImageInfo);
-    }
-
-    public void validateImageAdditionCount(final Integer imageAdditionCount) {
-        if (isInvalidImageCount(this.postImageInfos.size() + imageAdditionCount)) {
-            throw new EdonymyeonException(POST_IMAGE_COUNT_INVALID);
-        }
-    }
-
-    public void addAll(final List<PostImageInfo> postImageInfos) {
-        postImageInfos.forEach(this::add);
     }
 
     private boolean isInvalidImageCount(final Integer imageCount) {
         return imageCount > MAX_IMAGE_COUNT;
     }
 
-    public List<PostImageInfo> findImagesToDelete(final List<String> remainedStoreNames) {
+    public void addAll(final List<PostImageInfo> imagesToAdd) {
+        validateImageCount(this.postImageInfos.size() + imagesToAdd.size());
+        this.postImageInfos.addAll(imagesToAdd);
+    }
+
+    public void add(final PostImageInfo postImageInfo) {
+        if (this.postImageInfos.contains(postImageInfo)) {
+            return;
+        }
+        validateImageAdditionCount();
+        this.postImageInfos.add(postImageInfo);
+    }
+
+    private void validateImageAdditionCount() {
+        if (isInvalidImageCount(this.postImageInfos.size() + 1)) {
+            throw new EdonymyeonException(POST_IMAGE_COUNT_INVALID);
+        }
+    }
+
+    public void update(final List<String> remainedStoreNames, final List<PostImageInfo> newPostImageInfos) {
+        final List<PostImageInfo> imagesToDelete = findImagesToDelete(remainedStoreNames);
+        int updatedImageCount = this.postImageInfos.size() - imagesToDelete.size() + newPostImageInfos.size();
+        validateImageCount(updatedImageCount);
+
+        imagesToDelete.forEach(PostImageInfo::delete);
+        postImageInfos.removeAll(imagesToDelete);
+        postImageInfos.addAll(newPostImageInfos);
+    }
+
+    private List<PostImageInfo> findImagesToDelete(final List<String> remainedStoreNames) {
         final List<PostImageInfo> unmatchedPostImageInfos = this.postImageInfos.stream().
                 filter(postImageInfo -> !remainedStoreNames.contains(postImageInfo.getStoreName()))
                 .toList();
@@ -82,8 +93,26 @@ public class PostImageInfos {
         return unmatchedPostImageInfos;
     }
 
-    public void remove(final List<PostImageInfo> deletedPostImageInfos) {
+    // todo : 여기 부분 맞게 했나요? 헷갈립니다.
+    public void delete(final List<PostImageInfo> deletedPostImageInfos) {
+        // 어쨌든 deleted = false 인 놈들만 가지고 있어야 하니 지워져야 할 녀석들을 리스트에서 뺀다.
         this.postImageInfos.removeAll(deletedPostImageInfos);
-        deletedPostImageInfos.forEach(each -> each.updatePost(null));
+        // 지워져야 하는 녀석들을 soft delete
+        deletedPostImageInfos.forEach(PostImageInfo::delete);
+    }
+
+    public void deleteAll() {
+        this.postImageInfos.forEach(PostImageInfo::delete);
+    }
+
+    public boolean isEmpty() {
+        return this.postImageInfos.isEmpty();
+    }
+
+    public String getThumbnailName() {
+        if(this.postImageInfos.isEmpty()) {
+            return null;
+        }
+        return this.postImageInfos.get(0).getStoreName();
     }
 }

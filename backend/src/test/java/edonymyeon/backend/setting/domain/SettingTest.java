@@ -2,65 +2,22 @@ package edonymyeon.backend.setting.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edonymyeon.backend.member.domain.Member;
-import java.util.Collections;
-import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
-@SuppressWarnings("NonAsciiCharacters")
+@SpringBootTest
 class SettingTest {
     @Test
-    void 설정_항목을_체크하여_OnOff할_수_있다() {
-        final Member member = new Member(1L, "test@gmail.com", "password123", "nickName", null, null, List.of(), false);
-        final Setting setting
-                = new Setting(member, SettingType.NOTIFICATION_PER_THUMB, Collections.emptyList(),
-                EnableStatus.ENABLED);
+    void 설정_활성화여부를_토글링_할_수_있다() {
+        final Setting setting = new Setting(SettingType.NOTIFICATION_PER_THUMBS, null);
+        assertThat(setting.isActive())
+                .as("기본값은 비활성 상태")
+                .isFalse();
 
-        setting.toggleEnable();
+        setting.activate();
+        assertThat(setting.isActive()).isTrue();
 
-        assertThat(setting.isEnabled()).isFalse();
-    }
-
-    @Test
-    void 상위_항목을_disable하는_경우_하위_항목도_함께_disable된다() {
-        final Member member = new Member(1L, "test@gmail.com", "password123", "nickName", null, null, List.of(), false);
-
-        final Setting 하위항목1 = new Setting(member, SettingType.NOTIFICATION_PER_THUMB, Collections.emptyList(),
-                EnableStatus.ENABLED);
-        final Setting 하위항목2 = new Setting(member, SettingType.NOTIFICATION_PER_10, Collections.emptyList(),
-                EnableStatus.ENABLED);
-        final Setting 상위항목 = new Setting(member, SettingType.NOTIFICATION_THUMB, List.of(하위항목1, 하위항목2),
-                EnableStatus.ENABLED);
-        assertThat(하위항목1.isEnabled()).isTrue();
-        assertThat(하위항목2.isEnabled()).isTrue();
-
-        상위항목.toggleEnable();
-
-        assertThat(하위항목1.isEnabled()).isFalse();
-        assertThat(하위항목2.isEnabled()).isFalse();
-    }
-
-    @Test
-    void 상위_항목에_의해_disable된_항목이_상위_항목에_의해_다시_activated된_경우_이전의_설정을_다시_복구한다() {
-        final Member member = new Member("test@gmail.com", "password123!", "nickName", null, List.of());
-
-        final Setting 하위항목1 = new Setting(member, SettingType.NOTIFICATION_PER_THUMB, Collections.emptyList(),
-                EnableStatus.ENABLED);
-        final Setting 하위항목2 = new Setting(member, SettingType.NOTIFICATION_PER_10, Collections.emptyList(),
-                EnableStatus.DISABLED);
-        final Setting 상위항목 = new Setting(member, SettingType.NOTIFICATION_THUMB, List.of(하위항목1, 하위항목2),
-                EnableStatus.ENABLED);
-        assertThat(하위항목1.isEnabled()).isTrue();
-        assertThat(하위항목2.isEnabled()).isFalse();
-
-        상위항목.toggleEnable();
-
-        assertThat(하위항목1.isEnabled()).isFalse();
-        assertThat(하위항목2.isEnabled()).isFalse();
-
-        상위항목.toggleEnable();
-
-        assertThat(하위항목1.isEnabled()).isTrue();
-        assertThat(하위항목2.isEnabled()).isFalse();
+        setting.deactivate();
+        assertThat(setting.isActive()).isFalse();
     }
 }

@@ -1,7 +1,27 @@
 package edonymyeon.backend.post.docs;
 
+import static edonymyeon.backend.auth.ui.SessionConst.USER;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import edonymyeon.backend.CacheConfig;
-import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
@@ -11,12 +31,18 @@ import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.HotFindingCondition;
-import edonymyeon.backend.post.application.dto.AllThumbsInPostResponse;
-import edonymyeon.backend.post.application.dto.ThumbsStatusInPostResponse;
+import edonymyeon.backend.post.application.dto.response.AllThumbsInPostResponse;
+import edonymyeon.backend.post.application.dto.response.ThumbsStatusInPostResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.support.IntegrationTest;
+import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.thumbs.application.PostThumbsServiceImpl;
 import jakarta.servlet.http.Part;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.entity.ContentType;
 import org.junit.jupiter.api.Test;
@@ -38,25 +64,6 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
 @AutoConfigureMockMvc
@@ -66,6 +73,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PostControllerDocsTest implements ImageFileCleaner {
 
     private final MockMvc mockMvc;
+
+    private final TestMemberBuilder testMemberBuilder;
 
     @MockBean
     private MemberRepository memberRepository;
@@ -97,7 +106,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     }
 
     private void 핫_게시글_조회를_모킹한다(final Post 게시글) {
-        when(postRepository.findHotPosts(any(LocalDateTime.class), anyInt(), anyInt(), any()))
+        when(postRepository.findHotPosts(any(LocalDateTime.class), anyInt(), anyInt(), anyInt(), any()))
                 .thenReturn(new SliceImpl<>(List.of(게시글)));
         when(postRepository.findByIds(anyList()))
                 .thenReturn(List.of(게시글));
@@ -119,7 +128,10 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
     @Test
     void 게시글을_수정한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of(), false);
+        final Member 글쓴이 = testMemberBuilder.builder()
+                .id(1L)
+                .buildWithoutSaving();
+
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이);
         final PostImageInfo 유지하는_이미지_정보 = new PostImageInfo("stay.jpg", 게시글);
         final PostImageInfo 삭제될_이미지_정보 = new PostImageInfo("delete.jpg", 게시글);
@@ -145,10 +157,10 @@ public class PostControllerDocsTest implements ImageFileCleaner {
                 .part(가격)
                 .part(유지하는_이미지)
                 .file(추가되는_이미지)
+                .header("X-API-VERSION", 1)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((글쓴이.getEmail() + ":" + 글쓴이.getPassword()).getBytes()));
+                .sessionAttr(USER.getSessionId(), 글쓴이.getId());
+
         게시글_수정_요청.with(request -> {
             request.setMethod(HttpMethod.PUT.name());
             return request;
@@ -156,9 +168,6 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
         final RestDocumentationResultHandler 문서화 = document("post-update",
                 preprocessResponse(prettyPrint()),
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
-                ),
                 pathParameters(
                         parameterWithName("postId").description("게시글 id")
                 ),
@@ -181,7 +190,9 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
     @Test
     void 게시글을_삭제한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of(), false);
+        final Member 글쓴이 = testMemberBuilder.builder()
+                .id(1L)
+                .buildWithoutSaving();
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이);
 
         회원_레포지토리를_모킹한다(글쓴이);
@@ -191,14 +202,10 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
         final MockHttpServletRequestBuilder 게시글_삭제_요청 = delete("/posts/{postId}", 게시글.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((글쓴이.getEmail() + ":" + 글쓴이.getPassword()).getBytes()));
+                .header("X-API-VERSION", 1)
+                .sessionAttr(USER.getSessionId(), 글쓴이.getId());
 
         final RestDocumentationResultHandler 문서화 = document("post-delete",
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
-                ),
                 pathParameters(
                         parameterWithName("postId").description("게시글 id")
                 )
@@ -211,8 +218,10 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
     @Test
     void 게시글을_전체_조회한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of(), false);
-        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0);
+        final Member 글쓴이 = testMemberBuilder.builder()
+                .id(1L)
+                .buildWithoutSaving();
+        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0, 0, false);
 
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);
@@ -220,7 +229,8 @@ public class PostControllerDocsTest implements ImageFileCleaner {
         final var 게시글_전체_조회_요청 = get("/posts")
                 .param("size", "10")
                 .param("page", "0")
-                .contentType(MediaType.APPLICATION_JSON_VALUE);
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("X-API-VERSION", 1);
 
         final RestDocumentationResultHandler 문서화 = document("post-findAll",
                 preprocessResponse(prettyPrint()),
@@ -239,8 +249,10 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     void 게시글을_검색한다() throws Exception {
         final GeneralFindingCondition findingCondition = GeneralFindingCondition.builder().build();
 
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of(), false);
-        final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), 0);
+        final Member 글쓴이 = testMemberBuilder.builder()
+                .id(1L)
+                .buildWithoutSaving();
+        final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), 0, 0, false);
 
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);
@@ -252,7 +264,8 @@ public class PostControllerDocsTest implements ImageFileCleaner {
                 .queryParam("size", findingCondition.getSize().toString())
                 .queryParam("sort-by", findingCondition.getSortBy().getName())
                 .queryParam("sort-direction", findingCondition.getSortDirection().name())
-                .contentType(MediaType.APPLICATION_JSON_VALUE);
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("X-API-VERSION", 1);
 
         FieldDescriptor[] 응답 = {
                 fieldWithPath("content").description("게시글 목록"),
@@ -261,10 +274,9 @@ public class PostControllerDocsTest implements ImageFileCleaner {
                 fieldWithPath("content[].image").description("게시글 이미지 url"),
                 fieldWithPath("content[].content").description("게시글 내용"),
                 fieldWithPath("content[].createdAt").description("게시글 생성 날짜"),
-                fieldWithPath("content[].writer.nickName").description("닉네임"),
+                fieldWithPath("content[].writer.nickname").description("닉네임"),
                 fieldWithPath("content[].reactionCount.viewCount").description("조회수"),
                 fieldWithPath("content[].reactionCount.commentCount").description("댓글 수"),
-                fieldWithPath("content[].reactionCount.scrapCount").description("스크랩수"),
                 fieldWithPath("last").description("현재 요청한 페이지가 마지막 페이지인지")
         };
 
@@ -289,8 +301,10 @@ public class PostControllerDocsTest implements ImageFileCleaner {
     void 핫_게시글을_조회한다() throws Exception {
         final HotFindingCondition findingCondition = HotFindingCondition.builder().build();
 
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of(), false);
-        final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), 0);
+        final Member 글쓴이 = testMemberBuilder.builder()
+                .id(1L)
+                .buildWithoutSaving();
+        final Post 게시글 = new Post(1L, "햄버거 먹어도 되나요", "불고기 버거 세일중이던데", 1000L, 글쓴이, PostImageInfos.create(), 0, 0, false);
 
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);
@@ -299,7 +313,8 @@ public class PostControllerDocsTest implements ImageFileCleaner {
         final var 핫_게시글_조회_요청 = get("/posts/hot")
                 .queryParam("page", findingCondition.getPage().toString())
                 .queryParam("size", findingCondition.getSize().toString())
-                .contentType(MediaType.APPLICATION_JSON_VALUE);
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header("X-API-VERSION", 1);
 
         FieldDescriptor[] 응답 = {
                 fieldWithPath("content").description("게시글 목록"),
@@ -308,10 +323,9 @@ public class PostControllerDocsTest implements ImageFileCleaner {
                 fieldWithPath("content[].image").description("게시글 이미지 url"),
                 fieldWithPath("content[].content").description("게시글 내용"),
                 fieldWithPath("content[].createdAt").description("게시글 생성 날짜"),
-                fieldWithPath("content[].writer.nickName").description("닉네임"),
+                fieldWithPath("content[].writer.nickname").description("닉네임"),
                 fieldWithPath("content[].reactionCount.viewCount").description("조회수"),
                 fieldWithPath("content[].reactionCount.commentCount").description("댓글 수"),
-                fieldWithPath("content[].reactionCount.scrapCount").description("스크랩수"),
                 fieldWithPath("last").description("현재 요청한 페이지가 마지막 페이지인지")
         };
 
@@ -331,8 +345,10 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
     @Test
     void 게시글을_상세_조회한다() throws Exception {
-        final Member 글쓴이 = new Member(1L, "email", "password", "nickname", null, null, List.of(), false);
-        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0);
+        final Member 글쓴이 = testMemberBuilder.builder()
+                .id(1L)
+                .buildWithoutSaving();
+        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0, 0, false);
 
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);
@@ -340,9 +356,7 @@ public class PostControllerDocsTest implements ImageFileCleaner {
 
         final var 게시글_상세_조회_요청 = get("/posts/{postId}", 게시글.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((글쓴이.getEmail() + ":" + 글쓴이.getPassword()).getBytes()));
+                .header("X-API-VERSION", 1);
 
         final RestDocumentationResultHandler 문서화 = document("post-findOne",
                 preprocessResponse(prettyPrint())

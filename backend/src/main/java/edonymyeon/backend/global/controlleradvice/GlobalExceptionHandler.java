@@ -1,6 +1,7 @@
 package edonymyeon.backend.global.controlleradvice;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.AUTHORIZATION_EMPTY;
+import static edonymyeon.backend.global.exception.ExceptionInformation.COMMENT_MEMBER_NOT_SAME;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_IS_DELETED;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
@@ -38,6 +39,7 @@ public class GlobalExceptionHandler {
         exceptionInfoToHttpStatus.put(AUTHORIZATION_EMPTY, UNAUTHORIZED);
         exceptionInfoToHttpStatus.put(POST_MEMBER_NOT_SAME, FORBIDDEN);
         exceptionInfoToHttpStatus.put(MEMBER_IS_DELETED, UNAUTHORIZED);
+        exceptionInfoToHttpStatus.put(COMMENT_MEMBER_NOT_SAME, FORBIDDEN);
     }
 
     @ExceptionHandler(Exception.class)

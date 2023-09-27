@@ -21,8 +21,8 @@ android {
         applicationId = "app.edonymyeon"
         minSdk = 28
         targetSdk = 33
-        versionCode = 7
-        versionName = "2.0.0"
+        versionCode = 11
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -44,7 +44,8 @@ android {
             localProperties.getProperty("APP_BASE_URL"),
         )
 
-        manifestPlaceholders["KAKAO_NATIVE_KEY"] = localProperties.getProperty("KAKAO_NATIVE_KEY")
+        val kakaoNativeKey = localProperties.getProperty("KAKAO_NATIVE_KEY")
+        manifestPlaceholders["KAKAO_NATIVE_KEY"] = kakaoNativeKey.substring(1, kakaoNativeKey.length - 1)
     }
 
     buildTypes {

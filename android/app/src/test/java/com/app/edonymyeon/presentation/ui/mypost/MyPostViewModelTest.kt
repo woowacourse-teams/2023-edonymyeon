@@ -3,8 +3,10 @@ package com.app.edonymyeon.presentation.ui.mypost
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.app.edonymyeon.mapper.toUiModel
 import com.domain.edonymyeon.model.Consumption
+import com.domain.edonymyeon.model.Count
 import com.domain.edonymyeon.model.MyPost
 import com.domain.edonymyeon.model.MyPosts
+import com.domain.edonymyeon.model.ReactionCount
 import com.domain.edonymyeon.repository.PostRepository
 import com.domain.edonymyeon.repository.ProfileRepository
 import io.mockk.coEvery
@@ -25,10 +27,11 @@ class MyPostViewModelTest {
     private lateinit var viewModel: MyPostViewModel
     private lateinit var profileRepository: ProfileRepository
     private lateinit var postRepository: PostRepository
+    private val notificationId = 0L
 
-    private val fakeMyPost = listOf(
+    private val fakeMyPost = List(3) {
         MyPost(
-            id = 1L,
+            id = (it + 1).toLong(),
             title = "가나다라",
             image = "",
             content = "아야하언ㅇㄹㄴㅇㄹ",
@@ -39,34 +42,9 @@ class MyPostViewModelTest {
                 year = 0,
                 month = 0,
             ),
-        ),
-        MyPost(
-            id = 2L,
-            title = "가나다라",
-            image = "",
-            content = "아야하언ㅇㄹㄴㅇㄹ",
-            createdAt = "1일전",
-            consumption = Consumption(
-                type = "PURCHASE",
-                purchasePrice = 1000,
-                year = 2023,
-                month = 7,
-            ),
-        ),
-        MyPost(
-            id = 3L,
-            title = "가나다라",
-            image = "",
-            content = "아야하언ㅇㄹㄴㅇㄹ",
-            createdAt = "1일전",
-            consumption = Consumption(
-                type = "SAVING",
-                purchasePrice = 0,
-                year = 2023,
-                month = 4,
-            ),
-        ),
-    )
+            reactionCount = ReactionCount(Count(0), Count(0)),
+        )
+    }
 
     private val fakeMyPosts = MyPosts(
         fakeMyPost,
@@ -95,10 +73,12 @@ class MyPostViewModelTest {
     fun `내가 쓴 글을 불러온다`() {
         // given
         val page = 0
-        coEvery { profileRepository.getMyPosts(page) } returns Result.success(fakeMyPosts)
+        coEvery { profileRepository.getMyPosts(page, notificationId) } returns Result.success(
+            fakeMyPosts,
+        )
 
         // when
-        viewModel.getMyPosts()
+        viewModel.getMyPosts(notificationId)
 
         // then
         assertEquals(fakeMyPost.map { it.toUiModel() }, viewModel.posts.value)
@@ -115,7 +95,9 @@ class MyPostViewModelTest {
             month = 7,
         )
 
-        coEvery { profileRepository.getMyPosts(0) } returns Result.success(fakeMyPosts)
+        coEvery { profileRepository.getMyPosts(0, notificationId) } returns Result.success(
+            fakeMyPosts,
+        )
         coEvery {
             profileRepository.postPurchaseConfirm(
                 postId,
@@ -126,7 +108,7 @@ class MyPostViewModelTest {
         } returns Result.success(Unit)
 
         // when
-        viewModel.getMyPosts()
+        viewModel.getMyPosts(notificationId)
         viewModel.postPurchaseConfirm(
             postId,
             consumption.purchasePrice,
@@ -152,7 +134,9 @@ class MyPostViewModelTest {
             month = 7,
         )
 
-        coEvery { profileRepository.getMyPosts(0) } returns Result.success(fakeMyPosts)
+        coEvery { profileRepository.getMyPosts(0, notificationId) } returns Result.success(
+            fakeMyPosts,
+        )
         coEvery {
             profileRepository.postSavingConfirm(
                 postId,
@@ -162,7 +146,7 @@ class MyPostViewModelTest {
         } returns Result.success(Unit)
 
         // when
-        viewModel.getMyPosts()
+        viewModel.getMyPosts(notificationId)
         viewModel.postSavingConfirm(
             postId,
             consumption.year,
@@ -187,7 +171,9 @@ class MyPostViewModelTest {
             month = 0,
         )
 
-        coEvery { profileRepository.getMyPosts(0) } returns Result.success(fakeMyPosts)
+        coEvery { profileRepository.getMyPosts(0, notificationId) } returns Result.success(
+            fakeMyPosts,
+        )
         coEvery {
             profileRepository.deleteConfirm(
                 postId,
@@ -195,7 +181,7 @@ class MyPostViewModelTest {
         } returns Result.success(Unit)
 
         // when
-        viewModel.getMyPosts()
+        viewModel.getMyPosts(notificationId)
         viewModel.deleteConfirm(
             postId,
         )

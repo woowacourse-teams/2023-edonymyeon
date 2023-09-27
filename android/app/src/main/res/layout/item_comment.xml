@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="listener"
+            type="com.app.edonymyeon.presentation.ui.postdetail.listener.CommentClickListener" />
+
+        <variable
+            name="comment"
+            type="com.app.edonymyeon.presentation.uimodel.CommentUiModel" />
+
+        <variable
+            name="isLogin"
+            type="Boolean" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Space
+            android:id="@+id/space_nickname_top"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H, 360:8"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> listener.onDeleteComment(comment.id)}"
+            android:text="@string/all_delete"
+            android:textColor="@color/gray_666666"
+            android:textSize="13sp"
+            android:visibility="@{comment.writer ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="@id/tv_comment"
+            app:layout_constraintTop_toBottomOf="@id/space_nickname_top" />
+
+        <TextView
+            android:id="@+id/tv_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> listener.onReportComment(comment.id)}"
+            android:text="@string/all_report"
+            android:textColor="@color/gray_666666"
+            android:textSize="13sp"
+            android:visibility="@{comment.writer ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="@id/tv_comment"
+            app:layout_constraintTop_toBottomOf="@id/space_nickname_top" />
+
+        <TextView
+            android:id="@+id/tv_nickname"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:text="@{comment.nicknameUiModel.toString()}"
+            android:textColor="@color/gray_666666"
+            android:textSize="13sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/space_nickname_top"
+            tools:text="로피" />
+
+        <Space
+            android:id="@+id/space_nickname_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,360:12"
+            app:layout_constraintTop_toBottomOf="@id/tv_nickname" />
+
+        <TextView
+            android:id="@+id/tv_comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:text="@{comment.comment}"
+            android:textColor="@color/gray_434343"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="@id/tv_nickname"
+            app:layout_constraintTop_toBottomOf="@id/space_nickname_bottom"
+            app:layout_constraintWidth_percent="0.8888"
+            tools:text="올리브영 가면 웨이크메이크나 다른 저렴하고 좋은 브랜드들 많더라구요 ~" />
+
+        <Space
+            android:id="@+id/space_comment_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,360:8"
+            app:layout_constraintTop_toBottomOf="@id/tv_comment" />
+
+        <ImageView
+            android:id="@+id/iv_comment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_edonymyeon_logo"
+            android:visibility="@{comment.image == null ? View.GONE : View.VISIBLE }"
+            app:imgUrlFitCenter="@{comment.image}"
+            app:layout_constraintDimensionRatio="H, 125:130"
+            app:layout_constraintEnd_toEndOf="@+id/tv_comment"
+            app:layout_constraintStart_toStartOf="@+id/tv_comment"
+            app:layout_constraintTop_toBottomOf="@id/space_comment_bottom"
+            app:layout_constraintWidth_percent="0.3472" />
+
+        <TextView
+            android:id="@+id/tv_comment_createdAt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{comment.createdAt.toString()}"
+            android:textColor="@color/gray_666666"
+            android:textSize="13sp"
+            app:layout_constraintStart_toStartOf="@id/tv_nickname"
+            app:layout_constraintTop_toBottomOf="@id/iv_comment"
+            tools:text="07.02 22:23" />
+
+        <Space
+            android:id="@+id/space_createdAt_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H, 360:8"
+            app:layout_constraintTop_toBottomOf="@id/tv_comment_createdAt" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/blue_576b9e"
+            app:layout_constraintDimensionRatio="H,360:0.5"
+            app:layout_constraintTop_toBottomOf="@id/space_createdAt_bottom" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

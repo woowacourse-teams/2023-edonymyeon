@@ -1,6 +1,7 @@
 package edonymyeon.backend.setting.domain;
 
 import edonymyeon.backend.member.domain.Member;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -9,92 +10,72 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import java.util.ArrayList;
-import java.util.List;
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Setting {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
-    private Member member;
-
     @Enumerated(EnumType.STRING)
     private SettingType settingType;
 
-    @ManyToMany
-    @JoinTable(name = "settings_dependent_settings",
-            joinColumns = @JoinColumn(name = "setting_id"),
-            inverseJoinColumns = @JoinColumn(name = "dependent_setting_id")
-    )
-    private List<Setting> dependentSettings;
+    private boolean isActive;
 
-    private EnableStatus enabled;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
-    public Setting(final Member member, final SettingType settingType,
-                   final List<Setting> dependentSettings, final EnableStatus enabled) {
-        this.member = member;
+    public Setting(final SettingType settingType, final Member member) {
         this.settingType = settingType;
-        this.dependentSettings = dependentSettings;
-        this.enabled = enabled;
+        this.member = member;
     }
 
-    public static List<Setting> makeInitializedSettings(Member member) {
-        List<Setting> settings = new ArrayList<>();
-        for (SettingType settingType : SettingType.values()) {
-            settings.add(new Setting(member, settingType, new ArrayList<>(), EnableStatus.DISABLED));
-        }
-
-        for (Setting setting : settings) {
-            final List<Setting> dependentSettings = settings.stream()
-                    .filter(set -> set.isDependentBy(setting))
-                    .toList();
-            setting.dependentSettings.addAll(dependentSettings);
-        }
-
-        return settings;
+    public boolean isActive() {
+        return isActive;
     }
 
-    private boolean isDependentBy(final Setting setting) {
-        return this.settingType.isDependentBy(setting.settingType);
+    public void activate() {
+        this.isActive = true;
     }
 
-    public void toggleEnable() {
-        this.enabled = this.enabled.toggle();
-        handleDependentSettings();
+    public void deactivate() {
+        this.isActive = false;
     }
 
-    private void handleDependentSettings() {
-        if (this.enabled.isEnabled()) {
-            for (Setting dependentSetting : dependentSettings) {
-                dependentSetting.releaseForceShut();
-            }
-        }
+    public boolean isSameCategoryWith(final Setting setting) {
+        return settingType.isSameCategoryWith(setting.settingType);
+    }
 
-        if (!this.enabled.isEnabled()) {
-            for (Setting dependentSetting : dependentSettings) {
-                dependentSetting.forceShut();
-            }
+    public boolean hasLowerWeightThan(final Setting setting) {
+        return settingType.hasLowerWeightThan(setting.settingType);
+    }
+
+    public boolean hasSameWeight(final Setting setting) {
+        return settingType.hasSameWeight(setting.settingType);
+    }
+
+    public boolean isPrimary() {
+        return settingType.isPrimary();
+    }
+
+    public String getSerialNumber() {
+        return settingType.getSerialNumber();
+    }
+
+    public void ifActive(final Runnable task) {
+        if (this.isActive) {
+            task.run();
         }
     }
 
-    private void releaseForceShut() {
-        this.enabled = this.enabled.releaseForceDisable();
-    }
-
-    private void forceShut() {
-        this.enabled = this.enabled.forceDisable();
-    }
-
-    public boolean isEnabled() {
-        return this.enabled.isEnabled();
+    public void ifInactive(final Runnable task) {
+        if (!this.isActive) {
+            task.run();
+        }
     }
 }

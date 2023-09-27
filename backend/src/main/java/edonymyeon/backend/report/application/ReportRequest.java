@@ -1,4 +1,8 @@
 package edonymyeon.backend.report.application;
 
-public record ReportRequest(Long postId, int reportId, String content) {
+public record ReportRequest(
+        String type,
+        Long referenceId,
+        int reportCategoryId,
+        String content) {
 }

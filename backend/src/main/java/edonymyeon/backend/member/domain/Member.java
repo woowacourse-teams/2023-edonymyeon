@@ -1,11 +1,12 @@
 package edonymyeon.backend.member.domain;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.ENCODED_PASSWORD_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_INVALID;
-import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_NOT_MATCH;
 
 import edonymyeon.backend.global.domain.TemporalRecord;
+import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import jakarta.persistence.CascadeType;
@@ -36,7 +37,6 @@ import org.hibernate.annotations.ColumnDefault;
 public class Member extends TemporalRecord {
 
     private static final int MAX_EMAIL_LENGTH = 30;
-    private static final int MAX_PASSWORD_LENGTH = 30;
     private static final int MAX_NICKNAME_LENGTH = 20;
     private static final String UNKNOWN = "Unknown";
 
@@ -82,26 +82,7 @@ public class Member extends TemporalRecord {
                 .toList();
     }
 
-    public Member(final Long id, final String email, final String password, final String nickname,
-                  final SocialInfo socialInfo,
-                  final ProfileImageInfo profileImageInfo, final List<String> deviceTokens, final boolean deleted) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.nickname = nickname;
-        this.socialInfo = socialInfo;
-        this.profileImageInfo = profileImageInfo;
-        this.devices = deviceTokens.stream()
-                .map(token -> new Device(token, this))
-                .toList();
-        this.deleted = deleted;
-    }
-
-    public Member(final Long id) {
-        this.id = id;
-    }
-
-    public Member(final String email, final String password, final String nickname, final SocialInfo socialInfo) {
+    private Member(final String email, final String password, final String nickname, final SocialInfo socialInfo) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
@@ -110,9 +91,14 @@ public class Member extends TemporalRecord {
 
     public static Member from(final SocialInfo socialInfo) {
         return new Member(UUID.randomUUID().toString(),
-                UUID.randomUUID().toString(),
+                defaultSocialPassword(),
                 "#" + socialInfo.getSocialType().name() + UUID.randomUUID(),
                 socialInfo);
+    }
+
+    private static String defaultSocialPassword() {
+        final String uuid = UUID.randomUUID().toString();
+        return uuid.replace("-", "").substring(0, 25) + "!";
     }
 
     private void validate(final String email, final String password, final String nickname) {
@@ -139,13 +125,6 @@ public class Member extends TemporalRecord {
             return;
         }
         throw new EdonymyeonException(MEMBER_PASSWORD_INVALID);
-    }
-
-    public void checkPassword(final String password) {
-        if (this.password.equals(password)) {
-            return;
-        }
-        throw new EdonymyeonException(MEMBER_PASSWORD_NOT_MATCH);
     }
 
     public Optional<String> getActiveDeviceToken() {
@@ -194,4 +173,29 @@ public class Member extends TemporalRecord {
     private boolean isNewDevice(final String deviceToken) {
         return this.devices.stream().noneMatch(device -> device.isDeviceTokenEqualTo(deviceToken));
     }
+
+    public boolean hasId(final Long memberId) {
+        return Objects.equals(this.id, memberId);
+    }
+
+    public void encrypt(final String encodedPassword) {
+        //todo 운영 DB에 암호화 적용후 라인 삭제
+        validatePassword(password);
+
+        validateEncodedPassword(encodedPassword);
+        this.password = encodedPassword;
+    }
+
+    private void validateEncodedPassword(final String encodedPassword) {
+        if (PasswordValidator.isValidEncodedPassword(encodedPassword)) {
+            return;
+        }
+        throw new BusinessLogicException(ENCODED_PASSWORD_INVALID);
+    }
+
+    // todo
+    // 실제로 비밀번호가 변경하고 싶을 때는 UpdateMemberInfo라는 회원 정보 변경 클래스를 받아서 수정하도록
+//    public void updateMember(final UpdateMemberRequest updateMember) {
+//
+//    }
 }

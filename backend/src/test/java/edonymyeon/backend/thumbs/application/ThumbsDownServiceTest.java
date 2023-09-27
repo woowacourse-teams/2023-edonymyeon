@@ -5,21 +5,16 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_DO
 import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_IS_SELF_UP_DOWN;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.notification.application.NotificationSender;
 import edonymyeon.backend.post.application.PostService;
-import edonymyeon.backend.post.application.dto.PostRequest;
-import edonymyeon.backend.post.application.dto.PostResponse;
+import edonymyeon.backend.post.application.dto.request.PostRequest;
+import edonymyeon.backend.post.application.dto.response.PostIdResponse;
 import edonymyeon.backend.support.IntegrationFixture;
-import edonymyeon.backend.support.IntegrationTest;
-import edonymyeon.backend.support.MemberTestSupport;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
@@ -28,7 +23,6 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -42,7 +36,7 @@ public class ThumbsDownServiceTest extends IntegrationFixture {
 
     private Member postWriter;
 
-    private PostResponse postResponse;
+    private PostIdResponse postIdResponse;
 
     @BeforeEach
     void 사전작업() {
@@ -59,7 +53,7 @@ public class ThumbsDownServiceTest extends IntegrationFixture {
         );
 
         MemberId memberId = new ActiveMemberId(postWriter.getId());
-        postResponse = postService.createPost(memberId, postRequest);
+        postIdResponse = postService.createPost(memberId, postRequest);
     }
 
     @Test
@@ -77,7 +71,7 @@ public class ThumbsDownServiceTest extends IntegrationFixture {
         MemberId loginMemberId = new ActiveMemberId(postWriter.getId());
 
         assertThatThrownBy(
-                () -> thumbsService.thumbsDown(loginMemberId, postResponse.id()))
+                () -> thumbsService.thumbsDown(loginMemberId, postIdResponse.id()))
                 .isExactlyInstanceOf(EdonymyeonException.class)
                 .hasMessage(THUMBS_IS_SELF_UP_DOWN.getMessage());
     }
@@ -88,8 +82,8 @@ public class ThumbsDownServiceTest extends IntegrationFixture {
         Member otherMember = registerMember();
 
         // when
-        thumbsDown(otherMember, postResponse);
-        Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postResponse.id(),
+        thumbsDown(otherMember, postIdResponse);
+        Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postIdResponse.id(),
                 otherMember.getId());
 
         // then
@@ -97,7 +91,7 @@ public class ThumbsDownServiceTest extends IntegrationFixture {
                     softly.assertThat(postThumbs).isPresent();
                     softly.assertThat(postThumbs.get().getThumbsType()).isEqualTo(ThumbsType.DOWN);
                     softly.assertThat(postThumbs.get().getMember().getId()).isEqualTo(otherMember.getId());
-                    softly.assertThat(postThumbs.get().getPost().getId()).isEqualTo(postResponse.id());
+                    softly.assertThat(postThumbs.get().getPost().getId()).isEqualTo(postIdResponse.id());
                 }
         );
     }
@@ -108,10 +102,10 @@ public class ThumbsDownServiceTest extends IntegrationFixture {
         Member otherMember = registerMember();
 
         // when
-        thumbsUp(otherMember, postResponse);
-        thumbsDown(otherMember, postResponse);
+        thumbsUp(otherMember, postIdResponse);
+        thumbsDown(otherMember, postIdResponse);
 
-        Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postResponse.id(),
+        Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postIdResponse.id(),
                 otherMember.getId());
 
         // then
@@ -119,7 +113,7 @@ public class ThumbsDownServiceTest extends IntegrationFixture {
                     softly.assertThat(postThumbs).isPresent();
                     softly.assertThat(postThumbs.get().getThumbsType()).isEqualTo(ThumbsType.DOWN);
                     softly.assertThat(postThumbs.get().getMember().getId()).isEqualTo(otherMember.getId());
-                    softly.assertThat(postThumbs.get().getPost().getId()).isEqualTo(postResponse.id());
+                    softly.assertThat(postThumbs.get().getPost().getId()).isEqualTo(postIdResponse.id());
                 }
         );
     }
@@ -131,20 +125,20 @@ public class ThumbsDownServiceTest extends IntegrationFixture {
 
         // when
         MemberId otherMemberId = new ActiveMemberId(otherMember.getId());
-        thumbsDown(otherMember, postResponse);
+        thumbsDown(otherMember, postIdResponse);
 
         assertThatThrownBy(
-                () -> thumbsService.thumbsDown(otherMemberId, postResponse.id()))
+                () -> thumbsService.thumbsDown(otherMemberId, postIdResponse.id()))
                 .isExactlyInstanceOf(EdonymyeonException.class)
                 .hasMessage(THUMBS_DOWN_ALREADY_EXIST.getMessage());
     }
 
-    private void thumbsUp(final Member member, final PostResponse post) {
+    private void thumbsUp(final Member member, final PostIdResponse post) {
         MemberId memberId = new ActiveMemberId(member.getId());
         thumbsService.thumbsUp(memberId, post.id());
     }
 
-    private void thumbsDown(final Member member, final PostResponse post) {
+    private void thumbsDown(final Member member, final PostIdResponse post) {
         MemberId memberId = new ActiveMemberId(member.getId());
         thumbsService.thumbsDown(memberId, post.id());
     }
