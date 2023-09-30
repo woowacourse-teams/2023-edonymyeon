@@ -10,23 +10,19 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityAlarmSettingBinding
-import com.app.edonymyeon.data.datasource.preference.PreferenceRemoteDataSource
-import com.app.edonymyeon.data.repository.PreferenceRepositoryImpl
 import com.app.edonymyeon.presentation.common.activity.BaseActivity
 import com.app.edonymyeon.presentation.util.PermissionUtil
 import com.app.edonymyeon.presentation.util.makeSnackbar
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AlarmSettingActivity : BaseActivity<ActivityAlarmSettingBinding, AlarmSettingViewModel>(
     {
         ActivityAlarmSettingBinding.inflate(it)
     },
 ) {
 
-    override val viewModel: AlarmSettingViewModel by viewModels {
-        AlarmSettingViewModelFactory(
-            PreferenceRepositoryImpl(PreferenceRemoteDataSource()),
-        )
-    }
+    override val viewModel: AlarmSettingViewModel by viewModels()
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(this) }
 
     private val requestPermissionLauncher = registerForActivityResult(

@@ -1,6 +1,7 @@
 package edonymyeon.backend.thumbs.ui;
 
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
+import edonymyeon.backend.global.version.ApiVersion;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.thumbs.application.ThumbsService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ public class ThumbsController {
 
     private final ThumbsService thumbsService;
 
+    @ApiVersion(value = {1})
     @PutMapping("posts/{postId}/up")
     public ResponseEntity<Void> thumbsUp(@AuthPrincipal final MemberId memberId,
                                          @PathVariable final Long postId) {
@@ -24,6 +26,7 @@ public class ThumbsController {
                 .build();
     }
 
+    @ApiVersion(value = {1})
     @PutMapping("posts/{postId}/down")
     public ResponseEntity<Void> thumbsDown(@AuthPrincipal final MemberId memberId,
                                            @PathVariable final Long postId) {
@@ -32,6 +35,7 @@ public class ThumbsController {
                 .build();
     }
 
+    @ApiVersion(value = {1})
     @DeleteMapping("posts/{postId}/up")
     public ResponseEntity<Void> deleteThumbsUp(@AuthPrincipal final MemberId memberId,
                                                @PathVariable final Long postId) {
@@ -40,6 +44,7 @@ public class ThumbsController {
                 .build();
     }
 
+    @ApiVersion(value = {1})
     @DeleteMapping("posts/{postId}/down")
     public ResponseEntity<Void> deleteThumbsDown(@AuthPrincipal final MemberId memberId,
                                                  @PathVariable final Long postId) {

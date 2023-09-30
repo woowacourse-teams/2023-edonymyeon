@@ -5,6 +5,7 @@ import static edonymyeon.backend.notification.domain.NotificationMessage.THUMBS_
 import static edonymyeon.backend.notification.domain.NotificationMessage.THUMBS_PER_10_NOTIFICATION_TITLE;
 
 import edonymyeon.backend.comment.domain.Comment;
+import edonymyeon.backend.consumption.application.ConsumptionService;
 import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
@@ -51,6 +52,8 @@ public class NotificationService {
 
     private final ThumbsService thumbsService;
 
+    private final ConsumptionService consumptionService;
+
     /**
      * 특정 회원이 받은 알림 내역을 조회합니다.
      * @param memberId 알림 내역을 조회할 회원의 식별자
@@ -71,8 +74,7 @@ public class NotificationService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void sendThumbsNotificationToWriter(final Post post) {
-        final Optional<String> deviceToken = post.getMember().getActiveDeviceToken();
-        if (deviceToken.isEmpty()) {
+        if (consumptionService.isPostConfirmed(post.getId())) {
             return;
         }
 
@@ -97,15 +99,14 @@ public class NotificationService {
      */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void sendCommentNotificationToPostWriter(Comment comment) {
+        if (comment.isWrittenSelf()) {
+            return;
+        }
+
         if (settingService.isSettingActive(new ActiveMemberId(comment.getPost().getWriterId()), SettingType.NOTIFICATION_PER_COMMENT)) {
             comment = entityManager.merge(comment);
 
-            final Optional<String> deviceToken = comment.getDeviceTokenFromPostWriter();
-            if (deviceToken.isEmpty()) {
-                return;
-            }
-
-            sendNotification(comment.getWriter(), ScreenType.POST, comment.findPostId(), COMMENT_NOTIFICATION_TITLE);
+            sendNotification(comment.getPostWriter(), ScreenType.POST, comment.findPostId(), COMMENT_NOTIFICATION_TITLE);
         }
     }
 
@@ -114,9 +115,9 @@ public class NotificationService {
      */
     // 매일 오후 8시
     @Scheduled(cron = "0 0 20 * * *")
-    @Transactional(readOnly = true)
+    @Transactional
     public void remindConfirmingConsumptions() {
-        final List<Member> membersHavingUnConfirmedPost = memberRepository.findAllHavingUnConfirmedPost();
+        final List<Member> membersHavingUnConfirmedPost = memberRepository.findAllHavingUnConfirmedPostWithInDays(31);
 
         for (Member member : membersHavingUnConfirmedPost) {
             remindConfirmingConsumptions(member);
@@ -139,10 +140,14 @@ public class NotificationService {
      */
     private void sendNotification(final Member notifyingTarget, final ScreenType notifyingType, final Long redirectId,
                                   final NotificationMessage notificationMessage) {
+        if (notifyingTarget.isDeleted()) {
+            return;
+        }
+
         final Long notificationId = saveNotification(notifyingTarget, notifyingType, redirectId, notificationMessage);
 
-        if (notifyingTarget.isDeleted()) {
-            log.warn("탈퇴한 회원에 대한 알림 전송 시도입니다.");
+        final Optional<String> deviceToken = notifyingTarget.getActiveDeviceToken();
+        if (deviceToken.isEmpty()) {
             return;
         }
 

@@ -6,23 +6,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.activity.viewModels
 import app.edonymyeon.databinding.ActivitySignUpBinding
-import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
-import com.app.edonymyeon.data.datasource.auth.AuthRemoteDataSource
-import com.app.edonymyeon.data.repository.AuthRepositoryImpl
 import com.app.edonymyeon.presentation.common.activity.BaseActivity
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SignUpActivity : BaseActivity<ActivitySignUpBinding, SignUpViewModel>({
     ActivitySignUpBinding.inflate(it)
 }) {
-    override val viewModel: SignUpViewModel by viewModels {
-        SignUpViewModelFactory(
-            AuthRepositoryImpl(
-                AuthLocalDataSource(),
-                AuthRemoteDataSource(),
-            ),
-        )
-    }
+    override val viewModel: SignUpViewModel by viewModels()
 
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(this) }
 

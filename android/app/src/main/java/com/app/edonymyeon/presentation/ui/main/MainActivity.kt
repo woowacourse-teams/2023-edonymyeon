@@ -17,7 +17,9 @@ import com.app.edonymyeon.presentation.ui.main.search.SearchFragment
 import com.app.edonymyeon.presentation.ui.mypost.MyPostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import com.app.edonymyeon.presentation.util.makeSnackbar
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val fragments = mapOf(
         FRAGMENT_SEARCH to SearchFragment(),

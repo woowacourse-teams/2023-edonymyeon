@@ -1,6 +1,7 @@
 package edonymyeon.backend.setting.ui;
 
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
+import edonymyeon.backend.global.version.ApiVersion;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.setting.application.SettingService;
 import edonymyeon.backend.setting.application.dto.SettingRequest;
@@ -20,11 +21,13 @@ public class SettingController {
 
     private final SettingService settingService;
 
+    @ApiVersion(value = {1})
     @GetMapping("/notification")
     public ResponseEntity<SettingsResponse> findSettings(@AuthPrincipal MemberId memberId) {
         return ResponseEntity.ok(settingService.findSettingsByMemberId(memberId));
     }
 
+    @ApiVersion(value = {1})
     @PostMapping("/notification")
     public ResponseEntity<SettingsResponse> toggleSetting(@RequestBody SettingRequest settingRequest,
                                                           @AuthPrincipal MemberId memberId) {

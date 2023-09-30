@@ -2,10 +2,10 @@
 == 댓글
 
 === 댓글 작성
-operation::comment-create[snippets='request-headers,path-parameters,request-parts,http-request,http-response']
+operation::comment-create[snippets='path-parameters,request-parts,http-request,http-response']
 
 === 댓글 삭제
-operation::comment-delete[snippets='request-headers,path-parameters,http-request,http-response']
+operation::comment-delete[snippets='path-parameters,http-request,http-response']
 
 === 하나의 게시물에 대한 댓글만 조회
 operation::comment-findAllByPost[snippets='path-parameters,http-request,http-response,response-fields']

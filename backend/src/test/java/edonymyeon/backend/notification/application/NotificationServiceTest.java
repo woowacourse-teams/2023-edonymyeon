@@ -1,6 +1,7 @@
 package edonymyeon.backend.notification.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.Mockito.any;
@@ -18,6 +19,7 @@ import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.ScreenType;
@@ -31,7 +33,6 @@ import edonymyeon.backend.thumbs.application.ThumbsService;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -172,8 +173,7 @@ class NotificationServiceTest extends IntegrationFixture {
     @Test
     void 탈퇴한_회원에게는_알림을_발송하면_안된다(
             @Autowired AuthService authService,
-            @Autowired CommentService commentService,
-            @Autowired MemberService memberService
+            @Autowired CommentService commentService
     ) {
         final Member writer = getJoinedMember(authService);
         settingService.toggleSetting(SettingType.NOTIFICATION_PER_COMMENT.getSerialNumber(),
@@ -182,12 +182,15 @@ class NotificationServiceTest extends IntegrationFixture {
         final Member commenter = memberTestSupport.builder().build();
         final Post post = postTestSupport.builder().member(writer).build();
 
-        memberService.deleteMember(writer.getId());
+        authService.withdraw(new ActiveMemberId(writer.getId()));
 
         commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
                 new CommentRequest(null, "Test Commentary"));
 
-        verify(super.notificationSender, never()).sendNotification(any(), any());
+        Assertions.assertAll(
+                () -> verify(notificationSender, never()).sendNotification(any(), any()),
+                () -> assertThat(notificationRepository.count()).isZero()
+        );
     }
 
     @Test
@@ -228,6 +231,69 @@ class NotificationServiceTest extends IntegrationFixture {
         postService.deletePost(new ActiveMemberId(writer.getId()), post.getId());
 
         assertThat(notificationRepository.count()).isZero();
+    }
+
+    @Test
+    void 자신의_게시글에_자신이_댓글을_남기면_알림이_가지_않는다(
+            @Autowired AuthService authService,
+            @Autowired CommentService commentService
+    ) {
+        final Member writer = getJoinedMember(authService);
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_COMMENT.getSerialNumber(),
+                new ActiveMemberId(writer.getId()));
+
+        final Post post = postTestSupport.builder().member(writer).build();
+
+        commentService.createComment(new ActiveMemberId(writer.getId()), post.getId(),
+                new CommentRequest(null, "Test Commentary"));
+
+        Assertions.assertAll(
+                () -> verify(notificationSender, never()).sendNotification(any(), any()),
+                () -> assertThat(notificationRepository.count()).isZero()
+        );
+    }
+
+    @Test
+    void 로그아웃한_사용자에게_알림을_보내지_않는다(@Autowired CommentService commentService) {
+        final Member writer = getJoinedMember(authService);
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_COMMENT.getSerialNumber(), new ActiveMemberId(writer.getId()));
+
+        final Member commenter = memberTestSupport.builder().build();
+        final Post post = postTestSupport.builder().member(writer).build();
+
+        authService.logout(writer.getActiveDeviceToken().orElseGet(() -> fail("활성화된 디바이스 토큰이 존재하지 않음")));
+
+        commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
+                new CommentRequest(null, "Test Commentary"));
+
+        Assertions.assertAll(
+                () -> verify(notificationSender, never()).sendNotification(any(), any()),
+                () -> assertThat(notificationRepository.count())
+                        .as("알림은 발송하지 않았더라도 알림 내역은 저장해야지!")
+                        .isEqualTo(1)
+        );
+    }
+
+    @Test
+    void 소비절약_확정이_완료된_게시글에는_반응알림을_보내지_않는다(
+            @Autowired MemberService memberService,
+            @Autowired ThumbsService thumbsService
+    ) {
+        final Member writer = getJoinedMember(authService);
+        settingService.toggleSetting(SettingType.NOTIFICATION_PER_THUMBS.getSerialNumber(), new ActiveMemberId(writer.getId()));
+
+        final Post post = postTestSupport.builder().member(writer).build();
+        memberService.confirmPurchase(new ActiveMemberId(writer.getId()), post.getId(),
+                new PurchaseConfirmRequest(4000L, 2023, 8));
+
+        final Member liker = memberTestSupport.builder().build();
+
+        thumbsService.thumbsUp(new ActiveMemberId(liker.getId()), post.getId());
+
+        Assertions.assertAll(
+                () -> verify(notificationSender, never()).sendNotification(any(), any()),
+                () -> assertThat(notificationRepository.count()).isZero()
+        );
     }
 
     private static Member getJoinedMember(final AuthService authService) {

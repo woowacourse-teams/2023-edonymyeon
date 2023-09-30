@@ -7,12 +7,12 @@ import com.app.edonymyeon.data.dto.request.TokenRequest
 import com.app.edonymyeon.data.dto.request.UserRegistrationRequest
 import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
 import com.app.edonymyeon.data.service.AuthService
-import com.app.edonymyeon.data.service.client.RetrofitClient
 import retrofit2.Response
+import javax.inject.Inject
 
-class AuthRemoteDataSource : AuthDataSource.Remote {
-    private val authService: AuthService =
-        RetrofitClient.getInstance().create(AuthService::class.java)
+class AuthRemoteDataSource @Inject constructor(
+    private val authService: AuthService,
+) : AuthDataSource.Remote {
 
     override suspend fun signUp(userRegistrationRequest: UserRegistrationRequest): Response<Unit> {
         return authService.signUp(userRegistrationRequest)

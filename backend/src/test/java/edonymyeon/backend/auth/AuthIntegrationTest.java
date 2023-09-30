@@ -1,5 +1,6 @@
 package edonymyeon.backend.auth;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.AUTHORIZATION_EMPTY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.ArgumentMatchers.any;
@@ -12,17 +13,22 @@ import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
-import edonymyeon.backend.auth.domain.BasicTokenGenerator;
-import edonymyeon.backend.auth.domain.TokenGenerator;
+import edonymyeon.backend.auth.application.dto.LogoutRequest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.domain.SocialInfo;
 import edonymyeon.backend.member.domain.SocialInfo.SocialType;
 import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.support.EdonymyeonRestAssured;
+import edonymyeon.backend.support.EdonymyeonRestAssured.EdonymyeonRestAssuredBuilder;
 import edonymyeon.backend.support.IntegrationFixture;
+import edonymyeon.backend.support.TestMemberBuilder;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.http.Header;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.Base64;
+import io.restassured.specification.RequestSpecification;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +45,9 @@ class AuthIntegrationTest extends IntegrationFixture {
 
     @Test
     void 이메일_중복을_체크한다_중복X() {
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .param("target", "email")
                 .param("value", "email@naver.com")
                 .when()
@@ -62,8 +69,9 @@ class AuthIntegrationTest extends IntegrationFixture {
                 .email("email@naver.com")
                 .build();
 
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .param("target", "email")
                 .param("value", member.getEmail())
                 .when()
@@ -81,8 +89,9 @@ class AuthIntegrationTest extends IntegrationFixture {
 
     @Test
     void 닉네임_중복을_체크한다_중복X() {
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .param("target", "nickname")
                 .param("value", "2rinebabo")
                 .when()
@@ -104,8 +113,9 @@ class AuthIntegrationTest extends IntegrationFixture {
                 .nickname("2rinebabo")
                 .build();
 
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .param("target", "nickname")
                 .param("value", member.getNickname())
                 .when()
@@ -125,8 +135,9 @@ class AuthIntegrationTest extends IntegrationFixture {
     void 회원가입_성공() {
         final JoinRequest request = new JoinRequest("email@naver.com", "password123!", "kerrobabo", "unknownDevice");
 
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
@@ -147,8 +158,9 @@ class AuthIntegrationTest extends IntegrationFixture {
 
         final JoinRequest request = new JoinRequest(duplicatedEmail, "password123!", "kerrobabo", "unknownDevice");
 
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
@@ -169,8 +181,9 @@ class AuthIntegrationTest extends IntegrationFixture {
 
         final JoinRequest request = new JoinRequest("foxbabo", "password123!", duplicatedNickname, "unknownDevice");
 
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
@@ -189,8 +202,9 @@ class AuthIntegrationTest extends IntegrationFixture {
         final LoginRequest request = new LoginRequest(joinRequest.email(), joinRequest.password(),
                 joinRequest.deviceToken());
 
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
                 .when()
@@ -198,14 +212,11 @@ class AuthIntegrationTest extends IntegrationFixture {
                 .then()
                 .extract();
 
-        String valueToEncode = request.email() + ":";
-        final String expectedCookieValue = Base64.getEncoder().encodeToString(valueToEncode.getBytes());
-
         assertSoftly(
                 softly -> {
                     softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-                    softly.assertThat(response.header(HttpHeaders.AUTHORIZATION))
-                            .isEqualTo("Basic " + expectedCookieValue);
+                    softly.assertThat(response.header(HttpHeaders.SET_COOKIE))
+                            .contains(response.sessionId());
                 });
     }
 
@@ -220,8 +231,9 @@ class AuthIntegrationTest extends IntegrationFixture {
 
         final KakaoLoginRequest kakaoLoginRequest = new KakaoLoginRequest("accessToken", "testDeviceToken");
 
-        final ExtractableResponse<Response> response = RestAssured
-                .given()
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(kakaoLoginRequest)
                 .when()
@@ -229,12 +241,10 @@ class AuthIntegrationTest extends IntegrationFixture {
                 .then()
                 .extract();
 
-        TokenGenerator tokenGenerator = new BasicTokenGenerator();
-
         assertSoftly(softly -> {
             softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
-            softly.assertThat(response.header(HttpHeaders.AUTHORIZATION))
-                    .isEqualTo(tokenGenerator.getToken(member.getEmail()));
+            softly.assertThat(response.header(HttpHeaders.SET_COOKIE))
+                    .contains(response.sessionId());
         });
     }
 
@@ -245,8 +255,9 @@ class AuthIntegrationTest extends IntegrationFixture {
 
         final KakaoLoginRequest kakaoLoginRequest = new KakaoLoginRequest("accessToken", "testDeviceToken");
 
-        RestAssured
-                .given()
+        EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(kakaoLoginRequest)
                 .when()
@@ -258,5 +269,68 @@ class AuthIntegrationTest extends IntegrationFixture {
             softly.assertThat(카카오_로그인전_회원).isEmpty();
             softly.assertThat(카카오_로그인후_회원).isPresent();
         });
+    }
+
+    @Test
+    void 세션만료된_세션정보로_회원_정보_조회시_예외처리() {
+        final Member member = memberTestSupport.builder().build();
+
+        final ExtractableResponse<Response> 로그인_결과 = 로그인_요청(member);
+
+        final String cookieValue = 로그인_결과.header(HttpHeaders.SET_COOKIE);
+        final Header header = new Header(HttpHeaders.COOKIE, cookieValue);
+
+        로그아웃_요청(member, header);
+
+        final ExtractableResponse<Response> 내가_쓴글_조회 = EdonymyeonRestAssured.builder()
+                .version(1)
+                .sessionId(cookieValue)
+                .build()
+                .when()
+                .get("/profile/my-posts")
+                .then()
+                .extract();
+
+        final JsonPath errorResponse = 내가_쓴글_조회.body().jsonPath();
+        assertSoftly(
+                softly -> {
+                    softly.assertThat(내가_쓴글_조회.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+                    softly.assertThat(errorResponse.getInt("errorCode")).isEqualTo(AUTHORIZATION_EMPTY.getCode());
+                    softly.assertThat(errorResponse.getString("errorMessage"))
+                            .isEqualTo(AUTHORIZATION_EMPTY.getMessage());
+                }
+        );
+    }
+
+    private ExtractableResponse<Response> 로그인_요청(Member member) {
+        final String deviceToken = member.getDevices().get(0).getDeviceToken();
+        final LoginRequest loginRequest = new LoginRequest(member.getEmail(), TestMemberBuilder.getRawPassword(),
+                deviceToken);
+
+        return EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
+                .contentType(ContentType.JSON)
+                .body(loginRequest)
+                .when()
+                .post("/login")
+                .then()
+                .extract();
+    }
+
+    private ExtractableResponse<Response> 로그아웃_요청(Member member, Header header) {
+        final String deviceToken = member.getDevices().get(0).getDeviceToken();
+        final LogoutRequest logoutRequest = new LogoutRequest(deviceToken);
+
+        return EdonymyeonRestAssured.builder()
+                .version(1)
+                .sessionId(header.getValue())
+                .build()
+                .contentType(ContentType.JSON)
+                .body(logoutRequest)
+                .when()
+                .post("/logout")
+                .then()
+                .extract();
     }
 }

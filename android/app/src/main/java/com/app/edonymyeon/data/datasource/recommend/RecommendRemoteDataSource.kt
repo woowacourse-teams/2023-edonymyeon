@@ -1,12 +1,12 @@
 package com.app.edonymyeon.data.datasource.recommend
 
 import com.app.edonymyeon.data.service.RecommendService
-import com.app.edonymyeon.data.service.client.RetrofitClient
 import retrofit2.Response
+import javax.inject.Inject
 
-class RecommendRemoteDataSource : RecommendDataSource {
-    private val recommendService: RecommendService =
-        RetrofitClient.getInstance().create(RecommendService::class.java)
+class RecommendRemoteDataSource @Inject constructor(
+    private val recommendService: RecommendService,
+) : RecommendDataSource {
 
     override suspend fun saveRecommendUp(postId: Long): Response<Unit> {
         return recommendService.saveRecommendUp(postId)

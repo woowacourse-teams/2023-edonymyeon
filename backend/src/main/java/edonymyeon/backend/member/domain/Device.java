@@ -64,4 +64,8 @@ public class Device extends TemporalRecord {
             this.isActive = true;
         }
     }
+
+    public boolean isOwner(final Member member) {
+        return Objects.equals(this.member, member);
+    }
 }

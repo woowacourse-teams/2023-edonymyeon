@@ -1,5 +1,16 @@
 package edonymyeon.backend.report.docs;
 
+import static edonymyeon.backend.auth.ui.SessionConst.USER;
+import static edonymyeon.backend.report.domain.ReportType.POST;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.member.domain.Member;
@@ -13,29 +24,17 @@ import edonymyeon.backend.report.domain.AbusingType;
 import edonymyeon.backend.report.domain.Report;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.TestMemberBuilder;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.SliceImpl;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
-import java.util.Optional;
-
-import static edonymyeon.backend.report.domain.ReportType.POST;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -81,7 +80,6 @@ public class ReportDocsTest implements ImageFileCleaner {
         final Member 글쓴이 = testMemberBuilder.builder()
                 .id(1L)
                 .email("email@email.com")
-                .password("password123!")
                 .nickname("nickname")
                 .buildWithoutSaving();
         final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, PostImageInfos.create(), 0, 0, false);
@@ -90,14 +88,14 @@ public class ReportDocsTest implements ImageFileCleaner {
         게시글_레포지토리를_모킹한다(게시글);
         신고_서비스를_모킹한다(new Report(POST, 게시글.getId(), 글쓴이, AbusingType.OBSCENITY, ""));
 
-        final ReportRequest reportRequest = new ReportRequest("POST", 게시글.getId(), AbusingType.OBSCENITY.getTypeCode(), "");
+        final ReportRequest reportRequest = new ReportRequest("POST", 게시글.getId(), AbusingType.OBSCENITY.getTypeCode(),
+                "");
 
         final var 게시글_상세_조회_요청 = post("/report")
+                .header("X-API-VERSION", 1)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(reportRequest))
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((글쓴이.getEmail() + ":" + 글쓴이.getPassword()).getBytes()));
+                .sessionAttr(USER.getSessionId(), 글쓴이.getId());
 
         final RestDocumentationResultHandler 문서화 = document("report-save",
                 preprocessRequest(prettyPrint())

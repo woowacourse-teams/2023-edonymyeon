@@ -5,8 +5,9 @@ import com.app.edonymyeon.data.datasource.notification.NotificationDataSource
 import com.app.edonymyeon.mapper.toDomain
 import com.domain.edonymyeon.model.Notifications
 import com.domain.edonymyeon.repository.NotificationRepository
+import javax.inject.Inject
 
-class NotificationRepositoryImpl(private val notificationDataSource: NotificationDataSource) :
+class NotificationRepositoryImpl @Inject constructor(private val notificationDataSource: NotificationDataSource) :
     NotificationRepository {
     override suspend fun getNotifications(size: Int, page: Int): Result<Notifications> {
         val result = notificationDataSource.getNotifications(size, page)

@@ -203,8 +203,8 @@ public class ConsumptionIntegrationTest extends IntegrationFixture {
                     assertThat(조회_응답.jsonPath().getString("startMonth")).isEqualTo(최근_년_달);
                     assertThat(조회_응답.jsonPath().getString("endMonth")).isEqualTo(최근_년_달);
                     assertThat(조회_응답.jsonPath().getList("consumptions")).hasSize(1);
-                    assertThat(조회_응답.jsonPath().getLong("consumptions[0].savingPrice")).isEqualTo(0);
-                    assertThat(조회_응답.jsonPath().getLong("consumptions[0].purchasePrice")).isEqualTo(0);
+                    assertThat(조회_응답.jsonPath().getLong("consumptions[0].savingPrice")).isZero();
+                    assertThat(조회_응답.jsonPath().getLong("consumptions[0].purchasePrice")).isZero();
                 }
         );
     }
