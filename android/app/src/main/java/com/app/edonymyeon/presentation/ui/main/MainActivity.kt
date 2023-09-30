@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     private val backPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
-            if (System.currentTimeMillis() - backClickedTime >= 1500) {
+            if (System.currentTimeMillis() - backClickedTime >= FINISHING_APP_TIME) {
                 backClickedTime = System.currentTimeMillis()
                 binding.root.makeSnackbar(getString(R.string.main_ask_back_click))
             } else {
@@ -152,6 +152,8 @@ class MainActivity : AppCompatActivity() {
         private const val NOTIFICATION_CLICK_EVENT_MYPOST = "MYPOST"
         private const val NOTIFICATION_POST_ID = "postId"
         private const val NOTIFICATION_ID = "notificationId"
+
+        private const val FINISHING_APP_TIME = 2000 // 2초
 
         fun newIntent(context: Context): Intent {
             return Intent(context, MainActivity::class.java)
