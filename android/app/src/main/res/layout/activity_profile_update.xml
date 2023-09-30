@@ -126,5 +126,29 @@
             app:layout_constraintTop_toBottomOf="@id/space_nickname_bottom"
             app:layout_constraintWidth_percent="0.88" />
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_update"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_576b9e_radius_6dp"
+            android:stateListAnimator="@null"
+            android:text="@string/profile_update_button_update"
+            android:textColor="@color/white_ffffff"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/space_update_bottom"
+            app:layout_constraintDimensionRatio="H,320:48"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintWidth_percent="0.88" />
+
+        <Space
+            android:id="@+id/space_update_bottom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,360:14"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

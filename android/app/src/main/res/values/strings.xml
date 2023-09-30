@@ -160,5 +160,6 @@
     <string name="profile_update_image_upload">프로필 사진 업로드</string>
     <string name="profile_update_image_delete">기본 이미지로 변경</string>
     <string name="profile_update_nickname_title">닉네임</string>
+    <string name="profile_update_button_update">수정하기</string>
 
 </resources>
