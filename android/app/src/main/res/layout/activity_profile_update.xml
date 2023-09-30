@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Space
+            android:id="@+id/space_image_top"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,360:64"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_profile"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/space_image_top"
+            app:layout_constraintWidth_percent="0.54"
+            tools:src="@drawable/ic_launcher_background" />
+
+        <Space
+            android:id="@+id/space_image_bottom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,360:36"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_profile" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_image_upload"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_576b9e_radius_6dp"
+            android:text="@string/profile_update_image_upload"
+            android:textColor="@color/white_ffffff"
+            android:textSize="16sp"
+            app:layout_constraintDimensionRatio="H,140:42"
+            app:layout_constraintEnd_toStartOf="@id/btn_image_delete"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/space_image_bottom"
+            app:layout_constraintWidth_percent="0.4" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_image_delete"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_666666_radius_6dp"
+            android:text="@string/profile_update_image_delete"
+            android:textColor="@color/white_ffffff"
+            android:textSize="16sp"
+            app:layout_constraintDimensionRatio="H,140:42"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_image_upload"
+            app:layout_constraintTop_toBottomOf="@id/space_image_bottom"
+            app:layout_constraintWidth_percent="0.4" />
+
+        <Space
+            android:id="@+id/space_button_bottom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,360:30"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_image_upload" />
+
+        <Space
+            android:id="@+id/space_field_start"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="H,360:32"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/space_button_bottom" />
+
+        <Space
+            android:id="@+id/space_field_end"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="H,360:32"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/space_button_bottom" />
+
+        <TextView
+            android:id="@+id/tv_title_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_update_nickname_title"
+            android:textColor="@color/black_434343"
+            android:textSize="16sp"
+            app:layout_constraintStart_toEndOf="@id/space_field_start"
+            app:layout_constraintTop_toBottomOf="@id/space_button_bottom" />
+
+        <Space
+            android:id="@+id/space_nickname_bottom"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="H,360:14"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_title_nickname" />
+
+        <EditText
+            android:id="@+id/et_nickname"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/bg_stroke_576b9e_radius_10dp"
+            android:inputType="text"
+            android:padding="10dp"
+            android:textColor="@color/black_000000"
+            android:textColorHint="@color/black_000000"
+            android:textSize="16sp"
+            app:layout_constraintDimensionRatio="H,270:36"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/space_nickname_bottom"
+            app:layout_constraintWidth_percent="0.88" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

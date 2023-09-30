@@ -15,8 +15,8 @@ import com.app.edonymyeon.presentation.ui.main.MainActivity
 import com.app.edonymyeon.presentation.ui.main.mypage.chart.LineChartManager
 import com.app.edonymyeon.presentation.ui.main.mypage.dialog.WithdrawDialog
 import com.app.edonymyeon.presentation.ui.mypost.MyPostActivity
+import com.app.edonymyeon.presentation.ui.profileupdate.ProfileUpdateActivity
 import com.app.edonymyeon.presentation.uimodel.NicknameUiModel
-import com.app.edonymyeon.presentation.util.makeSnackbar
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -24,9 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
-    {
-        FragmentMyPageBinding.inflate(it)
-    },
+    { FragmentMyPageBinding.inflate(it) },
 ) {
     override val viewModel: MyPageViewModel by viewModels()
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
@@ -107,7 +105,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
         binding.tvLogout.setOnClickListener { logout() }
         binding.tvMyPost.setOnClickListener { navigateToMyPost() }
         binding.tvUpdateAlarmSetting.setOnClickListener { navigateToAlarmSetting() }
-        binding.tvUpdateUserInfo.setOnClickListener { binding.root.makeSnackbar(getString(R.string.all_preparing_feature)) }
+        binding.tvUpdateUserInfo.setOnClickListener { navigateToProfileUpdate() }
         binding.tvWithdraw.setOnClickListener { showDialog() }
     }
 
@@ -164,6 +162,10 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
     private fun navigateToAlarmSetting() {
 //        binding.root.makeSnackbar(getString(R.string.all_preparing_feature))
         startActivity(AlarmSettingActivity.newIntent(requireContext()))
+    }
+
+    private fun navigateToProfileUpdate() {
+        startActivity(ProfileUpdateActivity.newIntent(requireContext()))
     }
 
     private fun navigateToLogin() {
