@@ -3,11 +3,17 @@ package com.app.edonymyeon.presentation.ui.profileupdate
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import androidx.activity.viewModels
 import app.edonymyeon.databinding.ActivityProfileUpdateBinding
+import com.app.edonymyeon.presentation.common.activity.BaseActivity
 
-class ProfileUpdateActivity : AppCompatActivity() {
-    private val binding by lazy { ActivityProfileUpdateBinding.inflate(layoutInflater) }
+class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, ProfileUpdateViewModel>(
+    { ActivityProfileUpdateBinding.inflate(it) },
+) {
+    override val viewModel: ProfileUpdateViewModel by viewModels()
+
+    override val inflater: LayoutInflater by lazy { LayoutInflater.from(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
