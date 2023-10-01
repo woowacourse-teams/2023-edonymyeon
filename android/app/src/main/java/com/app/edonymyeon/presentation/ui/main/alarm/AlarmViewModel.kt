@@ -2,18 +2,22 @@ package com.app.edonymyeon.presentation.ui.main.alarm
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
 import com.app.edonymyeon.mapper.toUiModel
+import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.NotificationUiModel
 import com.domain.edonymyeon.model.Page
+import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.NotificationRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AlarmViewModel(
+@HiltViewModel
+class AlarmViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository,
-) : ViewModel() {
+    private val authRepository: AuthRepository,
+) : BaseViewModel() {
     private var currentPage = Page()
     private var isLastPage = false
 
@@ -24,11 +28,11 @@ class AlarmViewModel(
     val notificationList: LiveData<List<NotificationUiModel>> get() = _notificationList
 
     fun checkLogin() {
-        _isLogin.value = AuthLocalDataSource().getAuthToken() != null
+        _isLogin.value = authRepository.getToken() != null
     }
 
     fun getAlarmList() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             val result = notificationRepository.getNotifications(PAGE_SIZE, currentPage.value)
             if (result.isSuccess) {
                 _notificationList.value =

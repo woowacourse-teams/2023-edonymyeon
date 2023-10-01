@@ -1,6 +1,7 @@
 package edonymyeon.backend.report.ui;
 
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
+import edonymyeon.backend.global.version.ApiVersion;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.report.application.ReportRequest;
 import edonymyeon.backend.report.application.ReportService;
@@ -17,6 +18,7 @@ public class ReportController {
 
     private final ReportService reportService;
 
+    @ApiVersion(value = {1})
     @PostMapping("/report")
     public ResponseEntity<Void> report(@RequestBody ReportRequest reportRequest, @AuthPrincipal MemberId reporterId) {
         final Long reportId = reportService.report(reportRequest, reporterId);

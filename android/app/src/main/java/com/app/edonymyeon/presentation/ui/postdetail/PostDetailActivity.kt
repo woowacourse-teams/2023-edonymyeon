@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -15,18 +16,12 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.viewpager2.widget.ViewPager2
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostDetailBinding
 import app.edonymyeon.databinding.ViewCommentInputBinding
-import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
-import com.app.edonymyeon.data.datasource.recommend.RecommendRemoteDataSource
-import com.app.edonymyeon.data.datasource.report.ReportRemoteDataSource
-import com.app.edonymyeon.data.repository.PostRepositoryImpl
-import com.app.edonymyeon.data.repository.RecommendRepositoryImpl
-import com.app.edonymyeon.data.repository.ReportRepositoryImpl
+import com.app.edonymyeon.presentation.common.activity.BaseActivity
 import com.app.edonymyeon.presentation.common.activityutil.hideKeyboard
 import com.app.edonymyeon.presentation.common.dialog.LoadingDialog
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
@@ -34,33 +29,33 @@ import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.CommentAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.ImageSliderAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.DeleteDialog
+import com.app.edonymyeon.presentation.ui.postdetail.dialog.PostDeletedDialog
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.ReportDialog
 import com.app.edonymyeon.presentation.ui.postdetail.listener.CommentClickListener
 import com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.util.makeSnackbar
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
+import dagger.hilt.android.AndroidEntryPoint
 
-class PostDetailActivity : AppCompatActivity(), CommentClickListener {
+@AndroidEntryPoint
+class PostDetailActivity :
+    BaseActivity<ActivityPostDetailBinding, PostDetailViewModel>({
+        ActivityPostDetailBinding.inflate(it)
+    }),
+    CommentClickListener {
+
     private val id: Long by lazy {
         intent.getLongExtra(KEY_POST_ID, -1)
-    }
-
-    private val binding: ActivityPostDetailBinding by lazy {
-        ActivityPostDetailBinding.inflate(layoutInflater)
     }
 
     private val includeBinding: ViewCommentInputBinding by lazy {
         binding.clCommentInput
     }
 
-    private val viewModel: PostDetailViewModel by viewModels<PostDetailViewModel> {
-        PostDetailViewModelFactory(
-            PostRepositoryImpl(PostRemoteDataSource()),
-            RecommendRepositoryImpl(RecommendRemoteDataSource()),
-            ReportRepositoryImpl(ReportRemoteDataSource()),
-        )
-    }
+    override val viewModel: PostDetailViewModel by viewModels()
+
+    override val inflater: LayoutInflater by lazy { LayoutInflater.from(this) }
 
     private val pickGalleryImage =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -80,6 +75,12 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
 
     private val loadingDialog: LoadingDialog by lazy {
         LoadingDialog(getString(R.string.post_detail_loading))
+    }
+
+    private val postDeletedDialog: PostDeletedDialog by lazy {
+        PostDeletedDialog {
+            finish()
+        }
     }
 
     private val adapter: CommentAdapter by lazy {
@@ -189,7 +190,7 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
     }
 
     private fun getPost() {
-        viewModel.getPostDetail(id)
+        viewModel.getPostDetail(id, intent.getLongExtra(KEY_NOTIFICATION_ID, -1))
         viewModel.getComments(id)
     }
 
@@ -249,6 +250,12 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
         viewModel.reportSaveMessage.observe(this) {
             binding.root.makeSnackbar(it)
         }
+
+        viewModel.isPostDeleted.observe(this) {
+            if (it) {
+                postDeletedDialog.show(supportFragmentManager, "PostDeletedDialog")
+            }
+        }
     }
 
     private fun setListener() {
@@ -272,6 +279,11 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
         includeBinding.cvContentImage.ivPostGalleryImageRemove.setOnClickListener {
             includeBinding.clGalleryImage.visibility = View.GONE
             viewModel.setCommentImage(null)
+        }
+
+        binding.srlRefresh.setOnRefreshListener {
+            binding.srlRefresh.isRefreshing = false
+            viewModel.getComments(id)
         }
     }
 
@@ -393,9 +405,15 @@ class PostDetailActivity : AppCompatActivity(), CommentClickListener {
     }
 
     companion object {
-        const val KEY_POST_ID = "key_post_id"
+        private const val KEY_POST_ID = "key_post_id"
+        private const val KEY_NOTIFICATION_ID = "key_notification_id"
         fun newIntent(context: Context, postId: Long): Intent {
             return Intent(context, PostDetailActivity::class.java).putExtra(KEY_POST_ID, postId)
+        }
+
+        fun newIntent(context: Context, postId: Long, notificationId: Long): Intent {
+            return Intent(context, PostDetailActivity::class.java).putExtra(KEY_POST_ID, postId)
+                .putExtra(KEY_NOTIFICATION_ID, notificationId)
         }
     }
 }

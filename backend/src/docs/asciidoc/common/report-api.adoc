@@ -1,4 +1,4 @@
-[[authentication-api]]
+[[report-api]]
 == 신고
 
 === 신고 등록

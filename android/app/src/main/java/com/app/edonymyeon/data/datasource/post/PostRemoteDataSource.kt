@@ -6,7 +6,6 @@ import com.app.edonymyeon.data.dto.response.PostDetailResponse
 import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.Posts
 import com.app.edonymyeon.data.service.PostService
-import com.app.edonymyeon.data.service.client.RetrofitClient
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -14,13 +13,17 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Response
 import java.io.File
+import javax.inject.Inject
 
-class PostRemoteDataSource : PostDataSource {
-    private val postService: PostService =
-        RetrofitClient.getInstance().create(PostService::class.java)
+class PostRemoteDataSource @Inject constructor(
+    private val postService: PostService,
+) : PostDataSource {
 
-    override suspend fun getPostDetail(postId: Long): Response<PostDetailResponse> {
-        return postService.getPost(postId)
+    override suspend fun getPostDetail(
+        postId: Long,
+        notificationId: Long,
+    ): Response<PostDetailResponse> {
+        return postService.getPost(postId, notificationId)
     }
 
     override suspend fun deletePost(postId: Long): Response<Unit> {

@@ -10,16 +10,15 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostEditorBinding
-import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
-import com.app.edonymyeon.data.repository.PostRepositoryImpl
+import com.app.edonymyeon.presentation.common.activity.BaseActivity
 import com.app.edonymyeon.presentation.common.activityutil.hideKeyboard
 import com.app.edonymyeon.presentation.common.dialog.LoadingDialog
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
@@ -29,20 +28,21 @@ import com.app.edonymyeon.presentation.util.getParcelableExtraCompat
 import com.app.edonymyeon.presentation.util.makeSnackbar
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import com.domain.edonymyeon.model.PostEditor
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 
-class PostEditorActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorViewModel>(
+    { ActivityPostEditorBinding.inflate(it) },
+) {
 
-    private val viewModel: PostEditorViewModel by viewModels {
-        PostEditorViewModelFactory(PostRepositoryImpl(PostRemoteDataSource()))
-    }
+    override val viewModel: PostEditorViewModel by viewModels()
+
     private val adapter: PostEditorImagesAdapter by lazy {
         PostEditorImagesAdapter(::deleteImages)
     }
 
-    private val binding: ActivityPostEditorBinding by lazy {
-        ActivityPostEditorBinding.inflate(layoutInflater)
-    }
+    override val inflater: LayoutInflater by lazy { LayoutInflater.from(this) }
 
     private val loadingDialog: LoadingDialog by lazy {
         LoadingDialog(getString(R.string.post_editor_loading_message))

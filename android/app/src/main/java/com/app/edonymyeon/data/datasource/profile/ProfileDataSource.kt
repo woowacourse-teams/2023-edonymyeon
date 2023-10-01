@@ -7,7 +7,7 @@ import com.app.edonymyeon.data.dto.response.ProfileResponse
 import retrofit2.Response
 
 interface ProfileDataSource {
-    suspend fun getMyPosts(page: Int): Response<MyPostsResponse>
+    suspend fun getMyPosts(page: Int, notificationId: Long): Response<MyPostsResponse>
     suspend fun postPurchaseConfirm(
         id: Long,
         purchaseConfirmRequest: PurchaseConfirmRequest,

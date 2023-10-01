@@ -1,42 +1,30 @@
 package edonymyeon.backend.post.domain;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_CONTENT_ILLEGAL_LENGTH;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_EMPTY;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_PRICE_ILLEGAL_SIZE;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_TITLE_ILLEGAL_LENGTH;
-
 import edonymyeon.backend.global.domain.TemporalRecord;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.member.domain.Member;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Where;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import static edonymyeon.backend.global.exception.ExceptionInformation.*;
 
 @Getter
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @DynamicInsert
+@Table(indexes = @Index(name = "i_post_created_at", columnList = "createdAt"))
 @Where(clause = "deleted = false")
 @Entity
 public class Post extends TemporalRecord {
@@ -194,6 +182,10 @@ public class Post extends TemporalRecord {
         return member;
     }
 
+    public Long getWriterId() {
+        return this.member.getId();
+    }
+
     public boolean hasThumbnail() {
         return !this.postImageInfos.isEmpty();
     }
@@ -223,5 +215,9 @@ public class Post extends TemporalRecord {
         //lazyLoading 문제로 repository를 통해 직접 postImageInfos를 제거해주는 것이 필요하다.
         this.postImageInfos.deleteAll();
         this.deleted = true;
+    }
+
+    public Optional<String> getDeviceTokenFromWriter() {
+        return this.member.getActiveDeviceToken();
     }
 }

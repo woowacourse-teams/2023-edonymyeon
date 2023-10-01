@@ -5,16 +5,15 @@ import com.app.edonymyeon.data.dto.request.SavingConfirmRequest
 import com.app.edonymyeon.data.dto.response.MyPostsResponse
 import com.app.edonymyeon.data.dto.response.ProfileResponse
 import com.app.edonymyeon.data.service.ProfileService
-import com.app.edonymyeon.data.service.client.RetrofitClient
 import retrofit2.Response
+import javax.inject.Inject
 
-class ProfileRemoteDataSource : ProfileDataSource {
+class ProfileRemoteDataSource @Inject constructor(
+    private val profileService: ProfileService,
+) : ProfileDataSource {
 
-    private val profileService: ProfileService =
-        RetrofitClient.getInstance().create(ProfileService::class.java)
-
-    override suspend fun getMyPosts(page: Int): Response<MyPostsResponse> {
-        return profileService.getMyPost(20, page)
+    override suspend fun getMyPosts(page: Int, notificationId: Long): Response<MyPostsResponse> {
+        return profileService.getMyPost(20, page, notificationId)
     }
 
     override suspend fun postPurchaseConfirm(

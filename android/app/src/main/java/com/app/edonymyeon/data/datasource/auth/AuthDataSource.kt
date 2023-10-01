@@ -11,7 +11,7 @@ interface AuthDataSource {
 
     interface Local {
         fun getAuthToken(): String?
-        fun setAuthToken(token: String)
+        fun setAuthToken(token: String?)
     }
 
     interface Remote {

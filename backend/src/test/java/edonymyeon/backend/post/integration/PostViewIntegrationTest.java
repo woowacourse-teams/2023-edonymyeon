@@ -29,7 +29,6 @@ public class PostViewIntegrationTest extends IntegrationFixture implements Image
 
     private void 다른사람이_글을_조회하면_조회수가_오른다(final Member 열람자, final Post 게시글, final int expected) {
         final ExtractableResponse<Response> 다른사람이_게시글_조회한_결과 = this.게시글_하나를_상세_조회한다(열람자, 게시글.getId());
-        System.out.println(다른사람이_게시글_조회한_결과.body().asPrettyString());
         assertThat(다른사람이_게시글_조회한_결과.body()
                 .jsonPath()
                 .getLong("reactionCount.viewCount"))

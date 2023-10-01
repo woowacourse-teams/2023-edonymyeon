@@ -7,29 +7,26 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.viewpager2.widget.ViewPager2
 import app.edonymyeon.R
 import app.edonymyeon.databinding.FragmentHomeBinding
-import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
-import com.app.edonymyeon.data.repository.PostRepositoryImpl
+import com.app.edonymyeon.presentation.common.fragment.BaseFragment
 import com.app.edonymyeon.presentation.ui.main.home.adapter.AllPostAdapter
 import com.app.edonymyeon.presentation.ui.main.home.adapter.HotPostAdapter
 import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
+import dagger.hilt.android.AndroidEntryPoint
 
-class HomeFragment : Fragment() {
+@AndroidEntryPoint
+class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
+    {
+        FragmentHomeBinding.inflate(it)
+    },
+) {
 
-    private val binding: FragmentHomeBinding by lazy {
-        FragmentHomeBinding.inflate(layoutInflater)
-    }
-
-    private val viewModel: HomeViewModel by viewModels {
-        HomeViewModelFactory(
-            PostRepositoryImpl(PostRemoteDataSource()),
-        )
-    }
+    override val viewModel: HomeViewModel by viewModels()
+    override val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
 
     private val allPostAdapter by lazy {
         AllPostAdapter { id ->

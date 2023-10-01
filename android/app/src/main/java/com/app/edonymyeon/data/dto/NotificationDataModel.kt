@@ -12,7 +12,7 @@ data class NotificationDataModel(
     @SerialName("navigateTo")
     val navigateTo: String,
     @SerialName("postId")
-    val postId: Long,
+    val postId: Long?,
     @SerialName("read")
     val read: Boolean,
 )

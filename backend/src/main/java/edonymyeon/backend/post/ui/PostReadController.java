@@ -1,6 +1,7 @@
 package edonymyeon.backend.post.ui;
 
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
+import edonymyeon.backend.global.version.ApiVersion;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.HotFindingCondition;
@@ -23,7 +24,8 @@ public class PostReadController {
 
     private final PostReadService postReadService;
 
-    @GetMapping("/posts")
+    @ApiVersion(value = {1})
+    @GetMapping(value = "/posts")
     public ResponseEntity<PostSlice<GeneralPostInfoResponse>> findAllPosts(
             @PostPaging GeneralFindingCondition generalFindingCondition) {
         PostSlice<GeneralPostInfoResponse> posts = postReadService.findPostsByPagingCondition(generalFindingCondition);
@@ -31,6 +33,7 @@ public class PostReadController {
                 .body(posts);
     }
 
+    @ApiVersion(value = {1})
     @GetMapping("/posts/{postId}")
     public ResponseEntity<SpecificPostInfoResponse> findSpecificPost(
             @AuthPrincipal(required = false) MemberId memberId, @PathVariable Long postId) {
@@ -39,6 +42,7 @@ public class PostReadController {
                 .body(specificPost);
     }
 
+    @ApiVersion(value = {1})
     @GetMapping("/posts/hot")
     public ResponseEntity<PostSlice<GeneralPostInfoResponse>> findHotPosts(
             @HotPostSizing HotFindingCondition hotFindingCondition
@@ -48,6 +52,7 @@ public class PostReadController {
                 .body(hotPosts);
     }
 
+    @ApiVersion(value = {1})
     @GetMapping("/search")
     public ResponseEntity<PostSlice<GeneralPostInfoResponse>> searchPosts(
             @RequestParam String query,

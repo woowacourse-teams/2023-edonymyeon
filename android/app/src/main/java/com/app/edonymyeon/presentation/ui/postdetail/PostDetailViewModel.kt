@@ -4,30 +4,33 @@ import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
-import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
-import com.app.edonymyeon.data.util.PreferenceUtil
 import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.common.imageutil.processAndAdjustImage
+import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.CommentUiModel
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
 import com.app.edonymyeon.presentation.uimodel.RecommendationUiModel
 import com.domain.edonymyeon.model.Post
 import com.domain.edonymyeon.model.Recommendation
+import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.PostRepository
 import com.domain.edonymyeon.repository.RecommendRepository
 import com.domain.edonymyeon.repository.ReportRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PostDetailViewModel(
+@HiltViewModel
+class PostDetailViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val recommendRepository: RecommendRepository,
     private val reportRepository: ReportRepository,
-) : ViewModel() {
+    private val authRepository: AuthRepository,
+) : BaseViewModel() {
 
     private val _post = MutableLiveData<PostUiModel>()
     val post: LiveData<PostUiModel>
@@ -50,7 +53,8 @@ class PostDetailViewModel(
         get() = _isRecommendationRequestDone
 
     val isLogin: Boolean
-        get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
+        get() = authRepository.getToken() != null
+//        get() = PreferenceUtil.getValue(AuthLocalDataSource.USER_ACCESS_TOKEN) != null
 
     private val _isLoadingSuccess = MutableLiveData(false)
     val isLoadingSuccess: LiveData<Boolean>
@@ -77,10 +81,13 @@ class PostDetailViewModel(
     private val _reportSaveMessage = MutableLiveData<String>()
     val reportSaveMessage: LiveData<String>
         get() = _reportSaveMessage
+    private val _isPostDeleted = MutableLiveData(false)
+    val isPostDeleted: LiveData<Boolean>
+        get() = _isPostDeleted
 
-    fun getPostDetail(postId: Long) {
-        viewModelScope.launch {
-            postRepository.getPostDetail(postId)
+    fun getPostDetail(postId: Long, notificationId: Long) {
+        viewModelScope.launch(exceptionHandler) {
+            postRepository.getPostDetail(postId, notificationId)
                 .onSuccess {
                     it as Post
                     _recommendation.value = it.recommendation.toUiModel()
@@ -89,14 +96,21 @@ class PostDetailViewModel(
                     _isPostLoadingSuccess.value = true
                     checkLoadingSuccess()
                 }.onFailure {
-                    it as CustomThrowable
-                    _isPostLoadingSuccess.value = false
+                    val customThrowable = it as CustomThrowable
+                    when (customThrowable.code) {
+                        2000 -> {
+                            _isPostDeleted.value = true
+                            _isLoadingSuccess.value = true
+                        }
+
+                        else -> _isPostLoadingSuccess.value = false
+                    }
                 }
         }
     }
 
     fun deletePost(postId: Long) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             postRepository.deletePost(postId)
                 .onSuccess {}
                 .onFailure {
@@ -106,8 +120,9 @@ class PostDetailViewModel(
     }
 
     fun postReport(type: ReportType, postId: Long, reportId: Int, content: String?) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             reportRepository.postReport(type.toString(), postId, reportId, content)
+                .onSuccess { }
                 .onSuccess {
                     _reportSaveMessage.value = MESSAGE_REPORT_SUCCESS
                 }
@@ -200,7 +215,7 @@ class PostDetailViewModel(
         postId: Long,
         event: suspend RecommendRepository.(Long) -> Result<Any>,
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             recommendRepository.event(postId)
                 .onSuccess {
                     _isRecommendationRequestDone.value = true

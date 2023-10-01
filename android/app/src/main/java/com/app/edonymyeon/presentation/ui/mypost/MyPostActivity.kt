@@ -3,24 +3,26 @@ package com.app.edonymyeon.presentation.ui.mypost
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MenuItem
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import app.edonymyeon.databinding.ActivityMyPostBinding
-import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
-import com.app.edonymyeon.data.datasource.profile.ProfileRemoteDataSource
-import com.app.edonymyeon.data.repository.PostRepositoryImpl
-import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
+import com.app.edonymyeon.presentation.common.activity.BaseActivity
 import com.app.edonymyeon.presentation.ui.mypost.adapter.MyPostAdapter
 import com.app.edonymyeon.presentation.ui.mypost.dialog.ConsumptionDialog
 import com.app.edonymyeon.presentation.ui.mypost.listener.MyPostClickListener
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
+import dagger.hilt.android.AndroidEntryPoint
 
-class MyPostActivity : AppCompatActivity(), MyPostClickListener {
-
-    private val binding: ActivityMyPostBinding by lazy {
-        ActivityMyPostBinding.inflate(layoutInflater)
+@AndroidEntryPoint
+class MyPostActivity :
+    BaseActivity<ActivityMyPostBinding, MyPostViewModel>({
+        ActivityMyPostBinding.inflate(it)
+    }),
+    MyPostClickListener {
+    private val notificationId by lazy {
+        intent.getLongExtra(KEY_NOTIFICATION_ID, -1)
     }
 
     private val adapter: MyPostAdapter by lazy {
@@ -29,13 +31,9 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
 
     private lateinit var dialog: ConsumptionDialog
 
-    private val viewModel: MyPostViewModel by viewModels {
-        MyPostViewModelFactory(
-            ProfileRepositoryImpl(ProfileRemoteDataSource()),
-            PostRepositoryImpl(PostRemoteDataSource()),
-        )
-    }
+    override val viewModel: MyPostViewModel by viewModels()
 
+    override val inflater: LayoutInflater by lazy { LayoutInflater.from(this) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -74,7 +72,7 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
                     return
                 }
                 if (!binding.rvMyPost.canScrollVertically(1)) {
-                    viewModel.getMyPosts()
+                    viewModel.getMyPosts(notificationId)
                 }
             }
         })
@@ -97,7 +95,7 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
 
     private fun loadNewData() {
         viewModel.clearResult()
-        viewModel.getMyPosts()
+        viewModel.getMyPosts(notificationId)
     }
 
     override fun onMyPostClick(id: Long) {
@@ -138,8 +136,15 @@ class MyPostActivity : AppCompatActivity(), MyPostClickListener {
     }
 
     companion object {
+        private const val KEY_NOTIFICATION_ID = "key_notification_id"
         fun newIntent(context: Context): Intent {
             return Intent(context, MyPostActivity::class.java)
+        }
+
+        fun newIntent(context: Context, notificationId: Long): Intent {
+            return Intent(context, MyPostActivity::class.java).apply {
+                putExtra(KEY_NOTIFICATION_ID, notificationId)
+            }
         }
     }
 }

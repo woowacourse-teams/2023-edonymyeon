@@ -8,7 +8,7 @@ operation::join[snippets='request-fields,http-request,http-response']
 operation::validate-join[snippets='query-parameters,http-request,response-fields,http-response']
 
 === 로그인
-operation::login[snippets='request-fields,http-request,response-headers,http-response']
+operation::login[snippets='request-fields,http-request,http-response']
 
 === 카카오 로그인
-operation::kakao-login[snippets='request-fields,http-request,response-headers,http-response']
+operation::kakao-login[snippets='request-fields,http-request,http-response']
