@@ -1,6 +1,5 @@
 package com.app.edonymyeon.presentation.ui.profileupdate
 
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
@@ -26,5 +25,9 @@ class ProfileUpdateViewModel : BaseViewModel() {
 
     fun setNewProfileImage(image: String) {
         _newProfileImage.value = image
+    }
+
+    fun deleteProfileImage() {
+        _newProfileImage.value = null
     }
 }

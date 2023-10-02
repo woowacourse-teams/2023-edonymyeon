@@ -52,7 +52,7 @@ class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, Profile
             navigateToGallery()
         }
         binding.btnImageDelete.setOnClickListener {
-            // TODO: 이미지 삭제
+            viewModel.deleteProfileImage()
         }
     }
 
