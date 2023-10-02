@@ -1,8 +1,10 @@
 package edonymyeon.backend.image;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.*;
 import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_EXTENSION_INVALID;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.domain.ImageInfo;
 import java.io.File;
 import java.io.IOException;
@@ -30,13 +32,16 @@ public class ImageFileUploader {
     }
 
     public ImageInfo uploadFile(final MultipartFile multipartFile) {
+        final ImageInfo imageInfo = from(multipartFile);
+        uploadRealStorage(multipartFile, imageInfo);
+        return imageInfo;
+    }
+
+    public ImageInfo from(final MultipartFile multipartFile) {
         final String originalFileName = multipartFile.getOriginalFilename();
         validateExtension(originalFileName);
         final String uploadedFileName = imageFileNameStrategy.createName(originalFileName);
-        final ImageInfo imageInfo = new ImageInfo(uploadedFileName);
-
-        uploadRealStorage(multipartFile, uploadedFileName);
-        return imageInfo;
+        return new ImageInfo(uploadedFileName);
     }
 
     private void validateExtension(final String originalFileName) {
@@ -47,13 +52,13 @@ public class ImageFileUploader {
         throw new EdonymyeonException(IMAGE_EXTENSION_INVALID);
     }
 
-    protected void uploadRealStorage(final MultipartFile multipartFile, final String uploadedFileName) {
+    public void uploadRealStorage(final MultipartFile multipartFile, final ImageInfo imageInfo) {
         try {
-            String fullPath = getFullPath(uploadedFileName);
+            String fullPath = getFullPath(imageInfo.getStoreName());
             final Path path = Paths.get(fullPath);
             multipartFile.transferTo(path);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new EdonymyeonException(IMAGE_UPLOAD_FAIL);
         }
     }
 
