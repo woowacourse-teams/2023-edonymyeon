@@ -50,7 +50,7 @@ class ImageDetailActivity : AppCompatActivity() {
         }
     }
 
-    fun setImageSlider(data: Parcelable, position: Int) {
+    private fun setImageSlider(data: Parcelable, position: Int) {
         setupImageSlider()
         setImageSliderAdapter(data)
         setCurrentImageItem(position)
