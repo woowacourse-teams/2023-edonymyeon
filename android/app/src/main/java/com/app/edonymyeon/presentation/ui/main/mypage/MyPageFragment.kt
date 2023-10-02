@@ -160,12 +160,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
     }
 
     private fun navigateToAlarmSetting() {
-//        binding.root.makeSnackbar(getString(R.string.all_preparing_feature))
         startActivity(AlarmSettingActivity.newIntent(requireContext()))
     }
 
     private fun navigateToProfileUpdate() {
-        startActivity(ProfileUpdateActivity.newIntent(requireContext()))
+        startActivity(ProfileUpdateActivity.newIntent(requireContext(), viewModel.profile.value!!))
     }
 
     private fun navigateToLogin() {
