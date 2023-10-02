@@ -7,22 +7,43 @@ import android.view.LayoutInflater
 import androidx.activity.viewModels
 import app.edonymyeon.databinding.ActivityProfileUpdateBinding
 import com.app.edonymyeon.presentation.common.activity.BaseActivity
+import com.app.edonymyeon.presentation.uimodel.WriterUiModel
+import com.app.edonymyeon.presentation.util.getParcelableExtraCompat
 
 class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, ProfileUpdateViewModel>(
     { ActivityProfileUpdateBinding.inflate(it) },
 ) {
     override val viewModel: ProfileUpdateViewModel by viewModels()
-
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(this) }
+
+    private val originalProfile by lazy {
+        intent.getParcelableExtraCompat(KEY_PROFILE) as? WriterUiModel
+            ?: throw IllegalArgumentException()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        initBinding()
+        setOriginalProfile()
+    }
+
+    private fun initBinding() {
+        binding.lifecycleOwner = this
+        binding.viewModel = viewModel
+    }
+
+    private fun setOriginalProfile() {
+        viewModel.initOriginalProfile(originalProfile)
     }
 
     companion object {
-        fun newIntent(context: Context): Intent {
-            return Intent(context, ProfileUpdateActivity::class.java)
+        private const val KEY_PROFILE = "key_profile"
+
+        fun newIntent(context: Context, profile: WriterUiModel): Intent {
+            return Intent(context, ProfileUpdateActivity::class.java).apply {
+                putExtra(KEY_PROFILE, profile)
+            }
         }
     }
 }

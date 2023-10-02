@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.app.edonymyeon.presentation.ui.profileupdate.ProfileUpdateViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -18,8 +25,10 @@
 
         <ImageView
             android:id="@+id/iv_profile"
+            imgUrlCircleCrop="@{viewModel.profile.profileImage}"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="@drawable/bg_stroke_576b9e_oval"
             app:layout_constraintDimensionRatio="H,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -114,11 +123,12 @@
             android:id="@+id/et_nickname"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:autofillHints="no"
             android:background="@drawable/bg_stroke_576b9e_radius_10dp"
             android:inputType="text"
             android:padding="10dp"
-            android:textColor="@color/black_000000"
-            android:textColorHint="@color/black_000000"
+            android:text="@{viewModel.profile.nickname.toString()}"
+            android:textColor="@color/gray_434343"
             android:textSize="16sp"
             app:layout_constraintDimensionRatio="H,270:36"
             app:layout_constraintEnd_toEndOf="parent"
@@ -145,10 +155,10 @@
             android:id="@+id/space_update_bottom"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="H,360:14"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
