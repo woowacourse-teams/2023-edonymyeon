@@ -158,8 +158,9 @@ public class AuthService {
         validateDuplicateEmail(joinRequest.email());
         validateDuplicateNickname(joinRequest.nickname());
 
-        publisher.publishEvent(new JoinMemberEvent(member, joinRequest.deviceToken()));
-        return saveMember(member);
+        final Member savedMember = saveMember(member);
+        publisher.publishEvent(new JoinMemberEvent(savedMember, joinRequest.deviceToken()));
+        return savedMember;
     }
 
     private void validateDuplicateEmail(final String email) {
