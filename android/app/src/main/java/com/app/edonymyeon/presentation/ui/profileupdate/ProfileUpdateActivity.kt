@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import app.edonymyeon.databinding.ActivityProfileUpdateBinding
 import com.app.edonymyeon.presentation.common.activity.BaseActivity
@@ -21,11 +23,19 @@ class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, Profile
             ?: throw IllegalArgumentException()
     }
 
+    private val pickMultipleImage =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                viewModel.setNewProfileImage(uri.toString())
+            }
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         initBinding()
         setOriginalProfile()
+        setImageButtonsClickListener()
     }
 
     private fun initBinding() {
@@ -35,6 +45,19 @@ class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, Profile
 
     private fun setOriginalProfile() {
         viewModel.initOriginalProfile(originalProfile)
+    }
+
+    private fun setImageButtonsClickListener() {
+        binding.btnImageUpload.setOnClickListener {
+            navigateToGallery()
+        }
+        binding.btnImageDelete.setOnClickListener {
+            // TODO: 이미지 삭제
+        }
+    }
+
+    private fun navigateToGallery() {
+        pickMultipleImage.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
     }
 
     companion object {
