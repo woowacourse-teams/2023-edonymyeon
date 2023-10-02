@@ -341,7 +341,7 @@ class PostDetailActivity :
     private fun setImageSlider(post: PostUiModel) {
         binding.vpImageSlider.offscreenPageLimit = 1
         binding.vpImageSlider.adapter =
-            ImageSliderAdapter(post.images, onClick = {
+            ImageSliderAdapter(post.images, onImageClick = {
                 startActivity(ImageDetailActivity.newIntent(this, post, it))
             })
         binding.vpImageSlider.registerOnPageChangeCallback(

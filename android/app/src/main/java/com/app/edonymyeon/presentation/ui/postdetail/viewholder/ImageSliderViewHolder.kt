@@ -8,7 +8,7 @@ import app.edonymyeon.databinding.ItemImageSliderBinding
 
 class ImageSliderViewHolder(
     parent: ViewGroup,
-    private val onClick: (position: Int) -> Unit,
+    private val onImageClick: (position: Int) -> Unit,
 ) : RecyclerView.ViewHolder(
     LayoutInflater.from(parent.context).inflate(R.layout.item_image_slider, parent, false),
 ) {
@@ -17,7 +17,7 @@ class ImageSliderViewHolder(
     fun bind(imageUrl: String, position: Int) {
         binding.imageUrl = imageUrl
         binding.ivPostImageItem.setOnClickListener {
-            onClick(position)
+            onImageClick(position)
         }
     }
 }
