@@ -11,7 +11,9 @@ import app.edonymyeon.databinding.ActivityProfileUpdateBinding
 import com.app.edonymyeon.presentation.common.activity.BaseActivity
 import com.app.edonymyeon.presentation.uimodel.WriterUiModel
 import com.app.edonymyeon.presentation.util.getParcelableExtraCompat
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, ProfileUpdateViewModel>(
     { ActivityProfileUpdateBinding.inflate(it) },
 ) {
