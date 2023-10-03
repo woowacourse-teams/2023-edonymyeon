@@ -8,13 +8,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import app.edonymyeon.R
 import app.edonymyeon.databinding.FragmentMyPageBinding
-import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
-import com.app.edonymyeon.data.datasource.auth.AuthRemoteDataSource
-import com.app.edonymyeon.data.datasource.consumptions.ConsumptionsRemoteDataSource
-import com.app.edonymyeon.data.datasource.profile.ProfileRemoteDataSource
-import com.app.edonymyeon.data.repository.AuthRepositoryImpl
-import com.app.edonymyeon.data.repository.ConsumptionsRepositoryImpl
-import com.app.edonymyeon.data.repository.ProfileRepositoryImpl
 import com.app.edonymyeon.presentation.common.fragment.BaseFragment
 import com.app.edonymyeon.presentation.ui.alarmsetting.AlarmSettingActivity
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
@@ -27,22 +20,15 @@ import com.app.edonymyeon.presentation.util.makeSnackbar
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
     {
         FragmentMyPageBinding.inflate(it)
     },
 ) {
-    override val viewModel: MyPageViewModel by viewModels {
-        MyPageViewModelFactory(
-            ProfileRepositoryImpl(ProfileRemoteDataSource()),
-            ConsumptionsRepositoryImpl(ConsumptionsRemoteDataSource()),
-            AuthRepositoryImpl(
-                AuthLocalDataSource(),
-                AuthRemoteDataSource(),
-            ),
-        )
-    }
+    override val viewModel: MyPageViewModel by viewModels()
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
 
     private val withdrawDialog: WithdrawDialog by lazy {

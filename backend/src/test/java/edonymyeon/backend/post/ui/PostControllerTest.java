@@ -68,6 +68,7 @@ class PostControllerTest implements ImageFileCleaner {
                         .param("title", "test title")
                         .param("content", "test content")
                         .param("price", "1000")
+                        .header("X-API-VERSION", 1)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .sessionAttr(USER.getSessionId(), member.getId())
                 )
@@ -82,6 +83,7 @@ class PostControllerTest implements ImageFileCleaner {
                         .param("title", "test title")
                         .param("content", "test content")
                         .param("price", "1000")
+                        .header("X-API-VERSION", 1)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                 )
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
@@ -97,6 +99,7 @@ class PostControllerTest implements ImageFileCleaner {
                         .param("title", "test title")
                         .param("content", "test content")
                         .param("price", "1000")
+                        .header("X-API-VERSION", 1)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .sessionAttr(USER.getSessionId(), member.getId())
                 )
@@ -105,6 +108,7 @@ class PostControllerTest implements ImageFileCleaner {
         PostIdResponse 게시글_생성_응답 = extractResponseFromResult(게시글_생성_요청_결과, PostIdResponse.class);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/posts/" + 게시글_생성_응답.id())
+                        .header("X-API-VERSION", 1)
                         .sessionAttr(USER.getSessionId(), member.getId()))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
@@ -127,6 +131,7 @@ class PostControllerTest implements ImageFileCleaner {
                         .param("title", "test title")
                         .param("content", "test content")
                         .param("price", "1000")
+                        .header("X-API-VERSION", 1)
                         .contentType(MediaType.MULTIPART_FORM_DATA)
                         .sessionAttr(USER.getSessionId(), member.getId())
                 )
@@ -136,6 +141,7 @@ class PostControllerTest implements ImageFileCleaner {
         final Member otherMember = testMemberBuilder.builder().build();
 
         final MvcResult 게시글_삭제_요청_결과 = mockMvc.perform(MockMvcRequestBuilders.delete("/posts/" + 게시글_생성_응답.id())
+                        .header("X-API-VERSION", 1)
                         .sessionAttr(USER.getSessionId(), otherMember.getId()))
                 .andExpect(MockMvcResultMatchers.status().isForbidden())
                 .andReturn();

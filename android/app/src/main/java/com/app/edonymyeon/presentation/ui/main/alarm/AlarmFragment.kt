@@ -8,27 +8,21 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import app.edonymyeon.R
 import app.edonymyeon.databinding.FragmentAlarmBinding
-import com.app.edonymyeon.data.datasource.notification.NotificationRemoteDataSource
-import com.app.edonymyeon.data.repository.NotificationRepositoryImpl
 import com.app.edonymyeon.presentation.common.fragment.BaseFragment
 import com.app.edonymyeon.presentation.ui.main.alarm.adapter.AlarmAdapter
 import com.app.edonymyeon.presentation.ui.mypost.MyPostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AlarmFragment : BaseFragment<FragmentAlarmBinding, AlarmViewModel>(
     {
         FragmentAlarmBinding.inflate(it)
     },
 ) {
 
-    override val viewModel: AlarmViewModel by viewModels {
-        AlarmViewModelFactory(
-            NotificationRepositoryImpl(
-                NotificationRemoteDataSource(),
-            ),
-        )
-    }
+    override val viewModel: AlarmViewModel by viewModels()
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
 
     private val adapter: AlarmAdapter by lazy {

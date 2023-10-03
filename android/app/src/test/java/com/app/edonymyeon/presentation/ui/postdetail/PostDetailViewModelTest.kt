@@ -7,6 +7,7 @@ import com.domain.edonymyeon.model.Post
 import com.domain.edonymyeon.model.ReactionCount
 import com.domain.edonymyeon.model.Recommendation
 import com.domain.edonymyeon.model.Writer
+import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.PostRepository
 import com.domain.edonymyeon.repository.RecommendRepository
 import com.domain.edonymyeon.repository.ReportRepository
@@ -33,6 +34,7 @@ class PostDetailViewModelTest() {
     private lateinit var postRepository: PostRepository
     private lateinit var recommendRepository: RecommendRepository
     private lateinit var reportRepository: ReportRepository
+    private lateinit var authRepository: AuthRepository
 
     private val postId = 1L
     private val notificationId = 1L
@@ -77,7 +79,9 @@ class PostDetailViewModelTest() {
         postRepository = mockk()
         recommendRepository = mockk()
         reportRepository = mockk()
-        viewModel = PostDetailViewModel(postRepository, recommendRepository, reportRepository)
+        authRepository = mockk()
+
+        viewModel = PostDetailViewModel(postRepository, recommendRepository, reportRepository, authRepository)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

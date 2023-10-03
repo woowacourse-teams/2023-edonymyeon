@@ -50,7 +50,6 @@ public class PostImageInfos {
     }
 
     private boolean isInvalidImageCount(final Integer imageCount) {
-        System.out.println("imageCount = " + imageCount);
         return imageCount > MAX_IMAGE_COUNT;
     }
 

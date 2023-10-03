@@ -6,9 +6,11 @@ import com.app.edonymyeon.data.dto.request.NotificationPreferenceRequest
 import com.app.edonymyeon.mapper.toDomain
 import com.domain.edonymyeon.model.NotificationPreference
 import com.domain.edonymyeon.repository.PreferenceRepository
+import javax.inject.Inject
 
-class PreferenceRepositoryImpl(private val preferenceDataSource: PreferenceDataSource) :
-    PreferenceRepository {
+class PreferenceRepositoryImpl @Inject constructor(
+    private val preferenceDataSource: PreferenceDataSource,
+) : PreferenceRepository {
     override suspend fun getNotificationPreference(): Result<List<NotificationPreference>> {
         val result = preferenceDataSource.getNotificationPreference()
         return if (result.isSuccessful && result.body() != null) {

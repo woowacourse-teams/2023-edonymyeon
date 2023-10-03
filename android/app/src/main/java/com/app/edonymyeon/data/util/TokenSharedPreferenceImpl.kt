@@ -5,11 +5,13 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import com.app.edonymyeon.data.datasource.auth.AuthLocalDataSource
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-object PreferenceUtil {
-    private lateinit var sharedPreferences: SharedPreferences
+class TokenSharedPreferenceImpl @Inject constructor(@ApplicationContext context: Context) : TokenSharedPreference {
+    private val sharedPreferences: SharedPreferences
 
-    fun init(context: Context) {
+    init {
         sharedPreferences = EncryptedSharedPreferences(
             context,
             AuthLocalDataSource.AUTH_INFO,
@@ -23,11 +25,11 @@ object PreferenceUtil {
             .build()
     }
 
-    fun getValue(key: String): String? {
+    override fun getValue(key: String): String? {
         return sharedPreferences.getString(key, null)
     }
 
-    fun setValue(key: String, value: String?) {
+    override fun setValue(key: String, value: String?) {
         sharedPreferences.edit().putString(key, value).apply()
     }
 }

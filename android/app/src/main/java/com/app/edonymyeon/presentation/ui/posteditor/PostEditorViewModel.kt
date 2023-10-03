@@ -15,10 +15,13 @@ import com.app.edonymyeon.presentation.uimodel.PostEditorUiModel
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.domain.edonymyeon.model.PostEditor
 import com.domain.edonymyeon.repository.PostRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.File
+import javax.inject.Inject
 
-class PostEditorViewModel(
+@HiltViewModel
+class PostEditorViewModel @Inject constructor(
     private val repository: PostRepository,
 ) : BaseViewModel() {
     private val images = mutableListOf<String>()

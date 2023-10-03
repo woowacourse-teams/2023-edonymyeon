@@ -1,8 +1,5 @@
 package edonymyeon.backend.member.integration;
 
-import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.ConsumptionSteps.MemberConsumptionSteps.구매_확정_요청을_보낸다;
-import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.ConsumptionSteps.MemberConsumptionSteps.절약_확정_요청을_보낸다;
-import static edonymyeon.backend.support.IntegrationFixture.CommentSteps.ConsumptionSteps.MemberConsumptionSteps.확정_취소_요청을_보낸다;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;

@@ -6,18 +6,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostBinding
-import com.app.edonymyeon.data.datasource.post.PostRemoteDataSource
-import com.app.edonymyeon.data.repository.PostRepositoryImpl
 import com.app.edonymyeon.presentation.common.activity.BaseActivity
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
 import com.app.edonymyeon.presentation.ui.post.adapter.PostAdapter
 import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PostActivity : BaseActivity<ActivityPostBinding, PostViewModel>(
     {
         ActivityPostBinding.inflate(it)
@@ -30,9 +31,7 @@ class PostActivity : BaseActivity<ActivityPostBinding, PostViewModel>(
             }
         }
 
-    override val viewModel: PostViewModel by lazy {
-        PostViewModelFactory(PostRepositoryImpl(PostRemoteDataSource())).create(PostViewModel::class.java)
-    }
+    override val viewModel: PostViewModel by viewModels()
 
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(this) }
 

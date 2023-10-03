@@ -2,6 +2,7 @@ package edonymyeon.backend.auth.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_DUPLICATE;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_NOT_FOUND;
+import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_IS_DELETED;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_NOT_MATCH;
@@ -16,6 +17,7 @@ import edonymyeon.backend.auth.application.event.LogoutEvent;
 import edonymyeon.backend.auth.domain.PasswordEncoder;
 import edonymyeon.backend.auth.domain.ValidateType;
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
@@ -41,6 +43,8 @@ public class AuthService {
     private final MemberRepository memberRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final MemberService memberService;
 
     /**
      * 일반적인 로그인 작업을 수행합니다.
@@ -107,7 +111,7 @@ public class AuthService {
     public MemberId loginByKakao(final KakaoLoginResponse kakaoLoginResponse, final String deviceToken) {
         final SocialInfo socialInfo = SocialInfo.of(SocialType.KAKAO, kakaoLoginResponse.id());
         final Member member = memberRepository.findBySocialInfo(socialInfo)
-                .orElseGet(() -> joinSocialMember(socialInfo));
+                .orElseGet(() -> joinSocialMember(socialInfo, deviceToken));
         if (member.isDeleted()) {
             throw new EdonymyeonException(MEMBER_IS_DELETED);
         }
@@ -118,13 +122,16 @@ public class AuthService {
 
     /**
      * 소셜 로그인 방식으로 회원가입을 합니다.
-     * @param socialInfo 소셜 회원가입에 필요한 정보
+     *
+     * @param socialInfo  소셜 회원가입에 필요한 정보
+     * @param deviceToken 회원가입 시 사용하는 디바이스 정보
      * @return 가입 완료된 회원
      */
     @Transactional
-    public Member joinSocialMember(final SocialInfo socialInfo) {
-        final Member member = Member.from(socialInfo);
-        return saveMember(member);
+    public Member joinSocialMember(final SocialInfo socialInfo, final String deviceToken) {
+        final Member member = saveMember(Member.from(socialInfo));
+        publisher.publishEvent(new JoinMemberEvent(member, deviceToken));
+        return member;
     }
 
     private Member saveMember(Member member) {
@@ -155,22 +162,6 @@ public class AuthService {
         return saveMember(member);
     }
 
-    /**
-     * (삭제 예정) 암호화되지 않은 회원의 비밀번호를 암호화합니다.
-     */
-    // todo DB에 암호화 적용하고 삭제
-    @Transactional
-    public void updatePasswordToEncrypt() {
-        final List<Member> members = memberRepository.findAll();
-        for (Member member : members) {
-            final String encodedPassword = passwordEncoder.encode(member.getPassword());
-            try {
-                member.encrypt(encodedPassword);
-            } catch (EdonymyeonException e) {
-            }
-        }
-    }
-
     private void validateDuplicateEmail(final String email) {
         if (memberRepository.findByEmail(email).isPresent()) {
             throw new EdonymyeonException(MEMBER_EMAIL_DUPLICATE);
@@ -189,5 +180,13 @@ public class AuthService {
      */
     public void logout(String deviceToken) {
         publisher.publishEvent(new LogoutEvent(deviceToken));
+    }
+
+    @Transactional
+    public void withdraw(final MemberId memberId) {
+        final Member member = memberRepository.findById(memberId.id())
+                .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
+        memberService.deleteProfileImage(member);
+        member.withdraw();
     }
 }

@@ -83,7 +83,8 @@ public class ThumbsControllerDocsTest {
         when(thumbsRepository.save(조와요)).thenReturn(조와요);
 
         final MockHttpServletRequestBuilder 좋아요_요청 = put("/posts/{postId}/up", 글.getId())
-                .sessionAttr(USER.getSessionId(), 반응_하는_사람.getId());
+                .sessionAttr(USER.getSessionId(), 반응_하는_사람.getId())
+                .header("X-API-VERSION", 1);
 
         this.mockMvc.perform(좋아요_요청)
                 .andExpect(status().isOk())
@@ -100,7 +101,8 @@ public class ThumbsControllerDocsTest {
         when(thumbsRepository.save(시러요)).thenReturn(시러요);
 
         final MockHttpServletRequestBuilder 싫어요_요청 = put("/posts/{postId}/down", 글.getId())
-                .sessionAttr(USER.getSessionId(), 반응_하는_사람.getId());
+                .sessionAttr(USER.getSessionId(), 반응_하는_사람.getId())
+                .header("X-API-VERSION", 1);
 
         this.mockMvc.perform(싫어요_요청)
                 .andExpect(status().isOk())
@@ -117,7 +119,8 @@ public class ThumbsControllerDocsTest {
         when(thumbsRepository.findByPostIdAndMemberId(글.getId(), 반응_하는_사람.getId())).thenReturn(Optional.of(좋아요));
 
         final MockHttpServletRequestBuilder 좋아요_취소_요청 = delete("/posts/{postId}/up", 글.getId())
-                .sessionAttr(USER.getSessionId(), 반응_하는_사람.getId());
+                .sessionAttr(USER.getSessionId(), 반응_하는_사람.getId())
+                .header("X-API-VERSION", 1);
 
         this.mockMvc.perform(좋아요_취소_요청)
                 .andExpect(status().isOk())
@@ -134,7 +137,8 @@ public class ThumbsControllerDocsTest {
         when(thumbsRepository.findByPostIdAndMemberId(글.getId(), 반응_하는_사람.getId())).thenReturn(Optional.of(싫어요));
 
         final MockHttpServletRequestBuilder 싫어요_취소_요청 = delete("/posts/{postId}/down", 글.getId())
-                .sessionAttr(USER.getSessionId(), 반응_하는_사람.getId());
+                .sessionAttr(USER.getSessionId(), 반응_하는_사람.getId())
+                .header("X-API-VERSION", 1);
 
         this.mockMvc.perform(싫어요_취소_요청)
                 .andExpect(status().isOk())

@@ -10,9 +10,13 @@ import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.AllPostItemUiModel
 import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
 import com.domain.edonymyeon.repository.PostRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel(private val postRepository: PostRepository) : BaseViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(private val postRepository: PostRepository) :
+    BaseViewModel() {
     private val _allPosts = MutableLiveData<List<AllPostItemUiModel>>()
     val allPosts: LiveData<List<AllPostItemUiModel>>
         get() = _allPosts
