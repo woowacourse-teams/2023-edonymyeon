@@ -48,7 +48,8 @@ android {
         )
 
         val kakaoNativeKey = localProperties.getProperty("KAKAO_NATIVE_KEY")
-        manifestPlaceholders["KAKAO_NATIVE_KEY"] = kakaoNativeKey.substring(1, kakaoNativeKey.length - 1)
+        manifestPlaceholders["KAKAO_NATIVE_KEY"] =
+            kakaoNativeKey.substring(1, kakaoNativeKey.length - 1)
     }
 
     buildTypes {

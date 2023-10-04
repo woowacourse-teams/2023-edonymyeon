@@ -5,10 +5,10 @@ import android.content.ClipData
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.Menu
@@ -16,6 +16,7 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.content.FileProvider
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostEditorBinding
 import com.app.edonymyeon.presentation.common.activity.BaseActivity
@@ -29,12 +30,15 @@ import com.app.edonymyeon.presentation.util.makeSnackbar
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import com.domain.edonymyeon.model.PostEditor
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorViewModel>(
     { ActivityPostEditorBinding.inflate(it) },
 ) {
+
+    private var cameraUri: Uri? = null
 
     override val viewModel: PostEditorViewModel by viewModels()
 
@@ -56,10 +60,8 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         }
 
     private val takeCameraImage =
-        registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
-            if (bitmap != null) {
-                setCameraImage(bitmap)
-            }
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success) setCameraImage(cameraUri)
         }
 
     private val permissionRequestLauncher = registerForActivityResult(
@@ -194,7 +196,10 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
     }
 
     private fun navigateToCamera() {
-        takeCameraImage.launch(null)
+        val photoFile =
+            File.createTempFile("IMG_", ".jpg", getExternalFilesDir(Environment.DIRECTORY_PICTURES))
+        cameraUri = FileProvider.getUriForFile(this, "$packageName.provider", photoFile)
+        takeCameraImage.launch(cameraUri)
     }
 
     private fun navigateToGallery() {
@@ -255,8 +260,7 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         setAdapter()
     }
 
-    private fun setCameraImage(bitmap: Bitmap) {
-        val imageUri = getImageUri(bitmap)
+    private fun setCameraImage(imageUri: Uri?) {
         viewModel.addSelectedImages(imageUri.toString())
     }
 
@@ -271,19 +275,6 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         data?.data?.let { imageUri ->
             viewModel.addSelectedImages(imageUri.toString())
         }
-    }
-
-    private fun getImageUri(bitmap: Bitmap): Uri? {
-        val resolver = applicationContext.contentResolver
-        resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-            ?.let { imageUri ->
-                val outputStream = resolver.openOutputStream(imageUri)
-                outputStream?.use { stream ->
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-                }
-                return imageUri
-            }
-        return null
     }
 
     private fun checkImageCountLimit(count: Int, limitCount: Int): Boolean {
