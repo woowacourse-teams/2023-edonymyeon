@@ -8,7 +8,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.Menu
@@ -197,7 +196,7 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
 
     private fun navigateToCamera() {
         val photoFile =
-            File.createTempFile("IMG_", ".jpg", getExternalFilesDir(Environment.DIRECTORY_PICTURES))
+            File.createTempFile("IMG_", ".jpg", this.cacheDir)
         cameraUri = FileProvider.getUriForFile(this, "$packageName.provider", photoFile)
         takeCameraImage.launch(cameraUri)
     }
