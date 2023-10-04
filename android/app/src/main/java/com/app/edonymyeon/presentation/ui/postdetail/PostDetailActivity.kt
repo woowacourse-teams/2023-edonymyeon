@@ -24,6 +24,7 @@ import app.edonymyeon.databinding.ViewCommentInputBinding
 import com.app.edonymyeon.presentation.common.activity.BaseActivity
 import com.app.edonymyeon.presentation.common.activityutil.hideKeyboard
 import com.app.edonymyeon.presentation.common.dialog.LoadingDialog
+import com.app.edonymyeon.presentation.ui.imagedetail.ImageDetailActivity
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
 import com.app.edonymyeon.presentation.ui.post.PostActivity
 import com.app.edonymyeon.presentation.ui.postdetail.adapter.CommentAdapter
@@ -33,6 +34,7 @@ import com.app.edonymyeon.presentation.ui.postdetail.dialog.PostDeletedDialog
 import com.app.edonymyeon.presentation.ui.postdetail.dialog.ReportDialog
 import com.app.edonymyeon.presentation.ui.postdetail.listener.CommentClickListener
 import com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity
+import com.app.edonymyeon.presentation.uimodel.CommentUiModel
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.util.makeSnackbar
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
@@ -329,7 +331,9 @@ class PostDetailActivity :
     private fun setImageSlider(post: PostUiModel) {
         binding.vpImageSlider.offscreenPageLimit = 1
         binding.vpImageSlider.adapter =
-            ImageSliderAdapter(post.images)
+            ImageSliderAdapter(post.images, onImageClick = {
+                startActivity(ImageDetailActivity.newIntent(this, post, it))
+            })
         binding.vpImageSlider.registerOnPageChangeCallback(
             object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
@@ -402,6 +406,10 @@ class PostDetailActivity :
         } else {
             makeLoginSnackbar()
         }
+    }
+
+    override fun onImageClick(comment: CommentUiModel) {
+        startActivity(ImageDetailActivity.newIntent(this, comment))
     }
 
     companion object {

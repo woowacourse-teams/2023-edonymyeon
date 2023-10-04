@@ -33,9 +33,10 @@ private fun Bitmap.convertResizeImage(context: Context): File {
 private fun File.updateExifOrientation(context: Context, uri: Uri) {
     context.contentResolver.openInputStream(uri)?.use {
         val exif = ExifInterface(it)
-        exif.getAttribute(ExifInterface.TAG_ORIENTATION)?.let {
+        exif.getAttribute(ExifInterface.TAG_ORIENTATION)?.let { attribute ->
             val newExif = ExifInterface(absolutePath)
-            newExif.setAttribute(ExifInterface.TAG_ORIENTATION, it)
+            newExif.setAttribute(ExifInterface.TAG_ORIENTATION, attribute)
+            newExif.saveAttributes()
         }
     }
 }
