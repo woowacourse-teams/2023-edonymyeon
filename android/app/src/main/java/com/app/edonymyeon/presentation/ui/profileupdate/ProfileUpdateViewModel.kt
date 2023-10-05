@@ -20,10 +20,6 @@ class ProfileUpdateViewModel @Inject constructor(
     val newProfileImage: LiveData<String?>
         get() = _newProfileImage
 
-    init {
-        _newProfileImage.value = null
-    }
-
     fun initOriginalProfile(original: WriterUiModel) {
         _profile.value = WriterUiModel(original.id, original.nickname, original.profileImage)
         _newProfileImage.value = original.profileImage
