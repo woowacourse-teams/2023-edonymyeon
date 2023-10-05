@@ -289,6 +289,16 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         finish()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (!isChangingConfigurations) {
+            cameraUri?.let { uri ->
+                val contentResolver = applicationContext.contentResolver
+                contentResolver.delete(uri, null, null)
+            }
+        }
+    }
+
     companion object {
         private const val MAX_IMAGES_COUNT = 10
         private const val KEY_POST_EDITOR_CHECK = "key_post_editor_check"
