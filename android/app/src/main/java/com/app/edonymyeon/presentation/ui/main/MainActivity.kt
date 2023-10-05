@@ -34,17 +34,6 @@ class MainActivity : AppCompatActivity() {
 
     private var backClickedTime = 0L
 
-    private val backPressedCallback = object : OnBackPressedCallback(true) {
-        override fun handleOnBackPressed() {
-            if (System.currentTimeMillis() - backClickedTime >= FINISHING_APP_TIME) {
-                backClickedTime = System.currentTimeMillis()
-                binding.root.makeSnackbar(getString(R.string.main_ask_back_click))
-            } else {
-                finish()
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -56,7 +45,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setOnBackCallback() {
-        this.onBackPressedDispatcher.addCallback(this, backPressedCallback)
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (System.currentTimeMillis() - backClickedTime >= FINISHING_APP_TIME) {
+                        backClickedTime = System.currentTimeMillis()
+                        binding.root.makeSnackbar(getString(R.string.main_ask_back_click))
+                    } else {
+                        finish()
+                    }
+                }
+            },
+        )
     }
 
     private fun initFragmentContainerView() {
