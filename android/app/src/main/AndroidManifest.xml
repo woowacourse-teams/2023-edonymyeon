@@ -24,6 +24,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name="com.app.edonymyeon.presentation.ui.imagedetail.ImageDetailActivity"
+            android:exported="false" />
+        <activity
             android:name="com.app.edonymyeon.presentation.ui.alarmsetting.AlarmSettingActivity"
             android:exported="false" />
         <activity
@@ -39,8 +42,8 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="POST" />
-                <category android:name="android.intent.category.DEFAULT" />
 
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
@@ -51,6 +54,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -59,8 +63,8 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="MYPOST" />
-                <category android:name="android.intent.category.DEFAULT" />
 
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
