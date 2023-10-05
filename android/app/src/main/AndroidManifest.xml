@@ -24,6 +24,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name="com.app.edonymyeon.presentation.ui.imagedetail.ImageDetailActivity"
+            android:exported="false" />
+        <activity
             android:name="com.app.edonymyeon.presentation.ui.profileupdate.ProfileUpdateActivity"
             android:exported="false" />
         <activity
