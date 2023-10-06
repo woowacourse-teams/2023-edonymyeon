@@ -12,7 +12,6 @@ import edonymyeon.backend.comment.repository.CommentRepository;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
-import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
@@ -31,7 +30,6 @@ import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.MockMultipartFileTestSupport;
 import edonymyeon.backend.support.TestMemberBuilder;
 import jakarta.persistence.EntityManager;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,8 +66,6 @@ class PostServiceTest implements ImageFileCleaner {
     private final TestMemberBuilder memberTestSupport;
 
     private final MockMultipartFileTestSupport mockMultipartFileTestSupport;
-
-    private final ImageFileUploader imageFileUploader;
 
     private final ConsumptionTestSupport consumptionTestSupport;
 

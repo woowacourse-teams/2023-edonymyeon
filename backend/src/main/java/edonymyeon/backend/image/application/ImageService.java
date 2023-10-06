@@ -58,5 +58,22 @@ public class ImageService {
         return rootDirectory + storeName;
     }
 
+    /**
+     *
+     * @param fileName 예를 들면 post/name.png 처럼 이미지 타입까지 같이 들어온다
+     * @return 이미지가 저장된 실제 경로
+     */
+    public String findFullPath(final String fileName) {
+        return rootDirectory + fileName;
+    }
+
     //todo: 도메인 붙여서 url 반환하는 법
+
+    public void removeImage(final ImageInfo imageInfo, final ImageType imageType) {
+        if(!imageClient.supportsDeletion()){
+            return;
+        }
+        //todo: 이미지 삭제도?
+        imageClient.delete(findFullPath(imageInfo.getStoreName(), imageType));
+    }
 }

@@ -8,7 +8,8 @@ import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.comment.repository.CommentRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
-import edonymyeon.backend.image.ImageFileUploader;
+import edonymyeon.backend.image.application.ImageService;
+import edonymyeon.backend.image.application.ImageType;
 import edonymyeon.backend.image.commentimage.domain.CommentImageInfo;
 import edonymyeon.backend.image.commentimage.repository.CommentImageInfoRepository;
 import edonymyeon.backend.image.domain.Domain;
@@ -38,7 +39,7 @@ public class CommentService {
 
     private final CommentImageInfoRepository commentImageInfoRepository;
 
-    private final ImageFileUploader imageFileUploader;
+    private final ImageService imageService;
 
     private final ApplicationEventPublisher publisher;
 
@@ -68,7 +69,7 @@ public class CommentService {
         if (image == null || image.isEmpty()) {
             return null;
         }
-        final CommentImageInfo commentImageInfo = CommentImageInfo.from(imageFileUploader.uploadFile(image));
+        final CommentImageInfo commentImageInfo = CommentImageInfo.from(imageService.save(image, ImageType.COMMENT));
         commentImageInfoRepository.save(commentImageInfo);
         return commentImageInfo;
     }

@@ -1,5 +1,6 @@
 package edonymyeon.backend.image.application;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,5 +22,16 @@ public class LocalImageClient implements ImageClient {
         } catch (IOException e) {
             throw new RuntimeException(e); //todo: 커스텀 예외
         }
+    }
+
+    @Override
+    public boolean supportsDeletion() {
+        return true;
+    }
+
+    @Override
+    public void delete(final String imagePath) {
+        final File file = new File(imagePath);
+        file.delete();
     }
 }

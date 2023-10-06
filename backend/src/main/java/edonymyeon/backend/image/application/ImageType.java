@@ -2,9 +2,9 @@ package edonymyeon.backend.image.application;
 
 public enum ImageType {
 
-    POST("images/post/"),
-    COMMENT("images/comment/"),
-    PROFILE("images/profile/");
+    POST("post/"),
+    COMMENT("comment/"),
+    PROFILE("profile/");
 
     private final String saveDirectory;
 

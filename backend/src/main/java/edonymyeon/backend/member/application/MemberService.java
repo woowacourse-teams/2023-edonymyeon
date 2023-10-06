@@ -3,6 +3,7 @@ package edonymyeon.backend.member.application;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.image.application.ImageType;
 import edonymyeon.backend.image.profileimage.repository.ProfileImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.application.dto.YearMonthDto;
@@ -46,7 +47,7 @@ public class MemberService {
     public void deleteProfileImage(final Member member) {
         if (Objects.nonNull(member.getProfileImageInfo())) {
             profileImageInfoRepository.delete(member.getProfileImageInfo());
-            publisher.publishEvent(new ProfileImageDeletionEvent(member.getProfileImageInfo()));
+            publisher.publishEvent(new ProfileImageDeletionEvent(member.getProfileImageInfo(), ImageType.PROFILE));
         }
     }
 

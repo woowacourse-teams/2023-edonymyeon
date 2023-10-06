@@ -5,7 +5,8 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_N
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.image.ImageFileUploader;
+import edonymyeon.backend.image.application.ImageService;
+import edonymyeon.backend.image.application.ImageType;
 import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
@@ -33,7 +34,7 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    private final ImageFileUploader imageFileUploader;
+    private final ImageService imageService;
 
     private final PostImageInfoRepository postImageInfoRepository;
 
@@ -65,7 +66,7 @@ public class PostService {
         post.validateImageCount(postRequest.newImages().size());
 
         final PostImageInfos postImageInfos = PostImageInfos.of(post,
-                imageFileUploader.uploadFiles(postRequest.newImages()));
+                imageService.saveAll(postRequest.newImages(), ImageType.POST));
         postImageInfoRepository.saveAll(postImageInfos.getPostImageInfos());
 
         return new PostIdResponse(post.getId());
@@ -133,7 +134,7 @@ public class PostService {
             return new PostIdResponse(postId);
         }
 
-        final PostImageInfos imagesToAdd = PostImageInfos.of(post, imageFileUploader.uploadFiles(imageFilesToAdd));
+        final PostImageInfos imagesToAdd = PostImageInfos.of(post, imageService.saveAll(imageFilesToAdd, ImageType.POST));
         post.updateImages(remainedImageNames, imagesToAdd); //이때 기존 이미지중 삭제되는 것들은 softDelete
         postImageInfoRepository.saveAll(imagesToAdd.getPostImageInfos()); // //새로 추가된 이미지들을 DB에 저장
         return new PostIdResponse(postId);
