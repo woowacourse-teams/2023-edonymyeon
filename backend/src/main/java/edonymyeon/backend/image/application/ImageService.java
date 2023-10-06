@@ -59,7 +59,7 @@ public class ImageService {
      * @return 리소스가 저장된 실제 경로
      */
     private String findFullPath(final String storeName, final ImageType imageType) {
-        return rootDirectory + storeName;
+        return rootDirectory + imageType.getSaveDirectory() + storeName;
     }
 
     /**

@@ -11,6 +11,7 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +57,24 @@ class ImageServiceTest extends IntegrationFixture implements ImageFileCleaner {
 
         assertThat(baseUrl).isEqualTo(domain + imageType.getSaveDirectory());
         assertThat(imageUrl.replace(baseUrl, "")).isEqualTo("image.png");
+    }
+
+    @Test
+    void 프로필_이미지가_디렉터리에서_잘_삭제되는지_검증한다() throws IOException {
+        final MockMultipartFile image = mockMultipartFileTestSupport.builder().buildImageForPost();
+        final String baseDirectory = rootDirectory + ImageType.PROFILE.getSaveDirectory();
+
+        assertThat(new File(baseDirectory).list()).containsOnly("dummy.txt");
+        assertThat(new File(baseDirectory).list()).hasSize(1);
+
+        final ImageInfo save = imageService.save(image, ImageType.PROFILE);
+
+        assertThat(new File(baseDirectory).list()).contains(save.getStoreName());
+        assertThat(new File(baseDirectory).list()).hasSize(2);
+
+        imageService.removeImage(save, ImageType.PROFILE);
+
+        assertThat(new File(baseDirectory).list()).hasSize(1);
+        assertThat(new File(baseDirectory).list()).containsOnly("dummy.txt");
     }
 }
