@@ -28,7 +28,7 @@ import org.springframework.http.HttpStatus;
 @Import(TestConfig.class)
 public class CommentIntegrationTest extends IntegrationFixture implements ImageFileCleaner {
 
-    @Value("${domain}")
+    @Value("${image.domain}")
     private String domain;
 
     @Test

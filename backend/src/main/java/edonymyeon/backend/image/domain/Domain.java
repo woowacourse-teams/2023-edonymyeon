@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Domain {
 
-    @Value("${domain}")
+    @Value("${image.domain}")
     private String domain;
 
     public List<String> removeDomainFromUrl(final List<String> imageUrls, final String typeDirectory) {

@@ -36,7 +36,7 @@ import org.springframework.http.MediaType;
 @SuppressWarnings("NonAsciiCharacters")
 public class PostIntegrationTest extends IntegrationFixture implements ImageFileCleaner {
 
-    @Value("${domain}")
+    @Value("${image.domain}")
     private String domain;
 
     @Test

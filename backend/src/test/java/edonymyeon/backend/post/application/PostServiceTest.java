@@ -226,15 +226,6 @@ class PostServiceTest implements ImageFileCleaner {
             assertThat(consumptionRepository.findByPostId(post.getId())).isEmpty();
         }
 
-//        @Test
-//        void 게시글이_삭제되면_디렉토리에_있는_이미지도_삭제된다() throws IOException {
-//            final PostIdResponse postIdResponse = postService.createPost(memberId, getPostRequest());
-//            final PostImageInfo postImageInfo = postImageInfoRepository.findAllByPostId(postIdResponse.id()).get(0);
-//            assertThat(new File(imageFileUploader.getFullPath(postImageInfo.getStoreName())).canRead()).isTrue();
-//
-//            postService.deletePost(memberId, postIdResponse.id());
-//            assertThat(new File(imageFileUploader.getFullPath(postImageInfo.getStoreName())).canRead()).isFalse();
-//        }
 
         @Test
         void 게시글이_삭제되면_조회되지_않는다() throws IOException {
