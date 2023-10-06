@@ -7,7 +7,6 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMB
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.application.ImageService;
 import edonymyeon.backend.image.application.ImageType;
-import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberId;
@@ -45,8 +44,6 @@ public class PostService {
     private final PostCommentService commentService;
 
     private final ApplicationEventPublisher applicationEventPublisher;
-
-    private final Domain domain;
 
     @Transactional
     public PostIdResponse createPost(final MemberId memberId, final PostRequest postRequest) {
@@ -144,6 +141,6 @@ public class PostService {
         if (originalImageUrls == null || originalImageUrls.isEmpty()) {
             return Collections.emptyList();
         }
-        return domain.removeDomainFromUrl(originalImageUrls);
+        return imageService.removeDomainFromUrl(originalImageUrls, ImageType.POST);
     }
 }

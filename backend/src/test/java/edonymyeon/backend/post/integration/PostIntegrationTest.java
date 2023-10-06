@@ -10,6 +10,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
+import edonymyeon.backend.image.application.ImageType;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
@@ -21,10 +22,8 @@ import edonymyeon.backend.post.application.dto.response.SpecificPostInfoResponse
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.report.application.ReportRequest;
 import edonymyeon.backend.support.EdonymyeonRestAssured;
-import edonymyeon.backend.support.EdonymyeonRestAssured.EdonymyeonRestAssuredBuilder;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.io.IOException;
@@ -250,7 +249,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         assertSoftly(softly -> {
             softly.assertThat(jsonPath.getList("content")).hasSize(1);
             softly.assertThat(jsonPath.getLong("content[0].id")).isNotNull();
-            softly.assertThat(jsonPath.getString("content[0].image")).isEqualTo(domain + 첫번째이미지.getStoreName());
+            softly.assertThat(jsonPath.getString("content[0].image")).isEqualTo(domain + ImageType.POST.getSaveDirectory()+ 첫번째이미지.getStoreName());
         });
     }
 

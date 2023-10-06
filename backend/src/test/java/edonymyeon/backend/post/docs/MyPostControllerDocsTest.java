@@ -14,6 +14,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.queryPar
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edonymyeon.backend.image.application.ImageService;
+import edonymyeon.backend.image.application.ImageType;
 import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.member.domain.Member;
@@ -53,6 +55,9 @@ public class MyPostControllerDocsTest extends DocsTest {
     @MockBean
     private MemberRepository memberRepository;
 
+    @MockBean
+    private ImageService imageService;
+
     public MyPostControllerDocsTest(final MockMvc mockMvc,
                                     final ObjectMapper objectMapper,
                                     final Domain domain) {
@@ -68,12 +73,14 @@ public class MyPostControllerDocsTest extends DocsTest {
                 .id(1L)
                 .buildWithoutSaving();
         회원_레포지토리를_모킹한다(회원);
+        when(imageService.findBaseUrl(ImageType.POST)).thenReturn(domain.getDomain() + ImageType.POST.getSaveDirectory());
 
         final Post 게시글1 = new Post(1L, "제목1", "내용1", 1000L, 회원, PostImageInfos.create(), 0, 0, false);
         final Post 게시글2 = new Post(2L, "제목2", "내용2", 2000L, 회원, PostImageInfos.create(), 0, 0, false);
 
-        final MyPostResponse postResponse1 = MyPostResponse.of(게시글1, domain, PostConsumptionResponse.none());
-        final MyPostResponse postResponse2 = MyPostResponse.of(게시글2, domain, PostConsumptionResponse.none());
+        final String baseImageUrl = domain.getDomain() + ImageType.POST.getSaveDirectory();
+        final MyPostResponse postResponse1 = MyPostResponse.of(게시글1, baseImageUrl, PostConsumptionResponse.none());
+        final MyPostResponse postResponse2 = MyPostResponse.of(게시글2, baseImageUrl, PostConsumptionResponse.none());
 
         final List<MyPostResponse> posts = List.of(postResponse1, postResponse2);
 

@@ -12,7 +12,6 @@ import edonymyeon.backend.image.application.ImageService;
 import edonymyeon.backend.image.application.ImageType;
 import edonymyeon.backend.image.commentimage.domain.CommentImageInfo;
 import edonymyeon.backend.image.commentimage.repository.CommentImageInfoRepository;
-import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -42,8 +41,6 @@ public class CommentService {
     private final ImageService imageService;
 
     private final ApplicationEventPublisher publisher;
-
-    private final Domain domain;
 
     @Transactional
     public long createComment(final MemberId memberId, final Long postId, final CommentRequest commentRequest) {
@@ -103,6 +100,6 @@ public class CommentService {
             return null;
         }
         final String imageFileName = commentImageInfo.getStoreName();
-        return domain.convertToImageUrl(imageFileName);
+        return imageService.convertToImageUrl(imageFileName, ImageType.COMMENT);
     }
 }

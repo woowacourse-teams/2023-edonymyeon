@@ -7,7 +7,8 @@ import edonymyeon.backend.cache.application.PostCachingService;
 import edonymyeon.backend.cache.application.dto.CachedPostResponse;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
-import edonymyeon.backend.image.domain.Domain;
+import edonymyeon.backend.image.application.ImageService;
+import edonymyeon.backend.image.application.ImageType;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -42,7 +43,7 @@ public class PostReadService {
 
     private final PostThumbsService thumbsService;
 
-    private final Domain domain;
+    private final ImageService imageService;
 
     private final PostCachingService postCachingService;
 
@@ -55,7 +56,7 @@ public class PostReadService {
         Slice<GeneralPostInfoResponse> posts = postRepository.findAllBy(pageRequest)
                 .map(post -> GeneralPostInfoResponse.of(
                         post,
-                        domain.getDomain()
+                        imageService.findBaseUrl(ImageType.POST)
                 ));
         return PostSlice.from(posts);
     }
@@ -100,7 +101,7 @@ public class PostReadService {
                     allThumbsInPost,
                     writerDetailResponse,
                     reactionCountResponse,
-                    domain.getDomain()
+                    imageService.findBaseUrl(ImageType.POST)
             );
         }
 
@@ -113,7 +114,7 @@ public class PostReadService {
                 reactionCountResponse,
                 thumbsStatusInPost,
                 member.get(),
-                domain.getDomain()
+                imageService.findBaseUrl(ImageType.POST)
         );
     }
 
@@ -128,7 +129,7 @@ public class PostReadService {
         return new WriterDetailResponse(
                 member.getId(),
                 member.getNickname(),
-                domain.getDomain() + member.getProfileImageInfo().getStoreName()
+                imageService.findBaseUrl(ImageType.POST) + member.getProfileImageInfo().getStoreName()
         );
     }
 
@@ -143,7 +144,7 @@ public class PostReadService {
         Slice<GeneralPostInfoResponse> foundPosts = postRepository.findAll(searchResults, pageRequest)
                 .map(post -> GeneralPostInfoResponse.of(
                         post,
-                        domain.getDomain()
+                        imageService.findBaseUrl(ImageType.POST)
                 ));
         return PostSlice.from(foundPosts);
     }
@@ -167,7 +168,7 @@ public class PostReadService {
         postCachingService.cachePosts(hotFindingCondition, hotPost);
         Slice<GeneralPostInfoResponse> hotPostSlice = hotPost.map(post -> GeneralPostInfoResponse.of(
                         post,
-                        domain.getDomain()
+                        imageService.findBaseUrl(ImageType.POST)
                 )
         );
         return PostSlice.from(hotPostSlice);
@@ -185,7 +186,7 @@ public class PostReadService {
                 .stream()
                 .map(post -> GeneralPostInfoResponse.of(
                         post,
-                        domain.getDomain()
+                        imageService.findBaseUrl(ImageType.POST)
                 ))
                 .toList();
         return new PostSlice<>(posts, cachedHotPosts.isLast());

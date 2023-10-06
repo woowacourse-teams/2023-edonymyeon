@@ -1,6 +1,7 @@
 package edonymyeon.backend.post.application;
 
-import edonymyeon.backend.image.domain.Domain;
+import edonymyeon.backend.image.application.ImageService;
+import edonymyeon.backend.image.application.ImageType;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.application.dto.response.PostConsumptionResponse;
@@ -22,7 +23,7 @@ public class MyPostService {
 
     private final PostConsumptionService postConsumptionService;
 
-    private final Domain domain;
+    private final ImageService imageService;
 
     public PostSlice<MyPostResponse> findMyPosts(final MemberId memberIdDto,
                                                  final GeneralFindingCondition findingCondition) {
@@ -32,7 +33,7 @@ public class MyPostService {
                 postIds);
 
         final Slice<MyPostResponse> result = posts.map(
-                post -> MyPostResponse.of(post, domain, consumptionsByPostId.get(post.getId())));
+                post -> MyPostResponse.of(post, imageService.findBaseUrl(ImageType.POST), consumptionsByPostId.get(post.getId())));
         return PostSlice.from(result);
     }
 }

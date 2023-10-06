@@ -130,7 +130,7 @@ public class CommentControllerDocsTest {
                         ),
                         new CommentDto(
                                 8L,
-                                "http://edonymyeon.site/images/image2.png",
+                                "http://edonymyeon.site/images/comment/image2.png",
                                 "그돈이면 치킨이 세마리",
                                 false,
                                 LocalDateTime.now(),
@@ -138,7 +138,7 @@ public class CommentControllerDocsTest {
                         ),
                         new CommentDto(
                                 9L,
-                                "http://edonymyeon.site/images/image3.png",
+                                "http://edonymyeon.site/images/comment/image3.png",
                                 "배고프다",
                                 false,
                                 LocalDateTime.now(),

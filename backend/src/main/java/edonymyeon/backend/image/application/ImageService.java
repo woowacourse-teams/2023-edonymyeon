@@ -5,6 +5,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_EXT
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.ImageExtension;
 import edonymyeon.backend.image.ImageFileNameStrategy;
+import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.image.domain.ImageInfo;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 public class ImageService {
 
     private final ImageClient imageClient;
+
     private final ImageFileNameStrategy imageFileNameStrategy;
+
+    private final Domain domain;
 
     @Value("${image.root-dir}")
     private String rootDirectory; //todo: 어디다 두는게 좋을까?
@@ -52,28 +56,41 @@ public class ImageService {
     /**
      * @param storeName 이미지의 이름
      * @param imageType 이미지 사용처
-     * @return 이미지가 저장된 실제 경로
+     * @return 리소스가 저장된 실제 경로
      */
-    public String findFullPath(final String storeName, final ImageType imageType) {
+    private String findFullPath(final String storeName, final ImageType imageType) {
         return rootDirectory + storeName;
     }
 
     /**
-     *
      * @param fileName 예를 들면 post/name.png 처럼 이미지 타입까지 같이 들어온다
-     * @return 이미지가 저장된 실제 경로
+     * @return 리소스가 저장된 실제 경로
      */
     public String findFullPath(final String fileName) {
         return rootDirectory + fileName;
     }
 
-    //todo: 도메인 붙여서 url 반환하는 법
+    /**
+     * @param imageType 이미지 사용처
+     * @return 사용자에게 보여줄 이미지 도메인 주소(단 이미지 파일 이름은 제외, 예를 들어 https://localhost:8080/images/post/)
+     */
+    public String findBaseUrl(final ImageType imageType) {
+        return domain.getDomain() + imageType.getSaveDirectory();
+    }
 
     public void removeImage(final ImageInfo imageInfo, final ImageType imageType) {
         if(!imageClient.supportsDeletion()){
             return;
         }
-        //todo: 이미지 삭제도?
+        //todo: 이미지 삭제?
         imageClient.delete(findFullPath(imageInfo.getStoreName(), imageType));
+    }
+
+    public String convertToImageUrl(final String fileName, final ImageType imageType) {
+        return domain.convertToImageUrl(imageType.getSaveDirectory() + fileName);
+    }
+
+    public List<String> removeDomainFromUrl(final List<String> originalImageUrls, final ImageType imageType) {
+        return domain.removeDomainFromUrl(originalImageUrls, imageType.getSaveDirectory());
     }
 }
