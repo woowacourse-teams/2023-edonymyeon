@@ -7,7 +7,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_IS
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_NOT_MATCH;
 
-import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
+import edonymyeon.backend.member.application.dto.response.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
@@ -15,7 +15,6 @@ import edonymyeon.backend.auth.application.event.JoinMemberEvent;
 import edonymyeon.backend.auth.application.event.LoginEvent;
 import edonymyeon.backend.auth.application.event.LogoutEvent;
 import edonymyeon.backend.auth.domain.PasswordEncoder;
-import edonymyeon.backend.auth.domain.ValidateType;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
@@ -25,7 +24,6 @@ import edonymyeon.backend.member.domain.SocialInfo;
 import edonymyeon.backend.member.domain.SocialInfo.SocialType;
 import edonymyeon.backend.member.repository.MemberRepository;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -86,19 +84,7 @@ public class AuthService {
      * @return 중복 여부
      */
     public DuplicateCheckResponse checkDuplicate(final String target, final String value) {
-        final ValidateType validateType = ValidateType.from(target);
-
-        if (findMemberByValidateType(validateType, value).isEmpty()) {
-            return new DuplicateCheckResponse(true);
-        }
-        return new DuplicateCheckResponse(false);
-    }
-
-    private Optional<Member> findMemberByValidateType(final ValidateType validateType, final String value) {
-        if (validateType.equals(ValidateType.EMAIL)) {
-            return memberRepository.findByEmail(value);
-        }
-        return memberRepository.findByNickname(value);
+        return memberService.checkDuplicate(target, value);
     }
 
     /**

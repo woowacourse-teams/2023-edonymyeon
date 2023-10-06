@@ -7,6 +7,7 @@ import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.application.dto.request.MemberUpdateRequest;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
+import edonymyeon.backend.member.application.dto.response.DuplicateCheckResponse;
 import edonymyeon.backend.member.application.dto.response.MemberUpdateResponse;
 import edonymyeon.backend.member.application.dto.response.MyPageResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -39,6 +41,14 @@ public class MemberController {
                                                              @ModelAttribute MemberUpdateRequest updateRequest) {
         final MemberUpdateResponse memberResponse = memberService.updateMember(memberId, updateRequest);
         return ResponseEntity.ok(memberResponse);
+    }
+
+    @ApiVersion(value = {1})
+    @GetMapping("/members/check")
+    public ResponseEntity<DuplicateCheckResponse> validateDuplicate(@RequestParam String target,
+                                                                    @RequestParam String value) {
+        final DuplicateCheckResponse duplicateCheckResponse = memberService.checkDuplicate(target, value);
+        return ResponseEntity.ok().body(duplicateCheckResponse);
     }
 
     @ApiVersion(value = {1})

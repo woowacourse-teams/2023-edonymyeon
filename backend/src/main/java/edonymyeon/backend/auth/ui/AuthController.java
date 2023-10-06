@@ -5,7 +5,7 @@ import static edonymyeon.backend.auth.ui.SessionConst.USER;
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
 import edonymyeon.backend.auth.application.AuthService;
 import edonymyeon.backend.auth.application.KakaoAuthResponseProvider;
-import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
+import edonymyeon.backend.member.application.dto.response.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;

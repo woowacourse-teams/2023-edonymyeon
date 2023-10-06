@@ -10,13 +10,17 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import static edonymyeon.backend.auth.ui.SessionConst.USER;
@@ -38,8 +42,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
+import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
+import edonymyeon.backend.member.application.dto.response.DuplicateCheckResponse;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
@@ -60,6 +66,8 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.restdocs.payload.FieldDescriptor;
+import org.springframework.restdocs.request.ParameterDescriptor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -78,6 +86,9 @@ class MemberControllerDocsTest extends DocsTest {
 
     @MockBean
     private ConsumptionRepository consumptionRepository;
+
+    @MockBean
+    private MemberService memberService;
 
     public MemberControllerDocsTest(final MockMvc mockMvc,
                                     final ObjectMapper objectMapper) {
@@ -244,6 +255,38 @@ class MemberControllerDocsTest extends DocsTest {
         );
 
         this.mockMvc.perform(회원_정보_수정_요청)
+                .andExpect(status().isOk())
+                .andDo(문서화);
+    }
+
+    @Test
+    void 회원정보수정시_중복_확인_문서화() throws Exception {
+        String target = "nickname";
+        String value = "newNickname";
+        final DuplicateCheckResponse duplicateCheckResponse = new DuplicateCheckResponse(false);
+        when(memberService.checkDuplicate(target, value)).thenReturn(duplicateCheckResponse);
+
+        final MockHttpServletRequestBuilder 중복_요청 = get("/members/check")
+                .header("X-API-VERSION", 1)
+                .queryParam("target", target)
+                .queryParam("value", value);
+
+        ParameterDescriptor[] 요청_쿼리_파라미터 = {
+                parameterWithName("target").description("검증할 타입 ex)email, nickname"),
+                parameterWithName("value").description("검증할 값 ex)email@email.com, hoyZzang")
+        };
+
+        FieldDescriptor[] 응답값 = {
+                fieldWithPath("isUnique").description("해당 요청 값(이메일,닉네임)이 존재하지 않으면 true")
+        };
+
+        final RestDocumentationResultHandler 문서화 = document("validate-nickname",
+                preprocessResponse(prettyPrint()),
+                queryParameters(요청_쿼리_파라미터),
+                responseFields(응답값)
+        );
+
+        mockMvc.perform(중복_요청)
                 .andExpect(status().isOk())
                 .andDo(문서화);
     }
