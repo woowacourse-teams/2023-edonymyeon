@@ -19,7 +19,7 @@ public class ImageController {
 
     @GetMapping("/images/{fileName}")
     public ResponseEntity<Resource> loadImage(@PathVariable String fileName) throws MalformedURLException {
-        final UrlResource urlResource = new UrlResource("file:" + imageService.findFullPath(fileName));
+        final UrlResource urlResource = new UrlResource("file:" + imageService.findResourcePath(fileName));
 
         return ResponseEntity.ok()
                 .contentType(ImageExtension.findMediaType(fileName))

@@ -58,7 +58,7 @@ public class ImageService {
      * @param imageType 이미지 사용처
      * @return 리소스가 저장된 실제 경로
      */
-    private String findFullPath(final String storeName, final ImageType imageType) {
+    private String findResourcePath(final String storeName, final ImageType imageType) {
         return rootDirectory + imageType.getSaveDirectory() + storeName;
     }
 
@@ -66,7 +66,7 @@ public class ImageService {
      * @param fileName 예를 들면 post/name.png 처럼 이미지 타입까지 같이 들어온다
      * @return 리소스가 저장된 실제 경로
      */
-    public String findFullPath(final String fileName) {
+    public String findResourcePath(final String fileName) {
         return rootDirectory + fileName;
     }
 
@@ -83,7 +83,7 @@ public class ImageService {
             return;
         }
         //todo: 이미지 삭제?
-        imageClient.delete(findFullPath(imageInfo.getStoreName(), imageType));
+        imageClient.delete(findResourcePath(imageInfo.getStoreName(), imageType));
     }
 
     public String convertToImageUrl(final String fileName, final ImageType imageType) {
