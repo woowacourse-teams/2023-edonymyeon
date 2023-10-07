@@ -25,7 +25,6 @@ import edonymyeon.backend.member.domain.SocialInfo;
 import edonymyeon.backend.member.domain.SocialInfo.SocialType;
 import edonymyeon.backend.member.repository.MemberRepository;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -87,18 +86,22 @@ public class AuthService {
      */
     public DuplicateCheckResponse checkDuplicate(final String target, final String value) {
         final ValidateType validateType = ValidateType.from(target);
-
-        if (findMemberByValidateType(validateType, value).isEmpty()) {
-            return new DuplicateCheckResponse(true);
-        }
-        return new DuplicateCheckResponse(false);
+        return new DuplicateCheckResponse(isUniqueValue(validateType, value));
     }
 
-    private Optional<Member> findMemberByValidateType(final ValidateType validateType, final String value) {
-        if (validateType.equals(ValidateType.EMAIL)) {
-            return memberRepository.findByEmail(value);
+    private boolean isUniqueValue(final ValidateType validateType, final String value) {
+        try {
+            if (validateType.equals(ValidateType.EMAIL)) {
+                validateDuplicateEmail(value);
+            }
+            if (validateType.equals(ValidateType.NICKNAME)) {
+                validateDuplicateNickname(value);
+            }
+        } catch (EdonymyeonException e) {
+            return false;
         }
-        return memberRepository.findByNickname(value);
+
+        return true;
     }
 
     /**
