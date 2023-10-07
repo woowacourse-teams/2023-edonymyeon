@@ -9,10 +9,11 @@
             type="com.app.edonymyeon.presentation.ui.main.home.HomeViewModel" />
     </data>
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/gray_f5f5f5"
+        android:fillViewport="true"
         android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -211,13 +212,15 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_all_post"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/bg_ffffff_radius_10dp"
                     android:elevation="4dp"
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never"
                     android:paddingVertical="17dp"
+                    android:layout_marginHorizontal="20dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    app:layout_constraintDimensionRatio="H,312:384"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/space_all_post_title_bottom"
@@ -235,5 +238,5 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </layout>

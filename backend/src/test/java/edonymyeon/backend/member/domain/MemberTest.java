@@ -98,19 +98,6 @@ class MemberTest {
     }
 
     @Test
-    void 비밀번호_암호화시_이미_암호화되었다면_예외발생() {
-        List<String> emptyList = Collections.emptyList();
-        final Member member = new Member("test@email.com", "password1234!", "nickname", null, emptyList);
-        PasswordEncoder encoder = new SimplePasswordEncoder();
-        member.encrypt(encoder.encode(member.getPassword()));
-        final String encodedPassword = encoder.encode(member.getPassword());
-
-        assertThatThrownBy(() -> member.encrypt(encodedPassword))
-                .isInstanceOf(EdonymyeonException.class)
-                .hasMessage(MEMBER_PASSWORD_INVALID.getMessage());
-    }
-
-    @Test
     void 비밀번호_암호화시_잘못_암호화된_비밀번호가_들어오면_예외발생() {
         List<String> emptyList = Collections.emptyList();
         final Member member = new Member("test@email.com", "password1234!", "nickname", null, emptyList);

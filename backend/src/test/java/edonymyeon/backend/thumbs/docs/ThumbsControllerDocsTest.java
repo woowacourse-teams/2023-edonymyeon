@@ -1,5 +1,14 @@
 package edonymyeon.backend.thumbs.docs;
 
+import static edonymyeon.backend.auth.ui.SessionConst.USER;
+import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
@@ -9,27 +18,15 @@ import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
-import java.util.Optional;
-
-import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -86,16 +83,12 @@ public class ThumbsControllerDocsTest {
         when(thumbsRepository.save(조와요)).thenReturn(조와요);
 
         final MockHttpServletRequestBuilder 좋아요_요청 = put("/posts/{postId}/up", 글.getId())
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((반응_하는_사람.getEmail() + ":" + 반응_하는_사람.getPassword()).getBytes()));
+                .sessionAttr(USER.getSessionId(), 반응_하는_사람.getId())
+                .header("X-API-VERSION", 1);
 
         this.mockMvc.perform(좋아요_요청)
                 .andExpect(status().isOk())
                 .andDo(document("thumbs-up",
-                        requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
-                        ),
                         pathParameters(
                                 parameterWithName("postId").description("게시글 id")
                         )
@@ -108,16 +101,12 @@ public class ThumbsControllerDocsTest {
         when(thumbsRepository.save(시러요)).thenReturn(시러요);
 
         final MockHttpServletRequestBuilder 싫어요_요청 = put("/posts/{postId}/down", 글.getId())
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((반응_하는_사람.getEmail() + ":" + 반응_하는_사람.getPassword()).getBytes()));
+                .sessionAttr(USER.getSessionId(), 반응_하는_사람.getId())
+                .header("X-API-VERSION", 1);
 
         this.mockMvc.perform(싫어요_요청)
                 .andExpect(status().isOk())
                 .andDo(document("thumbs-down",
-                        requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
-                        ),
                         pathParameters(
                                 parameterWithName("postId").description("게시글 id")
                         )
@@ -130,16 +119,12 @@ public class ThumbsControllerDocsTest {
         when(thumbsRepository.findByPostIdAndMemberId(글.getId(), 반응_하는_사람.getId())).thenReturn(Optional.of(좋아요));
 
         final MockHttpServletRequestBuilder 좋아요_취소_요청 = delete("/posts/{postId}/up", 글.getId())
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((반응_하는_사람.getEmail() + ":" + 반응_하는_사람.getPassword()).getBytes()));
+                .sessionAttr(USER.getSessionId(), 반응_하는_사람.getId())
+                .header("X-API-VERSION", 1);
 
         this.mockMvc.perform(좋아요_취소_요청)
                 .andExpect(status().isOk())
                 .andDo(document("thumbs-up-delete",
-                        requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
-                        ),
                         pathParameters(
                                 parameterWithName("postId").description("게시글 id")
                         )
@@ -152,16 +137,12 @@ public class ThumbsControllerDocsTest {
         when(thumbsRepository.findByPostIdAndMemberId(글.getId(), 반응_하는_사람.getId())).thenReturn(Optional.of(싫어요));
 
         final MockHttpServletRequestBuilder 싫어요_취소_요청 = delete("/posts/{postId}/down", 글.getId())
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((반응_하는_사람.getEmail() + ":" + 반응_하는_사람.getPassword()).getBytes()));
+                .sessionAttr(USER.getSessionId(), 반응_하는_사람.getId())
+                .header("X-API-VERSION", 1);
 
         this.mockMvc.perform(싫어요_취소_요청)
                 .andExpect(status().isOk())
                 .andDo(document("thumbs-down-delete",
-                        requestHeaders(
-                                headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
-                        ),
                         pathParameters(
                                 parameterWithName("postId").description("게시글 id")
                         )

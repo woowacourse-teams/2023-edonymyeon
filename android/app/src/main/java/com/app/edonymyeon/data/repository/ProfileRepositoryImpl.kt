@@ -10,10 +10,13 @@ import com.app.edonymyeon.mapper.toDomain
 import com.domain.edonymyeon.model.MyPosts
 import com.domain.edonymyeon.repository.ProfileRepository
 import org.json.JSONObject
+import javax.inject.Inject
 
-class ProfileRepositoryImpl(private val profileDataSource: ProfileDataSource) : ProfileRepository {
-    override suspend fun getMyPosts(page: Int): Result<MyPosts> {
-        val result = profileDataSource.getMyPosts(page)
+class ProfileRepositoryImpl @Inject constructor(
+    private val profileDataSource: ProfileDataSource,
+) : ProfileRepository {
+    override suspend fun getMyPosts(page: Int, notificationId: Long): Result<MyPosts> {
+        val result = profileDataSource.getMyPosts(page, notificationId)
         return if (result.isSuccessful) {
             Result.success(
                 MyPosts(

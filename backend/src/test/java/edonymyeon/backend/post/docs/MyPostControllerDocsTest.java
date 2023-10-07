@@ -1,5 +1,18 @@
 package edonymyeon.backend.post.docs;
 
+import static edonymyeon.backend.auth.ui.SessionConst.USER;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
@@ -13,35 +26,18 @@ import edonymyeon.backend.post.application.dto.response.PostConsumptionResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.DocsTest;
 import edonymyeon.backend.support.TestMemberBuilder;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
-import org.springframework.http.HttpHeaders;
-import org.springframework.restdocs.headers.HeaderDescriptor;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.restdocs.request.ParameterDescriptor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
-import java.util.List;
-import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SuppressWarnings("NonAsciiCharacters")
 public class MyPostControllerDocsTest extends DocsTest {
@@ -69,6 +65,7 @@ public class MyPostControllerDocsTest extends DocsTest {
         final GeneralFindingCondition findingCondition = GeneralFindingCondition.builder().build();
 
         final Member 회원 = testMemberBuilder.builder()
+                .id(1L)
                 .buildWithoutSaving();
         회원_레포지토리를_모킹한다(회원);
 
@@ -85,17 +82,12 @@ public class MyPostControllerDocsTest extends DocsTest {
         when(myPostService.findMyPosts(any(), any())).thenReturn(PostSlice.from(result));
 
         final MockHttpServletRequestBuilder 내_게시글_조회_요청 = get("/profile/my-posts")
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + java.util.Base64.getEncoder()
-                        .encodeToString((회원.getEmail() + ":" + 회원.getPassword()).getBytes()))
+                .sessionAttr(USER.getSessionId(), 회원.getId())
+                .header("X-API-VERSION", 1)
                 .queryParam("page", findingCondition.getPage().toString())
                 .queryParam("size", findingCondition.getSize().toString())
                 .queryParam("sort-by", findingCondition.getSortBy().getName())
                 .queryParam("sort-direction", findingCondition.getSortDirection().name());
-
-        HeaderDescriptor[] 요청_헤더 = new HeaderDescriptor[]{
-                headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")
-        };
 
         ParameterDescriptor[] 요청_쿼리_파라미터 = {
                 parameterWithName("page")
@@ -130,7 +122,6 @@ public class MyPostControllerDocsTest extends DocsTest {
 
         final RestDocumentationResultHandler 문서화 = document("my-posts",
                 preprocessResponse(prettyPrint()),
-                requestHeaders(요청_헤더),
                 queryParameters(요청_쿼리_파라미터),
                 responseFields(응답)
         );

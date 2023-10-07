@@ -23,6 +23,9 @@
     <string name="login_logo_description">로그인 로고</string>
     <string name="login_check_logininfo_input">이메일과 비밀번호는 필수 입력사항입니다.</string>
 
+    <!-- main activity -->
+    <string name="main_ask_back_click">뒤로가기 버튼을 한번 더 누르시면 종료됩니다</string>
+
     <!-- bottom navigation title    -->
     <string name="bottom_navigation_home_title">홈</string>
     <string name="bottom_navigation_search_title">검색</string>
@@ -48,6 +51,8 @@
     <string name="post_detail_dialog_yes">예</string>
     <string name="post_detail_dialog_no">아니요</string>
     <string name="post_detail_loading">로딩 중입니다</string>
+    <string name="post_detail_deleted_dialog_title">삭제된 게시글입니다</string>
+    <string name="post_detail_deleted_dialog_yes">확인</string>
 
     <!--post report dialog -->
     <string name="post_report_dialog_title">신고 사유</string>
@@ -147,6 +152,7 @@
     <string name="alarm_setting_ten_reaction">좋아요/싫어요 10개당 알림 수신</string>
     <string name="alarm_setting_confirm_consumption">소비 확정여부 수신</string>
     <string name="alarm_setting_request_alarm_permission">알림 권한을 허용해주세요.</string>
+    <string name="alarm_setting_comment">댓글 알림 수신</string>
 
     <!--alarm-->
     <string name="alarm_title">알림</string>

@@ -2,17 +2,21 @@ package com.app.edonymyeon.presentation.ui.main.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.mapper.toAllPostItemUiModel
 import com.app.edonymyeon.mapper.toUiModel
+import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.AllPostItemUiModel
 import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
 import com.domain.edonymyeon.repository.PostRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel(private val postRepository: PostRepository) : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(private val postRepository: PostRepository) :
+    BaseViewModel() {
     private val _allPosts = MutableLiveData<List<AllPostItemUiModel>>()
     val allPosts: LiveData<List<AllPostItemUiModel>>
         get() = _allPosts
@@ -26,7 +30,7 @@ class HomeViewModel(private val postRepository: PostRepository) : ViewModel() {
         get() = _hotPosts
 
     fun getAllPosts() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             postRepository.getPosts(ALL_POST_DEFAULT_SIZE, ALL_POST_DEFAULT_PAGE).onSuccess {
                 _allPosts.value = it.posts.map { post ->
                     post.toAllPostItemUiModel()
@@ -40,7 +44,7 @@ class HomeViewModel(private val postRepository: PostRepository) : ViewModel() {
     }
 
     fun getHotPosts() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             postRepository.getHotPosts().onSuccess { post ->
                 _hotPosts.value = post.posts.map { it.toUiModel() }
             }.onFailure {

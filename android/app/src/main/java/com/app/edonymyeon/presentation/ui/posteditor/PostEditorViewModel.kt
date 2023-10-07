@@ -5,22 +5,25 @@ import android.net.Uri
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.presentation.common.imageutil.processAndAdjustImage
+import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.ui.mypost.dialog.ConsumptionDialog
 import com.app.edonymyeon.presentation.uimodel.PostEditorUiModel
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.domain.edonymyeon.model.PostEditor
 import com.domain.edonymyeon.repository.PostRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.File
+import javax.inject.Inject
 
-class PostEditorViewModel(
+@HiltViewModel
+class PostEditorViewModel @Inject constructor(
     private val repository: PostRepository,
-) : ViewModel() {
+) : BaseViewModel() {
     private val images = mutableListOf<String>()
     private val _galleryImages = MutableLiveData<List<String>>()
     val galleryImages: LiveData<List<String>> get() = _galleryImages
@@ -44,7 +47,7 @@ class PostEditorViewModel(
     }
 
     fun savePost(context: Context, postEditor: PostEditor) {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             repository.savePost(
                 postEditor,
                 getFileFromContent(
@@ -61,7 +64,7 @@ class PostEditorViewModel(
 
     fun updatePost(context: Context, id: Long, postEditor: PostEditor) {
         val uris = _galleryImages.value?.map { Uri.parse(it) } ?: emptyList()
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             repository.updatePost(
                 id,
                 postEditor,

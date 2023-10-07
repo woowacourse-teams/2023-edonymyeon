@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
+import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.RestAssured;
 import java.io.File;
@@ -23,12 +24,15 @@ public class ImageFileSizeIntegrationTest extends IntegrationFixture implements 
     @Test
     void 이미지_파일_하나의_용량이_20MB_이하면_성공한다() {
         final Member 작성자 = memberTestSupport.builder().build();
-        final var 게시글_생성_응답 = RestAssured.given()
+        final String sessionId = 로그인(작성자);
+        final var 게시글_생성_응답 = EdonymyeonRestAssured.builder()
+                .version(1)
+                .sessionId(sessionId)
+                .build()
                 .multiPart("title", "this is title")
                 .multiPart("content", "this is content")
                 .multiPart("price", 1000)
                 .multiPart("newImages", 크기_20MB_이미지, MediaType.IMAGE_JPEG_VALUE)
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
                 .when()
                 .post("/posts")
                 .then()
@@ -40,12 +44,16 @@ public class ImageFileSizeIntegrationTest extends IntegrationFixture implements 
     @Test
     void 이미지_파일_하나의_용량이_20MB를_보다_크면_실패한다() {
         final Member 작성자 = memberTestSupport.builder().build();
-        final var 게시글_생성_응답 = RestAssured.given()
+        final String sessionId = 로그인(작성자);
+
+        final var 게시글_생성_응답 = EdonymyeonRestAssured.builder()
+                .version(1)
+                .sessionId(sessionId)
+                .build()
                 .multiPart("title", "this is title")
                 .multiPart("content", "this is content")
                 .multiPart("price", 1000)
                 .multiPart("newImages", 크기_21MB_이미지, MediaType.IMAGE_JPEG_VALUE)
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
                 .when()
                 .post("/posts")
                 .then()
@@ -64,7 +72,13 @@ public class ImageFileSizeIntegrationTest extends IntegrationFixture implements 
     @Test
     void 요청의_크기가_200MB_이하면_성공한다() {
         final Member 작성자 = memberTestSupport.builder().build();
-        final var 게시글_생성_응답 = RestAssured.given()
+
+        final String sessionId = 로그인(작성자);
+
+        final var 게시글_생성_응답 = EdonymyeonRestAssured.builder()
+                .version(1)
+                .sessionId(sessionId)
+                .build()
                 .multiPart("title", "this is title")
                 .multiPart("content", "this is content")
                 .multiPart("price", 1000)
@@ -78,7 +92,6 @@ public class ImageFileSizeIntegrationTest extends IntegrationFixture implements 
                 .multiPart("newImages", 크기_20MB_이미지, MediaType.IMAGE_JPEG_VALUE)
                 .multiPart("newImages", 크기_20MB_이미지, MediaType.IMAGE_JPEG_VALUE)
                 .multiPart("newImages", 크기_20MB_이미지, MediaType.IMAGE_JPEG_VALUE)
-                .auth().preemptive().basic(작성자.getEmail(), 작성자.getPassword())
                 .when()
                 .post("/posts")
                 .then()
