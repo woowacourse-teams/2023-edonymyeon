@@ -8,7 +8,10 @@
 operation::my-posts[snippets='query-parameters,http-request,response-fields,http-response']
 
 === 회원 정보 수정
-operation::profile-update[snippets='request-headers,request-parts,http-request,http-response']
+operation::profile-update[snippets='request-parts,http-request,http-response']
+
+=== 닉네임 중복 체크
+operation::validate-nickname[snippets='query-parameters,http-request,response-fields,http-response']
 
 === 최근 1개월/6개월 간 절약/소비 금액 확인
 

@@ -236,21 +236,21 @@ class MemberControllerDocsTest extends DocsTest {
                 ContentType.IMAGE_JPEG.getMimeType(),
                 "이미지 파일입니다".getBytes(StandardCharsets.UTF_8));
         Part nickname = new MockPart("nickname", null, "수정할 닉네임".getBytes(StandardCharsets.UTF_8));
+        Part isImageChanged = new MockPart("isImageChanged", null, "true".getBytes(StandardCharsets.UTF_8));
 
         final MockHttpServletRequestBuilder 회원_정보_수정_요청 = MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/profile")
                 .part(nickname)
                 .file(profileImage)
+                .part(isImageChanged)
+                .header("X-API-VERSION", 1)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-                .header(HttpHeaders.AUTHORIZATION, "Basic "
-                        + Base64.getEncoder()
-                        .encodeToString((회원.getEmail() + ":" + 회원.getPassword()).getBytes()));
+                .sessionAttr(USER.getSessionId(), 회원.getId());
 
         final RestDocumentationResultHandler 문서화 = document("profile-update",
-                requestHeaders(
-                        headerWithName(HttpHeaders.AUTHORIZATION).description("서버에서 발급한 엑세스 토큰")),
                 requestParts(
                         partWithName("nickname").description("수정할 닉네임"),
-                        partWithName("profileImage").description("수정할 프로필 사진")
+                        partWithName("profileImage").description("수정할 프로필 사진"),
+                        partWithName("isImageChanged").description("이미지 변경 여부")
                 )
         );
 
