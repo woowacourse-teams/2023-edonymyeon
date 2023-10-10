@@ -1,7 +1,7 @@
 package edonymyeon.backend.member.application;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_INVALID;
+import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_DUPLICATE;
 
 import edonymyeon.backend.member.application.dto.response.DuplicateCheckResponse;
 import edonymyeon.backend.auth.domain.ValidateType;
@@ -78,8 +78,8 @@ public class MemberService {
 
     private void validateDuplicateNickname(final String currentNickname, final String updateNickname) {
         if (!currentNickname.equals(updateNickname) &&
-                memberRepository.findByNickname(updateNickname).isPresent()) {
-            throw new EdonymyeonException(MEMBER_NICKNAME_INVALID);
+                memberRepository.existsByNickname(updateNickname)) {
+            throw new EdonymyeonException(MEMBER_NICKNAME_DUPLICATE);
         }
     }
 

@@ -144,18 +144,19 @@ public class AuthService {
         validateDuplicateEmail(joinRequest.email());
         validateDuplicateNickname(joinRequest.nickname());
 
-        publisher.publishEvent(new JoinMemberEvent(member, joinRequest.deviceToken()));
-        return saveMember(member);
+        final Member savedMember = saveMember(member);
+        publisher.publishEvent(new JoinMemberEvent(savedMember, joinRequest.deviceToken()));
+        return savedMember;
     }
 
     private void validateDuplicateEmail(final String email) {
-        if (memberRepository.findByEmail(email).isPresent()) {
+        if (memberRepository.existsByEmail(email)) {
             throw new EdonymyeonException(MEMBER_EMAIL_DUPLICATE);
         }
     }
 
     private void validateDuplicateNickname(final String nickname) {
-        if (memberRepository.findByNickname(nickname).isPresent()) {
+        if (memberRepository.existsByNickname(nickname)) {
             throw new EdonymyeonException(MEMBER_NICKNAME_INVALID);
         }
     }
