@@ -23,7 +23,7 @@ public class S3ImageClient implements ImageClient {
     private final S3Client s3Client;
 
     @Value("${s3.bucket}")
-    private final String bucket;
+    private String bucket;
 
     @Override
     public void upload(final MultipartFile image, final String directory, final String storeName) {
