@@ -1,21 +1,48 @@
 package edonymyeon.backend.member.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.awaitility.Awaitility.await;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 
 import edonymyeon.backend.auth.application.AuthService;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
+import edonymyeon.backend.image.ImageFileUploader;
+import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
+import edonymyeon.backend.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.member.application.dto.request.MemberUpdateRequest;
+import edonymyeon.backend.member.application.dto.response.MemberUpdateResponse;
+import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.support.IntegrationFixture;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
-class MemberServiceTest extends IntegrationFixture {
+class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
 
     private final DeviceRepository deviceRepository;
+
     private final AuthService authService;
+
+    private final MemberService memberService;
+
+    @SpyBean
+    private ImageFileUploader imageFileUploader;
 
     @Test
     void 하나의_디바이스는_하나의_계정에서만_활성화_되어야_한다_회원가입() {
@@ -51,5 +78,147 @@ class MemberServiceTest extends IntegrationFixture {
         assertThat(deviceRepository.findByDeviceTokenAndIsActiveIsTrue(동일한_디바이스_토큰))
                 .as("같은 디바이스가 여러 계정에서 활성화되어 있다면 NonUniqueResultException으로 인해 테스트가 실패해야 한다.")
                 .isPresent();
+    }
+
+    @Transactional
+    @Test
+    void 닉네임만_변경되는_경우() {
+        final Member member = memberTestSupport.builder()
+                .nickname("originalNickname")
+                .build();
+        final var newNickname = "newNickname";
+        final MemberUpdateRequest updateRequest = new MemberUpdateRequest(newNickname, null, false);
+
+        memberService.updateMember(new ActiveMemberId(member.getId()), updateRequest);
+
+        assertThat(member.getNickname()).isEqualTo(newNickname);
+    }
+
+    @Transactional
+    @Test
+    void 프로필_이미지가_새로_등록되는_경우() throws IOException {
+        final Member member = memberTestSupport.builder()
+                .build();
+        final ProfileImageInfo originalProfileImage = member.getProfileImageInfo();
+
+        final MockMultipartFile newImageFile = mockMultipartFileTestSupport.builder().build();
+        final MemberUpdateRequest updateRequest = new MemberUpdateRequest(member.getNickname(), newImageFile, true);
+
+        memberService.updateMember(new ActiveMemberId(member.getId()), updateRequest);
+
+        assertSoftly(
+                soft -> {
+                    soft.assertThat(member.getNickname()).isEqualTo(updateRequest.nickname());
+                    soft.assertThat(originalProfileImage).isNull();
+                    soft.assertThat(member.getProfileImageInfo()).isNotNull();
+                }
+        );
+    }
+
+    @Test
+    void 프로필_이미지가_삭제되는_경우(@Autowired MemberRepository memberRepository) throws IOException {
+        final ProfileImageInfo profileImageInfo = profileImageInfoTestSupport.builder()
+                .buildWithImageFile();
+        final Member member = memberTestSupport.builder()
+                .profileImageInfo(profileImageInfo)
+                .build();
+
+        final MemberUpdateRequest updateRequest = new MemberUpdateRequest(member.getNickname(), null, true);
+
+        final MemberUpdateResponse response = memberService.updateMember(new ActiveMemberId(member.getId()),
+                updateRequest);
+
+        final Member updatedMember = memberRepository.findById(response.id()).orElseThrow();
+
+        assertSoftly(
+                soft -> {
+                    soft.assertThat(updatedMember.getId()).isEqualTo(member.getId());
+                    soft.assertThat(updatedMember.getNickname()).isEqualTo(updateRequest.nickname());
+                    soft.assertThat(updatedMember.getProfileImageInfo()).isNull();
+                    await().untilAsserted(() -> verify(imageFileUploader, atLeastOnce()).removeFile(any()));
+                }
+        );
+    }
+
+    @Test
+    void 프로필_이미지가_바뀌는_경우(@Autowired MemberRepository memberRepository) throws IOException {
+        final ProfileImageInfo profileImageInfo = profileImageInfoTestSupport.builder()
+                .buildWithImageFile();
+        final Member member = memberTestSupport.builder()
+                .profileImageInfo(profileImageInfo)
+                .build();
+
+        final MockMultipartFile imageFile = mockMultipartFileTestSupport.builder().build();
+        final MemberUpdateRequest updateRequest = new MemberUpdateRequest(member.getNickname(), imageFile, true);
+
+        final MemberUpdateResponse response = memberService.updateMember(new ActiveMemberId(member.getId()),
+                updateRequest);
+
+        final Member updatedMember = memberRepository.findById(response.id()).orElseThrow();
+
+        assertSoftly(
+                soft -> {
+                    soft.assertThat(updatedMember.getId()).isEqualTo(member.getId());
+                    soft.assertThat(updatedMember.getNickname()).isEqualTo(updateRequest.nickname());
+                    soft.assertThat(updatedMember.getProfileImageInfo()).isNotNull();
+                    await().untilAsserted(() -> verify(imageFileUploader, atLeastOnce()).removeFile(any()));
+                    await().untilAsserted(() -> verify(imageFileUploader, atLeastOnce()).uploadFile(any()));
+                }
+        );
+    }
+
+    @Test
+    void 닉네임_프로필_이미지가_모두_변경되는_경우(@Autowired MemberRepository memberRepository) throws IOException {
+        final ProfileImageInfo profileImageInfo = profileImageInfoTestSupport.builder()
+                .buildWithImageFile();
+        final Member member = memberTestSupport.builder()
+                .profileImageInfo(profileImageInfo)
+                .build();
+
+        final MockMultipartFile imageFile = mockMultipartFileTestSupport.builder().build();
+        final MemberUpdateRequest updateRequest = new MemberUpdateRequest("newNickname", imageFile, true);
+
+        final MemberUpdateResponse response = memberService.updateMember(new ActiveMemberId(member.getId()),
+                updateRequest);
+
+        final Member updatedMember = memberRepository.findById(response.id()).orElseThrow();
+
+        assertSoftly(
+                soft -> {
+                    soft.assertThat(updatedMember.getId()).isEqualTo(member.getId());
+                    soft.assertThat(updatedMember.getNickname()).isEqualTo(updateRequest.nickname());
+                    soft.assertThat(updatedMember.getProfileImageInfo()).isNotNull();
+                    await().untilAsserted(() -> verify(imageFileUploader, atLeastOnce()).removeFile(any()));
+                    await().untilAsserted(() -> verify(imageFileUploader, atLeastOnce()).uploadFile(any()));
+                }
+        );
+    }
+
+    @Test
+    void 실제_이미지_저장이_실패하면_회원정보_수정이_실패한다(@Autowired MemberRepository memberRepository) throws IOException {
+        final ProfileImageInfo profileImageInfo = profileImageInfoTestSupport.builder()
+                .buildWithImageFile();
+        final Member member = memberTestSupport.builder()
+                .profileImageInfo(profileImageInfo)
+                .build();
+
+        final MockMultipartFile imageFile = mockMultipartFileTestSupport.builder().build();
+        final MemberUpdateRequest updateRequest = new MemberUpdateRequest("newNickname", imageFile, true);
+
+        doThrow(new RuntimeException("롤백용 예외")).when(imageFileUploader).uploadRealStorage(any(), any());
+
+        assertThatThrownBy(() -> memberService.updateMember(new ActiveMemberId(member.getId()),
+                updateRequest))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessage("롤백용 예외");
+
+        final Member updatedMember = memberRepository.findById(member.getId()).orElseThrow();
+
+        SoftAssertions.assertSoftly(
+                soft -> {
+                    verify(imageFileUploader, atLeastOnce()).uploadRealStorage(any(), any());
+                    soft.assertThat(updatedMember.getNickname()).isNotEqualTo(updateRequest.nickname());
+                }
+        );
     }
 }

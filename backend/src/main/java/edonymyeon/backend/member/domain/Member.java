@@ -195,4 +195,8 @@ public class Member extends TemporalRecord {
         this.nickname = nickname;
         this.profileImageInfo = profileImageInfo;
     }
+
+    public void deleteProfileImage() {
+        this.profileImageInfo = null;
+    }
 }

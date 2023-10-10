@@ -3,6 +3,8 @@ package edonymyeon.backend.member.application;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_INVALID;
 
+import edonymyeon.backend.member.application.dto.response.DuplicateCheckResponse;
+import edonymyeon.backend.auth.domain.ValidateType;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.domain.ImageInfo;
@@ -16,6 +18,7 @@ import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.application.dto.response.MemberUpdateResponse;
 import edonymyeon.backend.member.application.dto.response.MyPageResponse;
 import edonymyeon.backend.member.application.event.ProfileImageDeletionEvent;
+import edonymyeon.backend.member.application.event.ProfileImageUploadEvent;
 import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -41,6 +44,8 @@ public class MemberService {
 
     private final ProfileImageInfoRepository profileImageInfoRepository;
 
+    private final ImageFileUploader imageFileUploader;
+
     private final ApplicationEventPublisher publisher;
 
     public MyPageResponse findMemberInfoById(final Long id) {
@@ -54,33 +59,21 @@ public class MemberService {
     }
 
     @Transactional
-    public void deleteProfileImage(final Member member) {
-        if (Objects.nonNull(member.getProfileImageInfo())) {
-            profileImageInfoRepository.delete(member.getProfileImageInfo());
-            publisher.publishEvent(new ProfileImageDeletionEvent(member.getProfileImageInfo()));
-        }
-    }
-
-    @Transactional
     public MemberUpdateResponse updateMember(final MemberId memberId, final MemberUpdateRequest updateRequest) {
         final Member member = findMember(memberId.id());
         validateDuplicateNickname(member.getNickname(), updateRequest.nickname());
 
-        if (isImageEmpty(updateRequest.profileImage())) {
-            return new MemberUpdateResponse(member.getId());
+        final boolean imageChanged = updateRequest.isImageChanged();
+
+        if (imageChanged) {
+            deleteProfileImage(member);
         }
 
-        final ImageInfo imageInfo = imageFileUploader.uploadFile(updateRequest.profileImage());
-        final ProfileImageInfo profileImage = ProfileImageInfo.from(imageInfo);
-        profileImageInfoRepository.save(profileImage);
+        if (isImageEmpty(updateRequest.profileImage())) {
+            return updateWithoutProfileImage(member, updateRequest);
+        }
 
-        member.updateMember(updateRequest.nickname(), profileImage);
-        return new MemberUpdateResponse(member.getId());
-    }
-
-    private boolean isImageEmpty(final MultipartFile image) {
-        return Objects.isNull(image) ||
-                image.isEmpty();
+        return updateWithProfileImage(member, updateRequest);
     }
 
     private void validateDuplicateNickname(final String currentNickname, final String updateNickname) {
@@ -88,6 +81,55 @@ public class MemberService {
                 memberRepository.findByNickname(updateNickname).isPresent()) {
             throw new EdonymyeonException(MEMBER_NICKNAME_INVALID);
         }
+    }
+
+    public DuplicateCheckResponse checkDuplicate(final String target, final String value) {
+        final ValidateType validateType = ValidateType.from(target);
+
+        if (findMemberByValidateType(validateType, value).isEmpty()) {
+            return new DuplicateCheckResponse(true);
+        }
+        return new DuplicateCheckResponse(false);
+    }
+
+    private Optional<Member> findMemberByValidateType(final ValidateType validateType, final String value) {
+        if (validateType.equals(ValidateType.EMAIL)) {
+            return memberRepository.findByEmail(value);
+        }
+        return memberRepository.findByNickname(value);
+    }
+
+    @Transactional
+    public void deleteProfileImage(final Member member) {
+        if (Objects.nonNull(member.getProfileImageInfo())) {
+            final ProfileImageInfo imageInfoToDelete = member.getProfileImageInfo();
+            profileImageInfoRepository.delete(imageInfoToDelete);
+            member.deleteProfileImage();
+            publisher.publishEvent(new ProfileImageDeletionEvent(imageInfoToDelete));
+        }
+    }
+
+    private boolean isImageEmpty(final MultipartFile image) {
+        return Objects.isNull(image) || image.isEmpty();
+    }
+
+    @Transactional
+    public MemberUpdateResponse updateWithoutProfileImage(final Member member,
+                                                          final MemberUpdateRequest updateRequest) {
+        member.updateMember(updateRequest.nickname(), member.getProfileImageInfo());
+        return new MemberUpdateResponse(member.getId());
+    }
+
+    @Transactional
+    public MemberUpdateResponse updateWithProfileImage(final Member member, final MemberUpdateRequest updateRequest) {
+        final MultipartFile imageFile = updateRequest.profileImage();
+        final ImageInfo imageInfo = imageFileUploader.from(imageFile);
+        final ProfileImageInfo profileImageInfo = ProfileImageInfo.from(imageInfo);
+        profileImageInfoRepository.save(profileImageInfo);
+        member.updateMember(updateRequest.nickname(), profileImageInfo);
+
+        publisher.publishEvent(new ProfileImageUploadEvent(imageFile, profileImageInfo));
+        return new MemberUpdateResponse(member.getId());
     }
 
     @Transactional
