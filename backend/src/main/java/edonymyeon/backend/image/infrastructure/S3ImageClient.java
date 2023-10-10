@@ -7,6 +7,7 @@ import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.image.application.ImageClient;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -30,6 +31,7 @@ public class S3ImageClient implements ImageClient {
         PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(bucket)
                 .key(directory + storeName)
+                .contentType(image.getContentType())
                 .build();
         s3Client.putObject(request, RequestBody.fromBytes(getBytes(image)));
     }
