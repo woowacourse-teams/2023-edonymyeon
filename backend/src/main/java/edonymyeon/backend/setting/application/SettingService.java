@@ -43,7 +43,7 @@ public class SettingService {
 
     public void initializeSettings(final Member member) {
         final List<Setting> defaultSettings = getDefaultSettings(member);
-        settingRepository.saveAll(defaultSettings);
+        settingRepository.batchSave(defaultSettings);
     }
 
     public void toggleSetting(final String settingSerialNumber, final MemberId memberId) {

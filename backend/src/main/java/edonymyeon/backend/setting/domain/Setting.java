@@ -1,7 +1,6 @@
 package edonymyeon.backend.setting.domain;
 
 import edonymyeon.backend.member.domain.Member;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -45,6 +44,14 @@ public class Setting {
 
     public void deactivate() {
         this.isActive = false;
+    }
+
+    public String findSettingName() {
+        return this.settingType.name();
+    }
+
+    public Long findMemberId() {
+        return this.member.getId();
     }
 
     public boolean isSameCategoryWith(final Setting setting) {
