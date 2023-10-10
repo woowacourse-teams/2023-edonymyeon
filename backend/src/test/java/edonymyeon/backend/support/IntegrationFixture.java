@@ -30,6 +30,9 @@ public class IntegrationFixture {
     protected static final File 이미지2 = new File("./src/test/resources/static/img/file/test_image_2.jpg");
 
     @Autowired
+    protected MockMultipartFileTestSupport mockMultipartFileTestSupport;
+
+    @Autowired
     protected ProfileImageInfoTestSupport profileImageInfoTestSupport;
 
     @Autowired
