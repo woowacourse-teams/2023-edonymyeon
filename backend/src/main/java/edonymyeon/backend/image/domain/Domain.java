@@ -32,7 +32,11 @@ public class Domain {
         }
     }
 
-    public String convertToImageUrl(final String fileName) {
-        return domain + fileName;
+    public String convertToImageUrl(final ImageInfo imageInfo) {
+        if(imageInfo == null){
+            return null;
+        }
+        final String imageFileName = imageInfo.getStoreName();
+        return domain + imageFileName;
     }
 }
