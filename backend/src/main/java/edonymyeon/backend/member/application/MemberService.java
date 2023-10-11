@@ -3,6 +3,7 @@ package edonymyeon.backend.member.application;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_DUPLICATE;
 
+import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.member.application.dto.response.DuplicateCheckResponse;
 import edonymyeon.backend.auth.domain.ValidateType;
 import edonymyeon.backend.global.exception.EdonymyeonException;
@@ -46,11 +47,13 @@ public class MemberService {
 
     private final ImageFileUploader imageFileUploader;
 
+    private final Domain domain;
+
     private final ApplicationEventPublisher publisher;
 
     public MyPageResponse findMemberInfoById(final Long id) {
         final Member member = findMember(id);
-        return new MyPageResponse(member.getId(), member.getNickname());
+        return new MyPageResponse(member.getId(), member.getNickname(), domain.convertToImageUrl(member.getProfileImageInfo()));
     }
 
     private Member findMember(final Long id) {

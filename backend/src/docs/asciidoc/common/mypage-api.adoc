@@ -2,6 +2,7 @@
 == 마이페이지
 
 === 회원 정보 조회
+operation::profile[snippets='http-request,response-fields,http-response']
 
 === 내가 쓴 글 조회
 

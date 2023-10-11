@@ -1,11 +1,10 @@
 package edonymyeon.backend.member.docs;
 
+import static edonymyeon.backend.auth.ui.SessionConst.USER;
 import static edonymyeon.backend.consumption.domain.ConsumptionType.SAVING;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
-import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -23,29 +22,15 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import static edonymyeon.backend.auth.ui.SessionConst.USER;
-import static edonymyeon.backend.consumption.domain.ConsumptionType.SAVING;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
+import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.application.dto.response.DuplicateCheckResponse;
+import edonymyeon.backend.member.application.dto.response.MyPageResponse;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
@@ -54,13 +39,11 @@ import edonymyeon.backend.support.DocsTest;
 import edonymyeon.backend.support.TestMemberBuilder;
 import jakarta.servlet.http.Part;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.Optional;
 import org.apache.http.entity.ContentType;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -71,7 +54,6 @@ import org.springframework.restdocs.request.ParameterDescriptor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 
 @SuppressWarnings("NonAsciiCharacters")
 class MemberControllerDocsTest extends DocsTest {
@@ -223,6 +205,27 @@ class MemberControllerDocsTest extends DocsTest {
 
         this.mockMvc.perform(회원_탈퇴_요청)
                 .andExpect(status().isNoContent())
+                .andDo(문서화);
+    }
+
+    @Test
+    void 회원정보를_조회한다(@Autowired Domain domain) throws Exception {
+        final Member 회원 = testMemberBuilder.builder().id(1L).buildWithoutSaving();
+        var response = new MyPageResponse(회원.getId(), 회원.getNickname(),
+                domain.convertToImageUrl(회원.getProfileImageInfo()));
+        when(memberService.findMemberInfoById(회원.getId())).thenReturn(response);
+
+        final MockHttpServletRequestBuilder 회원_정보_조회_요청 = get("/profile")
+                .header("X-API-VERSION", 1)
+                .sessionAttr(USER.getSessionId(), 회원.getId());
+
+        final RestDocumentationResultHandler 문서화 = document("profile",
+                responseFields(fieldWithPath("id").description("회원 id"),
+                        fieldWithPath("nickname").description("닉네임"),
+                        fieldWithPath("profileImage").description("프로필 사진")));
+
+        this.mockMvc.perform(회원_정보_조회_요청)
+                .andExpect(status().isOk())
                 .andDo(문서화);
     }
 
