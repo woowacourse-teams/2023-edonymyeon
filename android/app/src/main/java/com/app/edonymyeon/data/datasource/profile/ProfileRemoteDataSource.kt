@@ -8,7 +8,6 @@ import com.app.edonymyeon.data.dto.response.MyPostsResponse
 import com.app.edonymyeon.data.service.ProfileService
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Response
@@ -66,12 +65,5 @@ class ProfileRemoteDataSource @Inject constructor(
 
         val requestFile = this.asRequestBody("image/*".toMediaTypeOrNull())
         return MultipartBody.Part.createFormData("profileImage", this.name, requestFile)
-    }
-
-    /*
-    * 만약 Boolean 값도 RequestBody로 만들어야 한다면
-    * */
-    private fun Boolean.toRequestBody(): RequestBody {
-        return this.toString().toRequestBody("text/plain".toMediaTypeOrNull())
     }
 }
