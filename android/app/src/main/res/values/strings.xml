@@ -23,6 +23,9 @@
     <string name="login_logo_description">로그인 로고</string>
     <string name="login_check_logininfo_input">이메일과 비밀번호는 필수 입력사항입니다.</string>
 
+    <!-- main activity -->
+    <string name="main_ask_back_click">뒤로가기 버튼을 한번 더 누르시면 종료됩니다</string>
+
     <!-- bottom navigation title    -->
     <string name="bottom_navigation_home_title">홈</string>
     <string name="bottom_navigation_search_title">검색</string>
@@ -161,5 +164,4 @@
     <string name="profile_update_image_delete">기본 이미지로 변경</string>
     <string name="profile_update_nickname_title">닉네임</string>
     <string name="profile_update_button_update">수정하기</string>
-
 </resources>
