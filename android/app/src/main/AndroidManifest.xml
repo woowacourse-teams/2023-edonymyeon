@@ -27,6 +27,9 @@
             android:name="com.app.edonymyeon.presentation.ui.imagedetail.ImageDetailActivity"
             android:exported="false" />
         <activity
+            android:name="com.app.edonymyeon.presentation.ui.profileupdate.ProfileUpdateActivity"
+            android:exported="false" />
+        <activity
             android:name="com.app.edonymyeon.presentation.ui.alarmsetting.AlarmSettingActivity"
             android:exported="false" />
         <activity
@@ -71,14 +74,6 @@
             android:name="com.app.edonymyeon.presentation.ui.post.PostActivity"
             android:exported="true" />
 
-        <service
-            android:name="com.app.edonymyeon.data.service.fcm.AlarmService"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
-
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true">
@@ -93,6 +88,23 @@
                     android:scheme="${KAKAO_NATIVE_KEY}" />
             </intent-filter>
         </activity>
-    </application>
 
+        <service
+            android:name="com.app.edonymyeon.data.service.fcm.AlarmService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service android:name="com.google.android.gms.metadata.ModuleDependencies"
+            android:enabled="false"
+            android:exported="false"
+            tools:ignore="MissingClass">
+            <intent-filter>
+                <action android:name="com.google.android.gms.metadata.MODULE_DEPENDENCIES" />
+            </intent-filter>
+            <meta-data android:name="photopicker_activity:0:required" android:value="" />
+        </service>
+    </application>
 </manifest>
