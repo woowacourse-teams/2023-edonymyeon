@@ -3,11 +3,11 @@ package com.app.edonymyeon.data.repository
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.common.createCustomThrowableFromResponse
 import com.app.edonymyeon.data.datasource.profile.ProfileDataSource
+import com.app.edonymyeon.data.dto.WriterDataModel
 import com.app.edonymyeon.data.dto.request.ProfileUpdateRequest
 import com.app.edonymyeon.data.dto.request.PurchaseConfirmRequest
 import com.app.edonymyeon.data.dto.request.SavingConfirmRequest
 import com.app.edonymyeon.data.dto.response.MyPostsResponse
-import com.app.edonymyeon.data.dto.response.ProfileResponse
 import com.app.edonymyeon.mapper.toDomain
 import com.domain.edonymyeon.model.MyPosts
 import com.domain.edonymyeon.model.Nickname
@@ -71,7 +71,7 @@ class ProfileRepositoryImpl @Inject constructor(
     override suspend fun getProfile(): Result<Any> {
         val result = profileDataSource.getProfile()
         return if (result.isSuccessful) {
-            Result.success((result.body() as ProfileResponse).toDomain())
+            Result.success((result.body() as WriterDataModel).toDomain())
         } else {
             val errorResponse = result.errorBody()?.string()
             val json = errorResponse?.let { JSONObject(it) }

@@ -1,10 +1,10 @@
 package com.app.edonymyeon.data.datasource.profile
 
+import com.app.edonymyeon.data.dto.WriterDataModel
 import com.app.edonymyeon.data.dto.request.ProfileUpdateRequest
 import com.app.edonymyeon.data.dto.request.PurchaseConfirmRequest
 import com.app.edonymyeon.data.dto.request.SavingConfirmRequest
 import com.app.edonymyeon.data.dto.response.MyPostsResponse
-import com.app.edonymyeon.data.dto.response.ProfileResponse
 import retrofit2.Response
 import java.io.File
 
@@ -21,7 +21,7 @@ interface ProfileDataSource {
     ): Response<Unit>
 
     suspend fun deleteConfirm(id: Long): Response<Unit>
-    suspend fun getProfile(): Response<ProfileResponse>
+    suspend fun getProfile(): Response<WriterDataModel>
     suspend fun withdraw(): Response<Unit>
 
     suspend fun updateProfile(

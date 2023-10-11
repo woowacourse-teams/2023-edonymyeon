@@ -1,9 +1,9 @@
 package com.app.edonymyeon.data.service
 
+import com.app.edonymyeon.data.dto.WriterDataModel
 import com.app.edonymyeon.data.dto.request.PurchaseConfirmRequest
 import com.app.edonymyeon.data.dto.request.SavingConfirmRequest
 import com.app.edonymyeon.data.dto.response.MyPostsResponse
-import com.app.edonymyeon.data.dto.response.ProfileResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -44,7 +44,7 @@ interface ProfileService {
     ): Response<Unit>
 
     @GET("/profile")
-    suspend fun getProfile(): Response<ProfileResponse>
+    suspend fun getProfile(): Response<WriterDataModel>
 
     @DELETE("/withdraw")
     suspend fun withdraw(): Response<Unit>
