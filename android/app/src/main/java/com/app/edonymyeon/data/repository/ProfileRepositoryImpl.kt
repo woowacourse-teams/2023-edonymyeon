@@ -1,15 +1,19 @@
 package com.app.edonymyeon.data.repository
 
 import com.app.edonymyeon.data.common.CustomThrowable
+import com.app.edonymyeon.data.common.createCustomThrowableFromResponse
 import com.app.edonymyeon.data.datasource.profile.ProfileDataSource
+import com.app.edonymyeon.data.dto.request.ProfileUpdateRequest
 import com.app.edonymyeon.data.dto.request.PurchaseConfirmRequest
 import com.app.edonymyeon.data.dto.request.SavingConfirmRequest
 import com.app.edonymyeon.data.dto.response.MyPostsResponse
 import com.app.edonymyeon.data.dto.response.ProfileResponse
 import com.app.edonymyeon.mapper.toDomain
 import com.domain.edonymyeon.model.MyPosts
+import com.domain.edonymyeon.model.Nickname
 import com.domain.edonymyeon.repository.ProfileRepository
 import org.json.JSONObject
+import java.io.File
 import javax.inject.Inject
 
 class ProfileRepositoryImpl @Inject constructor(
@@ -85,6 +89,26 @@ class ProfileRepositoryImpl @Inject constructor(
             val json = errorResponse?.let { JSONObject(it) }
             val errorMessage = json?.getString("errorMessage") ?: ""
             Result.failure(CustomThrowable(result.code(), errorMessage))
+        }
+    }
+
+    override suspend fun updateProfile(
+        nickname: Nickname,
+        profileImage: File?,
+        isProfileChanged: Boolean,
+    ): Result<Unit> {
+        val result = profileDataSource.updateProfile(
+            ProfileUpdateRequest(
+                nickname.value,
+                isProfileChanged,
+            ),
+            profileImage,
+        )
+        return if (result.isSuccessful) {
+            Result.success(result.body() ?: Unit)
+        } else {
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 }

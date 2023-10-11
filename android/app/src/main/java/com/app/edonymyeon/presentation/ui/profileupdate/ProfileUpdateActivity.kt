@@ -38,6 +38,7 @@ class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, Profile
         initBinding()
         setOriginalProfile()
         setImageButtonsClickListener()
+        setUpdateProfileButtonClickListener()
     }
 
     private fun initBinding() {
@@ -55,6 +56,12 @@ class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, Profile
         }
         binding.btnImageDelete.setOnClickListener {
             viewModel.deleteProfileImage()
+        }
+    }
+
+    private fun setUpdateProfileButtonClickListener() {
+        binding.btnUpdate.setOnClickListener {
+            viewModel.updateProfile(this, binding.etNickname.text.toString())
         }
     }
 
