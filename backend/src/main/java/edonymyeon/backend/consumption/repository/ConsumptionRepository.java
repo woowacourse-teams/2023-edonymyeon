@@ -20,7 +20,7 @@ public interface ConsumptionRepository extends JpaRepository<Consumption, Long> 
             + "WHERE c.post.member.id = :memberId "
             + "AND c.consumptionDate BETWEEN :startDate AND :endDate")
     List<Consumption> findByMemberIdAndConsumptionDateBetween(
-            @Param("memberId") final Long memberId,
+            @Param("id") final Long memberId,
             @Param("startDate") final LocalDate startDate,
             @Param("endDate") final LocalDate endDate
     );

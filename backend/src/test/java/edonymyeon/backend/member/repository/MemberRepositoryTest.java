@@ -84,7 +84,7 @@ class MemberRepositoryTest extends IntegrationFixture {
                                 ('test', :daysAgo, false, :memberId, :daysAgo, 4000, 'title', 0, default)
                         """)
                 .setParameter("daysAgo", LocalDateTime.now().minusDays(31).plusMinutes(1))
-                .setParameter("memberId", member.getId())
+                .setParameter("id", member.getId())
                 .executeUpdate());
 
         final List<Member> members = memberRepository.findAllHavingUnConfirmedPostWithInDays(31);
@@ -107,7 +107,7 @@ class MemberRepositoryTest extends IntegrationFixture {
                                 ('test', :daysAgo, false, :memberId, :daysAgo, 4000, 'title', 0, default)
                         """)
                 .setParameter("daysAgo", LocalDateTime.now().minusDays(32))
-                .setParameter("memberId", member.getId())
+                .setParameter("id", member.getId())
                 .executeUpdate());
 
         final List<Member> members = memberRepository.findAllHavingUnConfirmedPostWithInDays(31);

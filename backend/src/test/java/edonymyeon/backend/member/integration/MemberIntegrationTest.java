@@ -13,7 +13,6 @@ import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
-import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
@@ -23,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class MemberIntegrationTest extends IntegrationFixture {
+class MemberIntegrationTest extends IntegrationFixture {
 
     @Test
     void 회원_정보_조회시_OK를_응답한다() {
@@ -43,7 +42,7 @@ public class MemberIntegrationTest extends IntegrationFixture {
 
         final MyPageResponse myPageResponse = response.as(MyPageResponse.class);
         assertAll(
-                () -> assertThat(myPageResponse.memberId()).isEqualTo(member.getId()),
+                () -> assertThat(myPageResponse.id()).isEqualTo(member.getId()),
                 () -> assertThat(myPageResponse.nickname()).isEqualTo(member.getNickname()),
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         );
