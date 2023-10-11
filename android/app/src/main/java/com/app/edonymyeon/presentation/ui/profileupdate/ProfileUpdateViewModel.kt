@@ -28,6 +28,10 @@ class ProfileUpdateViewModel @Inject constructor(
     val newProfileImage: LiveData<String?>
         get() = _newProfileImage
 
+    private val _isUploadSuccess = MutableLiveData<Boolean>()
+    val isUploadSuccess: LiveData<Boolean>
+        get() = _isUploadSuccess
+
     fun initOriginalProfile(original: WriterUiModel) {
         _profile.value = WriterUiModel(original.id, original.nickname, original.profileImage)
         _newProfileImage.value = original.profileImage
@@ -60,7 +64,11 @@ class ProfileUpdateViewModel @Inject constructor(
                 Nickname.create(nickname),
                 image,
                 isImageChanged,
-            ).onFailure { it as CustomThrowable }
+            ).onSuccess {
+                _isUploadSuccess.value = true
+            }.onFailure {
+                it as CustomThrowable
+            }
         }
     }
 }

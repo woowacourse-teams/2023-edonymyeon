@@ -7,8 +7,10 @@ import android.view.LayoutInflater
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityProfileUpdateBinding
 import com.app.edonymyeon.presentation.common.activity.BaseActivity
+import com.app.edonymyeon.presentation.common.dialog.LoadingDialog
 import com.app.edonymyeon.presentation.uimodel.WriterUiModel
 import com.app.edonymyeon.presentation.util.getParcelableExtraCompat
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,6 +21,10 @@ class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, Profile
 ) {
     override val viewModel: ProfileUpdateViewModel by viewModels()
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(this) }
+
+    private val loadingDialog: LoadingDialog by lazy {
+        LoadingDialog(getString(R.string.post_detail_loading))
+    }
 
     private val originalProfile by lazy {
         intent.getParcelableExtraCompat(KEY_PROFILE) as? WriterUiModel
@@ -39,6 +45,7 @@ class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, Profile
         setOriginalProfile()
         setImageButtonsClickListener()
         setUpdateProfileButtonClickListener()
+        setUpdateSuccessObserver()
     }
 
     private fun initBinding() {
@@ -61,7 +68,16 @@ class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, Profile
 
     private fun setUpdateProfileButtonClickListener() {
         binding.btnUpdate.setOnClickListener {
+            loadingDialog.show(supportFragmentManager, "LoadingDialog")
             viewModel.updateProfile(this, binding.etNickname.text.toString())
+        }
+    }
+
+    private fun setUpdateSuccessObserver() {
+        viewModel.isUploadSuccess.observe(this) {
+            if (it == true) {
+                finish()
+            }
         }
     }
 
