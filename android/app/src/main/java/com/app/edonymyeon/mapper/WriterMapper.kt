@@ -17,6 +17,6 @@ fun WriterDataModel.toDomain(): Writer {
     return Writer(
         id = writerId,
         nickname = nickname,
-        profileImage = null,
+        profileImage = profileImage,
     )
 }

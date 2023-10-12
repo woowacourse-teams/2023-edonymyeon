@@ -81,10 +81,6 @@ class ProfileUpdateViewModel @Inject constructor(
             null
         }
 
-        /*
-        * 이미지가 바뀜 -> 바뀐 이미지 전송
-        * 이미지가 안바뀜 -> null 전송
-        * */
         viewModelScope.launch(exceptionHandler) {
             repository.updateProfile(
                 Nickname.create(_newNickname.value!!),

@@ -11,6 +11,7 @@ import com.app.edonymyeon.data.dto.response.MyPostsResponse
 import com.app.edonymyeon.mapper.toDomain
 import com.domain.edonymyeon.model.MyPosts
 import com.domain.edonymyeon.model.Nickname
+import com.domain.edonymyeon.model.Writer
 import com.domain.edonymyeon.repository.ProfileRepository
 import org.json.JSONObject
 import java.io.File
@@ -68,15 +69,13 @@ class ProfileRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getProfile(): Result<Any> {
+    override suspend fun getProfile(): Result<Writer> {
         val result = profileDataSource.getProfile()
         return if (result.isSuccessful) {
             Result.success((result.body() as WriterDataModel).toDomain())
         } else {
-            val errorResponse = result.errorBody()?.string()
-            val json = errorResponse?.let { JSONObject(it) }
-            val errorMessage = json?.getString("errorMessage") ?: ""
-            Result.failure(CustomThrowable(result.code(), errorMessage))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 

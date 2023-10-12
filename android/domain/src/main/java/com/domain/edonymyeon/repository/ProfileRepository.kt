@@ -2,6 +2,7 @@ package com.domain.edonymyeon.repository
 
 import com.domain.edonymyeon.model.MyPosts
 import com.domain.edonymyeon.model.Nickname
+import com.domain.edonymyeon.model.Writer
 import java.io.File
 
 interface ProfileRepository {
@@ -15,7 +16,7 @@ interface ProfileRepository {
 
     suspend fun postSavingConfirm(id: Long, year: Int, month: Int): Result<Unit>
     suspend fun deleteConfirm(id: Long): Result<Unit>
-    suspend fun getProfile(): Result<Any>
+    suspend fun getProfile(): Result<Writer>
     suspend fun withdraw(): Result<Unit>
 
     suspend fun updateProfile(
