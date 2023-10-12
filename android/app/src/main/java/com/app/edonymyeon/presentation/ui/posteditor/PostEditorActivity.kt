@@ -2,13 +2,11 @@ package com.app.edonymyeon.presentation.ui.posteditor
 
 import android.Manifest
 import android.content.ClipData
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -30,7 +28,6 @@ import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import com.domain.edonymyeon.model.PostEditor
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
-import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorViewModel>(
@@ -195,8 +192,7 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
     }
 
     private fun navigateToCamera() {
-        val photoFile =
-            File.createTempFile("IMG_", ".jpg", this.cacheDir)
+        val photoFile = File.createTempFile("IMG_", ".jpg", this.cacheDir)
         cameraUri = FileProvider.getUriForFile(this, "$packageName.provider", photoFile)
         takeCameraImage.launch(cameraUri)
     }
@@ -306,11 +302,6 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         const val POST_CODE = 2000
         const val UPDATE_CODE = 3000
         const val RESULT_RELOAD_CODE = 1001
-
-        private val contentValues = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle${LocalDateTime.now()}")
-            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-        }
 
         private val requestPermissions = arrayOf(
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
