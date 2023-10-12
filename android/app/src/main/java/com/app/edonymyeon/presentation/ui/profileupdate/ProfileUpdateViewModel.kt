@@ -46,20 +46,20 @@ class ProfileUpdateViewModel @Inject constructor(
 
     fun setNewNickname(name: String) {
         _newNickname.value = name
-        setAbleToUpdate()
+        checkAbleToUpdate()
     }
 
     fun setNewProfileImage(image: String) {
         _newProfileImage.value = image
-        setAbleToUpdate()
+        checkAbleToUpdate()
     }
 
     fun deleteProfileImage() {
         _newProfileImage.value = null
-        setAbleToUpdate()
+        checkAbleToUpdate()
     }
 
-    private fun setAbleToUpdate() {
+    private fun checkAbleToUpdate() {
         if (_profile.value?.profileImage != _newProfileImage.value) {
             _isAbleToUpdate.value = true
             return
