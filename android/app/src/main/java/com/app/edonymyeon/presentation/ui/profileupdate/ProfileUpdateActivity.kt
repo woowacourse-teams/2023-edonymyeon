@@ -3,6 +3,8 @@ package com.app.edonymyeon.presentation.ui.profileupdate
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -43,6 +45,7 @@ class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, Profile
         setContentView(binding.root)
         initBinding()
         setOriginalProfile()
+        setNicknameChangedListener()
         setImageButtonsClickListener()
         setUpdateProfileButtonClickListener()
         setUpdateSuccessObserver()
@@ -57,6 +60,19 @@ class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, Profile
         viewModel.initOriginalProfile(originalProfile)
     }
 
+    private fun setNicknameChangedListener() {
+        binding.etNickname.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
+                Unit
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.setNewNickname(s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) = Unit
+        })
+    }
+
     private fun setImageButtonsClickListener() {
         binding.btnImageUpload.setOnClickListener {
             navigateToGallery()
@@ -69,7 +85,7 @@ class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, Profile
     private fun setUpdateProfileButtonClickListener() {
         binding.btnUpdate.setOnClickListener {
             loadingDialog.show(supportFragmentManager, "LoadingDialog")
-            viewModel.updateProfile(this, binding.etNickname.text.toString())
+            viewModel.updateProfile(this)
         }
     }
 

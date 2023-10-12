@@ -24,6 +24,8 @@ class ProfileUpdateViewModel @Inject constructor(
     val profile: LiveData<WriterUiModel>
         get() = _profile
 
+    private val _newNickname = MutableLiveData<String?>()
+
     private val _newProfileImage = MutableLiveData<String?>()
     val newProfileImage: LiveData<String?>
         get() = _newProfileImage
@@ -32,20 +34,44 @@ class ProfileUpdateViewModel @Inject constructor(
     val isUploadSuccess: LiveData<Boolean>
         get() = _isUploadSuccess
 
+    private val _isAbleToUpdate = MutableLiveData<Boolean>()
+    val isAbleToUpdate: LiveData<Boolean>
+        get() = _isAbleToUpdate
+
     fun initOriginalProfile(original: WriterUiModel) {
         _profile.value = WriterUiModel(original.id, original.nickname, original.profileImage)
         _newProfileImage.value = original.profileImage
+        _newNickname.value = original.nickname.toString()
+    }
+
+    fun setNewNickname(name: String) {
+        _newNickname.value = name
+        setAbleToUpdate()
     }
 
     fun setNewProfileImage(image: String) {
         _newProfileImage.value = image
+        setAbleToUpdate()
     }
 
     fun deleteProfileImage() {
         _newProfileImage.value = null
+        setAbleToUpdate()
     }
 
-    fun updateProfile(context: Context, nickname: String) {
+    private fun setAbleToUpdate() {
+        if (_profile.value?.profileImage != _newProfileImage.value) {
+            _isAbleToUpdate.value = true
+            return
+        }
+        if (_profile.value?.nickname.toString() != _newNickname.value) {
+            _isAbleToUpdate.value = true
+            return
+        }
+        _isAbleToUpdate.value = false
+    }
+
+    fun updateProfile(context: Context) {
         val isImageChanged: Boolean = _newProfileImage.value != _profile.value?.profileImage
         val image: File? = if (_newProfileImage.value == null) {
             null
@@ -61,7 +87,7 @@ class ProfileUpdateViewModel @Inject constructor(
         * */
         viewModelScope.launch(exceptionHandler) {
             repository.updateProfile(
-                Nickname.create(nickname),
+                Nickname.create(_newNickname.value!!),
                 image,
                 isImageChanged,
             ).onSuccess {
