@@ -4,6 +4,7 @@ import com.app.edonymyeon.data.dto.WriterDataModel
 import com.app.edonymyeon.data.dto.request.ProfileUpdateRequest
 import com.app.edonymyeon.data.dto.request.PurchaseConfirmRequest
 import com.app.edonymyeon.data.dto.request.SavingConfirmRequest
+import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
 import com.app.edonymyeon.data.dto.response.MyPostsResponse
 import retrofit2.Response
 import java.io.File
@@ -28,4 +29,6 @@ interface ProfileDataSource {
         profileRequest: ProfileUpdateRequest,
         newProfileImage: File?,
     ): Response<Unit>
+
+    suspend fun checkDuplicate(target: String, value: String): Response<AuthDuplicateResponse>
 }

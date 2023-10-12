@@ -24,4 +24,6 @@ interface ProfileRepository {
         profileImage: File?,
         isProfileChanged: Boolean,
     ): Result<Unit>
+
+    suspend fun checkDuplicate(target: String, value: String): Result<Boolean>
 }

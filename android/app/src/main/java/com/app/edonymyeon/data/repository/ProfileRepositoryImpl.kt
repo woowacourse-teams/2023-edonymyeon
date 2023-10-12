@@ -7,6 +7,7 @@ import com.app.edonymyeon.data.dto.WriterDataModel
 import com.app.edonymyeon.data.dto.request.ProfileUpdateRequest
 import com.app.edonymyeon.data.dto.request.PurchaseConfirmRequest
 import com.app.edonymyeon.data.dto.request.SavingConfirmRequest
+import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
 import com.app.edonymyeon.data.dto.response.MyPostsResponse
 import com.app.edonymyeon.mapper.toDomain
 import com.domain.edonymyeon.model.MyPosts
@@ -108,6 +109,19 @@ class ProfileRepositoryImpl @Inject constructor(
         } else {
             val customThrowable = createCustomThrowableFromResponse(result)
             Result.failure(customThrowable)
+        }
+    }
+
+    override suspend fun checkDuplicate(
+        target: String,
+        value: String,
+    ): Result<Boolean> {
+        val result = profileDataSource.checkDuplicate(target, value)
+
+        return if (result.isSuccessful) {
+            Result.success((result.body() ?: AuthDuplicateResponse(false)).isUnique)
+        } else {
+            Result.failure(CustomThrowable(result.code(), result.message()))
         }
     }
 }

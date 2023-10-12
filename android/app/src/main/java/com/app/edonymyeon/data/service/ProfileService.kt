@@ -3,6 +3,7 @@ package com.app.edonymyeon.data.service
 import com.app.edonymyeon.data.dto.WriterDataModel
 import com.app.edonymyeon.data.dto.request.PurchaseConfirmRequest
 import com.app.edonymyeon.data.dto.request.SavingConfirmRequest
+import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
 import com.app.edonymyeon.data.dto.response.MyPostsResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -56,4 +57,10 @@ interface ProfileService {
         @Part("isImageChanged") isImageChanged: Boolean,
         @Part image: MultipartBody.Part?,
     ): Response<Unit>
+
+    @GET("/members/check")
+    suspend fun checkDuplicate(
+        @Query("target") target: String,
+        @Query("value") value: String,
+    ): Response<AuthDuplicateResponse>
 }

@@ -30,6 +30,10 @@ class ProfileUpdateViewModel @Inject constructor(
     val newProfileImage: LiveData<String?>
         get() = _newProfileImage
 
+    private val _isNicknameValid = MutableLiveData<Boolean>(true)
+    val isNicknameValid: LiveData<Boolean>
+        get() = _isNicknameValid
+
     private val _isUploadSuccess = MutableLiveData<Boolean>()
     val isUploadSuccess: LiveData<Boolean>
         get() = _isUploadSuccess
@@ -37,6 +41,12 @@ class ProfileUpdateViewModel @Inject constructor(
     private val _isAbleToUpdate = MutableLiveData<Boolean>()
     val isAbleToUpdate: LiveData<Boolean>
         get() = _isAbleToUpdate
+
+    private val isNicknameChanged: Boolean
+        get() = _newNickname.value != _profile.value?.nickname.toString()
+
+    private val isImageChanged: Boolean
+        get() = _newProfileImage.value != _profile.value?.profileImage
 
     fun initOriginalProfile(original: WriterUiModel) {
         _profile.value = WriterUiModel(original.id, original.nickname, original.profileImage)
@@ -46,7 +56,7 @@ class ProfileUpdateViewModel @Inject constructor(
 
     fun setNewNickname(name: String) {
         _newNickname.value = name
-        checkAbleToUpdate()
+        verifyNickname()
     }
 
     fun setNewProfileImage(image: String) {
@@ -59,12 +69,30 @@ class ProfileUpdateViewModel @Inject constructor(
         checkAbleToUpdate()
     }
 
-    private fun checkAbleToUpdate() {
-        if (_profile.value?.profileImage != _newProfileImage.value) {
-            _isAbleToUpdate.value = true
+    private fun verifyNickname() {
+        if (!isNicknameChanged) {
+            _isNicknameValid.value = true
             return
         }
-        if (_profile.value?.nickname.toString() != _newNickname.value) {
+
+        val newNickname = _newNickname.value ?: ""
+        viewModelScope.launch(exceptionHandler) {
+            repository.checkDuplicate(NICKNAME, newNickname)
+                .onSuccess {
+                    _isNicknameValid.value = it && Nickname.validate(newNickname)
+                    checkAbleToUpdate()
+                }.onFailure {
+                    _isNicknameValid.value = false
+                }
+        }
+    }
+
+    private fun checkAbleToUpdate() {
+        if (isNicknameValid.value == false) {
+            _isAbleToUpdate.value = false
+            return
+        }
+        if (isImageChanged || isNicknameChanged) {
             _isAbleToUpdate.value = true
             return
         }
@@ -72,7 +100,6 @@ class ProfileUpdateViewModel @Inject constructor(
     }
 
     fun updateProfile(context: Context) {
-        val isImageChanged: Boolean = _newProfileImage.value != _profile.value?.profileImage
         val image: File? = if (_newProfileImage.value == null) {
             null
         } else if (isImageChanged) {
@@ -92,5 +119,9 @@ class ProfileUpdateViewModel @Inject constructor(
                 it as CustomThrowable
             }
         }
+    }
+
+    companion object {
+        private const val NICKNAME = "nickname"
     }
 }

@@ -4,6 +4,7 @@ import com.app.edonymyeon.data.dto.WriterDataModel
 import com.app.edonymyeon.data.dto.request.ProfileUpdateRequest
 import com.app.edonymyeon.data.dto.request.PurchaseConfirmRequest
 import com.app.edonymyeon.data.dto.request.SavingConfirmRequest
+import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
 import com.app.edonymyeon.data.dto.response.MyPostsResponse
 import com.app.edonymyeon.data.service.ProfileService
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -58,6 +59,13 @@ class ProfileRemoteDataSource @Inject constructor(
             profileRequest.isImageChanged,
             newProfileImage?.toMultipartBody(),
         )
+    }
+
+    override suspend fun checkDuplicate(
+        target: String,
+        value: String,
+    ): Response<AuthDuplicateResponse> {
+        return profileService.checkDuplicate(target, value)
     }
 
     private fun File?.toMultipartBody(): MultipartBody.Part? {

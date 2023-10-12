@@ -124,7 +124,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:autofillHints="no"
-            android:background="@drawable/bg_stroke_576b9e_radius_10dp"
+            android:background="@{viewModel.isNicknameValid ? @drawable/bg_stroke_576b9e_radius_10dp : @drawable/bg_stroke_ba3030_radius_10dp}"
             android:inputType="text"
             android:padding="10dp"
             android:text="@{viewModel.profile.nickname.toString()}"
