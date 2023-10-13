@@ -7,7 +7,6 @@ import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.NotificationUiModel
 import com.domain.edonymyeon.model.Page
-import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.NotificationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -16,7 +15,6 @@ import javax.inject.Inject
 @HiltViewModel
 class AlarmViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository,
-    private val authRepository: AuthRepository,
 ) : BaseViewModel() {
     private var currentPage = Page()
     private var isLastPage = false
@@ -33,6 +31,7 @@ class AlarmViewModel @Inject constructor(
 
     fun getAlarmList() {
         viewModelScope.launch(exceptionHandler) {
+            // TODO: 코비 숙제
             val result = notificationRepository.getNotifications(PAGE_SIZE, currentPage.value)
             if (result.isSuccess) {
                 _notificationList.value =
@@ -42,6 +41,8 @@ class AlarmViewModel @Inject constructor(
                     }.orEmpty()
                 currentPage = currentPage.increasePage()
                 isLastPage = result.getOrNull()?.isLast ?: true
+            } else {
+                result.onFailure { throw it }
             }
         }
     }

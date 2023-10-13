@@ -1,6 +1,5 @@
 package com.app.edonymyeon.data.repository
 
-import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.common.createCustomThrowableFromResponse
 import com.app.edonymyeon.data.datasource.post.PostDataSource
 import com.app.edonymyeon.data.dto.response.CommentsResponse
@@ -33,7 +32,8 @@ class PostRepositoryImpl @Inject constructor(
         return if (result.isSuccessful) {
             Result.success(Unit)
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 
@@ -49,7 +49,8 @@ class PostRepositoryImpl @Inject constructor(
                 ),
             )
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 
@@ -61,7 +62,8 @@ class PostRepositoryImpl @Inject constructor(
         return if (result.isSuccessful) {
             Result.success(result.body() as PostEditorResponse)
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 
@@ -76,7 +78,8 @@ class PostRepositoryImpl @Inject constructor(
         return if (result.isSuccessful) {
             Result.success(result.body() as PostEditorResponse)
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 
@@ -92,7 +95,8 @@ class PostRepositoryImpl @Inject constructor(
                 ),
             )
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 
@@ -109,7 +113,8 @@ class PostRepositoryImpl @Inject constructor(
                 ),
             )
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 
@@ -118,7 +123,8 @@ class PostRepositoryImpl @Inject constructor(
         return if (result.isSuccessful) {
             Result.success(Unit)
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 
@@ -127,7 +133,8 @@ class PostRepositoryImpl @Inject constructor(
         return if (result.isSuccessful) {
             Result.success(Unit)
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 }

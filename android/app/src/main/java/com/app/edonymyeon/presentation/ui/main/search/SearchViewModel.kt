@@ -32,6 +32,9 @@ class SearchViewModel @Inject constructor(
                     currentPage = currentPage.increasePage()
                     isLastPage = result.isLast
                 }
+                .onFailure {
+                    throw it
+                }
         }
     }
 

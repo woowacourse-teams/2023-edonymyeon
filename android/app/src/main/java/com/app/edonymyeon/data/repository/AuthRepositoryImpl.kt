@@ -1,6 +1,5 @@
 package com.app.edonymyeon.data.repository
 
-import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.common.createCustomThrowableFromResponse
 import com.app.edonymyeon.data.datasource.auth.AuthDataSource
 import com.app.edonymyeon.data.dto.LoginDataModel
@@ -10,7 +9,6 @@ import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
 import com.app.edonymyeon.mapper.toDataModel
 import com.domain.edonymyeon.model.UserRegistration
 import com.domain.edonymyeon.repository.AuthRepository
-import org.json.JSONObject
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -33,7 +31,8 @@ class AuthRepositoryImpl @Inject constructor(
         return if (result.isSuccessful) {
             Result.success(Unit)
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 
@@ -46,7 +45,8 @@ class AuthRepositoryImpl @Inject constructor(
         return if (result.isSuccessful) {
             Result.success((result.body() ?: AuthDuplicateResponse(false)).isUnique)
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 
@@ -69,10 +69,8 @@ class AuthRepositoryImpl @Inject constructor(
             authLocalDataSource.setAuthToken(result.headers()["Set-Cookie"] as String)
             Result.success(result.body() ?: Unit)
         } else {
-            val errorResponse = result.errorBody()?.string()
-            val json = errorResponse?.let { JSONObject(it) }
-            val errorMessage = json?.getString("errorMessage") ?: ""
-            Result.failure(CustomThrowable(result.code(), errorMessage))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 
@@ -82,7 +80,8 @@ class AuthRepositoryImpl @Inject constructor(
             authLocalDataSource.setAuthToken(null)
             Result.success(Unit)
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 }

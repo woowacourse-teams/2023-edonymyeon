@@ -87,6 +87,7 @@ class AlarmSettingViewModel @Inject constructor(
                     setNotificationSetting(it)
                 }
             }.onFailure {
+                throw it
             }
         }
     }

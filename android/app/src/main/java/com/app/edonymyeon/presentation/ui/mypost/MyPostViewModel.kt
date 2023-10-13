@@ -3,7 +3,6 @@ package com.app.edonymyeon.presentation.ui.mypost
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.ConsumptionUiModel
@@ -24,8 +23,7 @@ import javax.inject.Inject
 class MyPostViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val postRepository: PostRepository,
-) :
-    BaseViewModel() {
+) : BaseViewModel() {
 
     private var currentPage = Page()
     private var isLastPage = false
@@ -51,6 +49,9 @@ class MyPostViewModel @Inject constructor(
                 currentPage = currentPage.increasePage()
                 isLastPage = it.isLast
             }
+                .onFailure {
+                    throw it
+                }
         }
     }
 
@@ -76,9 +77,7 @@ class MyPostViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             profileRepository.postPurchaseConfirm(id, purchasePrice, year, month).onSuccess {
             }.onFailure {
-                it as CustomThrowable
-                when (it.code) {
-                }
+                throw it
             }
         }
     }
@@ -92,9 +91,7 @@ class MyPostViewModel @Inject constructor(
             profileRepository.postSavingConfirm(id, year, month).onSuccess {
             }
                 .onFailure {
-                    it as CustomThrowable
-                    when (it.code) {
-                    }
+                    throw it
                 }
         }
     }
@@ -108,9 +105,7 @@ class MyPostViewModel @Inject constructor(
             profileRepository.deleteConfirm(id).onSuccess {
             }
                 .onFailure {
-                    it as CustomThrowable
-                    when (it.code) {
-                    }
+                    throw it
                 }
         }
     }
@@ -148,7 +143,7 @@ class MyPostViewModel @Inject constructor(
             postRepository.getPostDetail(id).onSuccess {
                 _price.value = (it as Post).price.toString()
             }.onFailure {
-                it as CustomThrowable
+                throw it
             }
         }
     }

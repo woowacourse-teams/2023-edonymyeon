@@ -3,7 +3,6 @@ package com.app.edonymyeon.presentation.ui.main.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.mapper.toAllPostItemUiModel
 import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
@@ -37,7 +36,7 @@ class HomeViewModel @Inject constructor(private val postRepository: PostReposito
                 }
                 _allPostsSuccess.value = true
             }.onFailure {
-                it as CustomThrowable
+                throw it
                 _allPostsSuccess.value = false
             }
         }
@@ -48,7 +47,7 @@ class HomeViewModel @Inject constructor(private val postRepository: PostReposito
             postRepository.getHotPosts().onSuccess { post ->
                 _hotPosts.value = post.posts.map { it.toUiModel() }
             }.onFailure {
-                it as CustomThrowable
+                throw it
             }
         }
     }

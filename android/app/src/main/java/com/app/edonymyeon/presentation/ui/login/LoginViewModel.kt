@@ -43,7 +43,7 @@ class LoginViewModel @Inject constructor(
                     _isSuccess.value = true
                 }.onFailure {
                     _isSuccess.value = false
-                    _errorMessage.postValue((it as CustomThrowable).message)
+                    throw it
                 }
             }
         }
@@ -60,6 +60,7 @@ class LoginViewModel @Inject constructor(
                 }.onFailure {
                     _isSuccess.value = false
                     _errorMessage.postValue((it as CustomThrowable).message)
+                    throw it
                 }
             }
         }

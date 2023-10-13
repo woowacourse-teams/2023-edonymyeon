@@ -6,7 +6,6 @@ import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.presentation.common.imageutil.processAndAdjustImage
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
@@ -57,7 +56,7 @@ class PostEditorViewModel @Inject constructor(
             ).onSuccess {
                 _postId.value = (it as PostEditorResponse).id
             }.onFailure {
-                it as CustomThrowable
+                throw it
             }
         }
     }
@@ -73,7 +72,7 @@ class PostEditorViewModel @Inject constructor(
             ).onSuccess {
                 _postId.value = (it as PostEditorResponse).id
             }.onFailure {
-                it as CustomThrowable
+                throw it
             }
         }
     }

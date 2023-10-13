@@ -16,7 +16,6 @@ import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
 import com.app.edonymyeon.presentation.uimodel.RecommendationUiModel
 import com.domain.edonymyeon.model.Post
 import com.domain.edonymyeon.model.Recommendation
-import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.PostRepository
 import com.domain.edonymyeon.repository.RecommendRepository
 import com.domain.edonymyeon.repository.ReportRepository
@@ -29,7 +28,6 @@ class PostDetailViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val recommendRepository: RecommendRepository,
     private val reportRepository: ReportRepository,
-    private val authRepository: AuthRepository,
 ) : BaseViewModel() {
 
     private val _post = MutableLiveData<PostUiModel>()
@@ -105,6 +103,7 @@ class PostDetailViewModel @Inject constructor(
 
                         else -> _isPostLoadingSuccess.value = false
                     }
+                    throw customThrowable
                 }
         }
     }
@@ -114,7 +113,7 @@ class PostDetailViewModel @Inject constructor(
             postRepository.deletePost(postId)
                 .onSuccess {}
                 .onFailure {
-                    it as CustomThrowable
+                    throw it
                 }
         }
     }
@@ -127,7 +126,7 @@ class PostDetailViewModel @Inject constructor(
                     _reportSaveMessage.value = MESSAGE_REPORT_SUCCESS
                 }
                 .onFailure {
-                    it as CustomThrowable
+                    throw it
                 }
         }
     }
@@ -222,9 +221,7 @@ class PostDetailViewModel @Inject constructor(
                 }
                 .onFailure {
                     _isRecommendationRequestDone.value = true
-                    it as CustomThrowable
-                    when (it.code) {
-                    }
+                    throw it
                 }
         }
     }
@@ -240,6 +237,7 @@ class PostDetailViewModel @Inject constructor(
                 checkLoadingSuccess()
             }.onFailure {
                 _isCommentsLoadingSuccess.value = false
+                throw it
             }
         }
     }
@@ -255,6 +253,7 @@ class PostDetailViewModel @Inject constructor(
                 _isCommentSaveSuccess.value = true
             }.onFailure {
                 _isCommentSaveSuccess.value = false
+                throw it
             }
         }
     }
@@ -266,6 +265,8 @@ class PostDetailViewModel @Inject constructor(
                 commentId,
             ).onSuccess {
                 getComments(postId)
+            }.onFailure {
+                throw it
             }
         }
     }

@@ -1,9 +1,15 @@
 package com.app.edonymyeon.data.common
 
-sealed class FetchState {
-    object BadInternet : FetchState()
-    object ParseError : FetchState()
-    object WrongConnection : FetchState()
+sealed interface FetchState {
+    object BadInternet : FetchState
+    object ParseError : FetchState
+    object WrongConnection : FetchState
 
-    object Fail : FetchState()
+    class NoAuthorization(
+        val customThrowable: CustomThrowable,
+    ) : FetchState
+
+    class Fail(
+        val customThrowable: CustomThrowable,
+    ) : FetchState
 }
