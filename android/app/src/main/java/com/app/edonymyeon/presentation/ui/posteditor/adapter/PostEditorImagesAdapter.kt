@@ -1,6 +1,5 @@
 package com.app.edonymyeon.presentation.ui.posteditor.adapter
 
-import android.util.Log
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.app.edonymyeon.presentation.ui.posteditor.viewholder.PostEditorImagesViewHolder
@@ -17,7 +16,6 @@ class PostEditorImagesAdapter(
     }
 
     fun setImages(images: List<String>) {
-        Log.d("post", "submit Images into adapter: ${images.size}")
         submitList(images)
     }
 }
