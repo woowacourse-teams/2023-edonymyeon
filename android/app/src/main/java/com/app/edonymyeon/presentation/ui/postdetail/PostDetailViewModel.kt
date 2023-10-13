@@ -16,6 +16,7 @@ import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
 import com.app.edonymyeon.presentation.uimodel.RecommendationUiModel
 import com.domain.edonymyeon.model.Post
 import com.domain.edonymyeon.model.Recommendation
+import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.PostRepository
 import com.domain.edonymyeon.repository.RecommendRepository
 import com.domain.edonymyeon.repository.ReportRepository
@@ -28,7 +29,8 @@ class PostDetailViewModel @Inject constructor(
     private val postRepository: PostRepository,
     private val recommendRepository: RecommendRepository,
     private val reportRepository: ReportRepository,
-) : BaseViewModel() {
+    authRepository: AuthRepository,
+) : BaseViewModel(authRepository) {
 
     private val _post = MutableLiveData<PostUiModel>()
     val post: LiveData<PostUiModel>

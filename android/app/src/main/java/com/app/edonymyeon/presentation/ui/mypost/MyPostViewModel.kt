@@ -11,6 +11,7 @@ import com.domain.edonymyeon.model.Date
 import com.domain.edonymyeon.model.MonthRange
 import com.domain.edonymyeon.model.Page
 import com.domain.edonymyeon.model.Post
+import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.PostRepository
 import com.domain.edonymyeon.repository.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +24,8 @@ import javax.inject.Inject
 class MyPostViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val postRepository: PostRepository,
-) : BaseViewModel() {
+    authRepository: AuthRepository,
+) : BaseViewModel(authRepository) {
 
     private var currentPage = Page()
     private var isLastPage = false

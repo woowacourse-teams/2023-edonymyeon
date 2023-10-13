@@ -7,6 +7,7 @@ import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
 import com.domain.edonymyeon.model.Page
+import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PostViewModel @Inject constructor(
     private val postRepository: PostRepository,
-) : BaseViewModel() {
+    authRepository: AuthRepository,
+) : BaseViewModel(authRepository) {
     private var currentPage = Page()
     private var isLastPage = false
 

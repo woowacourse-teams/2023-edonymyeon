@@ -12,10 +12,8 @@ import java.net.SocketException
 import java.net.UnknownHostException
 import javax.inject.Inject
 
-abstract class BaseViewModel : ViewModel() {
+open class BaseViewModel @Inject constructor(val authRepository: AuthRepository) : ViewModel() {
 
-    @Inject
-    lateinit var authRepository: AuthRepository
     private val _fetchState = MutableLiveData<FetchState>()
     val fetchState: LiveData<FetchState>
         get() = _fetchState

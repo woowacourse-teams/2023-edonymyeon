@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.domain.edonymyeon.model.NotificationPreference
+import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.PreferenceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -13,7 +14,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AlarmSettingViewModel @Inject constructor(
     private val preferenceRepository: PreferenceRepository,
-) : BaseViewModel() {
+    authRepository: AuthRepository,
+) : BaseViewModel(authRepository) {
     private val _alarmPreference = MutableLiveData<List<NotificationPreference>>()
     val alarmPreference: LiveData<List<NotificationPreference>> get() = _alarmPreference
 

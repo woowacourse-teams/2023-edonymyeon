@@ -13,6 +13,7 @@ import com.app.edonymyeon.presentation.uimodel.NicknameUiModel
 import com.app.edonymyeon.presentation.uimodel.WriterUiModel
 import com.domain.edonymyeon.model.ConsumptionStatistics
 import com.domain.edonymyeon.model.Writer
+import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.ConsumptionsRepository
 import com.domain.edonymyeon.repository.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +24,8 @@ import javax.inject.Inject
 class MyPageViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val consumptionsRepository: ConsumptionsRepository,
-) : BaseViewModel() {
+    authRepository: AuthRepository,
+) : BaseViewModel(authRepository) {
     private val _profile = MutableLiveData<WriterUiModel>()
     val profile: LiveData<WriterUiModel>
         get() = _profile
