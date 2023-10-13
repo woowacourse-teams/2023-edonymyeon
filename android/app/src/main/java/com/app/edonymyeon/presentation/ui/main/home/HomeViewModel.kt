@@ -39,8 +39,8 @@ class HomeViewModel @Inject constructor(
                 }
                 _allPostsSuccess.value = true
             }.onFailure {
-                throw it
                 _allPostsSuccess.value = false
+                throw it
             }
         }
     }
