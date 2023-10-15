@@ -124,6 +124,7 @@
     <string name="my_post_createdAt">%s</string>
     <string name="my_post_purchase_text">%,d원 구매확정</string>
     <string name="my_post_saving_text">절약확정</string>
+    <string name="my_post_empty">내가 쓴 글이 없습니다</string>
 
     <!-- my_post_dialog -->
     <string name="dialog_purchase_title">구매 금액과 날짜를 입력해주세요</string>
@@ -164,4 +165,5 @@
     <string name="profile_update_image_delete">기본 이미지로 변경</string>
     <string name="profile_update_nickname_title">닉네임</string>
     <string name="profile_update_button_update">수정하기</string>
+
 </resources>
