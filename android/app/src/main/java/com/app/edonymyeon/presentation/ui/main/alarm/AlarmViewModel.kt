@@ -33,7 +33,6 @@ class AlarmViewModel @Inject constructor(
 
     fun getAlarmList() {
         viewModelScope.launch(exceptionHandler) {
-            // TODO: 코비 숙제
             val result = notificationRepository.getNotifications(PAGE_SIZE, currentPage.value)
             if (result.isSuccess) {
                 _notificationList.value =
