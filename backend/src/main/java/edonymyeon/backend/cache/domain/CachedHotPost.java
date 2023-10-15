@@ -41,6 +41,6 @@ public class CachedHotPost {
         if(Objects.isNull(this.postIds)){
             return Collections.emptyList();
         }
-        return this.postIds;
+        return Collections.unmodifiableList(this.postIds);
     }
 }
