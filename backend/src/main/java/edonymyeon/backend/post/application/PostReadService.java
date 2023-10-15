@@ -48,12 +48,8 @@ public class PostReadService {
     public PostSlice<GeneralPostInfoResponse> findPostsByPagingCondition(
             final GeneralFindingCondition generalFindingCondition) {
         PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
-        Slice<GeneralPostInfoResponse> posts = postRepository.findAllBy(pageRequest)
-                .map(post -> GeneralPostInfoResponse.of(
-                        post,
-                        domain.getDomain()
-                ));
-        return PostSlice.from(posts);
+        Slice<Post> posts = postRepository.findAllBy(pageRequest);
+        return PostSlice.from(GeneralPostsInfoResponse.toSlice(posts, domain.getDomain()));
     }
 
     private static PageRequest convertConditionToPageRequest(final GeneralFindingCondition generalFindingCondition) {
@@ -135,13 +131,8 @@ public class PostReadService {
                                                           final GeneralFindingCondition generalFindingCondition) {
         final Specification<Post> searchResults = PostSpecification.searchBy(searchWord);
         final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
-
-        Slice<GeneralPostInfoResponse> foundPosts = postRepository.findAll(searchResults, pageRequest)
-                .map(post -> GeneralPostInfoResponse.of(
-                        post,
-                        domain.getDomain()
-                ));
-        return PostSlice.from(foundPosts);
+        Slice<Post> foundPosts = postRepository.findAll(searchResults, pageRequest);
+        return PostSlice.from(GeneralPostsInfoResponse.toSlice(foundPosts, domain.getDomain()));
     }
 
     /**
@@ -161,29 +152,16 @@ public class PostReadService {
             final HotFindingCondition hotFindingCondition) {
         final Slice<Post> hotPost = findHotPostSliceFromRepositoryByPolicy(hotFindingCondition);
         postCachingService.cachePosts(hotFindingCondition, hotPost);
-        Slice<GeneralPostInfoResponse> hotPostSlice = hotPost.map(post -> GeneralPostInfoResponse.of(
-                        post,
-                        domain.getDomain()
-                )
-        );
-        return PostSlice.from(hotPostSlice);
+        return PostSlice.from(GeneralPostsInfoResponse.toSlice(hotPost, domain.getDomain()));
     }
 
     private PostSlice<GeneralPostInfoResponse> findCachedPosts(final HotFindingCondition hotFindingCondition) {
         CachedPostResponse cachedHotPosts = postCachingService.findCachedPosts(hotFindingCondition);
         List<Post> hotPostsInRepository = postRepository.findByIds(cachedHotPosts.postIds());
-
         if (cachedHotPosts.size() != hotPostsInRepository.size()) {
             return findHotPostFromRepository(hotFindingCondition);
         }
-
-        List<GeneralPostInfoResponse> posts = hotPostsInRepository.stream()
-                .map(post -> GeneralPostInfoResponse.of(
-                        post,
-                        domain.getDomain()
-                ))
-                .toList();
-        return new PostSlice<>(posts, cachedHotPosts.isLast());
+        return new PostSlice<>(GeneralPostsInfoResponse.toList(hotPostsInRepository, domain.getDomain()), cachedHotPosts.isLast());
     }
 
     private Slice<Post> findHotPostSliceFromRepositoryByPolicy(final HotFindingCondition hotFindingCondition) {
