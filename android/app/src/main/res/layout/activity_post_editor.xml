@@ -95,7 +95,6 @@
             android:background="@android:color/transparent"
             android:hint="@string/post_editor_price_hint"
             android:inputType="number"
-            android:onTextChanged="@{viewModel.checkPriceValidate}"
             android:text="@{viewModel.postEditor.price}"
             android:textColor="@color/gray_434343"
             android:textColorHint="@color/gray_615f5f"
