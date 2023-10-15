@@ -166,4 +166,6 @@
     <string name="profile_update_nickname_title">닉네임</string>
     <string name="profile_update_button_update">수정하기</string>
 
+    <!--search fragment -->
+    <string name="search_empty">검색된 게시글이 없습니다</string>
 </resources>
