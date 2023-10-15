@@ -1,8 +1,5 @@
 package edonymyeon.backend.post.application;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
-import static org.springframework.data.domain.Sort.Direction;
-
 import edonymyeon.backend.cache.application.PostCachingService;
 import edonymyeon.backend.cache.application.dto.CachedPostResponse;
 import edonymyeon.backend.global.exception.EdonymyeonException;
@@ -11,25 +8,24 @@ import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.post.application.dto.response.AllThumbsInPostResponse;
-import edonymyeon.backend.post.application.dto.response.GeneralPostInfoResponse;
-import edonymyeon.backend.post.application.dto.response.ReactionCountResponse;
-import edonymyeon.backend.post.application.dto.response.SpecificPostInfoResponse;
-import edonymyeon.backend.post.application.dto.response.ThumbsStatusInPostResponse;
-import edonymyeon.backend.post.application.dto.response.WriterDetailResponse;
+import edonymyeon.backend.post.application.dto.response.*;
 import edonymyeon.backend.post.domain.HotPostPolicy;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.post.repository.PostSpecification;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
+import static org.springframework.data.domain.Sort.Direction;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -181,8 +177,7 @@ public class PostReadService {
             return findHotPostFromRepository(hotFindingCondition);
         }
 
-        List<GeneralPostInfoResponse> posts = postRepository.findByIds(cachedHotPosts.postIds())
-                .stream()
+        List<GeneralPostInfoResponse> posts = hotPostsInRepository.stream()
                 .map(post -> GeneralPostInfoResponse.of(
                         post,
                         domain.getDomain()
