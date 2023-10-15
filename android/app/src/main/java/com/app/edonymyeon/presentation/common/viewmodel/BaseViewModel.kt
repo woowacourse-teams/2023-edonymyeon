@@ -35,7 +35,7 @@ open class BaseViewModel @Inject constructor(val authRepository: AuthRepository)
         }
     }
 
-    fun clearToken1() {
+    fun clearAuthToken() {
         authRepository.setToken(null)
     }
 

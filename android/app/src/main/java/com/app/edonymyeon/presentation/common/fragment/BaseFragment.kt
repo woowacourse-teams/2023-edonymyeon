@@ -27,7 +27,7 @@ abstract class BaseFragment<B : ViewDataBinding, VM : BaseViewModel>(private val
                 }
 
                 is FetchState.NoAuthorization -> {
-                    viewModel.clearToken1()
+                    viewModel.clearAuthToken()
                     binding.root.makeSnackbarWithEvent(
                         message = it.customThrowable.message,
                         eventTitle = getString(R.string.login_title),
