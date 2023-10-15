@@ -20,6 +20,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -150,9 +151,13 @@ public class PostReadService {
 
     private PostSlice<GeneralPostInfoResponse> findHotPostFromRepository(
             final HotFindingCondition hotFindingCondition) {
-        final Slice<Post> hotPost = findHotPostSliceFromRepositoryByPolicy(hotFindingCondition);
-        postCachingService.cachePosts(hotFindingCondition, hotPost);
-        return PostSlice.from(GeneralPostsInfoResponse.toSlice(hotPost, domain.getDomain()));
+        final Slice<Post> hotPosts = findHotPostSliceFromRepositoryByPolicy(hotFindingCondition);
+        postCachingService.cachePosts(hotFindingCondition, hotPosts);
+
+        List<Post> sortedHotPosts = hotPosts.stream()
+                .sorted(Comparator.comparing(Post::getId).reversed())
+                .toList();
+        return new PostSlice<>(GeneralPostsInfoResponse.toList(sortedHotPosts, domain.getDomain()), hotPosts.isLast());
     }
 
     private PostSlice<GeneralPostInfoResponse> findCachedPosts(final HotFindingCondition hotFindingCondition) {

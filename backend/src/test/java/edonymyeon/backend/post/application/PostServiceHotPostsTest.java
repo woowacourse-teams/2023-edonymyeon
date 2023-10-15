@@ -50,13 +50,15 @@ public class PostServiceHotPostsTest {
 
     @Test
     void 캐시가_존재하지_않아도_조회되고_새로_캐싱한다() {
-        postTestSupport.builder().build();
-        postTestSupport.builder().build();
+        final Post post1 = postTestSupport.builder().build();
+        final Post post2 = postTestSupport.builder().build();
 
         var hotPosts = postReadService.findHotPosts(findingCondition);
 
         assertSoftly(softly -> {
                     softly.assertThat(hotPosts.getContent()).hasSize(2);
+                    softly.assertThat(hotPosts.getContent().get(0).id()).isEqualTo(post2.getId());
+                    softly.assertThat(hotPosts.getContent().get(1).id()).isEqualTo(post1.getId());
                     softly.assertThat(hotPosts.isLast()).isTrue();
                 }
         );
