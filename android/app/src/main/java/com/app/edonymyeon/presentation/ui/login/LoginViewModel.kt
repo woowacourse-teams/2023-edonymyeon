@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val repository: AuthRepository,
-) : BaseViewModel() {
+) : BaseViewModel(repository) {
 
     private val _isSuccess = MutableLiveData<Boolean>()
     val isSuccess: LiveData<Boolean>
@@ -43,7 +43,7 @@ class LoginViewModel @Inject constructor(
                     _isSuccess.value = true
                 }.onFailure {
                     _isSuccess.value = false
-                    _errorMessage.postValue((it as CustomThrowable).message)
+                    throw it
                 }
             }
         }
@@ -60,6 +60,7 @@ class LoginViewModel @Inject constructor(
                 }.onFailure {
                     _isSuccess.value = false
                     _errorMessage.postValue((it as CustomThrowable).message)
+                    throw it
                 }
             }
         }
