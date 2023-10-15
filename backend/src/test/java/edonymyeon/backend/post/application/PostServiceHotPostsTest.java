@@ -86,7 +86,7 @@ public class PostServiceHotPostsTest {
         assertThat(hotPosts1.getContent()).hasSize(1);
 
         // when
-        Thread.sleep(3500);
+        Thread.sleep(1000);
         assertThat(postCachingService.shouldRefreshCache(findingCondition)).isTrue();
 
         postTestSupport.builder().build();
@@ -111,7 +111,7 @@ public class PostServiceHotPostsTest {
         assertThat(빈_핫게시글).isEmpty();
 
         // when
-        Thread.sleep(3500);
+        Thread.sleep(1000);
         assertThat(postCachingService.shouldRefreshCache(findingCondition)).isTrue();
 
         Post 새로운_게시글 = postTestSupport.builder().build();
