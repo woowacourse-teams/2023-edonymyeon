@@ -79,18 +79,7 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-tasks.named('asciidoctor') {
-	inputs.dir snippetsDir
-	dependsOn test
-}
-
-test {
-	// 위에서 작성한 snippetsDir 디렉토리를 test의 output으로 구성하는 설정 -> 스니펫 조각들이 build/generated-snippets로 출력
-	outputs.dir snippetsDir
-	useJUnitPlatform()
-}
-
-asciidoctor { // asciidoctor 작업 구성
+asciidoctor {
 	dependsOn test // test 작업 이후에 작동하도록 하는 설정
 	configurations 'asciidoctorExtensions' // 위에서 작성한 configuration 적용
 	inputs.dir snippetsDir // snippetsDir 를 입력으로 구성
@@ -106,19 +95,20 @@ asciidoctor { // asciidoctor 작업 구성
 	baseDirFollowsSourceFile()
 }
 
-// static/docs 폴더 비우기
-asciidoctor.doFirst {
-	delete file('src/main/resources/static/docs')
-}
-
-// asccidoctor 작업 이후 생성된 HTML 파일을 static/docs 로 copy
 tasks.register('copyDocument', Copy) {
 	dependsOn asciidoctor
-	from file("build/docs/asciidoc")
-	into file("src/main/resources/static/docs")
+	from asciidoctor.outputDir
+	into 'build/resources/main/static/docs'
 }
 
-// build 의 의존작업 명시
-build {
+jar {
+	dependsOn copyDocument
+}
+
+bootJar {
+	dependsOn copyDocument
+}
+
+resolveMainClassName {
 	dependsOn copyDocument
 }

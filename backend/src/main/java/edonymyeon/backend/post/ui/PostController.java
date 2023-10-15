@@ -1,6 +1,7 @@
 package edonymyeon.backend.post.ui;
 
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
+import edonymyeon.backend.global.version.ApiVersion;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.application.dto.request.PostModificationRequest;
@@ -24,6 +25,7 @@ public class PostController {
 
     private final PostService postService;
 
+    @ApiVersion(value = {1})
     @PostMapping
     public ResponseEntity<PostIdResponse> createPost(@AuthPrincipal MemberId memberId,
                                                      @ModelAttribute PostRequest postRequest) {
@@ -32,12 +34,14 @@ public class PostController {
                 .body(response);
     }
 
+    @ApiVersion(value = {1})
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(@AuthPrincipal MemberId memberId, @PathVariable Long postId) {
         postService.deletePost(memberId, postId);
         return ResponseEntity.noContent().build();
     }
 
+    @ApiVersion(value = {1})
     @PutMapping("/{postId}")
     public ResponseEntity<PostIdResponse> updatePost(@AuthPrincipal MemberId memberId,
                                                      @ModelAttribute PostModificationRequest postModificationRequest,

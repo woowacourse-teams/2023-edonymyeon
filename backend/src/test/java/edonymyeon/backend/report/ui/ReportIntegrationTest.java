@@ -1,9 +1,12 @@
 package edonymyeon.backend.report.ui;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.report.application.ReportRequest;
+import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -11,8 +14,6 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("NonAsciiCharacters")
 class ReportIntegrationTest extends IntegrationFixture implements ImageFileCleaner {
@@ -52,8 +53,9 @@ class ReportIntegrationTest extends IntegrationFixture implements ImageFileClean
 
         final ReportRequest reportRequest = new ReportRequest("POST", postId, 4, null);
 
-        final ExtractableResponse<Response> 게시글_신고_응답 = RestAssured
-                .given()
+        final ExtractableResponse<Response> 게시글_신고_응답 = EdonymyeonRestAssured.builder()
+                .version(1)
+                .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reportRequest)
                 .when()
@@ -86,6 +88,7 @@ class ReportIntegrationTest extends IntegrationFixture implements ImageFileClean
         final Member member = 사용자를_하나_만든다();
         final ExtractableResponse<Response> post = 게시글을_하나_만든다(member);
         final long postId = 응답의_location헤더에서_id를_추출한다(post);
+
         // when
 
         // then

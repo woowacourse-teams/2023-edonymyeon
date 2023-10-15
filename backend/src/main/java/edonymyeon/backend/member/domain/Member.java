@@ -179,9 +179,6 @@ public class Member extends TemporalRecord {
     }
 
     public void encrypt(final String encodedPassword) {
-        //todo 운영 DB에 암호화 적용후 라인 삭제
-        validatePassword(password);
-
         validateEncodedPassword(encodedPassword);
         this.password = encodedPassword;
     }

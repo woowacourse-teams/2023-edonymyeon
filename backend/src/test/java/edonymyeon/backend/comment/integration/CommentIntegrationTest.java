@@ -10,6 +10,7 @@ import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
@@ -133,11 +134,7 @@ public class CommentIntegrationTest extends IntegrationFixture implements ImageF
         final long 댓글1_id = 응답의_location헤더에서_id를_추출한다(댓글1);
         final long 댓글2_id = 응답의_location헤더에서_id를_추출한다(댓글2);
 
-        final ExtractableResponse<Response> 댓글_조회_응답 = RestAssured.given()
-                .when()
-                .get("/posts/{postId}/comments", 게시글.getId())
-                .then()
-                .extract();
+        final ExtractableResponse<Response> 댓글_조회_응답 = 게시물에_대한_댓글을_모두_조회한다(게시글.getId());
 
         Pattern 이미지_형식 = Pattern.compile(domain + "test-inserting\\d+\\.(png|jpg)");
 

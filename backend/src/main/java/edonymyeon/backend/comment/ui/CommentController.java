@@ -4,6 +4,7 @@ import edonymyeon.backend.auth.annotation.AuthPrincipal;
 import edonymyeon.backend.comment.application.CommentService;
 import edonymyeon.backend.comment.application.dto.request.CommentRequest;
 import edonymyeon.backend.comment.application.dto.response.CommentsResponse;
+import edonymyeon.backend.global.version.ApiVersion;
 import edonymyeon.backend.member.application.dto.MemberId;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    @ApiVersion(value = {1})
     @PostMapping
     public ResponseEntity<Void> createComment(@AuthPrincipal MemberId memberId,
                                               @PathVariable Long postId,
@@ -32,6 +34,7 @@ public class CommentController {
                 .build();
     }
 
+    @ApiVersion(value = {1})
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(@AuthPrincipal MemberId memberId,
                                               @PathVariable Long postId,
@@ -41,6 +44,7 @@ public class CommentController {
                 .build();
     }
 
+    @ApiVersion(value = {1})
     @GetMapping
     public ResponseEntity<CommentsResponse> findCommentsByPostId(@AuthPrincipal(required = false) MemberId memberId,
                                                                  @PathVariable Long postId) {

@@ -1,6 +1,7 @@
 package com.app.edonymyeon.data.repository
 
 import com.app.edonymyeon.data.common.CustomThrowable
+import com.app.edonymyeon.data.common.createCustomThrowableFromResponse
 import com.app.edonymyeon.data.datasource.post.PostDataSource
 import com.app.edonymyeon.data.dto.response.CommentsResponse
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
@@ -12,14 +13,18 @@ import com.domain.edonymyeon.model.PostEditor
 import com.domain.edonymyeon.model.PostItems
 import com.domain.edonymyeon.repository.PostRepository
 import java.io.File
+import javax.inject.Inject
 
-class PostRepositoryImpl(private val postDataSource: PostDataSource) : PostRepository {
-    override suspend fun getPostDetail(postId: Long): Result<Any> {
-        val result = postDataSource.getPostDetail(postId)
+class PostRepositoryImpl @Inject constructor(
+    private val postDataSource: PostDataSource,
+) : PostRepository {
+    override suspend fun getPostDetail(postId: Long, notificationId: Long): Result<Any> {
+        val result = postDataSource.getPostDetail(postId, notificationId)
         return if (result.isSuccessful) {
             Result.success((result.body() as PostDetailResponse).toDomain())
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 

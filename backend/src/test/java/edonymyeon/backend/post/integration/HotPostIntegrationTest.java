@@ -15,6 +15,8 @@ import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,11 +62,7 @@ public class HotPostIntegrationTest extends IntegrationFixture {
         postReadService.findSpecificPost(post5.getId(), new ActiveMemberId(member.getId())); // 조회 1번
 
         // then
-        JsonPath jsonPath = RestAssured.given()
-                .when()
-                .get("posts/hot")
-                .then()
-                .extract()
+        JsonPath jsonPath = 핫_게시글을_조회한다()
                 .body()
                 .jsonPath();
 
@@ -89,11 +87,7 @@ public class HotPostIntegrationTest extends IntegrationFixture {
         Post post5 = postTestSupport.builder().build();
 
         // then
-        JsonPath jsonPath = RestAssured.given()
-                .when()
-                .get("posts/hot")
-                .then()
-                .extract()
+        JsonPath jsonPath = 핫_게시글을_조회한다()
                 .body()
                 .jsonPath();
 
@@ -110,11 +104,7 @@ public class HotPostIntegrationTest extends IntegrationFixture {
 
     @Test
     void 최근_일주일_이내의_글이_없다면_빈리스트가_조회된다() {
-        JsonPath jsonPath = RestAssured.given()
-                .when()
-                .get("posts/hot")
-                .then()
-                .extract()
+        JsonPath jsonPath = 핫_게시글을_조회한다()
                 .body()
                 .jsonPath();
 

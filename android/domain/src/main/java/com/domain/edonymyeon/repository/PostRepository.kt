@@ -6,7 +6,11 @@ import com.domain.edonymyeon.model.PostItems
 import java.io.File
 
 interface PostRepository {
-    suspend fun getPostDetail(postId: Long): Result<Any>
+    suspend fun getPostDetail(
+        postId: Long,
+        notificationId: Long = -1,
+    ): Result<Any>
+
     suspend fun deletePost(postId: Long): Result<Any>
 
     suspend fun savePost(

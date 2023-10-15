@@ -5,5 +5,5 @@ import java.util.List;
 
 public interface MemberCustomRepository {
 
-    List<Member> findAllHavingUnConfirmedPost();
+    List<Member> findAllHavingUnConfirmedPostWithInDays(int days);
 }

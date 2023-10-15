@@ -1,18 +1,17 @@
 package com.app.edonymyeon.data.datasource.auth
 
-import android.util.Log
 import com.app.edonymyeon.data.dto.LoginDataModel
 import com.app.edonymyeon.data.dto.request.LogoutRequest
 import com.app.edonymyeon.data.dto.request.TokenRequest
 import com.app.edonymyeon.data.dto.request.UserRegistrationRequest
 import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
 import com.app.edonymyeon.data.service.AuthService
-import com.app.edonymyeon.data.service.client.RetrofitClient
 import retrofit2.Response
+import javax.inject.Inject
 
-class AuthRemoteDataSource : AuthDataSource.Remote {
-    private val authService: AuthService =
-        RetrofitClient.getInstance().create(AuthService::class.java)
+class AuthRemoteDataSource @Inject constructor(
+    private val authService: AuthService,
+) : AuthDataSource.Remote {
 
     override suspend fun signUp(userRegistrationRequest: UserRegistrationRequest): Response<Unit> {
         return authService.signUp(userRegistrationRequest)
@@ -30,7 +29,6 @@ class AuthRemoteDataSource : AuthDataSource.Remote {
     }
 
     override suspend fun logout(logoutRequest: LogoutRequest): Response<Unit> {
-        Log.d("testLog", logoutRequest.deviceToken)
         return authService.logout(logoutRequest)
     }
 

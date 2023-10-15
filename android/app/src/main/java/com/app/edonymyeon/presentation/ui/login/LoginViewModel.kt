@@ -2,15 +2,19 @@ package com.app.edonymyeon.presentation.ui.login
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.service.fcm.FCMToken
+import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.domain.edonymyeon.repository.AuthRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel(private val repository: AuthRepository) :
-    ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val repository: AuthRepository,
+) : BaseViewModel() {
 
     private val _isSuccess = MutableLiveData<Boolean>()
     val isSuccess: LiveData<Boolean>
@@ -30,7 +34,7 @@ class LoginViewModel(private val repository: AuthRepository) :
 
     private fun login(email: String, password: String) {
         FCMToken.getFCMToken {
-            viewModelScope.launch {
+            viewModelScope.launch(exceptionHandler) {
                 repository.login(
                     email,
                     password,
@@ -47,7 +51,7 @@ class LoginViewModel(private val repository: AuthRepository) :
 
     fun loginByKakao(accessToken: String) {
         FCMToken.getFCMToken {
-            viewModelScope.launch {
+            viewModelScope.launch(exceptionHandler) {
                 repository.loginByKakao(
                     accessToken,
                     it.orEmpty(),

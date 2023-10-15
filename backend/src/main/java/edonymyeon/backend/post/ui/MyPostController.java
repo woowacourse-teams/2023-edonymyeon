@@ -1,6 +1,7 @@
 package edonymyeon.backend.post.ui;
 
 import edonymyeon.backend.auth.annotation.AuthPrincipal;
+import edonymyeon.backend.global.version.ApiVersion;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.MyPostService;
@@ -21,6 +22,7 @@ public class MyPostController {
 
     private final MyPostService myPostService;
 
+    @ApiVersion(value = {1})
     @GetMapping("/my-posts")
     public ResponseEntity<PostSlice<MyPostResponse>> findMyPosts(@AuthPrincipal final MemberId memberId,
                                                              @PostPaging GeneralFindingCondition generalFindingCondition) {

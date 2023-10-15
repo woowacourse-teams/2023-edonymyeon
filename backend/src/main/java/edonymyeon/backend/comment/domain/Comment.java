@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -94,7 +95,11 @@ public class Comment extends TemporalRecord {
         return this.post.getId();
     }
 
-    public Member getWriter() {
+    public Member getPostWriter() {
         return this.post.getMember();
+    }
+
+    public boolean isWrittenSelf() {
+        return Objects.equals(this.member, this.getPost().getMember());
     }
 }

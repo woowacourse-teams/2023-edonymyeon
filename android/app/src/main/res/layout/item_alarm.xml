@@ -11,6 +11,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@{notification.read ? @color/gray_e3e3e3 : @color/white_ffffff}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
