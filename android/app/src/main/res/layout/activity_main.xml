@@ -22,11 +22,11 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/blue_576b9e"
-            app:itemIconSize="36dp"
+            app:itemIconSize="@dimen/main_bottom_icon_size"
             app:itemIconTint="@drawable/selector_bottom_nav_icon_tint"
             app:labelVisibilityMode="unlabeled"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="H,360:56"
+            app:layout_constraintHeight_percent="0.08"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:menu="@menu/bottom_menu" />
