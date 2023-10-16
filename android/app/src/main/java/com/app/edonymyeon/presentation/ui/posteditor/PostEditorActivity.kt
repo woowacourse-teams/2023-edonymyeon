@@ -245,7 +245,7 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         loadingDialog.show(supportFragmentManager, "LoadingDialog")
         val postTitle = binding.etPostTitle.text.toString()
         val postContent = binding.etPostContent.text.toString().ifBlank { "" }
-        val postPrice = binding.etPostPrice.text.toString().toInt()
+        val postPrice = binding.etPostPrice.text.toString().replace(",", "").toInt()
         val postEditor = PostEditor(postTitle, postContent, postPrice)
         when (originActivityKey) {
             POST_CODE -> viewModel.savePost(this, postEditor)
