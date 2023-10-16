@@ -17,7 +17,8 @@ import edonymyeon.backend.member.application.dto.request.MemberUpdateRequest;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.application.dto.response.MemberUpdateResponse;
-import edonymyeon.backend.member.application.dto.response.MyPageResponse;
+import edonymyeon.backend.member.application.dto.response.MyPageResponseV1;
+import edonymyeon.backend.member.application.dto.response.MyPageResponseV2;
 import edonymyeon.backend.member.application.event.ProfileImageDeletionEvent;
 import edonymyeon.backend.member.application.event.ProfileImageUploadEvent;
 import edonymyeon.backend.member.domain.Device;
@@ -51,14 +52,19 @@ public class MemberService {
 
     private final ApplicationEventPublisher publisher;
 
-    public MyPageResponse findMemberInfoById(final Long id) {
+    public MyPageResponseV1 findMemberInfoByIdV1(final Long id) {
         final Member member = findMember(id);
-        return new MyPageResponse(member.getId(), member.getNickname(), domain.convertToImageUrl(member.getProfileImageInfo()));
+        return new MyPageResponseV1(member.getId(), member.getNickname());
     }
 
     private Member findMember(final Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_ID_NOT_FOUND));
+    }
+
+    public MyPageResponseV2 findMemberInfoByIdV2(final Long id) {
+        final Member member = findMember(id);
+        return new MyPageResponseV2(member.getId(), member.getNickname(), domain.convertToImageUrl(member.getProfileImageInfo()));
     }
 
     @Transactional

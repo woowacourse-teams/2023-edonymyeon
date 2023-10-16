@@ -9,7 +9,8 @@ import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.application.dto.response.DuplicateCheckResponse;
 import edonymyeon.backend.member.application.dto.response.MemberUpdateResponse;
-import edonymyeon.backend.member.application.dto.response.MyPageResponse;
+import edonymyeon.backend.member.application.dto.response.MyPageResponseV1;
+import edonymyeon.backend.member.application.dto.response.MyPageResponseV2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,12 +31,19 @@ public class MemberController {
 
     @ApiVersion(value = {1})
     @GetMapping("/profile")
-    public ResponseEntity<MyPageResponse> findMemberInfo(@AuthPrincipal MemberId memberId) {
-        final MyPageResponse memberInfo = memberService.findMemberInfoById(memberId.id());
+    public ResponseEntity<MyPageResponseV1> findMemberInfoV1(@AuthPrincipal MemberId memberId) {
+        final MyPageResponseV1 memberInfo = memberService.findMemberInfoByIdV1(memberId.id());
         return ResponseEntity.ok(memberInfo);
     }
 
-    @ApiVersion(value = {1})
+    @ApiVersion(value = {2})
+    @GetMapping("/profile")
+    public ResponseEntity<MyPageResponseV2> findMemberInfoV2(@AuthPrincipal MemberId memberId) {
+        final MyPageResponseV2 memberInfo = memberService.findMemberInfoByIdV2(memberId.id());
+        return ResponseEntity.ok(memberInfo);
+    }
+
+    @ApiVersion(value = {2})
     @PutMapping("/profile")
     public ResponseEntity<MemberUpdateResponse> updateMember(@AuthPrincipal MemberId memberId,
                                                              @ModelAttribute MemberUpdateRequest updateRequest) {
@@ -43,7 +51,7 @@ public class MemberController {
         return ResponseEntity.ok(memberResponse);
     }
 
-    @ApiVersion(value = {1})
+    @ApiVersion(value = {2})
     @GetMapping("/members/check")
     public ResponseEntity<DuplicateCheckResponse> validateDuplicate(@RequestParam String target,
                                                                     @RequestParam String value) {
@@ -51,7 +59,7 @@ public class MemberController {
         return ResponseEntity.ok().body(duplicateCheckResponse);
     }
 
-    @ApiVersion(value = {1})
+    @ApiVersion(value = {1, 2})
     @PostMapping("/profile/my-posts/{postId}/purchase-confirm")
     public ResponseEntity<Void> confirmPurchase(@AuthPrincipal final MemberId memberId,
                                                 @PathVariable final Long postId,
@@ -60,7 +68,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @ApiVersion(value = {1})
+    @ApiVersion(value = {1, 2})
     @PostMapping("/profile/my-posts/{postId}/saving-confirm")
     public ResponseEntity<Void> confirmSaving(@AuthPrincipal final MemberId memberId,
                                               @PathVariable final Long postId,
@@ -69,7 +77,7 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @ApiVersion(value = {1})
+    @ApiVersion(value = {1, 2})
     @DeleteMapping("/profile/my-posts/{postId}/confirm-remove")
     public ResponseEntity<Void> removeConfirm(@AuthPrincipal final MemberId memberId,
                                               @PathVariable final Long postId) {
