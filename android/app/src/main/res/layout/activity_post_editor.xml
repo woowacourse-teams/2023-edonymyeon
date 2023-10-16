@@ -96,6 +96,7 @@
             android:hint="@string/post_editor_price_hint"
             android:inputType="number"
             android:text="@{viewModel.postEditor.price}"
+            android:textAlignment="textEnd"
             android:textColor="@color/gray_434343"
             android:textColorHint="@color/gray_615f5f"
             android:textSize="14sp"
