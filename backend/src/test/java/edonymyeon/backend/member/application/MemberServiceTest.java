@@ -101,7 +101,7 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
                 .build();
         final ProfileImageInfo originalProfileImage = member.getProfileImageInfo();
 
-        final MockMultipartFile newImageFile = mockMultipartFileTestSupport.builder().build();
+        final MockMultipartFile newImageFile = mockMultipartFileTestSupport.builder().buildImageForProfile();
         final MemberUpdateRequest updateRequest = new MemberUpdateRequest(member.getNickname(), newImageFile, true);
 
         memberService.updateMember(new ActiveMemberId(member.getId()), updateRequest);
@@ -148,7 +148,7 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
                 .profileImageInfo(profileImageInfo)
                 .build();
 
-        final MockMultipartFile imageFile = mockMultipartFileTestSupport.builder().build();
+        final MockMultipartFile imageFile = mockMultipartFileTestSupport.builder().buildImageForProfile();
         final MemberUpdateRequest updateRequest = new MemberUpdateRequest(member.getNickname(), imageFile, true);
 
         final MemberUpdateResponse response = memberService.updateMember(new ActiveMemberId(member.getId()),
@@ -175,7 +175,7 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
                 .profileImageInfo(profileImageInfo)
                 .build();
 
-        final MockMultipartFile imageFile = mockMultipartFileTestSupport.builder().build();
+        final MockMultipartFile imageFile = mockMultipartFileTestSupport.builder().buildImageForProfile();
         final MemberUpdateRequest updateRequest = new MemberUpdateRequest("newNickname", imageFile, true);
 
         final MemberUpdateResponse response = memberService.updateMember(new ActiveMemberId(member.getId()),
@@ -202,7 +202,7 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
                 .profileImageInfo(profileImageInfo)
                 .build();
 
-        final MockMultipartFile imageFile = mockMultipartFileTestSupport.builder().build();
+        final MockMultipartFile imageFile = mockMultipartFileTestSupport.builder().buildImageForProfile();
         final MemberUpdateRequest updateRequest = new MemberUpdateRequest("newNickname", imageFile, true);
 
         doThrow(new RuntimeException("롤백용 예외")).when(imageFileUploader).uploadRealStorage(any(), any());
