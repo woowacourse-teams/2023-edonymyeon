@@ -73,13 +73,14 @@
             android:id="@+id/tv_empty_post"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="32sp"
+            android:text="@string/search_empty"
             android:textColor="@color/black_434343"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="32sp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:text="@string/search_empty"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

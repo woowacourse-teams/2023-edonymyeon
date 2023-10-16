@@ -20,7 +20,6 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>({
 }) {
     override val viewModel: SearchViewModel by viewModels()
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -66,6 +65,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>({
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText == "") binding.tvEmptyPost.isVisible = false
                 return true
             }
         })
