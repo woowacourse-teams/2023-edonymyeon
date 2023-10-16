@@ -2,14 +2,11 @@ package com.app.edonymyeon.presentation.ui.posteditor
 
 import android.Manifest
 import android.content.ClipData
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -19,6 +16,7 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.content.FileProvider
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostEditorBinding
 import com.app.edonymyeon.presentation.common.activity.BaseActivity
@@ -32,13 +30,17 @@ import com.app.edonymyeon.presentation.util.makeSnackbar
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import com.domain.edonymyeon.model.PostEditor
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 import java.text.DecimalFormat
-import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorViewModel>(
     { ActivityPostEditorBinding.inflate(it) },
 ) {
+
+    private var cameraUri: Uri? = null
+
+    private var price = ""
 
     override val viewModel: PostEditorViewModel by viewModels()
 
@@ -60,10 +62,8 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         }
 
     private val takeCameraImage =
-        registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
-            if (bitmap != null) {
-                setCameraImage(bitmap)
-            }
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success) setCameraImage(cameraUri)
         }
 
     private val permissionRequestLauncher = registerForActivityResult(
@@ -106,8 +106,6 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
             override fun afterTextChanged(s: Editable?) = Unit
         }
     }
-
-    private var price = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -229,7 +227,9 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
     }
 
     private fun navigateToCamera() {
-        takeCameraImage.launch(null)
+        val photoFile = File.createTempFile("IMG_", ".jpg", this.cacheDir)
+        cameraUri = FileProvider.getUriForFile(this, "$packageName.provider", photoFile)
+        takeCameraImage.launch(cameraUri)
     }
 
     private fun navigateToGallery() {
@@ -290,8 +290,7 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         setAdapter()
     }
 
-    private fun setCameraImage(bitmap: Bitmap) {
-        val imageUri = getImageUri(bitmap)
+    private fun setCameraImage(imageUri: Uri?) {
         viewModel.addSelectedImages(imageUri.toString())
     }
 
@@ -306,19 +305,6 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         data?.data?.let { imageUri ->
             viewModel.addSelectedImages(imageUri.toString())
         }
-    }
-
-    private fun getImageUri(bitmap: Bitmap): Uri? {
-        val resolver = applicationContext.contentResolver
-        resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-            ?.let { imageUri ->
-                val outputStream = resolver.openOutputStream(imageUri)
-                outputStream?.use { stream ->
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-                }
-                return imageUri
-            }
-        return null
     }
 
     private fun checkImageCountLimit(count: Int, limitCount: Int): Boolean {
@@ -343,6 +329,16 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         return formatter.format(input)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (!isChangingConfigurations) {
+            cameraUri?.let { uri ->
+                val contentResolver = applicationContext.contentResolver
+                contentResolver.delete(uri, null, null)
+            }
+        }
+    }
+
     companion object {
         private const val MAX_IMAGES_COUNT = 10
         private const val KEY_POST_EDITOR_CHECK = "key_post_editor_check"
@@ -350,11 +346,6 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         const val POST_CODE = 2000
         const val UPDATE_CODE = 3000
         const val RESULT_RELOAD_CODE = 1001
-
-        private val contentValues = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle${LocalDateTime.now()}")
-            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-        }
 
         private val requestPermissions = arrayOf(
             Manifest.permission.WRITE_EXTERNAL_STORAGE,

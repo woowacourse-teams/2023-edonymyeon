@@ -1,6 +1,6 @@
 package com.app.edonymyeon.data.repository
 
-import com.app.edonymyeon.data.common.CustomThrowable
+import com.app.edonymyeon.data.common.createCustomThrowableFromResponse
 import com.app.edonymyeon.data.datasource.notification.NotificationDataSource
 import com.app.edonymyeon.mapper.toDomain
 import com.domain.edonymyeon.model.Notifications
@@ -14,7 +14,8 @@ class NotificationRepositoryImpl @Inject constructor(private val notificationDat
         return if (result.isSuccessful && result.body() != null) {
             Result.success(result.body()!!.toDomain())
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 }

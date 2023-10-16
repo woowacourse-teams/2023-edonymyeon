@@ -3,7 +3,6 @@ package com.app.edonymyeon.presentation.ui.main.mypage
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.service.fcm.FCMToken
 import com.app.edonymyeon.mapper.toDomain
 import com.app.edonymyeon.mapper.toUiModel
@@ -25,8 +24,8 @@ import javax.inject.Inject
 class MyPageViewModel @Inject constructor(
     private val profileRepository: ProfileRepository,
     private val consumptionsRepository: ConsumptionsRepository,
-    private val authRepository: AuthRepository,
-) : BaseViewModel() {
+    authRepository: AuthRepository,
+) : BaseViewModel(authRepository) {
     private val _profile = MutableLiveData<WriterUiModel>()
     val profile: LiveData<WriterUiModel>
         get() = _profile
@@ -55,7 +54,7 @@ class MyPageViewModel @Inject constructor(
                 it as Writer
                 _profile.value = it.toUiModel()
             }.onFailure {
-                it as CustomThrowable
+                throw it
             }
         }
     }
@@ -72,7 +71,7 @@ class MyPageViewModel @Inject constructor(
                 _consumptions.value = it.toUiModel()
                 _consumptionOnThisMonth.value = it.consumptionAmounts.last().toUiModel()
             }.onFailure {
-                it as CustomThrowable
+                throw it
             }
         }
     }
@@ -83,7 +82,7 @@ class MyPageViewModel @Inject constructor(
                 authRepository.logout(it ?: "").onSuccess {
                     _isLogoutSuccess.value = true
                 }.onFailure {
-                    it as CustomThrowable
+                    throw it
                 }
             }
         }
@@ -93,7 +92,7 @@ class MyPageViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             profileRepository.withdraw()
                 .onFailure {
-                    it as CustomThrowable
+                    throw it
                 }
         }
     }

@@ -1,7 +1,8 @@
 package edonymyeon.backend.post.integration;
 
 import edonymyeon.backend.CacheConfig;
-import edonymyeon.backend.cache.application.HotPostsRedisRepository;
+import edonymyeon.backend.cache.application.PostCachingService;
+import edonymyeon.backend.cache.repository.HotPostsRepository;
 import edonymyeon.backend.cache.util.HotPostCachePolicy;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
@@ -35,14 +36,12 @@ public class HotPostIntegrationTest extends IntegrationFixture {
 
     private final HotPostCachePolicy hotPostCachePolicy;
 
-    private final HotPostsRedisRepository hotPostsRedisRepository;
-
     private final HotFindingCondition findingCondition = HotFindingCondition.builder().build();
 
     @BeforeEach
     void 캐시를_삭제하고_시작하도록_한다(){
         String postIdsCacheKey = hotPostCachePolicy.getKey(findingCondition);
-        hotPostsRedisRepository.deleteById(postIdsCacheKey);
+        HotPostsRepository.delete(postIdsCacheKey);
     }
 
     @Test
@@ -109,6 +108,6 @@ public class HotPostIntegrationTest extends IntegrationFixture {
                 .body()
                 .jsonPath();
 
-        assertThat(jsonPath.getList("content").size()).isEqualTo(0);
+        assertThat(jsonPath.getList("content").size()).isZero();
     }
 }
