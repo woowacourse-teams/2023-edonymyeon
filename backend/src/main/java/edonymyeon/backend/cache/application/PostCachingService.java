@@ -1,7 +1,8 @@
 package edonymyeon.backend.cache.application;
 
-import edonymyeon.backend.cache.domain.CachedHotPost;
 import edonymyeon.backend.cache.application.dto.CachedPostResponse;
+import edonymyeon.backend.cache.domain.CachedHotPost;
+import edonymyeon.backend.cache.repository.HotPostsRepository;
 import edonymyeon.backend.cache.util.HotPostCachePolicy;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.post.application.HotFindingCondition;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.CACHE_NOT_FOUND;
 
@@ -20,23 +20,22 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.CACHE_NOT
 @RequiredArgsConstructor
 public class PostCachingService {
 
-    private final HotPostsRedisRepository hotPostsRedisRepository;
-
     private final HotPostCachePolicy hotPostPolicy;
 
     public boolean isNotCached(final HotFindingCondition hotFindingCondition) {
-        Optional<CachedHotPost> cachedPost = hotPostsRedisRepository.findById(hotPostPolicy.getKey(hotFindingCondition));
-        return cachedPost.isEmpty();
+        return ! HotPostsRepository.hasKey(hotPostPolicy.getKey(hotFindingCondition));
     }
 
     public boolean shouldRefreshCache(final HotFindingCondition hotFindingCondition) {
-        CachedHotPost cachedHotPost = hotPostsRedisRepository.findById(hotPostPolicy.getKey(hotFindingCondition))
+        final CachedHotPost cachedHotPost = HotPostsRepository.get(hotPostPolicy.getKey(hotFindingCondition))
                 .orElseThrow(() -> new EdonymyeonException(CACHE_NOT_FOUND));
+
         return cachedHotPost.shouldRefresh(hotPostPolicy.getExpiredSeconds());
+
     }
 
     public CachedPostResponse findCachedPosts(HotFindingCondition hotFindingCondition) {
-        CachedHotPost cachedHotPost = hotPostsRedisRepository.findById(hotPostPolicy.getKey(hotFindingCondition))
+        final CachedHotPost cachedHotPost = HotPostsRepository.get(hotPostPolicy.getKey(hotFindingCondition))
                 .orElseThrow(() -> new EdonymyeonException(CACHE_NOT_FOUND));
         return new CachedPostResponse(cachedHotPost.getPostIds(), cachedHotPost.isLast());
     }
@@ -46,25 +45,23 @@ public class PostCachingService {
                 .map(Post::getId)
                 .toList();
 
-        Optional<CachedHotPost> hotPostsFromCache = hotPostsRedisRepository.findById(hotPostPolicy.getKey(hotFindingCondition));
-
-        if (hotPostsFromCache.isEmpty()) {
+        if (isNotCached(hotFindingCondition)) {
             saveHotPost(hotFindingCondition, hotPost, hotPostIds);
             return;
         }
 
-        CachedHotPost cachedHotPost = hotPostsFromCache.get();
+        final CachedHotPost cachedHotPost = HotPostsRepository.get(hotPostPolicy.getKey(hotFindingCondition))
+                .orElseThrow(() -> new EdonymyeonException(CACHE_NOT_FOUND));
         cachedHotPost.refreshData(hotPostIds, hotPost.isLast());
-        hotPostsRedisRepository.save(cachedHotPost);
+        HotPostsRepository.save(hotPostPolicy.getKey(hotFindingCondition), cachedHotPost);
     }
 
     private void saveHotPost(HotFindingCondition hotFindingCondition, Slice<Post> hotPost, List<Long> hotPostIds) {
-        CachedHotPost hotPosts = new CachedHotPost(
-                hotPostPolicy.getKey(hotFindingCondition),
+        final CachedHotPost hotPosts = new CachedHotPost(
                 hotPostIds,
                 hotPost.isLast(),
                 LocalDateTime.now()
         );
-        hotPostsRedisRepository.save(hotPosts);
+        HotPostsRepository.save(hotPostPolicy.getKey(hotFindingCondition), hotPosts);
     }
 }

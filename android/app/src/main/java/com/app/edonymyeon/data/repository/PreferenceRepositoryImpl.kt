@@ -1,6 +1,6 @@
 package com.app.edonymyeon.data.repository
 
-import com.app.edonymyeon.data.common.CustomThrowable
+import com.app.edonymyeon.data.common.createCustomThrowableFromResponse
 import com.app.edonymyeon.data.datasource.preference.PreferenceDataSource
 import com.app.edonymyeon.data.dto.request.NotificationPreferenceRequest
 import com.app.edonymyeon.mapper.toDomain
@@ -20,7 +20,8 @@ class PreferenceRepositoryImpl @Inject constructor(
                 },
             )
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 
@@ -35,7 +36,8 @@ class PreferenceRepositoryImpl @Inject constructor(
                 },
             )
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 }

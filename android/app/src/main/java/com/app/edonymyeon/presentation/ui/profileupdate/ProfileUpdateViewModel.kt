@@ -5,11 +5,11 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.presentation.common.imageutil.processAndAdjustImage
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.WriterUiModel
 import com.domain.edonymyeon.model.Nickname
+import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -19,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileUpdateViewModel @Inject constructor(
     private val repository: ProfileRepository,
-) : BaseViewModel() {
+    authRepository: AuthRepository,
+) : BaseViewModel(authRepository) {
     private val _profile = MutableLiveData<WriterUiModel>()
     val profile: LiveData<WriterUiModel>
         get() = _profile
@@ -83,6 +84,7 @@ class ProfileUpdateViewModel @Inject constructor(
                     checkAbleToUpdate()
                 }.onFailure {
                     _isNicknameValid.value = false
+                    throw it
                 }
         }
     }
@@ -116,7 +118,7 @@ class ProfileUpdateViewModel @Inject constructor(
             ).onSuccess {
                 _isUploadSuccess.value = true
             }.onFailure {
-                it as CustomThrowable
+                throw it
             }
         }
     }

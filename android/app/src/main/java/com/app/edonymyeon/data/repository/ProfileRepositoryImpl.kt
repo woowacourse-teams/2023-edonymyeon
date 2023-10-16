@@ -1,6 +1,5 @@
 package com.app.edonymyeon.data.repository
 
-import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.common.createCustomThrowableFromResponse
 import com.app.edonymyeon.data.datasource.profile.ProfileDataSource
 import com.app.edonymyeon.data.dto.WriterDataModel
@@ -14,7 +13,6 @@ import com.domain.edonymyeon.model.MyPosts
 import com.domain.edonymyeon.model.Nickname
 import com.domain.edonymyeon.model.Writer
 import com.domain.edonymyeon.repository.ProfileRepository
-import org.json.JSONObject
 import java.io.File
 import javax.inject.Inject
 
@@ -31,7 +29,8 @@ class ProfileRepositoryImpl @Inject constructor(
                 ),
             )
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 
@@ -48,7 +47,8 @@ class ProfileRepositoryImpl @Inject constructor(
         return if (result.isSuccessful) {
             Result.success((result.body() ?: Unit))
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 
@@ -57,7 +57,8 @@ class ProfileRepositoryImpl @Inject constructor(
         return if (result.isSuccessful) {
             Result.success((result.body() ?: Unit))
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 
@@ -66,7 +67,8 @@ class ProfileRepositoryImpl @Inject constructor(
         return if (result.isSuccessful) {
             Result.success((result.body() ?: Unit))
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 
@@ -85,10 +87,8 @@ class ProfileRepositoryImpl @Inject constructor(
         return if (result.isSuccessful) {
             Result.success(result.body() ?: Unit)
         } else {
-            val errorResponse = result.errorBody()?.string()
-            val json = errorResponse?.let { JSONObject(it) }
-            val errorMessage = json?.getString("errorMessage") ?: ""
-            Result.failure(CustomThrowable(result.code(), errorMessage))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 
@@ -121,7 +121,8 @@ class ProfileRepositoryImpl @Inject constructor(
         return if (result.isSuccessful) {
             Result.success((result.body() ?: AuthDuplicateResponse(false)).isUnique)
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 }

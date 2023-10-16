@@ -7,6 +7,7 @@ import com.domain.edonymyeon.model.Count
 import com.domain.edonymyeon.model.PostItem
 import com.domain.edonymyeon.model.PostItems
 import com.domain.edonymyeon.model.ReactionCount
+import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.PostRepository
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -25,6 +26,7 @@ import java.time.LocalDate
 class HomeViewModelTest {
     private lateinit var viewModel: HomeViewModel
     private lateinit var postRepository: PostRepository
+    private lateinit var authRepository: AuthRepository
 
     private val fakePost = List(5) {
         PostItem(
@@ -54,7 +56,8 @@ class HomeViewModelTest {
     fun setUp() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         postRepository = mockk()
-        viewModel = HomeViewModel(postRepository)
+        authRepository = mockk()
+        viewModel = HomeViewModel(postRepository, authRepository)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
