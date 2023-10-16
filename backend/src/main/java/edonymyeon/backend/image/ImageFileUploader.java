@@ -3,8 +3,8 @@ package edonymyeon.backend.image;
 import static edonymyeon.backend.global.exception.ExceptionInformation.*;
 import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_EXTENSION_INVALID;
 
+import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.domain.ImageInfo;
 import java.io.File;
 import java.io.IOException;
@@ -58,7 +58,7 @@ public class ImageFileUploader {
             final Path path = Paths.get(fullPath);
             multipartFile.transferTo(path);
         } catch (IOException e) {
-            throw new EdonymyeonException(IMAGE_UPLOAD_FAIL);
+            throw new BusinessLogicException(IMAGE_UPLOAD_FAIL);
         }
     }
 
