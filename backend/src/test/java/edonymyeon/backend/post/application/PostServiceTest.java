@@ -100,7 +100,7 @@ class PostServiceTest implements ImageFileCleaner {
 
     private PostRequest getPostRequest() throws IOException {
         final MockMultipartFile file = mockMultipartFileTestSupport.builder()
-                .build();
+                .buildImageForPost();
 
         final List<MultipartFile> multipartFiles = List.of(file, file);
 
@@ -178,7 +178,7 @@ class PostServiceTest implements ImageFileCleaner {
             List<MultipartFile> images = new ArrayList<>();
             for (int i = 0; i < 10; i++) {
                 images.add(mockMultipartFileTestSupport.builder()
-                        .build());
+                        .buildImageForPost());
             }
             final PostRequest request = new PostRequest(
                     "사도 돼요?",
@@ -198,7 +198,7 @@ class PostServiceTest implements ImageFileCleaner {
             List<MultipartFile> images = new ArrayList<>();
             for (int i = 0; i < 11; i++) {
                 images.add(mockMultipartFileTestSupport.builder()
-                        .build());
+                        .buildImageForPost());
             }
             final PostRequest request = new PostRequest(
                     "사도 돼요?",
@@ -391,7 +391,7 @@ class PostServiceTest implements ImageFileCleaner {
 
                 // when
                 final List<MultipartFile> 추가할_이미지 = List.of(mockMultipartFileTestSupport.builder()
-                        .build());
+                        .buildImageForPost());
                 final PostModificationRequest request = new PostModificationRequest(
                         "I hate you",
                         "change!!",
@@ -430,7 +430,7 @@ class PostServiceTest implements ImageFileCleaner {
             @Test
             void 이미지를_바꿀_수_있다(@Autowired EntityManager entityManager) throws IOException {
                 //given
-                final MockMultipartFile 바꾸기_전_이미지 = mockMultipartFileTestSupport.builder().build();
+                final MockMultipartFile 바꾸기_전_이미지 = mockMultipartFileTestSupport.builder().buildImageForPost();
                 final PostRequest 게시글_생성_요청 = new PostRequest(
                         "I love you",
                         "He wisely contented himself with his family and his love of nature.",
@@ -442,7 +442,7 @@ class PostServiceTest implements ImageFileCleaner {
                         .get(0);
 
                 // when
-                final MockMultipartFile 바꾼_후_이미지 = mockMultipartFileTestSupport.builder().build();
+                final MockMultipartFile 바꾼_후_이미지 = mockMultipartFileTestSupport.builder().buildImageForPost();
                 final PostModificationRequest 게시글_수정_요청 = new PostModificationRequest(
                         "I love you",
                         "He wisely contented himself with his family and his love of nature.",
@@ -496,7 +496,7 @@ class PostServiceTest implements ImageFileCleaner {
                 List<MultipartFile> images = new ArrayList<>();
                 for (int i = 0; i < count; i++) {
                     images.add(mockMultipartFileTestSupport.builder()
-                            .build());
+                            .buildImageForPost());
                 }
                 return images;
             }

@@ -43,7 +43,7 @@ public class ProfileImageInfoTestSupport {
         }
 
         public ProfileImageInfo buildWithImageFile() throws IOException {
-            final MockMultipartFile file = mockMultipartFileTestSupport.builder().build();
+            final MockMultipartFile file = mockMultipartFileTestSupport.builder().buildImageForProfile();
             final ImageInfo imageInfo = imageFileUploader.uploadFile(file);
             return profileImageInfoRepository.save(
                     ProfileImageInfo.from(imageInfo)

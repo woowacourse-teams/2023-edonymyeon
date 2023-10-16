@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
-import edonymyeon.backend.member.application.dto.response.MyPageResponse;
+import edonymyeon.backend.member.application.dto.response.MyPageResponseV2;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.domain.Post;
@@ -40,10 +40,10 @@ class MemberIntegrationTest extends IntegrationFixture {
                 .then()
                 .extract();
 
-        final MyPageResponse myPageResponse = response.as(MyPageResponse.class);
+        final MyPageResponseV2 myPageResponseV2 = response.as(MyPageResponseV2.class);
         assertAll(
-                () -> assertThat(myPageResponse.id()).isEqualTo(member.getId()),
-                () -> assertThat(myPageResponse.nickname()).isEqualTo(member.getNickname()),
+                () -> assertThat(myPageResponseV2.id()).isEqualTo(member.getId()),
+                () -> assertThat(myPageResponseV2.nickname()).isEqualTo(member.getNickname()),
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         );
     }
