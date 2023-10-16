@@ -99,7 +99,6 @@ class PostEditorViewModel @Inject constructor(
             _isPostPriceValid.value = true
         }.onFailure {
             _isPostPriceValid.value = false
-            throw it
         }
     }
 

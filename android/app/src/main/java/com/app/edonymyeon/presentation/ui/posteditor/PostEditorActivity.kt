@@ -31,7 +31,6 @@ import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import com.domain.edonymyeon.model.PostEditor
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
-import java.text.DecimalFormat
 
 @AndroidEntryPoint
 class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorViewModel>(
@@ -174,7 +173,10 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
                 binding.etPostPrice.addTextChangedListener(textWatcher)
             } else {
                 price =
-                    makeCommaNumber(binding.etPostPrice.text.toString().replace(",", "").toInt())
+                    getString(
+                        R.string.all_price,
+                        binding.etPostPrice.text.toString().replace(",", "").toInt(),
+                    )
                 binding.etPostPrice.setText(price)
                 binding.etPostPrice.setSelection(price.length)
             }
@@ -322,11 +324,6 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
 
     private fun setPriceChangedListener() {
         binding.etPostPrice.addTextChangedListener(textWatcher)
-    }
-
-    private fun makeCommaNumber(input: Int): String {
-        val formatter = DecimalFormat("###,###")
-        return formatter.format(input)
     }
 
     override fun onDestroy() {
