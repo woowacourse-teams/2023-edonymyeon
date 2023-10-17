@@ -20,12 +20,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+@SuppressLint("MissingFirebaseInstanceTokenRefresh")
 class AlarmService : FirebaseMessagingService() {
-    override fun onNewToken(token: String) {
-        super.onNewToken(token)
-    }
-
-    // background는 MainActivity, forground는 아래 로직을 탐
     @SuppressLint("MissingPermission")
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
@@ -38,7 +34,7 @@ class AlarmService : FirebaseMessagingService() {
 
         val pendingIntent = PendingIntent.getActivity(
             this,
-            0,
+            (message.data["notificationId"] ?: "0").toInt(),
             intent,
             PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
