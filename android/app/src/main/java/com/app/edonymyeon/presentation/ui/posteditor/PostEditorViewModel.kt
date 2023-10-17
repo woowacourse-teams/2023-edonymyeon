@@ -92,12 +92,13 @@ class PostEditorViewModel @Inject constructor(
     fun checkPriceValidate(price: CharSequence, start: Int, end: Int, count: Int) {
         val postPrice = price.toString()
         runCatching {
-            if (postPrice != ConsumptionDialog.BLANK) postPrice.toInt()
+            if (postPrice != ConsumptionDialog.BLANK) {
+                postPrice.toInt()
+            }
         }.onSuccess {
             _isPostPriceValid.value = true
         }.onFailure {
             _isPostPriceValid.value = false
-            throw it
         }
     }
 
