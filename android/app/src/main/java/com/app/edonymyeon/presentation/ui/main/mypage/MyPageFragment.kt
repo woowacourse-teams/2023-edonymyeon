@@ -1,5 +1,6 @@
 package com.app.edonymyeon.presentation.ui.main.mypage
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,7 @@ import com.app.edonymyeon.presentation.uimodel.NicknameUiModel
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -66,6 +68,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
                 viewModel.clearToken()
             }
         }
+        setOpenSourceLicenseListener()
     }
 
     override fun onResume() {
@@ -78,6 +81,12 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
             setViewForLogin()
         } else {
             setViewForNotLogin()
+        }
+    }
+
+    private fun setOpenSourceLicenseListener() {
+        binding.tvOpenSourceLicense.setOnClickListener {
+            navigateToOpenSourceLicense()
         }
     }
 
@@ -176,6 +185,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
 
     private fun navigateToLogin() {
         startActivity(LoginActivity.newIntent(requireContext()))
+    }
+
+    private fun navigateToOpenSourceLicense() {
+        OssLicensesMenuActivity.setActivityTitle(getString(R.string.my_page_open_source))
+        startActivity(Intent(requireContext(), OssLicensesMenuActivity::class.java))
     }
 
     private fun showDialog() {
