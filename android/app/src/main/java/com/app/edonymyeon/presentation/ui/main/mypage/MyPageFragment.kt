@@ -53,6 +53,16 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setChart()
+        setLogoutObserver()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setViewByLogin()
+    }
+
+    private fun setChart() {
         setConsumptionChart(
             LineChartManager(
                 binding.chartMyPayment,
@@ -60,17 +70,15 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
                 resources.getFont(R.font.nanumsquare),
             ),
         )
+    }
+
+    private fun setLogoutObserver() {
         viewModel.isLogoutSuccess.observe(viewLifecycleOwner) {
             if (it) {
                 (activity as MainActivity).refreshActivity()
                 viewModel.clearToken()
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        setViewByLogin()
     }
 
     private fun setViewByLogin() {
