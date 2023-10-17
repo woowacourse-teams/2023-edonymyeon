@@ -1,6 +1,7 @@
 package edonymyeon.backend.thumbs.application;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -43,11 +44,7 @@ public class ThumbsService {
         Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postId, loginMember.getId());
         if (postThumbs.isEmpty()) {
             Thumbs thumbs = new Thumbs(post, loginMember, ThumbsType.UP);
-            try{
-                thumbsRepository.save(thumbs);
-            } catch (DataIntegrityViolationException e){
-                throw new EdonymyeonException(THUMBS_UP_ALREADY_EXIST);
-            }
+            save(thumbs, THUMBS_UP_ALREADY_EXIST);
             publisher.publishEvent(new ThumbsUpEvent(post));
             return;
         }
@@ -74,6 +71,14 @@ public class ThumbsService {
         }
     }
 
+    private void save(final Thumbs thumbs, final ExceptionInformation thumbsUpAlreadyExist) {
+        try {
+            thumbsRepository.save(thumbs);
+        } catch (DataIntegrityViolationException e) {
+            throw new EdonymyeonException(thumbsUpAlreadyExist);
+        }
+    }
+
     @Transactional
     public void thumbsDown(final MemberId memberId, final Long postId) {
         Member loginMember = findMemberById(memberId);
@@ -83,11 +88,7 @@ public class ThumbsService {
         Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postId, loginMember.getId());
         if (postThumbs.isEmpty()) {
             Thumbs thumbs = new Thumbs(post, loginMember, ThumbsType.DOWN);
-            try{
-                thumbsRepository.save(thumbs);
-            } catch (DataIntegrityViolationException e){
-                throw new EdonymyeonException(THUMBS_DOWN_ALREADY_EXIST);
-            }
+            save(thumbs, THUMBS_DOWN_ALREADY_EXIST);
             publisher.publishEvent(new ThumbsDownEvent(post));
             return;
         }
