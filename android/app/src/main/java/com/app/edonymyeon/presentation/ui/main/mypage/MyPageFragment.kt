@@ -30,7 +30,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
     override val viewModel: MyPageViewModel by viewModels()
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
 
-    private val alwaysVisibleOptions = listOf(R.id.tv_inquiry)
+    private val alwaysVisibleOptions = listOf(R.id.tv_inquiry, R.id.tv_open_source_license)
 
     private val withdrawDialog: WithdrawDialog by lazy {
         WithdrawDialog {
