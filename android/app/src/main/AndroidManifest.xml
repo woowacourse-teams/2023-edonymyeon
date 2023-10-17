@@ -54,7 +54,8 @@
             android:exported="true" />
         <activity
             android:name="com.app.edonymyeon.presentation.ui.main.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
