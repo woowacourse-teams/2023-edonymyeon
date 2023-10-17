@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import app.edonymyeon.R
@@ -28,6 +29,8 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
 ) {
     override val viewModel: MyPageViewModel by viewModels()
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
+
+    private val alwaysVisibleOptions = listOf(R.id.tv_inquiry)
 
     private val withdrawDialog: WithdrawDialog by lazy {
         WithdrawDialog {
@@ -98,7 +101,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
         binding.chartMyPayment.isVisible = isLogin
         binding.tvRequiredLogin.isVisible = !isLogin
         binding.btnLogin.isVisible = !isLogin
-        binding.clBottom.isVisible = isLogin
+        binding.clBottom.children.forEach { view ->
+            if (alwaysVisibleOptions.contains(view.id).not()) {
+                view.isVisible = isLogin
+            }
+        }
     }
 
     private fun setListenerForLogin() {
