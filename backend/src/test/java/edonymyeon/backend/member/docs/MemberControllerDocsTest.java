@@ -289,7 +289,7 @@ class MemberControllerDocsTest extends DocsTest {
         final DuplicateCheckResponse duplicateCheckResponse = new DuplicateCheckResponse(false);
         when(memberService.checkDuplicate(target, value)).thenReturn(duplicateCheckResponse);
 
-        final MockHttpServletRequestBuilder 중복_요청 = get("/members/check")
+        final MockHttpServletRequestBuilder 중복_요청 = get("/profile/check-duplicate")
                 .header("X-API-VERSION", 2)
                 .queryParam("target", target)
                 .queryParam("value", value);

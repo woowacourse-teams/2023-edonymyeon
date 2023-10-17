@@ -52,7 +52,7 @@ public class MemberController {
     }
 
     @ApiVersion(value = {2})
-    @GetMapping("/members/check")
+    @GetMapping("/profile/check-duplicate")
     public ResponseEntity<DuplicateCheckResponse> validateDuplicate(@RequestParam String target,
                                                                     @RequestParam String value) {
         final DuplicateCheckResponse duplicateCheckResponse = memberService.checkDuplicate(target, value);
