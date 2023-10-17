@@ -83,7 +83,8 @@ class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, Profile
     }
 
     private fun setUpdateProfileButtonClickListener() {
-        binding.btnUpdate.setOnClickListener {
+        binding.btnUpdate.setOnClickListener { view ->
+            view.isEnabled = false
             loadingDialog.show(supportFragmentManager, "LoadingDialog")
             viewModel.updateProfile(this)
         }
