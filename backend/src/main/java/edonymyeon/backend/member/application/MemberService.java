@@ -95,17 +95,18 @@ public class MemberService {
     public DuplicateCheckResponse checkDuplicate(final String target, final String value) {
         final ValidateType validateType = ValidateType.from(target);
 
-        if (findMemberByValidateType(validateType, value).isEmpty()) {
+        if (!existsByValidateType(validateType, value)) {
             return new DuplicateCheckResponse(true);
         }
         return new DuplicateCheckResponse(false);
     }
 
-    private Optional<Member> findMemberByValidateType(final ValidateType validateType, final String value) {
+    private boolean existsByValidateType(final ValidateType validateType, final String value) {
         if (validateType.equals(ValidateType.EMAIL)) {
-            return memberRepository.findByEmail(value);
+            return memberRepository.existsByEmail(value);
         }
-        return memberRepository.findByNickname(value);
+
+        return memberRepository.existsByNickname(value);
     }
 
     @Transactional
