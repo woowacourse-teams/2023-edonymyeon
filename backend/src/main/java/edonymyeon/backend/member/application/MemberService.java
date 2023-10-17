@@ -123,15 +123,13 @@ public class MemberService {
         return Objects.isNull(image) || image.isEmpty();
     }
 
-    @Transactional
-    public MemberUpdateResponse updateWithoutProfileImage(final Member member,
+    private MemberUpdateResponse updateWithoutProfileImage(final Member member,
                                                           final MemberUpdateRequest updateRequest) {
         member.updateNickname(updateRequest.nickname());
         return new MemberUpdateResponse(member.getId());
     }
 
-    @Transactional
-    public MemberUpdateResponse updateWithProfileImage(final Member member, final MemberUpdateRequest updateRequest) {
+    private MemberUpdateResponse updateWithProfileImage(final Member member, final MemberUpdateRequest updateRequest) {
         final MultipartFile imageFile = updateRequest.profileImage();
         final ImageInfo imageInfo = imageFileUploader.from(imageFile);
         final ProfileImageInfo profileImageInfo = ProfileImageInfo.from(imageInfo);
