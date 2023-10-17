@@ -75,6 +75,7 @@
     <string name="my_page_update_user_info">회원 정보 수정</string>
     <string name="my_page_alarm_setting">푸시 알람 설정</string>
     <string name="my_page_logout">로그아웃</string>
+    <string name="my_page_inquiry">문의하기</string>
     <string name="my_page_withdraw">회원탈퇴</string>
     <string name="my_page_login">로그인</string>
     <string name="my_page_saving_title">절약금액:</string>
