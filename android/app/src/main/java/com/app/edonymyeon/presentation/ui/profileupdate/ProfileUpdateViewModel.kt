@@ -102,12 +102,10 @@ class ProfileUpdateViewModel @Inject constructor(
     }
 
     fun updateProfile(context: Context) {
-        val image: File? = if (_newProfileImage.value == null) {
-            null
-        } else if (isImageChanged) {
-            processAndAdjustImage(context, Uri.parse(_newProfileImage.value))
-        } else {
-            null
+        val image: File? = when {
+            _newProfileImage.value == null -> null
+            isImageChanged -> processAndAdjustImage(context, Uri.parse(_newProfileImage.value))
+            else -> null
         }
 
         viewModelScope.launch(exceptionHandler) {
