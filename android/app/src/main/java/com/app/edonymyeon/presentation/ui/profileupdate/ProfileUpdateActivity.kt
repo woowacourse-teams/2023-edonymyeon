@@ -93,7 +93,7 @@ class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, Profile
 
     private fun setUpdateSuccessObserver() {
         viewModel.isUploadSuccess.observe(this) {
-            if (it == true) {
+            if (it) {
                 finish()
             }
         }
