@@ -58,7 +58,7 @@ interface ProfileService {
         @Part image: MultipartBody.Part?,
     ): Response<Unit>
 
-    @GET("/members/check")
+    @GET("/profile/check-duplicate")
     suspend fun checkDuplicate(
         @Query("target") target: String,
         @Query("value") value: String,
