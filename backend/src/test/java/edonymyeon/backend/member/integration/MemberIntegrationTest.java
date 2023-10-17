@@ -7,13 +7,13 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
-import edonymyeon.backend.member.application.dto.response.MyPageResponse;
+import edonymyeon.backend.member.application.dto.response.MyPageResponseV1;
+import edonymyeon.backend.member.application.dto.response.MyPageResponseV2;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
-import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
@@ -23,10 +23,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class MemberIntegrationTest extends IntegrationFixture {
+class MemberIntegrationTest extends IntegrationFixture {
 
     @Test
-    void 회원_정보_조회시_OK를_응답한다() {
+    void 회원_정보_V1_조회시_OK를_응답한다() {
         final Member member = memberTestSupport.builder()
                 .build();
 
@@ -41,10 +41,34 @@ public class MemberIntegrationTest extends IntegrationFixture {
                 .then()
                 .extract();
 
-        final MyPageResponse myPageResponse = response.as(MyPageResponse.class);
+        final MyPageResponseV1 myPageResponseV1 = response.as(MyPageResponseV1.class);
         assertAll(
-                () -> assertThat(myPageResponse.memberId()).isEqualTo(member.getId()),
-                () -> assertThat(myPageResponse.nickname()).isEqualTo(member.getNickname()),
+                () -> assertThat(myPageResponseV1.id()).isEqualTo(member.getId()),
+                () -> assertThat(myPageResponseV1.nickname()).isEqualTo(member.getNickname()),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        );
+    }
+
+    @Test
+    void 회원_정보_V2_조회시_OK를_응답한다() {
+        final Member member = memberTestSupport.builder()
+                .build();
+
+        final String sessionId = 로그인(member);
+
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(2)
+                .sessionId(sessionId)
+                .build()
+                .when()
+                .get("/profile")
+                .then()
+                .extract();
+
+        final MyPageResponseV2 myPageResponseV2 = response.as(MyPageResponseV2.class);
+        assertAll(
+                () -> assertThat(myPageResponseV2.id()).isEqualTo(member.getId()),
+                () -> assertThat(myPageResponseV2.nickname()).isEqualTo(member.getNickname()),
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         );
     }

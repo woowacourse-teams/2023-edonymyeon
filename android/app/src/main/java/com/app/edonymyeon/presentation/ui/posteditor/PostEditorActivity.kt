@@ -7,6 +7,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -34,6 +37,8 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
     { ActivityPostEditorBinding.inflate(it) },
 ) {
     private var cameraUri: Uri? = null
+
+    private var price = ""
 
     override val viewModel: PostEditorViewModel by viewModels()
 
@@ -80,6 +85,26 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         intent.getParcelableExtraCompat(KEY_POST_EDITOR_POST) as? PostUiModel
     }
 
+    private val textWatcher by lazy {
+        object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
+                Unit
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (!TextUtils.isEmpty(s.toString()) && s.toString() != price) {
+                    viewModel.checkPriceValidate(
+                        s.toString().replace(",", ""),
+                        start,
+                        start + count,
+                        count,
+                    )
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) = Unit
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -90,6 +115,7 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         setObserver()
         setPostIfUpdate()
         setClickListener()
+        setPriceChangedListener()
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -140,7 +166,18 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         viewModel.isPostPriceValid.observe(this) { isValid ->
             if (!isValid) {
                 binding.root.makeSnackbar(this.getString(R.string.dialog_input_price_error_message))
-                binding.etPostPrice.setText("")
+                binding.etPostPrice.removeTextChangedListener(textWatcher)
+                binding.etPostPrice.setText(price)
+                binding.etPostPrice.setSelection(binding.etPostPrice.text.length)
+                binding.etPostPrice.addTextChangedListener(textWatcher)
+            } else {
+                price =
+                    getString(
+                        R.string.all_price,
+                        binding.etPostPrice.text.toString().replace(",", "").toInt(),
+                    )
+                binding.etPostPrice.setText(price)
+                binding.etPostPrice.setSelection(price.length)
             }
         }
         viewModel.isUpdateAble.observe(this) { isAble ->
@@ -207,7 +244,7 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         loadingDialog.show(supportFragmentManager, "LoadingDialog")
         val postTitle = binding.etPostTitle.text.toString()
         val postContent = binding.etPostContent.text.toString().ifBlank { "" }
-        val postPrice = binding.etPostPrice.text.toString().toInt()
+        val postPrice = binding.etPostPrice.text.toString().replace(",", "").toInt()
         val postEditor = PostEditor(postTitle, postContent, postPrice)
         when (originActivityKey) {
             POST_CODE -> viewModel.savePost(this, postEditor)
@@ -282,6 +319,10 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
     private fun navigateToDetail() {
         startActivity(PostDetailActivity.newIntent(this, viewModel.postId.value ?: -1))
         finish()
+    }
+
+    private fun setPriceChangedListener() {
+        binding.etPostPrice.addTextChangedListener(textWatcher)
     }
 
     override fun onDestroy() {

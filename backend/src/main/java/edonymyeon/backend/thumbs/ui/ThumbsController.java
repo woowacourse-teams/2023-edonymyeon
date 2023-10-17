@@ -17,7 +17,7 @@ public class ThumbsController {
 
     private final ThumbsService thumbsService;
 
-    @ApiVersion(value = {1})
+    @ApiVersion(value = {1, 2})
     @PutMapping("posts/{postId}/up")
     public ResponseEntity<Void> thumbsUp(@AuthPrincipal final MemberId memberId,
                                          @PathVariable final Long postId) {
@@ -26,7 +26,7 @@ public class ThumbsController {
                 .build();
     }
 
-    @ApiVersion(value = {1})
+    @ApiVersion(value = {1, 2})
     @PutMapping("posts/{postId}/down")
     public ResponseEntity<Void> thumbsDown(@AuthPrincipal final MemberId memberId,
                                            @PathVariable final Long postId) {
@@ -35,7 +35,7 @@ public class ThumbsController {
                 .build();
     }
 
-    @ApiVersion(value = {1})
+    @ApiVersion(value = {1, 2})
     @DeleteMapping("posts/{postId}/up")
     public ResponseEntity<Void> deleteThumbsUp(@AuthPrincipal final MemberId memberId,
                                                @PathVariable final Long postId) {
@@ -44,7 +44,7 @@ public class ThumbsController {
                 .build();
     }
 
-    @ApiVersion(value = {1})
+    @ApiVersion(value = {1, 2})
     @DeleteMapping("posts/{postId}/down")
     public ResponseEntity<Void> deleteThumbsDown(@AuthPrincipal final MemberId memberId,
                                                  @PathVariable final Long postId) {

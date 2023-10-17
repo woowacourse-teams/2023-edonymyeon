@@ -46,5 +46,15 @@ public class MockMultipartFileTestSupport {
                     contentStream == null ? file1InputStream : contentStream
             );
         }
+
+        public MockMultipartFile buildImageForProfile() throws IOException {
+            final InputStream file1InputStream = getClass().getResourceAsStream("/static/img/file/test_image_2.jpg");
+            return new MockMultipartFile(
+                    "profileImage",
+                    originalFilename == null ? "test_image_2.jpg" : originalFilename,
+                    contentType == null ? "image/jpg" : contentType,
+                    contentStream == null ? file1InputStream : contentStream
+            );
+        }
     }
 }

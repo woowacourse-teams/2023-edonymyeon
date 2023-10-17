@@ -22,7 +22,6 @@ import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import edonymyeon.backend.post.repository.PostSpecification;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -118,17 +117,10 @@ public class PostReadService {
     }
 
     private WriterDetailResponse getWriterResponse(final Member member) {
-        if (Objects.isNull(member.getProfileImageInfo())) {
-            return new WriterDetailResponse(
-                    member.getId(),
-                    member.getNickname(),
-                    null
-            );
-        }
         return new WriterDetailResponse(
                 member.getId(),
                 member.getNickname(),
-                domain.getDomain() + member.getProfileImageInfo().getStoreName()
+                domain.convertToImageUrl(member.getProfileImageInfo())
         );
     }
 

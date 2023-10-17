@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import app.edonymyeon.databinding.FragmentSearchBinding
@@ -19,7 +20,6 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>(
 ) {
     override val viewModel: SearchViewModel by viewModels()
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,7 +41,10 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>(
 
         binding.rvSearchResult.adapter = searchAdapter
         viewModel.searchResult.observe(viewLifecycleOwner) {
-            searchAdapter.setPosts(it)
+            binding.tvEmptyPost.isVisible = it.isEmpty()
+            if (it.isNotEmpty()) {
+                searchAdapter.setPosts(it)
+            }
         }
     }
 
@@ -62,6 +65,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>(
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                if (newText == "") binding.tvEmptyPost.isVisible = false
                 return true
             }
         })

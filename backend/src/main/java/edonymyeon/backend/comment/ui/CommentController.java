@@ -24,7 +24,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @ApiVersion(value = {1})
+    @ApiVersion(value = {1, 2})
     @PostMapping
     public ResponseEntity<Void> createComment(@AuthPrincipal MemberId memberId,
                                               @PathVariable Long postId,
@@ -34,7 +34,7 @@ public class CommentController {
                 .build();
     }
 
-    @ApiVersion(value = {1})
+    @ApiVersion(value = {1, 2})
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(@AuthPrincipal MemberId memberId,
                                               @PathVariable Long postId,
@@ -44,7 +44,7 @@ public class CommentController {
                 .build();
     }
 
-    @ApiVersion(value = {1})
+    @ApiVersion(value = {1, 2})
     @GetMapping
     public ResponseEntity<CommentsResponse> findCommentsByPostId(@AuthPrincipal(required = false) MemberId memberId,
                                                                  @PathVariable Long postId) {
