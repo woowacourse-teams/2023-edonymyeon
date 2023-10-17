@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bg_ffffff_radius_10dp"
-        android:paddingHorizontal="16dp">
+        android:paddingHorizontal="@dimen/home_host_post_padding">
 
         <Space
             android:id="@+id/space_title_top"
@@ -97,10 +97,8 @@
 
         <com.app.edonymyeon.presentation.common.customview.PostReactionView
             android:id="@+id/prv_hot_post_reaction"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintDimensionRatio="H,360:24"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/space_reaction_top" />
 

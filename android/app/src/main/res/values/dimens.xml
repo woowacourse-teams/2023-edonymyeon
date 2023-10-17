@@ -8,4 +8,12 @@
     <dimen name="home_hot_post_title_text_size">16sp</dimen>
     <dimen name="home_hot_post_content_text_size">12sp</dimen>
     <dimen name="home_hot_post_writer_createdAt_text_size">12sp</dimen>
+    <dimen name="home_host_post_image_width">0.2</dimen>
+    <dimen name="home_host_post_padding">16dp</dimen>
+    <dimen name="home_host_post_margin_horizontal">16dp</dimen>
+    <dimen name="home_all_post_title_margin">24dp</dimen>
+    <dimen name="home_all_post_title_text_size">20sp</dimen>
+    <dimen name="home_all_post_icon_margin">24dp</dimen>
+    <dimen name="home_all_post_icon_width">0.1</dimen>
+    <dimen name="home_all_post_icon_padding">8dp</dimen>
 </resources>
