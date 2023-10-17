@@ -1,7 +1,9 @@
 package edonymyeon.backend.image;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.*;
 import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_EXTENSION_INVALID;
 
+import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.domain.ImageInfo;
 import java.io.File;
@@ -9,7 +11,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -24,31 +25,23 @@ public class ImageFileUploader {
     @Value("${file.dir}")
     private String fileDirectory;
 
-    public ImageInfo uploadFile(final MultipartFile multipartFile) {
-        try {
-            final String originalFileName = multipartFile.getOriginalFilename();
-            validateExtension(originalFileName);
-            final String uploadedFileName = imageFileNameStrategy.createName(originalFileName);
-            final ImageInfo imageInfo = new ImageInfo(uploadedFileName);
-
-            String fullPath = getFullPath(uploadedFileName);
-            final Path path = Paths.get(fullPath);
-            multipartFile.transferTo(path);
-
-            return imageInfo;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public List<ImageInfo> uploadFiles(final List<MultipartFile> multipartFiles) {
         return multipartFiles.stream()
                 .map(this::uploadFile)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    public String getFullPath(String storeName) {
-        return fileDirectory + storeName;
+    public ImageInfo uploadFile(final MultipartFile multipartFile) {
+        final ImageInfo imageInfo = from(multipartFile);
+        uploadRealStorage(multipartFile, imageInfo);
+        return imageInfo;
+    }
+
+    public ImageInfo from(final MultipartFile multipartFile) {
+        final String originalFileName = multipartFile.getOriginalFilename();
+        validateExtension(originalFileName);
+        final String uploadedFileName = imageFileNameStrategy.createName(originalFileName);
+        return new ImageInfo(uploadedFileName);
     }
 
     private void validateExtension(final String originalFileName) {
@@ -57,6 +50,20 @@ public class ImageFileUploader {
             return;
         }
         throw new EdonymyeonException(IMAGE_EXTENSION_INVALID);
+    }
+
+    public void uploadRealStorage(final MultipartFile multipartFile, final ImageInfo imageInfo) {
+        try {
+            String fullPath = getFullPath(imageInfo.getStoreName());
+            final Path path = Paths.get(fullPath);
+            multipartFile.transferTo(path);
+        } catch (IOException e) {
+            throw new BusinessLogicException(IMAGE_UPLOAD_FAIL);
+        }
+    }
+
+    public String getFullPath(String storeName) {
+        return fileDirectory + storeName;
     }
 
     public void removeFile(final ImageInfo imageInfo) {

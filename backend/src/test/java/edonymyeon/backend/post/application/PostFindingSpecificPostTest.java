@@ -3,6 +3,7 @@ package edonymyeon.backend.post.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.TestConfig;
@@ -119,12 +120,14 @@ public class PostFindingSpecificPostTest {
     }
 
     private ProfileImageInfo saveProfileImageInfo() {
+        final ImageInfo imageInfo = new ImageInfo("test_image_1.jpg");
         return profileImageInfoRepository.save(
-                new ProfileImageInfo("test_image_1.jpg"));
+                ProfileImageInfo.from(imageInfo));
     }
 
     private ProfileImageInfo saveProfileImageInfo2() {
+        final ImageInfo imageInfo = new ImageInfo("test_image_2.jpg");
         return profileImageInfoRepository.save(
-                new ProfileImageInfo("test_image_2.jpg"));
+                ProfileImageInfo.from(imageInfo));
     }
 }
