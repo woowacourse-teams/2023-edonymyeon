@@ -1,6 +1,5 @@
 package com.app.edonymyeon.data.datasource.auth
 
-import android.util.Log
 import com.app.edonymyeon.data.dto.LoginDataModel
 import com.app.edonymyeon.data.dto.request.LogoutRequest
 import com.app.edonymyeon.data.dto.request.TokenRequest
@@ -30,7 +29,6 @@ class AuthRemoteDataSource : AuthDataSource.Remote {
     }
 
     override suspend fun logout(logoutRequest: LogoutRequest): Response<Unit> {
-        Log.d("testLog", logoutRequest.deviceToken)
         return authService.logout(logoutRequest)
     }
 
