@@ -1,5 +1,7 @@
 package com.app.edonymyeon.presentation.ui.main.mypage
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +24,7 @@ import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
@@ -55,6 +58,7 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
 
         setChart()
         setLogoutObserver()
+        setInquiryListener()
     }
 
     override fun onResume() {
@@ -78,6 +82,13 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
                 (activity as MainActivity).refreshActivity()
                 viewModel.clearToken()
             }
+        }
+    }
+
+    private fun setInquiryListener() {
+        binding.tvInquiry.setOnClickListener {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(INQUIRY_URL))
+            startActivity(browserIntent)
         }
     }
 
@@ -192,5 +203,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
 
     companion object {
         private const val PERIOD_MONTH = 6
+        private const val INQUIRY_URL = "https://forms.gle/c1yTvxrFnhwhJd7k9"
     }
 }
