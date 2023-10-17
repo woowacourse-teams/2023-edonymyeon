@@ -80,23 +80,23 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
                 .isPresent();
     }
 
-    @Transactional
     @Test
-    void 닉네임만_변경되는_경우() {
+    void 닉네임만_변경되는_경우(@Autowired MemberRepository memberRepository) {
         final Member member = memberTestSupport.builder()
                 .nickname("originalNickname")
                 .build();
         final var newNickname = "newNickname";
         final MemberUpdateRequest updateRequest = new MemberUpdateRequest(newNickname, null, false);
 
-        memberService.updateMember(new ActiveMemberId(member.getId()), updateRequest);
+        final MemberUpdateResponse response = memberService.updateMember(new ActiveMemberId(member.getId()),
+                updateRequest);
+        final Member updatedMember = memberRepository.findById(response.id()).orElseThrow();
 
-        assertThat(member.getNickname()).isEqualTo(newNickname);
+        assertThat(updatedMember.getNickname()).isEqualTo(newNickname);
     }
 
-    @Transactional
     @Test
-    void 프로필_이미지가_새로_등록되는_경우() throws IOException {
+    void 프로필_이미지가_새로_등록되는_경우(@Autowired MemberRepository memberRepository) throws IOException {
         final Member member = memberTestSupport.builder()
                 .build();
         final ProfileImageInfo originalProfileImage = member.getProfileImageInfo();
@@ -104,13 +104,15 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
         final MockMultipartFile newImageFile = mockMultipartFileTestSupport.builder().buildImageForProfile();
         final MemberUpdateRequest updateRequest = new MemberUpdateRequest(member.getNickname(), newImageFile, true);
 
-        memberService.updateMember(new ActiveMemberId(member.getId()), updateRequest);
+        final MemberUpdateResponse response = memberService.updateMember(new ActiveMemberId(member.getId()),
+                updateRequest);
+        final Member updatedMember = memberRepository.findById(response.id()).orElseThrow();
 
         assertSoftly(
                 soft -> {
-                    soft.assertThat(member.getNickname()).isEqualTo(updateRequest.nickname());
+                    soft.assertThat(updatedMember.getNickname()).isEqualTo(updateRequest.nickname());
                     soft.assertThat(originalProfileImage).isNull();
-                    soft.assertThat(member.getProfileImageInfo()).isNotNull();
+                    soft.assertThat(updatedMember.getProfileImageInfo()).isNotNull();
                 }
         );
     }
