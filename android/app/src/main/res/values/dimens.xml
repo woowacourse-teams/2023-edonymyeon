@@ -5,7 +5,4 @@
     <!-- home -->
     <dimen name="home_app_title_text_size">32sp</dimen>
     <dimen name="home_hot_title_text_size">22sp</dimen>
-    <dimen name="home_hot_post_title_text_size">16sp</dimen>
-    <dimen name="home_hot_post_content_text_size">12sp</dimen>
-    <dimen name="home_hot_post_writer_createdAt_text_size">12sp</dimen>
 </resources>
