@@ -83,9 +83,9 @@ class SignUpViewModel @Inject constructor(
 
     private fun checkSignUpAble() {
         _isSignUpAble.value = isEmailValid.value ?: false &&
-            isNicknameValid.value ?: false &&
-            isPasswordValid.value ?: false &&
-            isPasswordCheckValid.value ?: false
+                isNicknameValid.value ?: false &&
+                isPasswordValid.value ?: false &&
+                isPasswordCheckValid.value ?: false
     }
 
     fun verifyEmail(email: String) {

@@ -5,7 +5,7 @@ import android.view.View
 
 class OnSingleClickListener(
     private var interval: Int = 600,
-    private var onSingleClick: (View) -> Unit
+    private var onSingleClick: (View) -> Unit,
 ) : View.OnClickListener {
 
     private var lastClickTime: Long = 0
