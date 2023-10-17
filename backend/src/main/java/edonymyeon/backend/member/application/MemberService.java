@@ -126,7 +126,7 @@ public class MemberService {
     @Transactional
     public MemberUpdateResponse updateWithoutProfileImage(final Member member,
                                                           final MemberUpdateRequest updateRequest) {
-        member.updateMember(updateRequest.nickname(), member.getProfileImageInfo());
+        member.updateNickname(updateRequest.nickname());
         return new MemberUpdateResponse(member.getId());
     }
 
@@ -136,7 +136,8 @@ public class MemberService {
         final ImageInfo imageInfo = imageFileUploader.from(imageFile);
         final ProfileImageInfo profileImageInfo = ProfileImageInfo.from(imageInfo);
         profileImageInfoRepository.save(profileImageInfo);
-        member.updateMember(updateRequest.nickname(), profileImageInfo);
+        member.updateProfileImageInfo(profileImageInfo);
+        member.updateNickname(updateRequest.nickname());
 
         publisher.publishEvent(new ProfileImageUploadEvent(imageFile, profileImageInfo));
         return new MemberUpdateResponse(member.getId());

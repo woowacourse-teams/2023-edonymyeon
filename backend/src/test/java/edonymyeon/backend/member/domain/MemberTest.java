@@ -112,7 +112,7 @@ class MemberTest {
         List<String> emptyList = Collections.emptyList();
         final Member member = new Member("test@email.com", "password1234!", "nickname", null, emptyList);
 
-        assertThatThrownBy(() -> member.updateMember("", null))
+        assertThatThrownBy(() -> member.updateNickname(""))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(MEMBER_NICKNAME_INVALID.getMessage());
     }

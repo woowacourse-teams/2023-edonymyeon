@@ -190,13 +190,16 @@ public class Member extends TemporalRecord {
         throw new BusinessLogicException(ENCODED_PASSWORD_INVALID);
     }
 
-    public void updateMember(final String nickname, final ProfileImageInfo profileImageInfo) {
-        validateNickName(nickname);
-        this.nickname = nickname;
-        this.profileImageInfo = profileImageInfo;
-    }
-
     public void deleteProfileImage() {
         this.profileImageInfo = null;
+    }
+
+    public void updateNickname(final String nickname) {
+        validateNickName(nickname);
+        this.nickname = nickname;
+    }
+
+    public void updateProfileImageInfo(final ProfileImageInfo profileImageInfo) {
+        this.profileImageInfo = profileImageInfo;
     }
 }
