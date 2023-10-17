@@ -4,6 +4,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_DOM
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import java.util.List;
+import javax.annotation.Nullable;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,7 @@ public class Domain {
         }
     }
 
+    @Nullable
     public String convertToImageUrl(final ImageInfo imageInfo) {
         if(imageInfo == null){
             return null;
