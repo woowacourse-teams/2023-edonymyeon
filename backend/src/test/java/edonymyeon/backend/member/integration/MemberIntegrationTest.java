@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
+import edonymyeon.backend.member.application.dto.response.MyPageResponseV1;
 import edonymyeon.backend.member.application.dto.response.MyPageResponseV2;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
@@ -25,7 +26,7 @@ import org.springframework.http.HttpStatus;
 class MemberIntegrationTest extends IntegrationFixture {
 
     @Test
-    void 회원_정보_조회시_OK를_응답한다() {
+    void 회원_정보_V1_조회시_OK를_응답한다() {
         final Member member = memberTestSupport.builder()
                 .build();
 
@@ -33,6 +34,30 @@ class MemberIntegrationTest extends IntegrationFixture {
 
         final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
                 .version(1)
+                .sessionId(sessionId)
+                .build()
+                .when()
+                .get("/profile")
+                .then()
+                .extract();
+
+        final MyPageResponseV1 myPageResponseV1 = response.as(MyPageResponseV1.class);
+        assertAll(
+                () -> assertThat(myPageResponseV1.id()).isEqualTo(member.getId()),
+                () -> assertThat(myPageResponseV1.nickname()).isEqualTo(member.getNickname()),
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
+        );
+    }
+
+    @Test
+    void 회원_정보_V2_조회시_OK를_응답한다() {
+        final Member member = memberTestSupport.builder()
+                .build();
+
+        final String sessionId = 로그인(member);
+
+        final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
+                .version(2)
                 .sessionId(sessionId)
                 .build()
                 .when()
