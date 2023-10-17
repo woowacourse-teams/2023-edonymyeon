@@ -15,6 +15,7 @@ import com.app.edonymyeon.presentation.common.activity.BaseActivity
 import com.app.edonymyeon.presentation.common.dialog.LoadingDialog
 import com.app.edonymyeon.presentation.uimodel.WriterUiModel
 import com.app.edonymyeon.presentation.util.getParcelableExtraCompat
+import com.app.edonymyeon.presentation.util.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -74,10 +75,10 @@ class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, Profile
     }
 
     private fun setImageButtonsClickListener() {
-        binding.btnImageUpload.setOnClickListener {
+        binding.btnImageUpload.setOnSingleClickListener {
             navigateToGallery()
         }
-        binding.btnImageDelete.setOnClickListener {
+        binding.btnImageDelete.setOnSingleClickListener {
             viewModel.deleteProfileImage()
         }
     }
