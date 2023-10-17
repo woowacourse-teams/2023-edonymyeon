@@ -17,11 +17,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AlarmFragment : BaseFragment<FragmentAlarmBinding, AlarmViewModel>(
-    {
-        FragmentAlarmBinding.inflate(it)
-    },
+    { FragmentAlarmBinding.inflate(it) },
 ) {
-
     override val viewModel: AlarmViewModel by viewModels()
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
 

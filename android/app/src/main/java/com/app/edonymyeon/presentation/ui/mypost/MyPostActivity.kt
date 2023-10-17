@@ -16,11 +16,9 @@ import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MyPostActivity :
-    BaseActivity<ActivityMyPostBinding, MyPostViewModel>({
-        ActivityMyPostBinding.inflate(it)
-    }),
-    MyPostClickListener {
+class MyPostActivity : BaseActivity<ActivityMyPostBinding, MyPostViewModel>(
+    { ActivityMyPostBinding.inflate(it) }
+), MyPostClickListener {
     private val notificationId by lazy {
         intent.getLongExtra(KEY_NOTIFICATION_ID, -1)
     }
@@ -32,8 +30,8 @@ class MyPostActivity :
     private lateinit var dialog: ConsumptionDialog
 
     override val viewModel: MyPostViewModel by viewModels()
-
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(this) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)

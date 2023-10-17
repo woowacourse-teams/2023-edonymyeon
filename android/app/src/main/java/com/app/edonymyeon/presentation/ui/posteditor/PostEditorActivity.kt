@@ -33,7 +33,6 @@ import java.io.File
 class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorViewModel>(
     { ActivityPostEditorBinding.inflate(it) },
 ) {
-
     private var cameraUri: Uri? = null
 
     override val viewModel: PostEditorViewModel by viewModels()

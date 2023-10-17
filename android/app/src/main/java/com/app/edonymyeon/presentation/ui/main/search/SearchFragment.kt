@@ -14,9 +14,9 @@ import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>({
-    FragmentSearchBinding.inflate(it)
-}) {
+class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>(
+    { FragmentSearchBinding.inflate(it) }
+) {
     override val viewModel: SearchViewModel by viewModels()
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
 
