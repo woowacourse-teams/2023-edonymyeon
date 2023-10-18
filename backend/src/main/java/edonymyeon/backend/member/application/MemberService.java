@@ -6,7 +6,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NI
 import edonymyeon.backend.auth.domain.ValidateType;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.application.ImageService;
-import edonymyeon.backend.image.application.ImageType;
+import edonymyeon.backend.image.domain.ImageType;
 import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.image.profileimage.repository.ProfileImageInfoRepository;

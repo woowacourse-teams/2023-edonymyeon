@@ -9,7 +9,7 @@ import edonymyeon.backend.comment.repository.CommentRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.application.ImageService;
-import edonymyeon.backend.image.application.ImageType;
+import edonymyeon.backend.image.domain.ImageType;
 import edonymyeon.backend.image.commentimage.domain.CommentImageInfo;
 import edonymyeon.backend.image.commentimage.repository.CommentImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberId;

@@ -1,12 +1,9 @@
 package edonymyeon.backend.image.application;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_EXTENSION_INVALID;
-
-import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.image.ImageExtension;
-import edonymyeon.backend.image.ImageFileNameStrategy;
-import edonymyeon.backend.image.domain.UrlManager;
 import edonymyeon.backend.image.domain.ImageInfo;
+import edonymyeon.backend.image.domain.ImageInfoFactory;
+import edonymyeon.backend.image.domain.ImageType;
+import edonymyeon.backend.image.domain.UrlManager;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +16,7 @@ public class ImageService {
 
     private final ImageClient imageClient;
 
-    private final ImageFileNameStrategy imageFileNameStrategy;
+    private final ImageInfoFactory imageInfoFactory;
 
     private final UrlManager urlManager;
 
@@ -27,20 +24,9 @@ public class ImageService {
     private String rootDirectory;
 
     public ImageInfo save(final MultipartFile image, final ImageType imageType) {
-        final String originalFileName = image.getOriginalFilename();
-        validateExtension(originalFileName);
-        final String storeName = imageFileNameStrategy.createName(originalFileName);
-        final ImageInfo imageInfo = new ImageInfo(storeName);
-        uploadRealStorage(image, imageType, storeName);
+        final ImageInfo imageInfo = imageInfoFactory.create(image);
+        uploadRealStorage(image, imageType, imageInfo.getStoreName());
         return imageInfo;
-    }
-
-    private void validateExtension(final String originalFileName) {
-        final String ext = ImageExtension.extractExt(originalFileName);
-        if (ImageExtension.contains(ext)) {
-            return;
-        }
-        throw new EdonymyeonException(IMAGE_EXTENSION_INVALID);
     }
 
     private void uploadRealStorage(final MultipartFile image, final ImageType imageType, final String storeName) {
@@ -58,7 +44,7 @@ public class ImageService {
     }
 
     public void removeImage(final ImageInfo imageInfo, final ImageType imageType) {
-        if(!imageClient.supportsDeletion()){
+        if (!imageClient.supportsDeletion()) {
             return;
         }
         imageClient.delete(findResourcePath(imageInfo.getStoreName(), imageType));

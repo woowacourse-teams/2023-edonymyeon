@@ -1,4 +1,4 @@
-package edonymyeon.backend.image.application;
+package edonymyeon.backend.image.domain;
 
 public enum ImageType {
 

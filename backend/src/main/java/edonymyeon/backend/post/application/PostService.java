@@ -6,7 +6,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMB
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.application.ImageService;
-import edonymyeon.backend.image.application.ImageType;
+import edonymyeon.backend.image.domain.ImageType;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberId;
@@ -18,7 +18,6 @@ import edonymyeon.backend.post.application.dto.response.PostIdResponse;
 import edonymyeon.backend.post.application.event.PostDeletionEvent;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;

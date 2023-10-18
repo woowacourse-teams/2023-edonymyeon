@@ -1,7 +1,7 @@
 package edonymyeon.backend.post.application;
 
 import edonymyeon.backend.image.application.ImageService;
-import edonymyeon.backend.image.application.ImageType;
+import edonymyeon.backend.image.domain.ImageType;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.application.dto.response.PostConsumptionResponse;

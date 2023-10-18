@@ -1,10 +1,8 @@
 package edonymyeon.backend.image.domain;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_DOMAIN_INVALID;
-import static java.util.Objects.isNull;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.image.application.ImageType;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nullable;

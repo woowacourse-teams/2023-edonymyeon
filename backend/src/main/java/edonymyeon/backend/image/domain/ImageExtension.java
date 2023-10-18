@@ -1,4 +1,4 @@
-package edonymyeon.backend.image;
+package edonymyeon.backend.image.domain;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_EXTENSION_INVALID;
 

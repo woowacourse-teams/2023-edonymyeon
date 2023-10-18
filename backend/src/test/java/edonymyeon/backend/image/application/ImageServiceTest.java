@@ -3,6 +3,7 @@ package edonymyeon.backend.image.application;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import edonymyeon.backend.image.domain.ImageInfo;
+import edonymyeon.backend.image.domain.ImageType;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.support.MockMultipartFileTestSupport;

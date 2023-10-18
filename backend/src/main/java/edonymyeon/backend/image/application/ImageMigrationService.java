@@ -6,6 +6,7 @@ import static java.util.Objects.isNull;
 import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.image.commentimage.domain.CommentImageInfo;
 import edonymyeon.backend.image.commentimage.repository.CommentImageInfoRepository;
+import edonymyeon.backend.image.domain.ImageType;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import java.io.File;

@@ -1,6 +1,6 @@
 package edonymyeon.backend.image.ui;
 
-import edonymyeon.backend.image.ImageExtension;
+import edonymyeon.backend.image.domain.ImageExtension;
 import edonymyeon.backend.image.application.ImageMigrationService;
 import edonymyeon.backend.image.application.ImageService;
 import java.net.MalformedURLException;
