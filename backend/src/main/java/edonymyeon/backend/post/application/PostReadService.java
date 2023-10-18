@@ -54,7 +54,7 @@ public class PostReadService {
             final GeneralFindingCondition generalFindingCondition) {
         PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
         Slice<Post> posts = postRepository.findAllBy(pageRequest);
-        return PostSlice.from(GeneralPostsInfoResponse.toSlice(posts,  imageService.findBaseUrl(ImageType.POST)));
+        return PostSlice.from(GeneralPostsInfoResponse.toSlice(posts, imageService.findBaseUrl(ImageType.POST)));
     }
 
     private static PageRequest convertConditionToPageRequest(final GeneralFindingCondition generalFindingCondition) {
