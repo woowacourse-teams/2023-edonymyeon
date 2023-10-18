@@ -41,12 +41,9 @@ import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class PostDetailActivity :
-    BaseActivity<ActivityPostDetailBinding, PostDetailViewModel>({
-        ActivityPostDetailBinding.inflate(it)
-    }),
-    CommentClickListener {
-
+class PostDetailActivity : BaseActivity<ActivityPostDetailBinding, PostDetailViewModel>(
+    { ActivityPostDetailBinding.inflate(it) }
+), CommentClickListener {
     private val id: Long by lazy {
         intent.getLongExtra(KEY_POST_ID, -1)
     }
@@ -56,7 +53,6 @@ class PostDetailActivity :
     }
 
     override val viewModel: PostDetailViewModel by viewModels()
-
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(this) }
 
     private val pickGalleryImage =
@@ -222,7 +218,6 @@ class PostDetailActivity :
             binding.prvPostReaction.reactionCount = it
         }
 
-        // 추천/비추천 체크박스 클릭 시 활성화/비활성화
         viewModel.isRecommendationRequestDone.observe(this) {
             binding.cbUp.isEnabled = it
             binding.cbDown.isEnabled = it
@@ -415,6 +410,7 @@ class PostDetailActivity :
     companion object {
         private const val KEY_POST_ID = "key_post_id"
         private const val KEY_NOTIFICATION_ID = "key_notification_id"
+
         fun newIntent(context: Context, postId: Long): Intent {
             return Intent(context, PostDetailActivity::class.java).putExtra(KEY_POST_ID, postId)
         }
