@@ -72,7 +72,7 @@ class ConsumptionControllerDocsTest extends DocsTest {
 
         final MockHttpServletRequestBuilder 최근_소비_조회_요청 = get("/consumptions?period-month={periodMonth}", 1)
                 .sessionAttr(USER.getSessionId(), 회원.getId())
-                .header("X-API-VERSION", 1, 2);
+                .header("X-API-VERSION", "1.0.0", "1.1.0");
 
         final RestDocumentationResultHandler 문서화 = document("recent-consumptions",
                 preprocessResponse(prettyPrint()),

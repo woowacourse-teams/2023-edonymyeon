@@ -63,7 +63,7 @@ class SettingControllerDocsTest extends DocsTest {
 
         final MockHttpServletRequestBuilder 설정_조회_요청 = get("/preference/notification")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("X-API-VERSION", 1, 2)
+                .header("X-API-VERSION", "1.0.0", "1.1.0")
                 .sessionAttr(USER.getSessionId(), 회원.getId());
 
         final RestDocumentationResultHandler 문서화 = document("notification-findAll",
@@ -98,7 +98,7 @@ class SettingControllerDocsTest extends DocsTest {
 
         final MockHttpServletRequestBuilder 설정_조회_요청 = post("/preference/notification")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("X-API-VERSION", 1, 2)
+                .header("X-API-VERSION", "1.0.0", "1.1.0")
                 .sessionAttr(USER.getSessionId(), 회원.getId())
                 .content(objectMapper.writeValueAsString(
                         new SettingRequest(SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber())));

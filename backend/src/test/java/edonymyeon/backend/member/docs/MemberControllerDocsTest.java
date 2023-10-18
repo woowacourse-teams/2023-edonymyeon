@@ -30,8 +30,8 @@ import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.application.dto.response.DuplicateCheckResponse;
-import edonymyeon.backend.member.application.dto.response.MyPageResponseV1;
-import edonymyeon.backend.member.application.dto.response.MyPageResponseV2;
+import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_0;
+import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_1;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
@@ -111,7 +111,7 @@ class MemberControllerDocsTest extends DocsTest {
 
         final MockHttpServletRequestBuilder 구매_확정_요청 = post("/profile/my-posts/{postId}/purchase-confirm", 게시글.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("X-API-VERSION", 1, 2)
+                .header("X-API-VERSION", "1.0.0", "1.1.0")
                 .sessionAttr(USER.getSessionId(), 회원.getId())
                 .content(objectMapper.writeValueAsString(request));
 
@@ -146,7 +146,7 @@ class MemberControllerDocsTest extends DocsTest {
 
         final MockHttpServletRequestBuilder 절약_확정_요청 = post("/profile/my-posts/{postId}/saving-confirm", 게시글.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("X-API-VERSION", 1, 2)
+                .header("X-API-VERSION", "1.0.0", "1.1.0")
                 .sessionAttr(USER.getSessionId(), 회원.getId())
                 .content(objectMapper.writeValueAsString(request));
 
@@ -178,7 +178,7 @@ class MemberControllerDocsTest extends DocsTest {
 
         final MockHttpServletRequestBuilder 확정_취소_요청 = delete("/profile/my-posts/{postId}/confirm-remove", 게시글.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("X-API-VERSION", 1, 2)
+                .header("X-API-VERSION", "1.0.0", "1.1.0")
                 .sessionAttr(USER.getSessionId(), 회원.getId());
 
         final RestDocumentationResultHandler 문서화 = document("confirm-remove",
@@ -199,7 +199,7 @@ class MemberControllerDocsTest extends DocsTest {
         when(memberRepository.findById(회원.getId())).thenReturn(Optional.of(회원));
 
         final MockHttpServletRequestBuilder 회원_탈퇴_요청 = delete("/withdraw")
-                .header("X-API-VERSION", 1, 2)
+                .header("X-API-VERSION", "1.0.0", "1.1.0")
                 .sessionAttr(USER.getSessionId(), 회원.getId());
 
         final RestDocumentationResultHandler 문서화 = document("withdraw");
@@ -212,15 +212,15 @@ class MemberControllerDocsTest extends DocsTest {
     @Test
     void 회원정보를_조회한다_V1(@Autowired Domain domain) throws Exception {
         final Member 회원 = testMemberBuilder.builder().id(1L).buildWithoutSaving();
-        var response = new MyPageResponseV1(회원.getId(), 회원.getNickname());
-        when(memberService.findMemberInfoByIdV1(회원.getId())).thenReturn(response);
+        var response = new MyPageResponseV1_0(회원.getId(), 회원.getNickname());
+        when(memberService.findMemberInfoByIdV1_0(회원.getId())).thenReturn(response);
 
         final MockHttpServletRequestBuilder 회원_정보_조회_요청 = get("/profile")
                 .header("X-API-VERSION", 1)
                 .sessionAttr(USER.getSessionId(), 회원.getId());
 
         final RestDocumentationResultHandler 문서화 = document("profile-v1",
-                responseFields(fieldWithPath("id").description("회원 id"),
+                responseFields(fieldWithPath("memberId").description("회원 id"),
                         fieldWithPath("nickname").description("닉네임")));
 
         this.mockMvc.perform(회원_정보_조회_요청)
@@ -229,17 +229,17 @@ class MemberControllerDocsTest extends DocsTest {
     }
 
     @Test
-    void 회원정보를_조회한다_V2(@Autowired Domain domain) throws Exception {
+    void 회원정보를_조회한다_V1_1(@Autowired Domain domain) throws Exception {
         final Member 회원 = testMemberBuilder.builder().id(1L).buildWithoutSaving();
-        var response = new MyPageResponseV2(회원.getId(), 회원.getNickname(),
+        var response = new MyPageResponseV1_1(회원.getId(), 회원.getNickname(),
                 domain.convertToImageUrl(회원.getProfileImageInfo()));
-        when(memberService.findMemberInfoByIdV2(회원.getId())).thenReturn(response);
+        when(memberService.findMemberInfoByIdV1_1(회원.getId())).thenReturn(response);
 
         final MockHttpServletRequestBuilder 회원_정보_조회_요청 = get("/profile")
                 .header("X-API-VERSION", 2)
                 .sessionAttr(USER.getSessionId(), 회원.getId());
 
-        final RestDocumentationResultHandler 문서화 = document("profile-v2",
+        final RestDocumentationResultHandler 문서화 = document("profile-V1_1",
                 responseFields(fieldWithPath("id").description("회원 id"),
                         fieldWithPath("nickname").description("닉네임"),
                         fieldWithPath("profileImage").description("프로필 사진")));
