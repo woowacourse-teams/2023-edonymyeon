@@ -2,6 +2,7 @@ package edonymyeon.backend.notification.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.*;
 import static org.mockito.Mockito.when;
 
 import edonymyeon.backend.consumption.application.ConsumptionService;
@@ -22,6 +23,7 @@ import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.application.ThumbsService;
 import jakarta.persistence.EntityManager;
 import java.util.Optional;
+import org.assertj.core.api.SoftAssertions;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,9 +65,7 @@ class NotificationService_NotificationMessageTest extends IntegrationFixture {
     ) {
         // given
         final Member member = 회원만들기();
-
         final Post post = 게시글만들기(member);
-
         주요기능모킹하기(member, post);
 
         // when
@@ -113,6 +113,40 @@ class NotificationService_NotificationMessageTest extends IntegrationFixture {
         assertThatThrownBy(() -> notificationService.sendThumbsNotificationToWriter(post))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(ExceptionInformation.NOTIFICATION_MESSAGE_NOT_FOUND.getMessage());
+    }
+
+    @Test
+    void 특정_알림에서_사용할_제목_또는_내용을_수정할_수_있다(
+            @Autowired NotificationRepository notificationRepository
+    ) {
+        // given
+        final Member member = 회원만들기();
+        final Post post = 게시글만들기(member);
+        주요기능모킹하기(member, post);
+
+        notificationService.sendThumbsNotificationToWriter(post);
+        final Notification savedNotification = notificationRepository
+                .findAll()
+                .get(0);
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(savedNotification.getTitle()).isEqualTo("당신의 글에 따봉이 달려있어요! 짱");
+            softAssertions.assertThat(savedNotification.getBody()).isEqualTo("따봉맨을 확인해 보세요.");
+        });
+
+        // when
+        final NotificationContent notificationContent
+                = new NotificationContent(NotificationMessage.THUMBS_NOTIFICATION_TITLE, "변경한 알림 제목", "변경한 알림 내용");
+        notificationService.updateContent(notificationContent);
+
+        // then
+        notificationService.sendThumbsNotificationToWriter(post); // 따봉을 취소했다가 다시 한 상황
+        final Notification updatedNotification = notificationRepository
+                .findAll()
+                .get(1);
+        assertSoftly(softAssertions -> {
+            softAssertions.assertThat(updatedNotification.getTitle()).isEqualTo("변경한 알림 제목");
+            softAssertions.assertThat(updatedNotification.getBody()).isEqualTo("변경한 알림 내용");
+        });
     }
 
     private void 주요기능모킹하기(final Member member, final Post post) {

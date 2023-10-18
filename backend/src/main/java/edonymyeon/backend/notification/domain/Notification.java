@@ -13,12 +13,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-@Getter
 @Entity
 public class Notification extends TemporalRecord {
 
@@ -30,7 +27,7 @@ public class Notification extends TemporalRecord {
     @JoinColumn(nullable = false)
     private Member member;
 
-    @OneToOne
+    @ManyToOne
     private NotificationContent notificationContent;
 
     @Enumerated(EnumType.STRING)
@@ -53,11 +50,31 @@ public class Notification extends TemporalRecord {
         this.read = true;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getTitle() {
         return this.notificationContent.getTitle();
     }
 
     public String getBody() {
         return this.notificationContent.getBody();
+    }
+
+    public ScreenType getScreenType() {
+        return screenType;
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public Long getPostId() {
+        return postId;
+    }
+
+    public Member getMember() {
+        return member;
     }
 }

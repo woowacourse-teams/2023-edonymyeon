@@ -1,5 +1,7 @@
 package edonymyeon.backend.notification.domain.notification_content.domain;
 
+import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.notification.domain.NotificationMessage;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,6 +30,10 @@ public class NotificationContent {
         this.body = body;
     }
 
+    public NotificationMessage getId() {
+        return id;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -52,5 +58,19 @@ public class NotificationContent {
     @Override
     public int hashCode() {
         return Objects.hash(id, title, body);
+    }
+
+    public void update(final NotificationContent content) {
+        if (Objects.isNull(content.title) && Objects.isNull(content.body)) {
+            throw new EdonymyeonException(ExceptionInformation.NOTIFICATION_MESSAGE_INVALID_CONTENT);
+        }
+
+        if (Objects.nonNull(content.title)) {
+            this.title = content.title;
+        }
+
+        if (Objects.nonNull(content.body)) {
+            this.body = content.body;
+        }
     }
 }
