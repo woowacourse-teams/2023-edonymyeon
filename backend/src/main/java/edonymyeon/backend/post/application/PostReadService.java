@@ -1,5 +1,8 @@
 package edonymyeon.backend.post.application;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
+import static org.springframework.data.domain.Sort.Direction;
+
 import edonymyeon.backend.cache.application.PostCachingService;
 import edonymyeon.backend.cache.application.dto.CachedPostResponse;
 import edonymyeon.backend.global.exception.EdonymyeonException;
@@ -111,17 +114,10 @@ public class PostReadService {
     }
 
     private WriterDetailResponse getWriterResponse(final Member member) {
-        if (Objects.isNull(member.getProfileImageInfo())) {
-            return new WriterDetailResponse(
-                    member.getId(),
-                    member.getNickname(),
-                    null
-            );
-        }
         return new WriterDetailResponse(
                 member.getId(),
                 member.getNickname(),
-                domain.getDomain() + member.getProfileImageInfo().getStoreName()
+                domain.convertToImageUrl(member.getProfileImageInfo())
         );
     }
 

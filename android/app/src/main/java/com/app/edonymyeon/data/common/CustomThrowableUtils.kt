@@ -3,7 +3,7 @@ package com.app.edonymyeon.data.common
 import org.json.JSONObject
 import retrofit2.Response
 
-fun <T : Any> createCustomThrowableFromResponse(result: Response<T>): CustomThrowable {
+fun <T> createCustomThrowableFromResponse(result: Response<T>): CustomThrowable {
     val errorResponse = result.errorBody()?.string()
     val json = errorResponse?.let { JSONObject(it) }
     val errorMessage = json?.getString("errorMessage") ?: ""

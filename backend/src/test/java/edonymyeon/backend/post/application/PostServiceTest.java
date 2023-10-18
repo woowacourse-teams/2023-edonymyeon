@@ -31,7 +31,6 @@ import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.MockMultipartFileTestSupport;
 import edonymyeon.backend.support.TestMemberBuilder;
 import jakarta.persistence.EntityManager;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;

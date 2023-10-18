@@ -36,7 +36,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @IntegrationTest
-public class PostCreationDocsTest implements ImageFileCleaner {
+class PostCreationDocsTest implements ImageFileCleaner {
 
     private final MockMvc mockMvc;
 
@@ -59,7 +59,7 @@ public class PostCreationDocsTest implements ImageFileCleaner {
                 .file(이미지)
                 .file(이미지)
                 .file(이미지)
-                .header("X-API-VERSION", 1)
+                .header("X-API-VERSION", 1, 2)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .sessionAttr(USER.getSessionId(), 글쓴이.getId());
 

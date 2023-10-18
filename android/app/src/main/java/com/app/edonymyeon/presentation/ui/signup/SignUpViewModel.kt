@@ -15,7 +15,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SignUpViewModel @Inject constructor(private val authRepository: AuthRepository) : BaseViewModel() {
+class SignUpViewModel @Inject constructor(
+    authRepository: AuthRepository,
+) : BaseViewModel(authRepository) {
     private val _isEmailValid = MutableLiveData<Boolean>()
     val isEmailValid: LiveData<Boolean> get() = _isEmailValid
 
@@ -48,6 +50,7 @@ class SignUpViewModel @Inject constructor(private val authRepository: AuthReposi
                     _isSignUpSuccess.value = true
                 }.onFailure {
                     _isSignUpSuccess.value = false
+                    throw it
                 }
             }
         }
@@ -91,6 +94,7 @@ class SignUpViewModel @Inject constructor(private val authRepository: AuthReposi
                 _isEmailValid.value = it && Email.validate(email)
             }.onFailure {
                 _isEmailValid.value = false
+                throw it
             }
         }
     }
@@ -101,6 +105,7 @@ class SignUpViewModel @Inject constructor(private val authRepository: AuthReposi
                 _isNicknameValid.value = it && Nickname.validate(nickname)
             }.onFailure {
                 _isNicknameValid.value = false
+                throw it
             }
         }
     }
