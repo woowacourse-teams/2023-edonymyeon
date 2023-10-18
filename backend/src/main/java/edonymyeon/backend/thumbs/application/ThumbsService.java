@@ -1,14 +1,7 @@
 package edonymyeon.backend.thumbs.application;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_DOWN_DELETE_FAIL_WHEN_THUMBS_UP;
-import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_DOWN_IS_NOT_EXIST;
-import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_IS_SELF_UP_DOWN;
-import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP_DELETE_FAIL_WHEN_THUMBS_DOWN;
-import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP_IS_NOT_EXIST;
-
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -19,11 +12,15 @@ import edonymyeon.backend.thumbs.application.event.ThumbsUpEvent;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+
+import static edonymyeon.backend.global.exception.ExceptionInformation.*;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -47,7 +44,7 @@ public class ThumbsService {
         Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postId, loginMember.getId());
         if (postThumbs.isEmpty()) {
             Thumbs thumbs = new Thumbs(post, loginMember, ThumbsType.UP);
-            thumbsRepository.save(thumbs);
+            save(thumbs, THUMBS_UP_ALREADY_EXIST);
             publisher.publishEvent(new ThumbsUpEvent(post));
             return;
         }
@@ -74,6 +71,14 @@ public class ThumbsService {
         }
     }
 
+    private void save(final Thumbs thumbs, final ExceptionInformation thumbsUpAlreadyExist) {
+        try {
+            thumbsRepository.save(thumbs);
+        } catch (DataIntegrityViolationException e) {
+            throw new EdonymyeonException(thumbsUpAlreadyExist);
+        }
+    }
+
     @Transactional
     public void thumbsDown(final MemberId memberId, final Long postId) {
         Member loginMember = findMemberById(memberId);
@@ -83,7 +88,7 @@ public class ThumbsService {
         Optional<Thumbs> postThumbs = thumbsRepository.findByPostIdAndMemberId(postId, loginMember.getId());
         if (postThumbs.isEmpty()) {
             Thumbs thumbs = new Thumbs(post, loginMember, ThumbsType.DOWN);
-            thumbsRepository.save(thumbs);
+            save(thumbs, THUMBS_DOWN_ALREADY_EXIST);
             publisher.publishEvent(new ThumbsDownEvent(post));
             return;
         }
