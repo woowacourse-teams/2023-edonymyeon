@@ -12,7 +12,7 @@ import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.notification.domain.Notification;
-import edonymyeon.backend.notification.domain.NotificationMessage;
+import edonymyeon.backend.notification.domain.NotificationMessageId;
 import edonymyeon.backend.notification.domain.notification_content.application.NotificationMessageRepository;
 import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContent;
 import edonymyeon.backend.notification.repository.NotificationRepository;
@@ -55,7 +55,7 @@ class NotificationService_NotificationMessageTest extends IntegrationFixture {
     @BeforeEach
     void setup() {
         notificationMessageRepository.save(
-                new NotificationContent(NotificationMessage.THUMBS_NOTIFICATION_TITLE, "당신의 글에 따봉이 달려있어요! 짱",
+                new NotificationContent(NotificationMessageId.THUMBS_NOTIFICATION_TITLE, "당신의 글에 따봉이 달려있어요! 짱",
                         "따봉맨을 확인해 보세요."));
     }
 
@@ -77,7 +77,7 @@ class NotificationService_NotificationMessageTest extends IntegrationFixture {
                 .get(0);
 
         final NotificationContent expectedNotificationContent = notificationMessageRepository.findById(
-                NotificationMessage.THUMBS_NOTIFICATION_TITLE).get();
+                NotificationMessageId.THUMBS_NOTIFICATION_TITLE).get();
 
         assertThat(savedNotification.getBody())
                 .as("리포지토리에 저장한 알림 title 내용으로 알림을 발송해야 한다.")
@@ -106,7 +106,7 @@ class NotificationService_NotificationMessageTest extends IntegrationFixture {
         final Post post = 게시글만들기(member);
 
         주요기능모킹하기(member, post);
-        when(notificationMessageRepository.findById(NotificationMessage.THUMBS_NOTIFICATION_TITLE))
+        when(notificationMessageRepository.findById(NotificationMessageId.THUMBS_NOTIFICATION_TITLE))
                 .thenReturn(Optional.empty());
 
         // when & then
@@ -135,7 +135,7 @@ class NotificationService_NotificationMessageTest extends IntegrationFixture {
 
         // when
         final NotificationContent notificationContent
-                = new NotificationContent(NotificationMessage.THUMBS_NOTIFICATION_TITLE, "변경한 알림 제목", "변경한 알림 내용");
+                = new NotificationContent(NotificationMessageId.THUMBS_NOTIFICATION_TITLE, "변경한 알림 제목", "변경한 알림 내용");
         notificationService.updateContent(notificationContent);
 
         // then

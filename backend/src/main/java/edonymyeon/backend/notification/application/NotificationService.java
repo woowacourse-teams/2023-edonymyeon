@@ -1,8 +1,8 @@
 package edonymyeon.backend.notification.application;
 
-import static edonymyeon.backend.notification.domain.NotificationMessage.COMMENT_NOTIFICATION_TITLE;
-import static edonymyeon.backend.notification.domain.NotificationMessage.THUMBS_NOTIFICATION_TITLE;
-import static edonymyeon.backend.notification.domain.NotificationMessage.THUMBS_PER_10_NOTIFICATION_TITLE;
+import static edonymyeon.backend.notification.domain.NotificationMessageId.COMMENT_NOTIFICATION_TITLE;
+import static edonymyeon.backend.notification.domain.NotificationMessageId.THUMBS_NOTIFICATION_TITLE;
+import static edonymyeon.backend.notification.domain.NotificationMessageId.THUMBS_PER_10_NOTIFICATION_TITLE;
 
 import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.consumption.application.ConsumptionService;
@@ -17,7 +17,7 @@ import edonymyeon.backend.notification.application.dto.Data;
 import edonymyeon.backend.notification.application.dto.NotificationResponse;
 import edonymyeon.backend.notification.application.dto.Receiver;
 import edonymyeon.backend.notification.domain.Notification;
-import edonymyeon.backend.notification.domain.NotificationMessage;
+import edonymyeon.backend.notification.domain.NotificationMessageId;
 import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.notification.domain.notification_content.application.NotificationMessageRepository;
 import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContent;
@@ -133,7 +133,7 @@ public class NotificationService {
     private void remindConfirmingConsumptions(final Member member) {
         if (settingService.isSettingActive(new ActiveMemberId(member.getId()),
                 SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING)) {
-            sendNotification(member, ScreenType.MYPOST, null, NotificationMessage.UNCONFIRMED_POST_REMINDER_TITLE);
+            sendNotification(member, ScreenType.MYPOST, null, NotificationMessageId.UNCONFIRMED_POST_REMINDER_TITLE);
         }
     }
 
@@ -142,15 +142,19 @@ public class NotificationService {
      * @param notifyingTarget 알림을 전송할 대상
      * @param notifyingType 알림을 클릭했을 때 리다이렉트할 페이지의 종류
      * @param redirectId 알림을 클릭했을 때 리다이렉트할 페이지의 id
-     * @param notificationMessage 알림에서 표시할 제목
+     * @param notificationMessageId 알림에서 표시할 제목
      */
     private void sendNotification(final Member notifyingTarget, final ScreenType notifyingType, final Long redirectId,
-                                  final NotificationMessage notificationMessage) {
+                                  final NotificationMessageId notificationMessageId) {
         if (notifyingTarget.isDeleted()) {
             return;
         }
 
-        final Long notificationId = saveNotification(notifyingTarget, notifyingType, redirectId, notificationMessage);
+        final NotificationContent notificationContent
+                = notificationMessageRepository.findById(notificationMessageId)
+                .orElseThrow(() -> new EdonymyeonException(ExceptionInformation.NOTIFICATION_MESSAGE_NOT_FOUND));
+
+        final Long notificationId = saveNotification(notifyingTarget, notifyingType, redirectId, notificationContent);
 
         final Optional<String> deviceToken = notifyingTarget.getActiveDeviceToken();
         if (deviceToken.isEmpty()) {
@@ -162,7 +166,7 @@ public class NotificationService {
         try {
             notificationSender.sendNotification(
                     receiver,
-                    notificationMessage.getMessage()
+                    notificationContent.getTitle()
             );
         } catch (BusinessLogicException e) {
             log.error("알림 전송에 실패했습니다.", e);
@@ -171,17 +175,15 @@ public class NotificationService {
 
     /**
      * 알림 전송 전/후 해당 내용을 저장합니다.
-     * @param notifyingTarget 알림을 전송받은 대상
-     * @param notifyingType 알림을 클릭했을 때 리다이렉트한 페이지의 종류
-     * @param redirectId 알림을 클릭했을 때 리다이렉트한 페이지의 id
-     * @param notificationMessage 알림에서 표시한 제목
+     *
+     * @param notifyingTarget       알림을 전송받은 대상
+     * @param notifyingType         알림을 클릭했을 때 리다이렉트한 페이지의 종류
+     * @param redirectId            알림을 클릭했을 때 리다이렉트한 페이지의 id
+     * @param notificationContent   알림에 표시할 제목과 본문
      * @return 알림 식별자
      */
     private Long saveNotification(final Member notifyingTarget, final ScreenType notifyingType, final Long redirectId,
-                          final NotificationMessage notificationMessage) {
-        final NotificationContent notificationContent
-                = notificationMessageRepository.findById(notificationMessage)
-                .orElseThrow(() -> new EdonymyeonException(ExceptionInformation.NOTIFICATION_MESSAGE_NOT_FOUND));
+                                  final NotificationContent notificationContent) {
 
         final Notification notification = new Notification(
                 notifyingTarget,
