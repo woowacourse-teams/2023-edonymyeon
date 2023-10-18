@@ -43,7 +43,7 @@ class MemberIntegrationTest extends IntegrationFixture {
 
         final MyPageResponseV1 myPageResponseV1 = response.as(MyPageResponseV1.class);
         assertAll(
-                () -> assertThat(myPageResponseV1.id()).isEqualTo(member.getId()),
+                () -> assertThat(myPageResponseV1.memberId()).isEqualTo(member.getId()),
                 () -> assertThat(myPageResponseV1.nickname()).isEqualTo(member.getNickname()),
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         );

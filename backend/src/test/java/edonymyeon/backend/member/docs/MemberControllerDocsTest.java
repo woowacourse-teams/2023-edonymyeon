@@ -220,7 +220,7 @@ class MemberControllerDocsTest extends DocsTest {
                 .sessionAttr(USER.getSessionId(), 회원.getId());
 
         final RestDocumentationResultHandler 문서화 = document("profile-v1",
-                responseFields(fieldWithPath("id").description("회원 id"),
+                responseFields(fieldWithPath("memberId").description("회원 id"),
                         fieldWithPath("nickname").description("닉네임")));
 
         this.mockMvc.perform(회원_정보_조회_요청)
