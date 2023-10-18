@@ -67,4 +67,12 @@
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">"@color/gray_615f5f"</item>
     </style>
+
+    <style name="Button_TEXT_STYLE">
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="Basic_TEXT_STYLE">
+        <item name="android:textSize">16sp</item>
+    </style>
 </resources>
