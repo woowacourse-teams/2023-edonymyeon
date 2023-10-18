@@ -7,7 +7,9 @@ import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.domain.Notification;
+import edonymyeon.backend.notification.domain.NotificationMessage;
 import edonymyeon.backend.notification.domain.ScreenType;
+import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContent;
 import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.PostSlice;
@@ -16,7 +18,6 @@ import edonymyeon.backend.setting.domain.SettingType;
 import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.application.ThumbsService;
-import io.restassured.RestAssured;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
@@ -66,7 +67,7 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
         final Member 사용자 = 사용자를_하나_만든다();
         final long 게시글id = 응답의_location헤더에서_id를_추출한다(게시글을_하나_만든다(사용자));
         final Long 알림id = notificationRepository
-                .save(new Notification(사용자, "알림이 등록되었어요!", ScreenType.POST, 게시글id))
+                .save(new Notification(사용자, new NotificationContent(NotificationMessage.THUMBS_NOTIFICATION_TITLE, "알림이 등록되었어요!", "알림을 확인해보세요!"), ScreenType.POST, 게시글id))
                 .getId();
 
         var notification = notificationRepository.findById(알림id);

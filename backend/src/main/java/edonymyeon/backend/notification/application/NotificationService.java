@@ -7,6 +7,8 @@ import static edonymyeon.backend.notification.domain.NotificationMessage.THUMBS_
 import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.consumption.application.ConsumptionService;
 import edonymyeon.backend.global.exception.BusinessLogicException;
+import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
@@ -17,6 +19,8 @@ import edonymyeon.backend.notification.application.dto.Receiver;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.NotificationMessage;
 import edonymyeon.backend.notification.domain.ScreenType;
+import edonymyeon.backend.notification.domain.notification_content.application.NotificationMessageRepository;
+import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContent;
 import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.PostSlice;
@@ -53,6 +57,8 @@ public class NotificationService {
     private final ThumbsService thumbsService;
 
     private final ConsumptionService consumptionService;
+
+    private final NotificationMessageRepository notificationMessageRepository;
 
     /**
      * 특정 회원이 받은 알림 내역을 조회합니다.
@@ -173,9 +179,13 @@ public class NotificationService {
      */
     private Long saveNotification(final Member notifyingTarget, final ScreenType notifyingType, final Long redirectId,
                           final NotificationMessage notificationMessage) {
+        final NotificationContent notificationContent
+                = notificationMessageRepository.findById(notificationMessage)
+                .orElseThrow(() -> new EdonymyeonException(ExceptionInformation.NOTIFICATION_MESSAGE_NOT_FOUND));
+
         final Notification notification = new Notification(
                 notifyingTarget,
-                notificationMessage.getMessage(),
+                notificationContent,
                 notifyingType,
                 redirectId
         );
