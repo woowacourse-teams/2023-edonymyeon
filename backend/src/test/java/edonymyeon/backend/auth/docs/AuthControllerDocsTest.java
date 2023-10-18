@@ -58,7 +58,7 @@ class AuthControllerDocsTest extends DocsTest {
         when(authService.login(request)).thenReturn(new ActiveMemberId(1L));
 
         final MockHttpServletRequestBuilder 로그인_요청 = post("/login")
-                .header("X-API-VERSION", 1, 2)
+                .header("X-API-VERSION", "1.0.0", "1.1.0")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request));
 
@@ -88,7 +88,7 @@ class AuthControllerDocsTest extends DocsTest {
         when(authService.loginByKakao(kakaoLoginResponse, kakaoLoginRequest.deviceToken())).thenReturn(activeMemberId);
 
         final MockHttpServletRequestBuilder 로그인_요청 = post("/auth/kakao/login")
-                .header("X-API-VERSION", 1, 2)
+                .header("X-API-VERSION", "1.0.0", "1.1.0")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(kakaoLoginRequest));
 
@@ -115,7 +115,7 @@ class AuthControllerDocsTest extends DocsTest {
         when(authService.checkDuplicate(target, value)).thenReturn(duplicateCheckResponse);
 
         final MockHttpServletRequestBuilder 중복_요청 = get("/join")
-                .header("X-API-VERSION", 1, 2)
+                .header("X-API-VERSION", "1.0.0", "1.1.0")
                 .queryParam("target", target)
                 .queryParam("value", value);
 
@@ -145,7 +145,7 @@ class AuthControllerDocsTest extends DocsTest {
                 "kj234jkn342kj");
 
         final MockHttpServletRequestBuilder 회원가입_요청 = post("/join")
-                .header("X-API-VERSION", 1, 2)
+                .header("X-API-VERSION", "1.0.0", "1.1.0")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request));
 

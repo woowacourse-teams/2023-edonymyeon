@@ -9,8 +9,8 @@ import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.application.dto.response.DuplicateCheckResponse;
 import edonymyeon.backend.member.application.dto.response.MemberUpdateResponse;
-import edonymyeon.backend.member.application.dto.response.MyPageResponseV1;
-import edonymyeon.backend.member.application.dto.response.MyPageResponseV2;
+import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_0_0;
+import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_1_0;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,15 +31,15 @@ public class MemberController {
 
     @ApiVersion(from = "1.0", to = "1.0")
     @GetMapping("/profile")
-    public ResponseEntity<MyPageResponseV1> findMemberInfoV1(@AuthPrincipal MemberId memberId) {
-        final MyPageResponseV1 memberInfo = memberService.findMemberInfoByIdV1(memberId.id());
+    public ResponseEntity<MyPageResponseV1_0_0> findMemberInfoV1_0_0(@AuthPrincipal MemberId memberId) {
+        final MyPageResponseV1_0_0 memberInfo = memberService.findMemberInfoByIdV1_0_0(memberId.id());
         return ResponseEntity.ok(memberInfo);
     }
 
     @ApiVersion(from = "1.1")
     @GetMapping("/profile")
-    public ResponseEntity<MyPageResponseV2> findMemberInfoV2(@AuthPrincipal MemberId memberId) {
-        final MyPageResponseV2 memberInfo = memberService.findMemberInfoByIdV2(memberId.id());
+    public ResponseEntity<MyPageResponseV1_1_0> findMemberInfoV1_1_0(@AuthPrincipal MemberId memberId) {
+        final MyPageResponseV1_1_0 memberInfo = memberService.findMemberInfoByIdV1_1_0(memberId.id());
         return ResponseEntity.ok(memberInfo);
     }
 

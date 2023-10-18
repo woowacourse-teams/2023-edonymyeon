@@ -44,7 +44,7 @@ class SettingIntegrationTest extends IntegrationFixture {
         System.out.println("sessionId = " + sessionId);
 
         ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .when()
@@ -72,7 +72,7 @@ class SettingIntegrationTest extends IntegrationFixture {
 
         final SettingType 반응_열건당_알림_설정정보 = SettingType.NOTIFICATION_PER_10_THUMBS;
         ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
