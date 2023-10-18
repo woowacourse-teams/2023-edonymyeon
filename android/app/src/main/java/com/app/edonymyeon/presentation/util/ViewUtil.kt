@@ -15,3 +15,9 @@ fun View.makeSnackbarWithEvent(message: String, eventTitle: String, event: () ->
             event()
         }.setAnimationMode(ANIMATION_MODE_SLIDE).show()
 }
+
+fun View.setOnSingleClickListener(onSingleClick: (View) -> Unit) {
+    setOnClickListener(OnSingleClickListener {
+        onSingleClick(it)
+    })
+}

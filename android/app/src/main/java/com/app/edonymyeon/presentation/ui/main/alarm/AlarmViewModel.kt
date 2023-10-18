@@ -37,9 +37,9 @@ class AlarmViewModel @Inject constructor(
             if (result.isSuccess) {
                 _notificationList.value =
                     notificationList.value.orEmpty() +
-                    result.getOrNull()?.notifications?.map {
-                        it.toUiModel()
-                    }.orEmpty()
+                            result.getOrNull()?.notifications?.map {
+                                it.toUiModel()
+                            }.orEmpty()
                 currentPage = currentPage.increasePage()
                 isLastPage = result.getOrNull()?.isLast ?: true
             } else {

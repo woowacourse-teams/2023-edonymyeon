@@ -36,7 +36,6 @@ import java.io.File
 class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorViewModel>(
     { ActivityPostEditorBinding.inflate(it) },
 ) {
-
     private var cameraUri: Uri? = null
 
     private var price = ""
