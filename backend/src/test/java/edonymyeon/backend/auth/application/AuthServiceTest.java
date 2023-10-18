@@ -18,6 +18,8 @@ import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.auth.domain.PasswordEncoder;
 import edonymyeon.backend.image.application.ImageService;
+import edonymyeon.backend.image.ImageFileUploader;
+import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
@@ -157,7 +159,8 @@ class AuthServiceTest {
 
         final Member mockedMember = mock(Member.class);
         when(memberRepository.findById(member.getId())).thenReturn(Optional.of(mockedMember));
-        when(mockedMember.getProfileImageInfo()).thenReturn(new ProfileImageInfo("storeName"));
+        final ImageInfo imageInfo = new ImageInfo("storeName");
+        when(mockedMember.getProfileImageInfo()).thenReturn(ProfileImageInfo.from(imageInfo));
 
         // when
         final ActiveMemberId memberId = new ActiveMemberId(member.getId());
@@ -180,7 +183,8 @@ class AuthServiceTest {
 
         final var mockedMember = mock(Member.class);
         when(memberRepository.findById(member.getId())).thenReturn(Optional.of(mockedMember));
-        when(mockedMember.getProfileImageInfo()).thenReturn(new ProfileImageInfo("storeName"));
+        final ImageInfo imageInfo = new ImageInfo("storeName");
+        when(mockedMember.getProfileImageInfo()).thenReturn(ProfileImageInfo.from(imageInfo));
         doThrow(new RuntimeException("롤백용 예외")).when(mockedMember).withdraw();
 
         // when

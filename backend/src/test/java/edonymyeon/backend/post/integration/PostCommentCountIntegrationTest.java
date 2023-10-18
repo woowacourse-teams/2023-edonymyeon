@@ -1,10 +1,7 @@
 package edonymyeon.backend.post.integration;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import edonymyeon.backend.CacheConfig;
-import edonymyeon.backend.cache.application.HotPostsRedisRepository;
+import edonymyeon.backend.cache.repository.HotPostsRepository;
 import edonymyeon.backend.cache.util.HotPostCachePolicy;
 import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.member.domain.Member;
@@ -21,14 +18,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
 @Import(CacheConfig.class)
 public class PostCommentCountIntegrationTest extends IntegrationFixture {
 
     private final HotPostCachePolicy hotPostCachePolicy;
-
-    private final HotPostsRedisRepository hotPostsRedisRepository;
 
     private final HotFindingCondition findingCondition = HotFindingCondition.builder().build();
 
@@ -112,7 +110,7 @@ public class PostCommentCountIntegrationTest extends IntegrationFixture {
     void 핫게시글_조회시_댓글수가_반영되어_조회된다() {
         // 캐시 비우기
         String postIdsCacheKey = hotPostCachePolicy.getKey(findingCondition);
-        hotPostsRedisRepository.deleteById(postIdsCacheKey);
+        HotPostsRepository.delete(postIdsCacheKey);
 
         Post post1 = 댓글이_달린_게시글을_만든다(1);
         Post post2 = 댓글이_달린_게시글을_만든다(2);

@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.auth.application.AuthService;
 import edonymyeon.backend.auth.application.KakaoAuthResponseProvider;
-import edonymyeon.backend.auth.application.dto.DuplicateCheckResponse;
+import edonymyeon.backend.member.application.dto.response.DuplicateCheckResponse;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
@@ -58,7 +58,7 @@ class AuthControllerDocsTest extends DocsTest {
         when(authService.login(request)).thenReturn(new ActiveMemberId(1L));
 
         final MockHttpServletRequestBuilder 로그인_요청 = post("/login")
-                .header("X-API-VERSION", 1)
+                .header("X-API-VERSION", 1, 2)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request));
 
@@ -88,7 +88,7 @@ class AuthControllerDocsTest extends DocsTest {
         when(authService.loginByKakao(kakaoLoginResponse, kakaoLoginRequest.deviceToken())).thenReturn(activeMemberId);
 
         final MockHttpServletRequestBuilder 로그인_요청 = post("/auth/kakao/login")
-                .header("X-API-VERSION", 1)
+                .header("X-API-VERSION", 1, 2)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(kakaoLoginRequest));
 
@@ -115,7 +115,7 @@ class AuthControllerDocsTest extends DocsTest {
         when(authService.checkDuplicate(target, value)).thenReturn(duplicateCheckResponse);
 
         final MockHttpServletRequestBuilder 중복_요청 = get("/join")
-                .header("X-API-VERSION", 1)
+                .header("X-API-VERSION", 1, 2)
                 .queryParam("target", target)
                 .queryParam("value", value);
 
@@ -145,7 +145,7 @@ class AuthControllerDocsTest extends DocsTest {
                 "kj234jkn342kj");
 
         final MockHttpServletRequestBuilder 회원가입_요청 = post("/join")
-                .header("X-API-VERSION", 1)
+                .header("X-API-VERSION", 1, 2)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request));
 

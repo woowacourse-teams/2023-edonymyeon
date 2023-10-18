@@ -50,7 +50,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @IntegrationTest
-public class CommentControllerDocsTest {
+class CommentControllerDocsTest {
 
     private final MockMvc mockMvc;
 
@@ -71,7 +71,7 @@ public class CommentControllerDocsTest {
         final MockHttpServletRequestBuilder 댓글_작성_요청 = multipart("/posts/{postId}/comments", 1L)
                 .part(내용)
                 .file(이미지)
-                .header("X-API-VERSION", 1)
+                .header("X-API-VERSION", 1, 2)
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .sessionAttr(USER.getSessionId(), 사용자.getId());
 
@@ -100,7 +100,7 @@ public class CommentControllerDocsTest {
 
         final MockHttpServletRequestBuilder 댓글_삭제_요청 = delete("/posts/{postId}/comments/{commentId}", 1L, 1L)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("X-API-VERSION", 1)
+                .header("X-API-VERSION", 1, 2)
                 .sessionAttr(USER.getSessionId(), 사용자.getId());
 
         final RestDocumentationResultHandler 문서화 = document("comment-delete",
@@ -150,7 +150,7 @@ public class CommentControllerDocsTest {
 
         final MockHttpServletRequestBuilder 댓글_조회_요청 = get("/posts/{postId}/comments", 1L)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .header("X-API-VERSION", 1);
+                .header("X-API-VERSION", 1, 2);
 
         final RestDocumentationResultHandler 문서화 = document("comment-findAllByPost",
                 preprocessRequest(prettyPrint()),

@@ -48,9 +48,6 @@ dependencies {
 	implementation 'com.google.firebase:firebase-admin:9.2.0'
 	implementation 'com.squareup.okhttp3:okhttp:4.10.0'
 
-	// sql 파라미터 보여준 애 나중에 지워잉
-	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
-
 	// rest assured 추가
 	testImplementation 'io.rest-assured:rest-assured:5.3.1'
 
@@ -68,9 +65,6 @@ dependencies {
 	// 이 덕분에 .adoc 파일에서 operation 같은 매크로를 사용하여 스니펫 조각들을 연동할 수 있는 것입니다.
 	// 그리고 최종적으로 .adoc 파일을 HTML로 만들어 export 해줍니다.
 	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
-
-	// redis
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 	// flyway 추가
 	implementation 'org.flywaydb:flyway-mysql'

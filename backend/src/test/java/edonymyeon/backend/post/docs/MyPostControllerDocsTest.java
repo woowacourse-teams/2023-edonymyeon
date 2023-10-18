@@ -42,7 +42,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class MyPostControllerDocsTest extends DocsTest {
+class MyPostControllerDocsTest extends DocsTest {
 
     @Autowired
     private final Domain domain;
@@ -90,7 +90,7 @@ public class MyPostControllerDocsTest extends DocsTest {
 
         final MockHttpServletRequestBuilder 내_게시글_조회_요청 = get("/profile/my-posts")
                 .sessionAttr(USER.getSessionId(), 회원.getId())
-                .header("X-API-VERSION", 1)
+                .header("X-API-VERSION", 1, 2)
                 .queryParam("page", findingCondition.getPage().toString())
                 .queryParam("size", findingCondition.getSize().toString())
                 .queryParam("sort-by", findingCondition.getSortBy().getName())
