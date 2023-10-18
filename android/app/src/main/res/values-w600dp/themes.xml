@@ -24,4 +24,8 @@
         <item name="android:textSize">24sp</item>
         <item name="android:textColor">"@color/black_000000"</item>
     </style>
+
+    <style name="EDIT_TEXT_STYLE">
+        <item name="android:textSize">20sp</item>
+    </style>
 </resources>

@@ -75,4 +75,8 @@
     <style name="Basic_TEXT_STYLE">
         <item name="android:textSize">16sp</item>
     </style>
+
+    <style name="EDIT_TEXT_STYLE">
+        <item name="android:textSize">14sp</item>
+    </style>
 </resources>

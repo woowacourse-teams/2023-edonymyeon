@@ -13,4 +13,11 @@
     <dimen name="home_all_post_icon_margin">32dp</dimen>
     <dimen name="home_all_post_icon_width">0.1</dimen>
     <dimen name="home_all_post_icon_padding">24dp</dimen>
+
+    <!-- post editor-->
+    <dimen name="post_editor_title_text_size">20sp</dimen>
+    <dimen name="post_editor_margin">40dp</dimen>
+    <dimen name="post_editor_margin_between_title_and_edit">116dp</dimen>
+    <dimen name="post_editor_comment_text_size">26sp</dimen>
+    <dimen name="post_editor_image_width">112dp</dimen>
 </resources>
