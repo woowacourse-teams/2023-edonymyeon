@@ -1,8 +1,8 @@
 package edonymyeon.backend.notification.application;
 
-import static edonymyeon.backend.notification.domain.NotificationMessageId.COMMENT_NOTIFICATION_TITLE;
-import static edonymyeon.backend.notification.domain.NotificationMessageId.THUMBS_NOTIFICATION_TITLE;
-import static edonymyeon.backend.notification.domain.NotificationMessageId.THUMBS_PER_10_NOTIFICATION_TITLE;
+import static edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId.COMMENT_NOTIFICATION_TITLE;
+import static edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId.THUMBS_NOTIFICATION_TITLE;
+import static edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId.THUMBS_PER_10_NOTIFICATION_TITLE;
 
 import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.consumption.application.ConsumptionService;
@@ -17,7 +17,7 @@ import edonymyeon.backend.notification.application.dto.Data;
 import edonymyeon.backend.notification.application.dto.NotificationResponse;
 import edonymyeon.backend.notification.application.dto.Receiver;
 import edonymyeon.backend.notification.domain.Notification;
-import edonymyeon.backend.notification.domain.NotificationMessageId;
+import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId;
 import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.notification.domain.notification_content.application.NotificationMessageRepository;
 import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContent;
@@ -136,7 +136,7 @@ public class NotificationService {
     private void remindConfirmingConsumptions(final Member member) {
         if (settingService.isSettingActive(new ActiveMemberId(member.getId()),
                 SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING)) {
-            sendNotification(member, ScreenType.MYPOST, null, NotificationMessageId.UNCONFIRMED_POST_REMINDER_TITLE);
+            sendNotification(member, ScreenType.MYPOST, null, NotificationContentId.UNCONFIRMED_POST_REMINDER_TITLE);
         }
     }
 
@@ -145,16 +145,16 @@ public class NotificationService {
      * @param notifyingTarget 알림을 전송할 대상
      * @param notifyingType 알림을 클릭했을 때 리다이렉트할 페이지의 종류
      * @param redirectId 알림을 클릭했을 때 리다이렉트할 페이지의 id
-     * @param notificationMessageId 알림에서 표시할 제목
+     * @param notificationContentId 알림에서 표시할 제목
      */
     private void sendNotification(final Member notifyingTarget, final ScreenType notifyingType, final Long redirectId,
-                                  final NotificationMessageId notificationMessageId) {
+                                  final NotificationContentId notificationContentId) {
         if (notifyingTarget.isDeleted()) {
             return;
         }
 
         final NotificationContent notificationContent
-                = notificationMessageRepository.findById(notificationMessageId)
+                = notificationMessageRepository.findById(notificationContentId)
                 .orElseThrow(() -> new EdonymyeonException(ExceptionInformation.NOTIFICATION_MESSAGE_NOT_FOUND));
 
         final Long notificationId = saveNotification(notifyingTarget, notifyingType, redirectId, notificationContent);

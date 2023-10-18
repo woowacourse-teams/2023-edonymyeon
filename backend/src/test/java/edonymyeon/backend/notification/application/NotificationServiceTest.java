@@ -22,7 +22,7 @@ import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.domain.Notification;
-import edonymyeon.backend.notification.domain.NotificationMessageId;
+import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId;
 import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContent;
 import edonymyeon.backend.notification.repository.NotificationRepository;
@@ -84,7 +84,7 @@ class NotificationServiceTest extends IntegrationFixture {
         final var post = postTestSupport.builder().build();
         final var notificationId = notificationRepository.save(
                         new Notification(post.getMember(),
-                                new NotificationContent(NotificationMessageId.THUMBS_NOTIFICATION_TITLE, "알림이 등록되었어요!",
+                                new NotificationContent(NotificationContentId.THUMBS_NOTIFICATION_TITLE, "알림이 등록되었어요!",
                                         "알림을 확인해보세요!"), ScreenType.POST, post.getId()))
                 .getId();
 
