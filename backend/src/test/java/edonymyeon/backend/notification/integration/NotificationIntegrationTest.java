@@ -47,7 +47,7 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
         thumbsService.thumbsDown(new ActiveMemberId(열람인2.getId()), 게시글id);
 
         final var 알림목록_조회결과 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .when()
@@ -75,7 +75,7 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
                 Assertions::fail);
 
         EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .when()
                 .get("/posts/{postId}?notificated={notificationId}",

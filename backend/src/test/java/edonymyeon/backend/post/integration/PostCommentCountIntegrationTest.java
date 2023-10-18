@@ -119,7 +119,7 @@ public class PostCommentCountIntegrationTest extends IntegrationFixture {
         Post post5 = 댓글이_달린_게시글을_만든다(5);
 
         JsonPath jsonPath = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .get("posts/hot")
                 .then()
@@ -155,7 +155,7 @@ public class PostCommentCountIntegrationTest extends IntegrationFixture {
         commentTestSupport.builder().post(게시글).build();
 
         final var 검색된_게시글_조회_결과 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .when()
                 .queryParam("query", "사과")
@@ -180,7 +180,7 @@ public class PostCommentCountIntegrationTest extends IntegrationFixture {
 
         final String sessionId = 로그인(사용자);
         final var 검색된_게시글_조회_결과 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .when()
