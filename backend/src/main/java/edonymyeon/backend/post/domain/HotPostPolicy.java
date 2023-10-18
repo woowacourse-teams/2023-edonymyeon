@@ -5,7 +5,10 @@ import java.time.temporal.ChronoUnit;
 
 public class HotPostPolicy {
 
-    private static final int FINDING_PERIOD = 7;
+    private HotPostPolicy() {
+    }
+
+    private static final int FINDING_PERIOD = 3;
 
     private static final int VIEW_COUNT_WEIGHT = 1;
 
