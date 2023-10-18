@@ -95,17 +95,18 @@ public class MemberService {
     public DuplicateCheckResponse checkDuplicate(final String target, final String value) {
         final ValidateType validateType = ValidateType.from(target);
 
-        if (findMemberByValidateType(validateType, value).isEmpty()) {
+        if (!existsByValidateType(validateType, value)) {
             return new DuplicateCheckResponse(true);
         }
         return new DuplicateCheckResponse(false);
     }
 
-    private Optional<Member> findMemberByValidateType(final ValidateType validateType, final String value) {
+    private boolean existsByValidateType(final ValidateType validateType, final String value) {
         if (validateType.equals(ValidateType.EMAIL)) {
-            return memberRepository.findByEmail(value);
+            return memberRepository.existsByEmail(value);
         }
-        return memberRepository.findByNickname(value);
+
+        return memberRepository.existsByNickname(value);
     }
 
     @Transactional
@@ -122,20 +123,19 @@ public class MemberService {
         return Objects.isNull(image) || image.isEmpty();
     }
 
-    @Transactional
-    public MemberUpdateResponse updateWithoutProfileImage(final Member member,
+    private MemberUpdateResponse updateWithoutProfileImage(final Member member,
                                                           final MemberUpdateRequest updateRequest) {
-        member.updateMember(updateRequest.nickname(), member.getProfileImageInfo());
+        member.updateNickname(updateRequest.nickname());
         return new MemberUpdateResponse(member.getId());
     }
 
-    @Transactional
-    public MemberUpdateResponse updateWithProfileImage(final Member member, final MemberUpdateRequest updateRequest) {
+    private MemberUpdateResponse updateWithProfileImage(final Member member, final MemberUpdateRequest updateRequest) {
         final MultipartFile imageFile = updateRequest.profileImage();
         final ImageInfo imageInfo = imageFileUploader.from(imageFile);
         final ProfileImageInfo profileImageInfo = ProfileImageInfo.from(imageInfo);
         profileImageInfoRepository.save(profileImageInfo);
-        member.updateMember(updateRequest.nickname(), profileImageInfo);
+        member.updateProfileImageInfo(profileImageInfo);
+        member.updateNickname(updateRequest.nickname());
 
         publisher.publishEvent(new ProfileImageUploadEvent(imageFile, profileImageInfo));
         return new MemberUpdateResponse(member.getId());

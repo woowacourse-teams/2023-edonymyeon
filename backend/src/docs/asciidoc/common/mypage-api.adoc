@@ -2,7 +2,11 @@
 == 마이페이지
 
 === 회원 정보 조회
-operation::profile[snippets='http-request,response-fields,http-response']
+==== version 1
+operation::profile-v1[snippets='http-request,response-fields,http-response']
+
+==== version 2
+operation::profile-v2[snippets='http-request,response-fields,http-response']
 
 === 내가 쓴 글 조회
 

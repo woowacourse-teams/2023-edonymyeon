@@ -7,6 +7,7 @@ import com.domain.edonymyeon.model.Count
 import com.domain.edonymyeon.model.MyPost
 import com.domain.edonymyeon.model.MyPosts
 import com.domain.edonymyeon.model.ReactionCount
+import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.PostRepository
 import com.domain.edonymyeon.repository.ProfileRepository
 import io.mockk.coEvery
@@ -27,6 +28,7 @@ class MyPostViewModelTest {
     private lateinit var viewModel: MyPostViewModel
     private lateinit var profileRepository: ProfileRepository
     private lateinit var postRepository: PostRepository
+    private lateinit var authRepository: AuthRepository
     private val notificationId = 0L
 
     private val fakeMyPost = List(3) {
@@ -60,7 +62,8 @@ class MyPostViewModelTest {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         profileRepository = mockk()
         postRepository = mockk()
-        viewModel = MyPostViewModel(profileRepository, postRepository)
+        authRepository = mockk()
+        viewModel = MyPostViewModel(profileRepository, postRepository, authRepository)
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

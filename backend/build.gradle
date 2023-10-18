@@ -66,9 +66,6 @@ dependencies {
 	// 그리고 최종적으로 .adoc 파일을 HTML로 만들어 export 해줍니다.
 	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 
-	// redis
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
 	// flyway 추가
 	implementation 'org.flywaydb:flyway-mysql'
 	implementation 'org.flywaydb:flyway-core'

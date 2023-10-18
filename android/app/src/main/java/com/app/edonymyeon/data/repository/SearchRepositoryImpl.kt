@@ -1,6 +1,6 @@
 package com.app.edonymyeon.data.repository
 
-import com.app.edonymyeon.data.common.CustomThrowable
+import com.app.edonymyeon.data.common.createCustomThrowableFromResponse
 import com.app.edonymyeon.data.datasource.search.SearchDataSource
 import com.app.edonymyeon.mapper.toDomain
 import com.domain.edonymyeon.model.PostItems
@@ -22,7 +22,8 @@ class SearchRepositoryImpl @Inject constructor(
                 ),
             )
         } else {
-            Result.failure(CustomThrowable(result.code(), result.message()))
+            val customThrowable = createCustomThrowableFromResponse(result)
+            Result.failure(customThrowable)
         }
     }
 }

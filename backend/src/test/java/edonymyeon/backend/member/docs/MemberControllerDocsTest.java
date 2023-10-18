@@ -219,7 +219,7 @@ class MemberControllerDocsTest extends DocsTest {
                 .header("X-API-VERSION", 1)
                 .sessionAttr(USER.getSessionId(), 회원.getId());
 
-        final RestDocumentationResultHandler 문서화 = document("profile",
+        final RestDocumentationResultHandler 문서화 = document("profile-v1",
                 responseFields(fieldWithPath("id").description("회원 id"),
                         fieldWithPath("nickname").description("닉네임")));
 
@@ -239,7 +239,7 @@ class MemberControllerDocsTest extends DocsTest {
                 .header("X-API-VERSION", 2)
                 .sessionAttr(USER.getSessionId(), 회원.getId());
 
-        final RestDocumentationResultHandler 문서화 = document("profile",
+        final RestDocumentationResultHandler 문서화 = document("profile-v2",
                 responseFields(fieldWithPath("id").description("회원 id"),
                         fieldWithPath("nickname").description("닉네임"),
                         fieldWithPath("profileImage").description("프로필 사진")));
@@ -289,7 +289,7 @@ class MemberControllerDocsTest extends DocsTest {
         final DuplicateCheckResponse duplicateCheckResponse = new DuplicateCheckResponse(false);
         when(memberService.checkDuplicate(target, value)).thenReturn(duplicateCheckResponse);
 
-        final MockHttpServletRequestBuilder 중복_요청 = get("/members/check")
+        final MockHttpServletRequestBuilder 중복_요청 = get("/profile/check-duplicate")
                 .header("X-API-VERSION", 2)
                 .queryParam("target", target)
                 .queryParam("value", value);

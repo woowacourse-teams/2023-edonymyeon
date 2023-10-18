@@ -1,9 +1,7 @@
 package edonymyeon.backend.cache.domain;
 
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.data.redis.core.RedisHash;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -14,11 +12,7 @@ import java.util.Objects;
 
 @AllArgsConstructor
 @Getter
-@RedisHash("HOT_POSTS")
 public class CachedHotPost {
-
-    @Id
-    private final String id;
 
     private List<Long> postIds;
 
@@ -40,10 +34,6 @@ public class CachedHotPost {
     }
 
     private void initializePostIds() {
-        if (Objects.nonNull(this.postIds)) {
-            this.postIds.clear();
-            return;
-        }
         this.postIds = new ArrayList<>();
     }
 
@@ -51,6 +41,6 @@ public class CachedHotPost {
         if(Objects.isNull(this.postIds)){
             return Collections.emptyList();
         }
-        return this.postIds;
+        return Collections.unmodifiableList(this.postIds);
     }
 }
