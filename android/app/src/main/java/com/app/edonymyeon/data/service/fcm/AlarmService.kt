@@ -20,13 +20,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-// TODO("Notification 분리 예정")
+@SuppressLint("MissingFirebaseInstanceTokenRefresh")
 class AlarmService : FirebaseMessagingService() {
-    override fun onNewToken(token: String) {
-        super.onNewToken(token)
-    }
-
-    // background는 MainActivity, forground는 아래 로직을 탐
     @SuppressLint("MissingPermission")
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
@@ -35,7 +30,30 @@ class AlarmService : FirebaseMessagingService() {
             alarmOn.value = true
         }
 
-        val intent = when (message.data["navigateTo"].toString()) {
+        val intent = getIntentByNotification(message)
+
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            (message.data["notificationId"] ?: "0").toInt(),
+            intent,
+            PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+        )
+
+        val builder =
+            NotificationCompat.Builder(this, CHANNEL_ID).setSmallIcon(R.mipmap.ic_edonymyeon_round)
+                .setContentTitle(message.notification?.title)
+                .setContentText(message.notification?.body)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT).setContentIntent(
+                    pendingIntent,
+                ).setAutoCancel(true)
+
+        with(NotificationManagerCompat.from(this)) {
+            notify((message.data["notificationId"] ?: "0").toInt(), builder.build())
+        }
+    }
+
+    private fun getIntentByNotification(message: RemoteMessage) =
+        when (message.data["navigateTo"].toString()) {
             "POST" -> {
                 PostDetailActivity.newIntent(
                     this,
@@ -62,33 +80,11 @@ class AlarmService : FirebaseMessagingService() {
             }
         }
 
-        val builder =
-            NotificationCompat.Builder(this, CHANNEL_ID).setSmallIcon(R.mipmap.ic_edonymyeon_round)
-                .setContentTitle(message.notification?.title)
-                .setContentText(message.notification?.body)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT).setContentIntent(
-                    PendingIntent.getActivity(
-                        this,
-                        0,
-                        intent,
-                        PendingIntent.FLAG_MUTABLE,
-                    ),
-                ).setAutoCancel(true)
-
-        with(NotificationManagerCompat.from(this)) {
-            // notificationId is a unique int for each notification that you must define
-            notify((message.data["id"] ?: "0").toInt(), builder.build())
-        }
-    }
-
     private fun createNotificationChannel() {
-        val name = "이돈이면 채널" // getString()
-        val descriptionText = "이돈이면 채널입니다" // getString(R.string.channel_description)
         val importance = NotificationManager.IMPORTANCE_DEFAULT
-        val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-            description = descriptionText
+        val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance).apply {
+            description = CHANNEL_DESCRIPTION
         }
-        // Register the channel with the system
         val notificationManager: NotificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
@@ -96,6 +92,8 @@ class AlarmService : FirebaseMessagingService() {
 
     companion object {
         private const val CHANNEL_ID = "Edonymyeon"
+        private const val CHANNEL_NAME = "이돈이면 채널"
+        private const val CHANNEL_DESCRIPTION = "이돈이면 채널입니다"
         private val alarmOn: MutableLiveData<Boolean> = MutableLiveData()
         val isAlarmOn: LiveData<Boolean>
             get() = alarmOn
