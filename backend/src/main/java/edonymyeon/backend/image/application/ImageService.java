@@ -24,15 +24,23 @@ public class ImageService {
     private final UrlManager urlManager;
 
     @Value("${image.root-dir}")
-    private String rootDirectory; //todo: 어디다 두는게 좋을까?
+    private String rootDirectory;
 
     public ImageInfo save(final MultipartFile image, final ImageType imageType) {
         final String originalFileName = image.getOriginalFilename();
         validateExtension(originalFileName);
         final String storeName = imageFileNameStrategy.createName(originalFileName);
-        final ImageInfo imageInfo = new ImageInfo(storeName); //todo: imageType에 따라 imageInfo 변환
+        final ImageInfo imageInfo = new ImageInfo(storeName);
         uploadRealStorage(image, imageType, storeName);
-        return imageInfo; //todo: 생성된 imageInfo 저장 및 반환
+        return imageInfo;
+    }
+
+    private void validateExtension(final String originalFileName) {
+        final String ext = ImageExtension.extractExt(originalFileName);
+        if (ImageExtension.contains(ext)) {
+            return;
+        }
+        throw new EdonymyeonException(IMAGE_EXTENSION_INVALID);
     }
 
     private void uploadRealStorage(final MultipartFile image, final ImageType imageType, final String storeName) {
@@ -49,12 +57,11 @@ public class ImageService {
                 .toList();
     }
 
-    private void validateExtension(final String originalFileName) {
-        final String ext = ImageExtension.extractExt(originalFileName);
-        if (ImageExtension.contains(ext)) {
+    public void removeImage(final ImageInfo imageInfo, final ImageType imageType) {
+        if(!imageClient.supportsDeletion()){
             return;
         }
-        throw new EdonymyeonException(IMAGE_EXTENSION_INVALID);
+        imageClient.delete(findResourcePath(imageInfo.getStoreName(), imageType));
     }
 
     /**
@@ -79,21 +86,14 @@ public class ImageService {
      * @return 사용자에게 보여줄 이미지 도메인 주소(단 이미지 파일 이름은 제외, 예를 들어 https://localhost:8080/images/post/)
      */
     public String findBaseUrl(final ImageType imageType) {
-        return urlManager.getDomain() + imageType.getSaveDirectory();
-    }
-
-    public void removeImage(final ImageInfo imageInfo, final ImageType imageType) {
-        if(!imageClient.supportsDeletion()){
-            return;
-        }
-        imageClient.delete(findResourcePath(imageInfo.getStoreName(), imageType));
+        return urlManager.findBaseUrl(imageType);
     }
 
     public String convertToImageUrl(final ImageInfo imageInfo, final ImageType imageType) {
         return urlManager.convertToImageUrl(imageType, imageInfo);
     }
 
-    public List<String> removeDomainFromUrl(final List<String> originalImageUrls, final ImageType imageType) {
-        return urlManager.removeDomainFromUrl(originalImageUrls, imageType.getSaveDirectory());
+    public List<String> convertToStoreName(final List<String> originalImageUrls, final ImageType imageType) {
+        return urlManager.convertToStoreName(originalImageUrls, imageType.getSaveDirectory());
     }
 }

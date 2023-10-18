@@ -1,5 +1,8 @@
 package edonymyeon.backend.image.application;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_UPLOAD_FAIL;
+
+import edonymyeon.backend.global.exception.BusinessLogicException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -20,7 +23,7 @@ public class LocalImageClient implements ImageClient {
             final Path path = Paths.get(directory + storeName);
             image.transferTo(path);
         } catch (IOException e) {
-            throw new RuntimeException(e); //todo: 커스텀 예외
+            throw new BusinessLogicException(IMAGE_UPLOAD_FAIL);
         }
     }
 

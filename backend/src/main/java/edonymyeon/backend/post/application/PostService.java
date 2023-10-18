@@ -124,7 +124,7 @@ public class PostService {
         post.update(request.title(), request.content(), request.price());
 
         final List<MultipartFile> imageFilesToAdd = request.newImages();
-        final List<String> remainedImageNames = convertUrlToStoreName(request.originalImages());
+        final List<String> remainedImageNames = imageService.convertToStoreName(request.originalImages(), ImageType.POST);
 
         if(isImagesEmpty(imageFilesToAdd)) {
             post.updateImages(remainedImageNames);
@@ -135,12 +135,5 @@ public class PostService {
         post.updateImages(remainedImageNames, imagesToAdd); //이때 기존 이미지중 삭제되는 것들은 softDelete
         postImageInfoRepository.saveAll(imagesToAdd.getPostImageInfos()); // //새로 추가된 이미지들을 DB에 저장
         return new PostIdResponse(postId);
-    }
-
-    private List<String> convertUrlToStoreName(final List<String> originalImageUrls) {
-        if (originalImageUrls == null || originalImageUrls.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return imageService.removeDomainFromUrl(originalImageUrls, ImageType.POST);
     }
 }

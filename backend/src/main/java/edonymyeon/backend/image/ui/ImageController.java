@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-// todo: 이미지 migration 되면 없어질 컨트롤러
 @RequiredArgsConstructor
 @RestController
 public class ImageController {
@@ -29,6 +28,7 @@ public class ImageController {
                 .body(urlResource);
     }
 
+    // todo: 이미지 migration 되면 없어질 예정
     @GetMapping("/image-migration")
     public ResponseEntity<Void> migrateImages() {
         imageMigrationService.migrate();
