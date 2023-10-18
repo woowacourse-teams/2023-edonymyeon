@@ -20,7 +20,7 @@ import org.springframework.test.context.jdbc.Sql;
 @Inherited
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @TestConstructor(autowireMode = AutowireMode.ALL)
-@Sql(value = "/truncate.sql")
+@Sql(value = {"/truncate.sql", "/beforeall_init.sql"})
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public @interface IntegrationTest {
 }
