@@ -28,4 +28,8 @@
     <style name="EDIT_TEXT_STYLE">
         <item name="android:textSize">20sp</item>
     </style>
+
+    <style name="BASIC_TEXT_EXPLANATION">
+        <item name="android:textSize">18sp</item>
+    </style>
 </resources>
