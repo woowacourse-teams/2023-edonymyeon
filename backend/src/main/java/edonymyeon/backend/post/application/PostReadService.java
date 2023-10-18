@@ -115,18 +115,10 @@ public class PostReadService {
     }
 
     private WriterDetailResponse getWriterResponse(final Member member) {
-        if (Objects.isNull(member.getProfileImageInfo())) {
-            return new WriterDetailResponse(
-                    member.getId(),
-                    member.getNickname(),
-                    null
-            );
-        }
-        //todo: null 처리 포함해서 캡슐화
         return new WriterDetailResponse(
                 member.getId(),
                 member.getNickname(),
-                imageService.findBaseUrl(ImageType.POST) + member.getProfileImageInfo().getStoreName()
+                imageService.convertToImageUrl(member.getProfileImageInfo(), ImageType.POST)
         );
     }
 
