@@ -135,7 +135,7 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
             R.id.action_post_save -> {
                 hideKeyboard()
                 item.isEnabled = false
-                viewModel.checkTitleValidate(binding.etPostTitle.text.toString())
+                viewModel.checkUploadValidate(binding.etPostTitle.text.toString(), binding.etPostPrice.text.toString())
                 true
             }
 
