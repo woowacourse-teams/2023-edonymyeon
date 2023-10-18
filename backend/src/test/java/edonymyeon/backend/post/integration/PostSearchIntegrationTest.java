@@ -37,7 +37,7 @@ public class PostSearchIntegrationTest extends IntegrationFixture {
     @Test
     void 검색어가_포함되어있지_않으면_오류가_발생한다_400_BasRequest() {
         ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .when()
                 .get("/search")
@@ -54,7 +54,7 @@ public class PostSearchIntegrationTest extends IntegrationFixture {
     @Test
     void 검색어가_포함된_제목이_제대로_검색되는지_확인한다() {
         final var 검색된_게시글_조회_결과 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .when()
                 .queryParam("query", "사과")
@@ -73,7 +73,7 @@ public class PostSearchIntegrationTest extends IntegrationFixture {
     @Test
     void 검색어가_포함된_내용이_제대로_검색되는지_확인한다() {
         final var 검색된_게시글_조회_결과 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .when()
                 .queryParam("query", "자취")
@@ -93,7 +93,7 @@ public class PostSearchIntegrationTest extends IntegrationFixture {
     @Test
     void 검색어에_해당하는_게시물이_없다면_빈_결과값이_나온다() {
         final var 검색된_게시글_조회_결과 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .when()
                 .queryParam("query", "케로로")
@@ -109,7 +109,7 @@ public class PostSearchIntegrationTest extends IntegrationFixture {
     @Test
     void 빈_값을_검색하면_빈_리스트가_조회된다() {
         final var 검색된_게시글_조회_결과 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .when()
                 .queryParam("query", "")

@@ -26,7 +26,7 @@ public class ImageFileSizeIntegrationTest extends IntegrationFixture implements 
         final Member 작성자 = memberTestSupport.builder().build();
         final String sessionId = 로그인(작성자);
         final var 게시글_생성_응답 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .multiPart("title", "this is title")
@@ -47,7 +47,7 @@ public class ImageFileSizeIntegrationTest extends IntegrationFixture implements 
         final String sessionId = 로그인(작성자);
 
         final var 게시글_생성_응답 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .multiPart("title", "this is title")
@@ -76,7 +76,7 @@ public class ImageFileSizeIntegrationTest extends IntegrationFixture implements 
         final String sessionId = 로그인(작성자);
 
         final var 게시글_생성_응답 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .multiPart("title", "this is title")

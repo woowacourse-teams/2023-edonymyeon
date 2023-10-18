@@ -69,7 +69,7 @@ public class ThumbsIntegrationTest extends IntegrationFixture {
     @Test
     void 로그인_되어있지_않다면_추천기능을_사용할_수_없다_401_UNAUTHORIZED() {
         EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .when()
                 .put("posts/" + postId + "/up")
@@ -210,7 +210,7 @@ public class ThumbsIntegrationTest extends IntegrationFixture {
         final String sessionId = 로그인(member);
 
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .when()
@@ -224,7 +224,7 @@ public class ThumbsIntegrationTest extends IntegrationFixture {
         final String sessionId = 로그인(member);
 
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .when()

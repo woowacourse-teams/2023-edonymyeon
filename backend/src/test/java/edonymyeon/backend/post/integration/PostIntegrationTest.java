@@ -51,7 +51,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
     @Test
     void 회원이_아니면_게시글_작성_불가능하다() {
         final var response = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .multiPart("title", "this is title")
                 .multiPart("content", "this is content")
@@ -71,7 +71,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final Member 작성자 = 사용자를_하나_만든다();
         final String sessionId = 로그인(작성자);
         final var response = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .multiPart("title", "this is title")
@@ -92,7 +92,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final String sessionId = 로그인(작성자);
 
         final ExtractableResponse<Response> 게시글_작성_응답 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .multiPart("title", "제목")
@@ -141,7 +141,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final Member 작성자가_아닌_사람 = 사용자를_하나_만든다();
         final String sessionId = 로그인(작성자가_아닌_사람);
         EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .when()
@@ -259,7 +259,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         한_사용자가_게시글을_서른개_작성한다();
 
         final var 게시글_전체_조회_응답 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .get("/posts")
                 .then()
@@ -285,7 +285,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         한_사용자가_게시글을_서른개_작성한다();
 
         final var 게시글_전체_조회_응답 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .param("size", 3)
                 .when()
@@ -313,7 +313,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         한_사용자가_게시글을_서른개_작성한다();
 
         final var 게시글_전체_조회_응답 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .param("size", 3)
                 .param("page", 1)
@@ -507,7 +507,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final String sessionId = 로그인(작성자);
 
         final ExtractableResponse<Response> 게시글_수정_응답 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .multiPart("title", "제목을 수정하자")
@@ -537,7 +537,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final String sessionId = 로그인(작성자가_아닌_사람);
 
         final ExtractableResponse<Response> 게시글_수정_응답 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .multiPart("title", "제목을 수정하자")
@@ -570,7 +570,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final String 유지할_이미지의_url = 게시글_상세_조회_응답.body().jsonPath().getString("images[0]");
 
         final ExtractableResponse<Response> 게시글_수정_응답 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .multiPart("title", "제목을 수정하자")
                 .multiPart("content", "내용을 수정하자")
@@ -600,7 +600,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final String sessionId = 로그인(작성자);
 
         final ExtractableResponse<Response> 게시글_수정_응답 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .multiPart("title", "제목을 수정하자")
@@ -631,7 +631,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final String sessionId = 로그인(작성자);
 
         final ExtractableResponse<Response> 게시글_수정_응답 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .multiPart("title", "제목을 수정하자")
@@ -666,7 +666,7 @@ public class PostIntegrationTest extends IntegrationFixture implements ImageFile
         final String sessionId = 로그인(작성자);
 
         final ExtractableResponse<Response> 게시글_수정_응답 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .multiPart("title", "제목을 수정하자")

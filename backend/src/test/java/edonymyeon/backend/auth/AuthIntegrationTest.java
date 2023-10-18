@@ -43,7 +43,7 @@ class AuthIntegrationTest extends IntegrationFixture {
     @Test
     void 이메일_중복을_체크한다_중복X() {
         final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .param("target", "email")
                 .param("value", "email@naver.com")
@@ -67,7 +67,7 @@ class AuthIntegrationTest extends IntegrationFixture {
                 .build();
 
         final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .param("target", "email")
                 .param("value", member.getEmail())
@@ -87,7 +87,7 @@ class AuthIntegrationTest extends IntegrationFixture {
     @Test
     void 닉네임_중복을_체크한다_중복X() {
         final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .param("target", "nickname")
                 .param("value", "2rinebabo")
@@ -111,7 +111,7 @@ class AuthIntegrationTest extends IntegrationFixture {
                 .build();
 
         final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .param("target", "nickname")
                 .param("value", member.getNickname())
@@ -133,7 +133,7 @@ class AuthIntegrationTest extends IntegrationFixture {
         final JoinRequest request = new JoinRequest("email@naver.com", "password123!", "kerrobabo", "unknownDevice");
 
         final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
@@ -156,7 +156,7 @@ class AuthIntegrationTest extends IntegrationFixture {
         final JoinRequest request = new JoinRequest(duplicatedEmail, "password123!", "kerrobabo", "unknownDevice");
 
         final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
@@ -179,7 +179,7 @@ class AuthIntegrationTest extends IntegrationFixture {
         final JoinRequest request = new JoinRequest("foxbabo", "password123!", duplicatedNickname, "unknownDevice");
 
         final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
@@ -200,7 +200,7 @@ class AuthIntegrationTest extends IntegrationFixture {
                 joinRequest.deviceToken());
 
         final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(request)
@@ -229,7 +229,7 @@ class AuthIntegrationTest extends IntegrationFixture {
         final KakaoLoginRequest kakaoLoginRequest = new KakaoLoginRequest("accessToken", "testDeviceToken");
 
         final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(kakaoLoginRequest)
@@ -253,7 +253,7 @@ class AuthIntegrationTest extends IntegrationFixture {
         final KakaoLoginRequest kakaoLoginRequest = new KakaoLoginRequest("accessToken", "testDeviceToken");
 
         EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(kakaoLoginRequest)
@@ -280,7 +280,7 @@ class AuthIntegrationTest extends IntegrationFixture {
         로그아웃_요청(member, header);
 
         final ExtractableResponse<Response> 내가_쓴글_조회 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(cookieValue)
                 .build()
                 .when()
@@ -305,7 +305,7 @@ class AuthIntegrationTest extends IntegrationFixture {
                 deviceToken);
 
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .contentType(ContentType.JSON)
                 .body(loginRequest)
@@ -320,7 +320,7 @@ class AuthIntegrationTest extends IntegrationFixture {
         final LogoutRequest logoutRequest = new LogoutRequest(deviceToken);
 
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(header.getValue())
                 .build()
                 .contentType(ContentType.JSON)
