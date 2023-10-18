@@ -32,7 +32,8 @@ public class NotificationController {
 
     @ApiVersion(from = "1.0")
     @PutMapping("/admin/notification/content")
-    public void updateNotificationMessage(@RequestBody NotificationContent notificationContent) {
+    public ResponseEntity<Void> updateNotificationMessage(@RequestBody NotificationContent notificationContent) {
         notificationService.updateContent(notificationContent);
+        return ResponseEntity.ok().build();
     }
 }

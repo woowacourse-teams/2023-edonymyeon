@@ -7,7 +7,7 @@ import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.domain.Notification;
-import edonymyeon.backend.notification.domain.NotificationMessageId;
+import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId;
 import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.notification.domain.notification_content.application.NotificationMessageRepository;
 import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContent;
@@ -69,7 +69,7 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
         final Member 사용자 = 사용자를_하나_만든다();
         final long 게시글id = 응답의_location헤더에서_id를_추출한다(게시글을_하나_만든다(사용자));
         final Long 알림id = notificationRepository
-                .save(new Notification(사용자, new NotificationContent(NotificationMessageId.THUMBS_NOTIFICATION_TITLE, "알림이 등록되었어요!", "알림을 확인해보세요!"), ScreenType.POST, 게시글id))
+                .save(new Notification(사용자, new NotificationContent(NotificationContentId.THUMBS_NOTIFICATION_TITLE, "알림이 등록되었어요!", "알림을 확인해보세요!"), ScreenType.POST, 게시글id))
                 .getId();
 
         var notification = notificationRepository.findById(알림id);
@@ -97,14 +97,13 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
             @Autowired NotificationMessageRepository notificationMessageRepository
     ) {
         final NotificationContent notificationContent
-                = new NotificationContent(NotificationMessageId.THUMBS_NOTIFICATION_TITLE, "원래 알림 제목", "원래 알림 본문");
+                = new NotificationContent(NotificationContentId.THUMBS_NOTIFICATION_TITLE, "원래 알림 제목", "원래 알림 본문");
         notificationMessageRepository.save(notificationContent);
 
-        assertThat(notificationMessageRepository.findById(NotificationMessageId.THUMBS_NOTIFICATION_TITLE).get())
-                .isEqualTo(notificationContent);
+        assertThat(notificationMessageRepository.findById(NotificationContentId.THUMBS_NOTIFICATION_TITLE)).contains(notificationContent);
 
         final NotificationContent notificationContentToUpdate
-                = new NotificationContent(NotificationMessageId.THUMBS_NOTIFICATION_TITLE, "새로운 알림 제목", "새로운 알림 본문");
+                = new NotificationContent(NotificationContentId.THUMBS_NOTIFICATION_TITLE, "새로운 알림 제목", "새로운 알림 본문");
 
         EdonymyeonRestAssured.builder()
                 .version("1.0.0")
@@ -116,7 +115,6 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
                 .then()
                 .statusCode(HttpStatus.OK.value());
 
-        assertThat(notificationMessageRepository.findById(NotificationMessageId.THUMBS_NOTIFICATION_TITLE).get())
-                .isEqualTo(notificationContentToUpdate);
+        assertThat(notificationMessageRepository.findById(NotificationContentId.THUMBS_NOTIFICATION_TITLE)).contains(notificationContentToUpdate);
     }
 }

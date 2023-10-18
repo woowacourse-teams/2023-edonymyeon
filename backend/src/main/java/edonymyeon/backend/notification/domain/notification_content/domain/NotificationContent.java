@@ -2,7 +2,6 @@ package edonymyeon.backend.notification.domain.notification_content.domain;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
-import edonymyeon.backend.notification.domain.NotificationMessageId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -16,21 +15,22 @@ import lombok.ToString;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class NotificationContent {
+
     @Id
     @Enumerated(EnumType.STRING)
-    private NotificationMessageId id;
+    private NotificationContentId id;
 
     private String title;
 
     private String body;
 
-    public NotificationContent(final NotificationMessageId id, final String title, final String body) {
+    public NotificationContent(final NotificationContentId id, final String title, final String body) {
         this.id = id;
         this.title = title;
         this.body = body;
     }
 
-    public NotificationMessageId getId() {
+    public NotificationContentId getId() {
         return id;
     }
 

@@ -1,6 +1,6 @@
-package edonymyeon.backend.notification.domain;
+package edonymyeon.backend.notification.domain.notification_content.domain;
 
-public enum NotificationMessageId {
+public enum NotificationContentId {
 
     THUMBS_NOTIFICATION_TITLE,
     THUMBS_PER_10_NOTIFICATION_TITLE,
