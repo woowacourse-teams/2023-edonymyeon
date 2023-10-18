@@ -27,8 +27,9 @@ public class Notification extends TemporalRecord {
     @JoinColumn(nullable = false)
     private Member member;
 
-    @ManyToOne
-    private NotificationContent notificationContent;
+    private String title;
+
+    private String body;
 
     @Enumerated(EnumType.STRING)
     private ScreenType screenType;
@@ -40,7 +41,8 @@ public class Notification extends TemporalRecord {
 
     public Notification(final Member member, final NotificationContent notificationContent, final ScreenType screenType, final Long postId) {
         this.member = member;
-        this.notificationContent = notificationContent;
+        this.title = notificationContent.getTitle();
+        this.body = notificationContent.getBody();
         this.screenType = screenType;
         this.postId = postId;
         this.read = false;
@@ -55,11 +57,11 @@ public class Notification extends TemporalRecord {
     }
 
     public String getTitle() {
-        return this.notificationContent.getTitle();
+        return this.title;
     }
 
     public String getBody() {
-        return this.notificationContent.getBody();
+        return this.body;
     }
 
     public ScreenType getScreenType() {

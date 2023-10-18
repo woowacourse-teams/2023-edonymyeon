@@ -22,9 +22,10 @@ import edonymyeon.backend.setting.domain.SettingType;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.application.ThumbsService;
 import jakarta.persistence.EntityManager;
+import java.util.List;
 import java.util.Optional;
-import org.assertj.core.api.SoftAssertions;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -146,6 +147,36 @@ class NotificationService_NotificationMessageTest extends IntegrationFixture {
         assertSoftly(softAssertions -> {
             softAssertions.assertThat(updatedNotification.getTitle()).isEqualTo("변경한 알림 제목");
             softAssertions.assertThat(updatedNotification.getBody()).isEqualTo("변경한 알림 내용");
+        });
+    }
+
+    @Test
+    void 알림_메시지가_수정된_이후_새로_등록된_알림에만_변경_사항이_적용된다(
+            @Autowired NotificationRepository notificationRepository
+    ) {
+        // given
+        final Member member = 회원만들기();
+        final Post post = 게시글만들기(member);
+        주요기능모킹하기(member, post);
+
+        notificationService.sendThumbsNotificationToWriter(post);
+
+        // when
+        final NotificationContent notificationContent
+                = new NotificationContent(NotificationMessageId.THUMBS_NOTIFICATION_TITLE, "변경한 알림 제목", "변경한 알림 내용");
+        notificationService.updateContent(notificationContent);
+
+        // then
+        notificationService.sendThumbsNotificationToWriter(post); // 따봉을 취소했다가 다시 한 상황
+        final List<Notification> savedNotification = notificationRepository.findAll();
+        Assertions.assertAll("이전에 기록된 알림의 제목과 본문 내용은 변경이 없어야 한다.", () -> {
+            assertThat(savedNotification.get(0).getTitle()).isEqualTo("당신의 글에 따봉이 달려있어요! 짱");
+            assertThat(savedNotification.get(0).getBody()).isEqualTo("따봉맨을 확인해 보세요.");
+        });
+
+        Assertions.assertAll("메시지가 변경된 이후 발송한 알림에만 제목과 본문에 변경 사항이 반영된다.", () -> {
+            assertThat(savedNotification.get(1).getTitle()).isEqualTo("변경한 알림 제목");
+            assertThat(savedNotification.get(1).getBody()).isEqualTo("변경한 알림 내용");
         });
     }
 
