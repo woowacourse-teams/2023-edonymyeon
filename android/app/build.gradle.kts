@@ -24,7 +24,7 @@ android {
         applicationId = "app.edonymyeon"
         minSdk = 28
         targetSdk = 33
-        versionCode = 13
+        versionCode = 14
         versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
