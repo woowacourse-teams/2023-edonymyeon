@@ -9,6 +9,7 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.NotificationMessageId;
 import edonymyeon.backend.notification.domain.ScreenType;
+import edonymyeon.backend.notification.domain.notification_content.application.NotificationMessageRepository;
 import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContent;
 import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
@@ -24,6 +25,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -88,5 +90,33 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
         notification.ifPresentOrElse(
                 not -> assertThat(not.isRead()).isTrue(),
                 Assertions::fail);
+    }
+
+    @Test
+    void 알림으로_보낼_메시지의_내용을_수정할_수_있다(
+            @Autowired NotificationMessageRepository notificationMessageRepository
+    ) {
+        final NotificationContent notificationContent
+                = new NotificationContent(NotificationMessageId.THUMBS_NOTIFICATION_TITLE, "원래 알림 제목", "원래 알림 본문");
+        notificationMessageRepository.save(notificationContent);
+
+        assertThat(notificationMessageRepository.findById(NotificationMessageId.THUMBS_NOTIFICATION_TITLE).get())
+                .isEqualTo(notificationContent);
+
+        final NotificationContent notificationContentToUpdate
+                = new NotificationContent(NotificationMessageId.THUMBS_NOTIFICATION_TITLE, "새로운 알림 제목", "새로운 알림 본문");
+
+        EdonymyeonRestAssured.builder()
+                .version("1.0.0")
+                .build()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(notificationContentToUpdate)
+                .when()
+                .put("/admin/notification/content")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+
+        assertThat(notificationMessageRepository.findById(NotificationMessageId.THUMBS_NOTIFICATION_TITLE).get())
+                .isEqualTo(notificationContentToUpdate);
     }
 }
