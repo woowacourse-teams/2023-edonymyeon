@@ -30,8 +30,8 @@ import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.application.dto.response.DuplicateCheckResponse;
-import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_0_0;
-import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_1_0;
+import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_0;
+import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_1;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
@@ -212,8 +212,8 @@ class MemberControllerDocsTest extends DocsTest {
     @Test
     void 회원정보를_조회한다_V1(@Autowired Domain domain) throws Exception {
         final Member 회원 = testMemberBuilder.builder().id(1L).buildWithoutSaving();
-        var response = new MyPageResponseV1_0_0(회원.getId(), 회원.getNickname());
-        when(memberService.findMemberInfoByIdV1_0_0(회원.getId())).thenReturn(response);
+        var response = new MyPageResponseV1_0(회원.getId(), 회원.getNickname());
+        when(memberService.findMemberInfoByIdV1_0(회원.getId())).thenReturn(response);
 
         final MockHttpServletRequestBuilder 회원_정보_조회_요청 = get("/profile")
                 .header("X-API-VERSION", 1)
@@ -229,17 +229,17 @@ class MemberControllerDocsTest extends DocsTest {
     }
 
     @Test
-    void 회원정보를_조회한다_V1_1_0(@Autowired Domain domain) throws Exception {
+    void 회원정보를_조회한다_V1_1(@Autowired Domain domain) throws Exception {
         final Member 회원 = testMemberBuilder.builder().id(1L).buildWithoutSaving();
-        var response = new MyPageResponseV1_1_0(회원.getId(), 회원.getNickname(),
+        var response = new MyPageResponseV1_1(회원.getId(), 회원.getNickname(),
                 domain.convertToImageUrl(회원.getProfileImageInfo()));
-        when(memberService.findMemberInfoByIdV1_1_0(회원.getId())).thenReturn(response);
+        when(memberService.findMemberInfoByIdV1_1(회원.getId())).thenReturn(response);
 
         final MockHttpServletRequestBuilder 회원_정보_조회_요청 = get("/profile")
                 .header("X-API-VERSION", 2)
                 .sessionAttr(USER.getSessionId(), 회원.getId());
 
-        final RestDocumentationResultHandler 문서화 = document("profile-v1_1_0",
+        final RestDocumentationResultHandler 문서화 = document("profile-V1_1",
                 responseFields(fieldWithPath("id").description("회원 id"),
                         fieldWithPath("nickname").description("닉네임"),
                         fieldWithPath("profileImage").description("프로필 사진")));

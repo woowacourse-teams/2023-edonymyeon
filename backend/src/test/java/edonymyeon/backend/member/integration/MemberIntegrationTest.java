@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
-import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_0_0;
-import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_1_0;
+import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_0;
+import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_1;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.domain.Post;
@@ -41,7 +41,7 @@ class MemberIntegrationTest extends IntegrationFixture {
                 .then()
                 .extract();
 
-        final MyPageResponseV1_0_0 myPageResponse = response.as(MyPageResponseV1_0_0.class);
+        final MyPageResponseV1_0 myPageResponse = response.as(MyPageResponseV1_0.class);
         assertAll(
                 () -> assertThat(myPageResponse.memberId()).isEqualTo(member.getId()),
                 () -> assertThat(myPageResponse.nickname()).isEqualTo(member.getNickname()),
@@ -50,7 +50,7 @@ class MemberIntegrationTest extends IntegrationFixture {
     }
 
     @Test
-    void 회원_정보_V1_1_0_조회시_OK를_응답한다() {
+    void 회원_정보_V1_1_조회시_OK를_응답한다() {
         final Member member = memberTestSupport.builder()
                 .build();
 
@@ -65,7 +65,7 @@ class MemberIntegrationTest extends IntegrationFixture {
                 .then()
                 .extract();
 
-        final MyPageResponseV1_1_0 myPageResponseV110 = response.as(MyPageResponseV1_1_0.class);
+        final MyPageResponseV1_1 myPageResponseV110 = response.as(MyPageResponseV1_1.class);
         assertAll(
                 () -> assertThat(myPageResponseV110.id()).isEqualTo(member.getId()),
                 () -> assertThat(myPageResponseV110.nickname()).isEqualTo(member.getNickname()),
