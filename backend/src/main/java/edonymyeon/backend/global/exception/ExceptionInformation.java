@@ -79,7 +79,8 @@ public enum ExceptionInformation {
     ABUSING_TYPE_NOT_FOUND(9100, "존재하지 않는 리포팅 카테고리 분류입니다."),
     REPORT_TYPE_NOT_FOUND(9101, "존재하지 않는 리포팅 타입 분류입니다."),
     NOTIFICATION_REQUEST_FAILED(9200, "알림 발송 요청에 실패했습니다."),
-    NOTIFICATION_MESSAGE_NOT_FOUND(9201, "알림 발송에 필요한 메시지를 찾지 못했습니다.");
+    NOTIFICATION_MESSAGE_NOT_FOUND(9201, "알림 발송에 필요한 메시지를 찾지 못했습니다."),
+    NOTIFICATION_MESSAGE_INVALID_CONTENT(9203, "알림 메시지로 사용할 수 없는 메시지입니다.");
 
     private int code;
 

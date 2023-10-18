@@ -210,4 +210,15 @@ public class NotificationService {
     public void deleteNotificationByPost(final Long postId) {
         notificationRepository.deleteAllByPostId(postId);
     }
+
+    /**
+     * 알림 메시지로 보낼 제목과 본문 내용을 변경합니다.
+     * @param content 변경할 Notification 정보
+     */
+    @Transactional
+    public void updateContent(final NotificationContent content) {
+        final NotificationContent notificationContent = notificationMessageRepository.findById(content.getId())
+                .orElseThrow(() -> new EdonymyeonException(ExceptionInformation.NOTIFICATION_MESSAGE_NOT_FOUND));
+        notificationContent.update(content);
+    }
 }
