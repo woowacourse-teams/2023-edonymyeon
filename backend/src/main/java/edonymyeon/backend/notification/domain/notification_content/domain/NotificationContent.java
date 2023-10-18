@@ -18,7 +18,7 @@ import lombok.ToString;
 public class NotificationContent {
     @Id
     @Enumerated(EnumType.STRING)
-    private NotificationMessage id;
+    private NotificationMessageId id;
 
     private String title;
 
