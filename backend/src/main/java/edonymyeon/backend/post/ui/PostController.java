@@ -25,7 +25,7 @@ public class PostController {
 
     private final PostService postService;
 
-    @ApiVersion(value = {1})
+    @ApiVersion(value = {1, 2})
     @PostMapping
     public ResponseEntity<PostIdResponse> createPost(@AuthPrincipal MemberId memberId,
                                                      @ModelAttribute PostRequest postRequest) {
@@ -34,14 +34,14 @@ public class PostController {
                 .body(response);
     }
 
-    @ApiVersion(value = {1})
+    @ApiVersion(value = {1, 2})
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(@AuthPrincipal MemberId memberId, @PathVariable Long postId) {
         postService.deletePost(memberId, postId);
         return ResponseEntity.noContent().build();
     }
 
-    @ApiVersion(value = {1})
+    @ApiVersion(value = {1, 2})
     @PutMapping("/{postId}")
     public ResponseEntity<PostIdResponse> updatePost(@AuthPrincipal MemberId memberId,
                                                      @ModelAttribute PostModificationRequest postModificationRequest,

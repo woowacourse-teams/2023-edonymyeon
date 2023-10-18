@@ -6,7 +6,6 @@ import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.presentation.common.imageutil.processAndAdjustImage
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
@@ -14,6 +13,7 @@ import com.app.edonymyeon.presentation.ui.mypost.dialog.ConsumptionDialog
 import com.app.edonymyeon.presentation.uimodel.PostEditorUiModel
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.domain.edonymyeon.model.PostEditor
+import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -23,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PostEditorViewModel @Inject constructor(
     private val repository: PostRepository,
-) : BaseViewModel() {
+    authRepository: AuthRepository,
+) : BaseViewModel(authRepository) {
     private val images = mutableListOf<String>()
     private val _galleryImages = MutableLiveData<List<String>>()
     val galleryImages: LiveData<List<String>> get() = _galleryImages
@@ -57,7 +58,7 @@ class PostEditorViewModel @Inject constructor(
             ).onSuccess {
                 _postId.value = (it as PostEditorResponse).id
             }.onFailure {
-                it as CustomThrowable
+                throw it
             }
         }
     }
@@ -73,7 +74,7 @@ class PostEditorViewModel @Inject constructor(
             ).onSuccess {
                 _postId.value = (it as PostEditorResponse).id
             }.onFailure {
-                it as CustomThrowable
+                throw it
             }
         }
     }
@@ -91,7 +92,9 @@ class PostEditorViewModel @Inject constructor(
     fun checkPriceValidate(price: CharSequence, start: Int, end: Int, count: Int) {
         val postPrice = price.toString()
         runCatching {
-            if (postPrice != ConsumptionDialog.BLANK) postPrice.toInt()
+            if (postPrice != ConsumptionDialog.BLANK) {
+                postPrice.toInt()
+            }
         }.onSuccess {
             _isPostPriceValid.value = true
         }.onFailure {

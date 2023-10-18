@@ -50,13 +50,15 @@ public class PostServiceHotPostsTest {
 
     @Test
     void 캐시가_존재하지_않아도_조회되고_새로_캐싱한다() {
-        postTestSupport.builder().build();
-        postTestSupport.builder().build();
+        final Post post1 = postTestSupport.builder().build();
+        final Post post2 = postTestSupport.builder().build();
 
         var hotPosts = postReadService.findHotPosts(findingCondition);
 
         assertSoftly(softly -> {
                     softly.assertThat(hotPosts.getContent()).hasSize(2);
+                    softly.assertThat(hotPosts.getContent().get(0).id()).isEqualTo(post2.getId());
+                    softly.assertThat(hotPosts.getContent().get(1).id()).isEqualTo(post1.getId());
                     softly.assertThat(hotPosts.isLast()).isTrue();
                 }
         );
@@ -86,7 +88,7 @@ public class PostServiceHotPostsTest {
         assertThat(hotPosts1.getContent()).hasSize(1);
 
         // when
-        Thread.sleep(3500);
+        Thread.sleep(1000);
         assertThat(postCachingService.shouldRefreshCache(findingCondition)).isTrue();
 
         postTestSupport.builder().build();
@@ -111,7 +113,7 @@ public class PostServiceHotPostsTest {
         assertThat(빈_핫게시글).isEmpty();
 
         // when
-        Thread.sleep(3500);
+        Thread.sleep(1000);
         assertThat(postCachingService.shouldRefreshCache(findingCondition)).isTrue();
 
         Post 새로운_게시글 = postTestSupport.builder().build();

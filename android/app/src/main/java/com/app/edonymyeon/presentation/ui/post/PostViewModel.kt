@@ -16,8 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PostViewModel @Inject constructor(
     private val postRepository: PostRepository,
-    private val authRepository: AuthRepository,
-) : BaseViewModel() {
+    authRepository: AuthRepository,
+) : BaseViewModel(authRepository) {
     private var currentPage = Page()
     private var isLastPage = false
 
@@ -39,6 +39,9 @@ class PostViewModel @Inject constructor(
                 currentPage = currentPage.increasePage()
                 isLastPage = result.isLast
             }
+                .onFailure {
+                    throw it
+                }
         }
     }
 

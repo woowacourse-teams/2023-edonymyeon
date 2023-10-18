@@ -30,7 +30,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 @SuppressWarnings("NonAsciiCharacters")
-public class ConsumptionControllerDocsTest extends DocsTest {
+class ConsumptionControllerDocsTest extends DocsTest {
 
     private final TestMemberBuilder testMemberBuilder = new TestMemberBuilder(null);
 
@@ -72,7 +72,7 @@ public class ConsumptionControllerDocsTest extends DocsTest {
 
         final MockHttpServletRequestBuilder 최근_소비_조회_요청 = get("/consumptions?period-month={periodMonth}", 1)
                 .sessionAttr(USER.getSessionId(), 회원.getId())
-                .header("X-API-VERSION", 1);
+                .header("X-API-VERSION", 1, 2);
 
         final RestDocumentationResultHandler 문서화 = document("recent-consumptions",
                 preprocessResponse(prettyPrint()),

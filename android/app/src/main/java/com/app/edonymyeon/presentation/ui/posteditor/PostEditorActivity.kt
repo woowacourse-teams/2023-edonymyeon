@@ -2,20 +2,21 @@ package com.app.edonymyeon.presentation.ui.posteditor
 
 import android.Manifest
 import android.content.ClipData
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.core.content.FileProvider
 import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityPostEditorBinding
 import com.app.edonymyeon.presentation.common.activity.BaseActivity
@@ -29,12 +30,16 @@ import com.app.edonymyeon.presentation.util.makeSnackbar
 import com.app.edonymyeon.presentation.util.makeSnackbarWithEvent
 import com.domain.edonymyeon.model.PostEditor
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDateTime
+import java.io.File
 
 @AndroidEntryPoint
 class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorViewModel>(
     { ActivityPostEditorBinding.inflate(it) },
 ) {
+
+    private var cameraUri: Uri? = null
+
+    private var price = ""
 
     override val viewModel: PostEditorViewModel by viewModels()
 
@@ -56,10 +61,8 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         }
 
     private val takeCameraImage =
-        registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
-            if (bitmap != null) {
-                setCameraImage(bitmap)
-            }
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+            if (success) setCameraImage(cameraUri)
         }
 
     private val permissionRequestLauncher = registerForActivityResult(
@@ -83,6 +86,26 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         intent.getParcelableExtraCompat(KEY_POST_EDITOR_POST) as? PostUiModel
     }
 
+    private val textWatcher by lazy {
+        object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
+                Unit
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (!TextUtils.isEmpty(s.toString()) && s.toString() != price) {
+                    viewModel.checkPriceValidate(
+                        s.toString().replace(",", ""),
+                        start,
+                        start + count,
+                        count,
+                    )
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) = Unit
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -93,6 +116,7 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         setObserver()
         setPostIfUpdate()
         setClickListener()
+        setPriceChangedListener()
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -143,7 +167,18 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         viewModel.isPostPriceValid.observe(this) { isValid ->
             if (!isValid) {
                 binding.root.makeSnackbar(this.getString(R.string.dialog_input_price_error_message))
-                binding.etPostPrice.setText("")
+                binding.etPostPrice.removeTextChangedListener(textWatcher)
+                binding.etPostPrice.setText(price)
+                binding.etPostPrice.setSelection(binding.etPostPrice.text.length)
+                binding.etPostPrice.addTextChangedListener(textWatcher)
+            } else {
+                price =
+                    getString(
+                        R.string.all_price,
+                        binding.etPostPrice.text.toString().replace(",", "").toInt(),
+                    )
+                binding.etPostPrice.setText(price)
+                binding.etPostPrice.setSelection(price.length)
             }
         }
         viewModel.isUpdateAble.observe(this) { isAble ->
@@ -194,7 +229,9 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
     }
 
     private fun navigateToCamera() {
-        takeCameraImage.launch(null)
+        val photoFile = File.createTempFile("IMG_", ".jpg", this.cacheDir)
+        cameraUri = FileProvider.getUriForFile(this, "$packageName.provider", photoFile)
+        takeCameraImage.launch(cameraUri)
     }
 
     private fun navigateToGallery() {
@@ -208,7 +245,7 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         loadingDialog.show(supportFragmentManager, "LoadingDialog")
         val postTitle = binding.etPostTitle.text.toString()
         val postContent = binding.etPostContent.text.toString().ifBlank { "" }
-        val postPrice = binding.etPostPrice.text.toString().toInt()
+        val postPrice = binding.etPostPrice.text.toString().replace(",", "").toInt()
         val postEditor = PostEditor(postTitle, postContent, postPrice)
         when (originActivityKey) {
             POST_CODE -> viewModel.savePost(this, postEditor)
@@ -255,8 +292,7 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         setAdapter()
     }
 
-    private fun setCameraImage(bitmap: Bitmap) {
-        val imageUri = getImageUri(bitmap)
+    private fun setCameraImage(imageUri: Uri?) {
         viewModel.addSelectedImages(imageUri.toString())
     }
 
@@ -273,19 +309,6 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         }
     }
 
-    private fun getImageUri(bitmap: Bitmap): Uri? {
-        val resolver = applicationContext.contentResolver
-        resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-            ?.let { imageUri ->
-                val outputStream = resolver.openOutputStream(imageUri)
-                outputStream?.use { stream ->
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-                }
-                return imageUri
-            }
-        return null
-    }
-
     private fun checkImageCountLimit(count: Int, limitCount: Int): Boolean {
         if (count > limitCount) {
             binding.clPostEditor.makeSnackbar(getString(R.string.post_editor_image_limit_message))
@@ -299,6 +322,20 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         finish()
     }
 
+    private fun setPriceChangedListener() {
+        binding.etPostPrice.addTextChangedListener(textWatcher)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (!isChangingConfigurations) {
+            cameraUri?.let { uri ->
+                val contentResolver = applicationContext.contentResolver
+                contentResolver.delete(uri, null, null)
+            }
+        }
+    }
+
     companion object {
         private const val MAX_IMAGES_COUNT = 10
         private const val KEY_POST_EDITOR_CHECK = "key_post_editor_check"
@@ -306,11 +343,6 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         const val POST_CODE = 2000
         const val UPDATE_CODE = 3000
         const val RESULT_RELOAD_CODE = 1001
-
-        private val contentValues = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "ImageTitle${LocalDateTime.now()}")
-            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
-        }
 
         private val requestPermissions = arrayOf(
             Manifest.permission.WRITE_EXTERNAL_STORAGE,

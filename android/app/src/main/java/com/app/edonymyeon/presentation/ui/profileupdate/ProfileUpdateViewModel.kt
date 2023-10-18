@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.WriterUiModel
+import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -11,7 +12,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileUpdateViewModel @Inject constructor(
     private val repository: ProfileRepository,
-) : BaseViewModel() {
+    authRepository: AuthRepository,
+) : BaseViewModel(authRepository) {
     private val _profile = MutableLiveData<WriterUiModel>()
     val profile: LiveData<WriterUiModel>
         get() = _profile

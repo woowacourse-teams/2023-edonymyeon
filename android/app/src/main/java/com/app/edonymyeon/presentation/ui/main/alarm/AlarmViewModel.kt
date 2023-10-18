@@ -16,8 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AlarmViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository,
-    private val authRepository: AuthRepository,
-) : BaseViewModel() {
+    authRepository: AuthRepository,
+) : BaseViewModel(authRepository) {
     private var currentPage = Page()
     private var isLastPage = false
 
@@ -42,6 +42,8 @@ class AlarmViewModel @Inject constructor(
                     }.orEmpty()
                 currentPage = currentPage.increasePage()
                 isLastPage = result.getOrNull()?.isLast ?: true
+            } else {
+                result.onFailure { throw it }
             }
         }
     }

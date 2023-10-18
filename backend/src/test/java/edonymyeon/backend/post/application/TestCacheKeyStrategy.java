@@ -6,7 +6,7 @@ public class TestCacheKeyStrategy implements CacheKeyStrategy {
 
     private static final String CACHE_NAME_FORMAT = "TEST:SIZE=%s_PAGE=%s";
 
-    private static final int EXPIRED_SECONDS = 3;
+    private static final int EXPIRED_SECONDS = 1;
 
     @Override
     public String geCacheKey(final Integer size, final Integer page){

@@ -106,4 +106,14 @@ class MemberTest {
                 .isInstanceOf(BusinessLogicException.class)
                 .hasMessage(ENCODED_PASSWORD_INVALID.getMessage());
     }
+
+    @Test
+    void 회원정보_수정시_잘못된_닉네임_들어오면_예외발생() {
+        List<String> emptyList = Collections.emptyList();
+        final Member member = new Member("test@email.com", "password1234!", "nickname", null, emptyList);
+
+        assertThatThrownBy(() -> member.updateNickname(""))
+                .isInstanceOf(EdonymyeonException.class)
+                .hasMessage(MEMBER_NICKNAME_INVALID.getMessage());
+    }
 }
