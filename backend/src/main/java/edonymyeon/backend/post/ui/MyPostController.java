@@ -21,7 +21,7 @@ public class MyPostController {
 
     private final MyPostService myPostService;
 
-    @ApiVersion(value = {1, 2})
+    @ApiVersion(from = "1.0")
     @GetMapping("/my-posts")
     public ResponseEntity<PostSlice<MyPostResponse>> findMyPosts(@AuthPrincipal final MemberId memberId,
                                                              @PostPaging GeneralFindingCondition generalFindingCondition) {

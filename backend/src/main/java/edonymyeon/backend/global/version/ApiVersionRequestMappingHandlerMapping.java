@@ -15,7 +15,7 @@ public class ApiVersionRequestMappingHandlerMapping extends RequestMappingHandle
 
     private RequestCondition<?> createCondition(ApiVersion apiVersion) {
         return Optional.ofNullable(apiVersion)
-                .map(item -> new ApiVersionRequestCondition(item.value()))
+                .map(item -> new ApiVersionRequestCondition(item.from(), item.to()))
                 .orElse(null);
     }
 }
