@@ -19,12 +19,12 @@ public class EdonymyeonRestAssured {
 
     public static class EdonymyeonRestAssuredBuilder {
 
-        private static final int INIT_VERSION = 1;
+        private static final String INIT_VERSION = "1.0.0";
 
-        private int version = INIT_VERSION;
+        private String version = INIT_VERSION;
         private String sessionId;
 
-        public EdonymyeonRestAssuredBuilder version(final int version) {
+        public EdonymyeonRestAssuredBuilder version(final String version) {
             this.version = version;
             return this;
         }

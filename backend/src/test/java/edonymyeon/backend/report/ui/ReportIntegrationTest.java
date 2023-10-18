@@ -54,7 +54,7 @@ class ReportIntegrationTest extends IntegrationFixture implements ImageFileClean
         final ReportRequest reportRequest = new ReportRequest("POST", postId, 4, null);
 
         final ExtractableResponse<Response> 게시글_신고_응답 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .body(reportRequest)
