@@ -41,16 +41,16 @@ class MemberIntegrationTest extends IntegrationFixture {
                 .then()
                 .extract();
 
-        final MyPageResponseV1_0_0 myPageResponseV100 = response.as(MyPageResponseV1_0_0.class);
+        final MyPageResponseV1_0_0 myPageResponse = response.as(MyPageResponseV1_0_0.class);
         assertAll(
-                () -> assertThat(myPageResponseV100.id()).isEqualTo(member.getId()),
-                () -> assertThat(myPageResponseV100.nickname()).isEqualTo(member.getNickname()),
+                () -> assertThat(myPageResponse.memberId()).isEqualTo(member.getId()),
+                () -> assertThat(myPageResponse.nickname()).isEqualTo(member.getNickname()),
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         );
     }
 
     @Test
-    void 회원_정보__조회시_OK를_응답한다() {
+    void 회원_정보_V1_1_0_조회시_OK를_응답한다() {
         final Member member = memberTestSupport.builder()
                 .build();
 
