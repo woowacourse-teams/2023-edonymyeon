@@ -41,7 +41,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @IntegrationTest
-public class ReportDocsTest implements ImageFileCleaner {
+class ReportDocsTest implements ImageFileCleaner {
 
     private final MockMvc mockMvc;
 
@@ -92,7 +92,7 @@ public class ReportDocsTest implements ImageFileCleaner {
                 "");
 
         final var 게시글_상세_조회_요청 = post("/report")
-                .header("X-API-VERSION", 1)
+                .header("X-API-VERSION", 1, 2)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(reportRequest))
                 .sessionAttr(USER.getSessionId(), 글쓴이.getId());

@@ -17,7 +17,7 @@ public class ConsumptionController {
 
     private final ConsumptionService consumptionService;
 
-    @ApiVersion(value = {1})
+    @ApiVersion(value = {1, 2})
     @GetMapping("/consumptions")
     public ResponseEntity<RecentConsumptionsResponse> findRecentConsumptions(@AuthPrincipal final MemberId memberId,
                                                                              @RequestParam("period-month") final Integer periodMonth) {

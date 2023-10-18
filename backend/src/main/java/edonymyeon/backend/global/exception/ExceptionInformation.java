@@ -59,6 +59,7 @@ public enum ExceptionInformation {
     IMAGE_EXTENSION_INVALID(5000, "등록할 수 없는 이미지 확장자입니다."),
     IMAGE_DOMAIN_INVALID(5001, "이미지의 url 경로가 잘못되었습니다."),
     IMAGE_STORE_NAME_INVALID(5002, "유효하지 않은 이미지 이름이 포함되어 있습니다."),
+    IMAGE_UPLOAD_FAIL(5003, "이미지 업로드에 실패했습니다."),
 
     // 6___: 소비, 절약 관련
     CONSUMPTION_POST_ID_ALREADY_EXIST(6000, "이미 소비, 절약 여부가 확정된 게시글입니다."),

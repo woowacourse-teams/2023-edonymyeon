@@ -11,7 +11,11 @@ import lombok.NoArgsConstructor;
 @Entity
 public class ProfileImageInfo extends ImageInfo {
 
-    public ProfileImageInfo(final String storeName) {
+    private ProfileImageInfo(final String storeName) {
         super(storeName);
+    }
+
+    public static ProfileImageInfo from(ImageInfo imageInfo) {
+        return new ProfileImageInfo(imageInfo.getStoreName());
     }
 }
