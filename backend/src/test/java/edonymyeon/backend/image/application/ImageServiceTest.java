@@ -53,7 +53,7 @@ class ImageServiceTest extends IntegrationFixture implements ImageFileCleaner {
     @EnumSource
     void 사용자에게_전달할__이미지_주소를_올바르게_조회하는지_검증한다(final ImageType imageType) {
         final String baseUrl = imageService.findBaseUrl(imageType);
-        final String imageUrl = imageService.convertToImageUrl("image.png", imageType);
+        final String imageUrl = imageService.convertToImageUrl(new ImageInfo("image.png"), imageType);
 
         assertThat(baseUrl).isEqualTo(domain + imageType.getSaveDirectory());
         assertThat(imageUrl.replace(baseUrl, "")).isEqualTo("image.png");

@@ -5,7 +5,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_EXT
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.ImageExtension;
 import edonymyeon.backend.image.ImageFileNameStrategy;
-import edonymyeon.backend.image.domain.Domain;
+import edonymyeon.backend.image.domain.UrlManager;
 import edonymyeon.backend.image.domain.ImageInfo;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class ImageService {
 
     private final ImageFileNameStrategy imageFileNameStrategy;
 
-    private final Domain domain;
+    private final UrlManager urlManager;
 
     @Value("${image.root-dir}")
     private String rootDirectory; //todo: 어디다 두는게 좋을까?
@@ -31,12 +31,16 @@ public class ImageService {
         validateExtension(originalFileName);
         final String storeName = imageFileNameStrategy.createName(originalFileName);
         final ImageInfo imageInfo = new ImageInfo(storeName); //todo: imageType에 따라 imageInfo 변환
+        uploadRealStorage(image, imageType, storeName);
+        return imageInfo; //todo: 생성된 imageInfo 저장 및 반환
+    }
+
+    private void uploadRealStorage(final MultipartFile image, final ImageType imageType, final String storeName) {
         imageClient.upload(
                 image,
                 rootDirectory + imageType.getSaveDirectory(),
                 storeName
         );
-        return imageInfo; //todo: 생성된 imageInfo 저장 및 반환
     }
 
     public List<ImageInfo> saveAll(final List<MultipartFile> images, final ImageType imageType) {
@@ -75,22 +79,21 @@ public class ImageService {
      * @return 사용자에게 보여줄 이미지 도메인 주소(단 이미지 파일 이름은 제외, 예를 들어 https://localhost:8080/images/post/)
      */
     public String findBaseUrl(final ImageType imageType) {
-        return domain.getDomain() + imageType.getSaveDirectory();
+        return urlManager.getDomain() + imageType.getSaveDirectory();
     }
 
     public void removeImage(final ImageInfo imageInfo, final ImageType imageType) {
         if(!imageClient.supportsDeletion()){
             return;
         }
-        //todo: 이미지 삭제?
         imageClient.delete(findResourcePath(imageInfo.getStoreName(), imageType));
     }
 
-    public String convertToImageUrl(final String fileName, final ImageType imageType) {
-        return domain.convertToImageUrl(imageType.getSaveDirectory() + fileName);
+    public String convertToImageUrl(final ImageInfo imageInfo, final ImageType imageType) {
+        return urlManager.convertToImageUrl(imageType, imageInfo);
     }
 
     public List<String> removeDomainFromUrl(final List<String> originalImageUrls, final ImageType imageType) {
-        return domain.removeDomainFromUrl(originalImageUrls, imageType.getSaveDirectory());
+        return urlManager.removeDomainFromUrl(originalImageUrls, imageType.getSaveDirectory());
     }
 }

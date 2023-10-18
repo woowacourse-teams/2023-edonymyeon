@@ -25,7 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
-import edonymyeon.backend.image.domain.Domain;
+import edonymyeon.backend.image.application.ImageType;
+import edonymyeon.backend.image.domain.UrlManager;
 import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
@@ -210,7 +211,7 @@ class MemberControllerDocsTest extends DocsTest {
     }
 
     @Test
-    void 회원정보를_조회한다_V1(@Autowired Domain domain) throws Exception {
+    void 회원정보를_조회한다_V1(@Autowired UrlManager urlManager) throws Exception {
         final Member 회원 = testMemberBuilder.builder().id(1L).buildWithoutSaving();
         var response = new MyPageResponseV1(회원.getId(), 회원.getNickname());
         when(memberService.findMemberInfoByIdV1(회원.getId())).thenReturn(response);
@@ -229,10 +230,10 @@ class MemberControllerDocsTest extends DocsTest {
     }
 
     @Test
-    void 회원정보를_조회한다_V2(@Autowired Domain domain) throws Exception {
+    void 회원정보를_조회한다_V2(@Autowired UrlManager urlManager) throws Exception {
         final Member 회원 = testMemberBuilder.builder().id(1L).buildWithoutSaving();
         var response = new MyPageResponseV2(회원.getId(), 회원.getNickname(),
-                domain.convertToImageUrl(회원.getProfileImageInfo()));
+                urlManager.convertToImageUrl(ImageType.PROFILE, 회원.getProfileImageInfo()));
         when(memberService.findMemberInfoByIdV2(회원.getId())).thenReturn(response);
 
         final MockHttpServletRequestBuilder 회원_정보_조회_요청 = get("/profile")

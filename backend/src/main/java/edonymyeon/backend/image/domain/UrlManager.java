@@ -3,6 +3,7 @@ package edonymyeon.backend.image.domain;
 import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_DOMAIN_INVALID;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.image.application.ImageType;
 import java.util.List;
 import javax.annotation.Nullable;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Getter
 @Component
-public class Domain {
+public class UrlManager {
 
     @Value("${image.domain}")
     private String domain;
@@ -35,11 +36,11 @@ public class Domain {
     }
 
     @Nullable
-    public String convertToImageUrl(final ImageInfo imageInfo) {
+    public String convertToImageUrl(final ImageType imageType, final ImageInfo imageInfo) {
         if(imageInfo == null){
             return null;
         }
         final String imageFileName = imageInfo.getStoreName();
-        return domain + imageFileName;
+        return domain + imageType.getSaveDirectory() + imageFileName;
     }
 }

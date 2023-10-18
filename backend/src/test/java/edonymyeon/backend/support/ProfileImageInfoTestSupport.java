@@ -1,6 +1,7 @@
 package edonymyeon.backend.support;
 
-import edonymyeon.backend.image.ImageFileUploader;
+import edonymyeon.backend.image.application.ImageService;
+import edonymyeon.backend.image.application.ImageType;
 import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.image.profileimage.repository.ProfileImageInfoRepository;
@@ -18,7 +19,7 @@ public class ProfileImageInfoTestSupport {
 
     private final MockMultipartFileTestSupport mockMultipartFileTestSupport;
 
-    private final ImageFileUploader imageFileUploader;
+    private final ImageService imageService;
 
     public ProfileImageInfoBuilder builder() {
         return new ProfileImageInfoBuilder();
@@ -44,7 +45,7 @@ public class ProfileImageInfoTestSupport {
 
         public ProfileImageInfo buildWithImageFile() throws IOException {
             final MockMultipartFile file = mockMultipartFileTestSupport.builder().buildImageForProfile();
-            final ImageInfo imageInfo = imageFileUploader.uploadFile(file);
+            final ImageInfo imageInfo = imageService.save(file, ImageType.PROFILE);
             return profileImageInfoRepository.save(
                     ProfileImageInfo.from(imageInfo)
             );

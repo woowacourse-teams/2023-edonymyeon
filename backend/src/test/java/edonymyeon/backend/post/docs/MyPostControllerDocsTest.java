@@ -16,7 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.image.application.ImageService;
 import edonymyeon.backend.image.application.ImageType;
-import edonymyeon.backend.image.domain.Domain;
+import edonymyeon.backend.image.domain.UrlManager;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -45,7 +45,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 class MyPostControllerDocsTest extends DocsTest {
 
     @Autowired
-    private final Domain domain;
+    private final UrlManager urlManager;
 
     TestMemberBuilder testMemberBuilder = new TestMemberBuilder(null);
 
@@ -60,9 +60,9 @@ class MyPostControllerDocsTest extends DocsTest {
 
     public MyPostControllerDocsTest(final MockMvc mockMvc,
                                     final ObjectMapper objectMapper,
-                                    final Domain domain) {
+                                    final UrlManager urlManager) {
         super(mockMvc, objectMapper);
-        this.domain = domain;
+        this.urlManager = urlManager;
     }
 
     @Test
@@ -73,12 +73,12 @@ class MyPostControllerDocsTest extends DocsTest {
                 .id(1L)
                 .buildWithoutSaving();
         회원_레포지토리를_모킹한다(회원);
-        when(imageService.findBaseUrl(ImageType.POST)).thenReturn(domain.getDomain() + ImageType.POST.getSaveDirectory());
+        when(imageService.findBaseUrl(ImageType.POST)).thenReturn(urlManager.getDomain() + ImageType.POST.getSaveDirectory());
 
         final Post 게시글1 = new Post(1L, "제목1", "내용1", 1000L, 회원, PostImageInfos.create(), 0, 0, false);
         final Post 게시글2 = new Post(2L, "제목2", "내용2", 2000L, 회원, PostImageInfos.create(), 0, 0, false);
 
-        final String baseImageUrl = domain.getDomain() + ImageType.POST.getSaveDirectory();
+        final String baseImageUrl = urlManager.getDomain() + ImageType.POST.getSaveDirectory();
         final MyPostResponse postResponse1 = MyPostResponse.of(게시글1, baseImageUrl, PostConsumptionResponse.none());
         final MyPostResponse postResponse2 = MyPostResponse.of(게시글2, baseImageUrl, PostConsumptionResponse.none());
 

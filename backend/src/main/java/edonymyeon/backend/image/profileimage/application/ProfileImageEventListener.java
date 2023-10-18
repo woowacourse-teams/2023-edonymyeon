@@ -15,11 +15,6 @@ public class ProfileImageEventListener {
 
     private final ImageService imageService;
 
-    @EventListener
-    public void uploadFile(ProfileImageUploadEvent event) {
-        imageFileUploader.uploadRealStorage(event.file(), event.imageInfo());
-    }
-
     @Async
     @TransactionalEventListener
     public void removeFile(ProfileImageDeletionEvent event) {
