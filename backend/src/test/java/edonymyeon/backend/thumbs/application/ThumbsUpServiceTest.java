@@ -1,11 +1,5 @@
 package edonymyeon.backend.thumbs.application;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_IS_SELF_UP_DOWN;
-import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP_ALREADY_EXIST;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
@@ -18,11 +12,20 @@ import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.domain.ThumbsType;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static edonymyeon.backend.global.exception.ExceptionInformation.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -132,6 +135,43 @@ class ThumbsUpServiceTest extends IntegrationFixture {
                 () -> thumbsService.thumbsUp(otherMemberId, postIdResponse.id()))
                 .isExactlyInstanceOf(EdonymyeonException.class)
                 .hasMessage(THUMBS_UP_ALREADY_EXIST.getMessage());
+    }
+
+    @Test
+    void 같은_사람이_같은_게시글에_동시에_여러번_좋아요를_누르더라도_한번만_저장된다() throws InterruptedException {
+        // given
+        int numberOfExecute = 10;
+        AtomicInteger successCount = new AtomicInteger();
+        AtomicInteger failCount = new AtomicInteger();
+        ExecutorService service = Executors.newFixedThreadPool(10);
+        CountDownLatch latch = new CountDownLatch(numberOfExecute);
+
+        Member otherMember = registerMember();
+
+        // when
+        for (int i = 0; i < numberOfExecute; i++) {
+            service.execute(() -> {
+                try {
+                    thumbsService.thumbsUp(new ActiveMemberId(otherMember.getId()), postIdResponse.id());
+                    successCount.getAndIncrement();
+                    System.out.println("성공");
+                } catch (EdonymyeonException e) {
+                    failCount.getAndIncrement();
+                    System.out.println("충돌감지");
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+                latch.countDown();
+            });
+        }
+        latch.await();
+
+        // then
+        assertSoftly(softly -> {
+                    softly.assertThat(successCount.get()).isEqualTo(1);
+                    softly.assertThat(failCount.get()).isEqualTo(9);
+                }
+        );
     }
 
     private void thumbsUp(final Member member, final PostIdResponse post) {

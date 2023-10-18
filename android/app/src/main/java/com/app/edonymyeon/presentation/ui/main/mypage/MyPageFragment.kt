@@ -1,6 +1,7 @@
 package com.app.edonymyeon.presentation.ui.main.mypage
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
@@ -55,6 +57,17 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setChart()
+        setLogoutObserver()
+        setInquiryListener()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setViewByLogin()
+    }
+
+    private fun setChart() {
         setConsumptionChart(
             LineChartManager(
                 binding.chartMyPayment,
@@ -62,6 +75,9 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
                 resources.getFont(R.font.nanumsquare),
             ),
         )
+    }
+
+    private fun setLogoutObserver() {
         viewModel.isLogoutSuccess.observe(viewLifecycleOwner) {
             if (it) {
                 (activity as MainActivity).refreshActivity()
@@ -71,9 +87,11 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
         setOpenSourceLicenseListener()
     }
 
-    override fun onResume() {
-        super.onResume()
-        setViewByLogin()
+    private fun setInquiryListener() {
+        binding.tvInquiry.setOnClickListener {
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(INQUIRY_URL))
+            startActivity(browserIntent)
+        }
     }
 
     private fun setViewByLogin() {
@@ -198,5 +216,6 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding, MyPageViewModel>(
 
     companion object {
         private const val PERIOD_MONTH = 6
+        private const val INQUIRY_URL = "https://forms.gle/c1yTvxrFnhwhJd7k9"
     }
 }

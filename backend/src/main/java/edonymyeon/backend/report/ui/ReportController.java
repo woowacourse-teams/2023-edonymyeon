@@ -18,7 +18,7 @@ public class ReportController {
 
     private final ReportService reportService;
 
-    @ApiVersion(value = {1, 2})
+    @ApiVersion(from = "1.0")
     @PostMapping("/report")
     public ResponseEntity<Void> report(@RequestBody ReportRequest reportRequest, @AuthPrincipal MemberId reporterId) {
         final Long reportId = reportService.report(reportRequest, reporterId);

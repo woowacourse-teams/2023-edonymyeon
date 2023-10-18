@@ -84,7 +84,7 @@ class ThumbsControllerDocsTest {
 
         final MockHttpServletRequestBuilder 좋아요_요청 = put("/posts/{postId}/up", 글.getId())
                 .sessionAttr(USER.getSessionId(), 반응_하는_사람.getId())
-                .header("X-API-VERSION", 1, 2);
+                .header("X-API-VERSION", "1.0.0", "1.1.0");
 
         this.mockMvc.perform(좋아요_요청)
                 .andExpect(status().isOk())
@@ -102,7 +102,7 @@ class ThumbsControllerDocsTest {
 
         final MockHttpServletRequestBuilder 싫어요_요청 = put("/posts/{postId}/down", 글.getId())
                 .sessionAttr(USER.getSessionId(), 반응_하는_사람.getId())
-                .header("X-API-VERSION", 1, 2);
+                .header("X-API-VERSION", "1.0.0", "1.1.0");
 
         this.mockMvc.perform(싫어요_요청)
                 .andExpect(status().isOk())
@@ -120,7 +120,7 @@ class ThumbsControllerDocsTest {
 
         final MockHttpServletRequestBuilder 좋아요_취소_요청 = delete("/posts/{postId}/up", 글.getId())
                 .sessionAttr(USER.getSessionId(), 반응_하는_사람.getId())
-                .header("X-API-VERSION", 1, 2);
+                .header("X-API-VERSION", "1.0.0", "1.1.0");
 
         this.mockMvc.perform(좋아요_취소_요청)
                 .andExpect(status().isOk())
@@ -138,7 +138,7 @@ class ThumbsControllerDocsTest {
 
         final MockHttpServletRequestBuilder 싫어요_취소_요청 = delete("/posts/{postId}/down", 글.getId())
                 .sessionAttr(USER.getSessionId(), 반응_하는_사람.getId())
-                .header("X-API-VERSION", 1, 2);
+                .header("X-API-VERSION", "1.0.0", "1.1.0");
 
         this.mockMvc.perform(싫어요_취소_요청)
                 .andExpect(status().isOk())

@@ -19,7 +19,7 @@ public class NotificationController {
 
     private final NotificationService notificationService;
 
-    @ApiVersion(value = {1, 2})
+    @ApiVersion(from = "1.0")
     @GetMapping("/notification")
     public ResponseEntity<PostSlice<NotificationResponse>> findNotifications(@AuthPrincipal MemberId memberId, @PostPaging GeneralFindingCondition generalFindingCondition) {
         return ResponseEntity.ok()

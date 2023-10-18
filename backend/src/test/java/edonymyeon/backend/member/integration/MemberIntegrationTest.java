@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
-import edonymyeon.backend.member.application.dto.response.MyPageResponseV1;
-import edonymyeon.backend.member.application.dto.response.MyPageResponseV2;
+import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_0;
+import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_1;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
 import edonymyeon.backend.post.domain.Post;
@@ -33,7 +33,7 @@ class MemberIntegrationTest extends IntegrationFixture {
         final String sessionId = 로그인(member);
 
         final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .when()
@@ -41,23 +41,23 @@ class MemberIntegrationTest extends IntegrationFixture {
                 .then()
                 .extract();
 
-        final MyPageResponseV1 myPageResponseV1 = response.as(MyPageResponseV1.class);
+        final MyPageResponseV1_0 myPageResponse = response.as(MyPageResponseV1_0.class);
         assertAll(
-                () -> assertThat(myPageResponseV1.id()).isEqualTo(member.getId()),
-                () -> assertThat(myPageResponseV1.nickname()).isEqualTo(member.getNickname()),
+                () -> assertThat(myPageResponse.memberId()).isEqualTo(member.getId()),
+                () -> assertThat(myPageResponse.nickname()).isEqualTo(member.getNickname()),
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         );
     }
 
     @Test
-    void 회원_정보_V2_조회시_OK를_응답한다() {
+    void 회원_정보_V1_1_조회시_OK를_응답한다() {
         final Member member = memberTestSupport.builder()
                 .build();
 
         final String sessionId = 로그인(member);
 
         final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
-                .version(2)
+                .version("1.1.0")
                 .sessionId(sessionId)
                 .build()
                 .when()
@@ -65,10 +65,10 @@ class MemberIntegrationTest extends IntegrationFixture {
                 .then()
                 .extract();
 
-        final MyPageResponseV2 myPageResponseV2 = response.as(MyPageResponseV2.class);
+        final MyPageResponseV1_1 myPageResponseV110 = response.as(MyPageResponseV1_1.class);
         assertAll(
-                () -> assertThat(myPageResponseV2.id()).isEqualTo(member.getId()),
-                () -> assertThat(myPageResponseV2.nickname()).isEqualTo(member.getNickname()),
+                () -> assertThat(myPageResponseV110.id()).isEqualTo(member.getId()),
+                () -> assertThat(myPageResponseV110.nickname()).isEqualTo(member.getNickname()),
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value())
         );
     }
@@ -100,7 +100,7 @@ class MemberIntegrationTest extends IntegrationFixture {
         final String sessionId = 로그인(member);
 
         final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .when()
@@ -125,7 +125,7 @@ class MemberIntegrationTest extends IntegrationFixture {
         final String sessionId = 로그인(member);
 
         EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .when()
@@ -134,7 +134,7 @@ class MemberIntegrationTest extends IntegrationFixture {
         final LoginRequest request = new LoginRequest(member.getEmail(), member.getPassword(), "werwe");
 
         final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .contentType(ContentType.JSON)
                 .body(request)
@@ -166,14 +166,14 @@ class MemberIntegrationTest extends IntegrationFixture {
         final String sessionId = 로그인(member);
 
         EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .when()
                 .delete("/withdraw");
 
         final ExtractableResponse<Response> response = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .when()
                 .get("/posts/" + post.getId())

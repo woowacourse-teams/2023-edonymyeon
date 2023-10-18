@@ -89,7 +89,7 @@ public class IntegrationFixture {
         final LoginRequest request = new LoginRequest(member.getEmail(), TestMemberBuilder.getRawPassword(),
                 "testToken");
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .contentType(ContentType.JSON)
                 .body(request)
@@ -103,7 +103,7 @@ public class IntegrationFixture {
     protected String 로그인(final String email, final String password) {
         final LoginRequest request = new LoginRequest(email, password, "testToken");
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .contentType(ContentType.JSON)
                 .body(request)
@@ -132,7 +132,7 @@ public class IntegrationFixture {
         final String sessionId = 로그인(작성자);
 
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .when()
@@ -145,7 +145,7 @@ public class IntegrationFixture {
         final String sessionId = 로그인(열람인);
 
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .when()
@@ -156,7 +156,7 @@ public class IntegrationFixture {
 
     protected ExtractableResponse<Response> 게시글_하나를_상세_조회한다(final long 게시글_id) {
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .when()
                 .get("/posts/" + 게시글_id)
@@ -166,7 +166,7 @@ public class IntegrationFixture {
 
     protected ExtractableResponse<Response> 게시글을_전체_조회한다() {
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .when()
                 .get("/posts")
@@ -176,7 +176,7 @@ public class IntegrationFixture {
 
     protected ExtractableResponse<Response> 핫_게시글을_조회한다() {
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .when()
                 .get("posts/hot")
@@ -196,7 +196,7 @@ public class IntegrationFixture {
         final String sessionId = 로그인(사용자);
 
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .multiPart("image", 이미지)
@@ -215,7 +215,7 @@ public class IntegrationFixture {
         final File 빈_이미지 = File.createTempFile("empty", "");
         final String sessionId = 로그인(사용자);
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .multiPart("image", 빈_이미지)
@@ -234,7 +234,7 @@ public class IntegrationFixture {
         final String sessionId = 로그인(사용자);
 
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .when()
@@ -250,7 +250,7 @@ public class IntegrationFixture {
         final String sessionId = 로그인(사용자);
 
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .when()
@@ -261,7 +261,7 @@ public class IntegrationFixture {
 
     protected ExtractableResponse<Response> 게시물에_대한_댓글을_모두_조회한다(final Long 게시글_id) {
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .build()
                 .when()
                 .get("/posts/{postId}/comments", 게시글_id)
@@ -273,7 +273,7 @@ public class IntegrationFixture {
         final String sessionId = 로그인(member);
 
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .when()
@@ -289,7 +289,7 @@ public class IntegrationFixture {
         final String sessionId = 로그인(사용자);
 
         final ExtractableResponse<Response> 조회_응답 = EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -308,7 +308,7 @@ public class IntegrationFixture {
         final String sessionId = 로그인(사용자);
 
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -327,7 +327,7 @@ public class IntegrationFixture {
         final String sessionId = 로그인(사용자);
 
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -342,7 +342,7 @@ public class IntegrationFixture {
         final String sessionId = 로그인(사용자);
 
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -360,7 +360,7 @@ public class IntegrationFixture {
         final String sessionId = 로그인(member);
 
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -377,7 +377,7 @@ public class IntegrationFixture {
 
     protected ExtractableResponse<Response> 게시글을_추천한다(final long 게시글_id, final String sessionId) {
         return EdonymyeonRestAssured.builder()
-                .version(1)
+                .version("1.0.0")
                 .sessionId(sessionId)
                 .build()
                 .when()

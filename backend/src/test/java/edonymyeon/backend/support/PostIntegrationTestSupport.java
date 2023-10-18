@@ -83,7 +83,7 @@ public class PostIntegrationTestSupport {
             final LoginRequest request = new LoginRequest(member.getEmail(), TestMemberBuilder.getRawPassword(),
                     "testToken");
             final String sessionId = EdonymyeonRestAssured.builder()
-                    .version(1)
+                    .version("1.0.0")
                     .build()
                     .contentType(ContentType.JSON)
                     .body(request)
@@ -94,7 +94,7 @@ public class PostIntegrationTestSupport {
                     .sessionId();
 
             return EdonymyeonRestAssured.builder()
-                    .version(1)
+                    .version("1.0.0")
                     .sessionId(sessionId)
                     .build()
                     .multiPart("title", this.title == null ? DEFAULT_TITLE : this.title)
