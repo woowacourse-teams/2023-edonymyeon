@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -168,6 +169,7 @@ public class MemberService {
         memberConsumptionService.removeConfirm(memberId, postId);
     }
 
+    @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void activateDevice(final Member member, final String deviceToken) {
         final Member rePersistedMember = memberRepository.save(member);
@@ -179,6 +181,7 @@ public class MemberService {
         deactivateOtherDevices(member, deviceToken);
     }
 
+    @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void deactivateOtherDevices(final Member member, final String deviceToken) {
         deviceRepository.findAllByDeviceToken(deviceToken)
@@ -186,6 +189,7 @@ public class MemberService {
                 .forEach(Device::deactivate);
     }
 
+    @Async
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void deactivateDevice(final String deviceToken) {
         final Optional<Device> device = deviceRepository.findByDeviceToken(deviceToken);
