@@ -3,8 +3,9 @@ package com.app.edonymyeon.presentation.common.imageutil
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.ExifInterface
 import android.net.Uri
+import android.os.Build
+import androidx.exifinterface.media.ExifInterface
 import java.io.File
 import java.io.FileOutputStream
 
@@ -25,7 +26,11 @@ private fun Bitmap.convertResizeImage(context: Context): File {
     val tempFile = File.createTempFile("resized_image", ".jpg", context.cacheDir)
 
     FileOutputStream(tempFile).use { fileOutputStream ->
-        this.compress(Bitmap.CompressFormat.JPEG, 80, fileOutputStream)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            this.compress(Bitmap.CompressFormat.WEBP_LOSSY, 80, fileOutputStream)
+        } else {
+            this.compress(Bitmap.CompressFormat.WEBP, 80, fileOutputStream)
+        }
     }
     return tempFile
 }
