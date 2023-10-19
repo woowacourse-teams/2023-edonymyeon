@@ -75,6 +75,7 @@
     <string name="my_page_update_user_info">회원 정보 수정</string>
     <string name="my_page_alarm_setting">푸시 알람 설정</string>
     <string name="my_page_logout">로그아웃</string>
+    <string name="my_page_inquiry">문의하기</string>
     <string name="my_page_withdraw">회원탈퇴</string>
     <string name="my_page_login">로그인</string>
     <string name="my_page_saving_title">절약금액:</string>
@@ -105,7 +106,7 @@
     <string name="post_editor_check_permission">권한 허용 필요</string>
     <string name="post_editor_check_title_input">제목은 필수 입력 항목입니다</string>
     <string name="post_editor_snackbar_ok_message">확인</string>
-    <string name="post_editor_snackbar_missing_title_message">타이틀을 작성해야만 등록이 됩니다.</string>
+    <string name="post_editor_snackbar_missing_title_message">타이틀과 가격을 작성해야만 등록이 됩니다.</string>
     <string name="post_editor_loading_message">저장 중입니다</string>
 
     <!-- item_post_editor_image -->

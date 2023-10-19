@@ -120,7 +120,6 @@ class ImageDetailActivity : AppCompatActivity() {
     }
 
     companion object {
-
         private const val KEY_POST = "key_post"
         private const val KEY_POSITION = "key_position"
         private const val KEY_COMMENT = "key_comment"

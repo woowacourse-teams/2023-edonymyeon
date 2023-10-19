@@ -334,11 +334,27 @@
                     android:gravity="center_vertical"
                     android:text="@string/my_page_alarm_setting"
                     android:textColor="@color/gray_434343"
-                    app:layout_constraintBottom_toTopOf="@id/tv_logout"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toTopOf="@id/tv_inquiry"
                     app:layout_constraintDimensionRatio="H,336:48"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_update_user_info"
+                    app:layout_constraintWidth_percent="0.87" />
+
+                <TextView
+                    android:id="@+id/tv_inquiry"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/my_page_inquiry"
+                    android:textColor="@color/black_000000"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toTopOf="@id/tv_logout"
+                    app:layout_constraintDimensionRatio="H, 336:48"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_update_alarm_setting"
                     app:layout_constraintWidth_percent="0.87" />
 
                 <TextView
@@ -353,7 +369,7 @@
                     app:layout_constraintDimensionRatio="H, 336:48"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_update_alarm_setting"
+                    app:layout_constraintTop_toBottomOf="@id/tv_inquiry"
                     app:layout_constraintWidth_percent="0.87" />
 
                 <TextView

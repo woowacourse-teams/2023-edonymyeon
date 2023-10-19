@@ -92,7 +92,7 @@ class ReportDocsTest implements ImageFileCleaner {
                 "");
 
         final var 게시글_상세_조회_요청 = post("/report")
-                .header("X-API-VERSION", 1, 2)
+                .header("X-API-VERSION", "1.0.0", "1.1.0")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(reportRequest))
                 .sessionAttr(USER.getSessionId(), 글쓴이.getId());

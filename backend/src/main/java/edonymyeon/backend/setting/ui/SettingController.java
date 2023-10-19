@@ -21,13 +21,13 @@ public class SettingController {
 
     private final SettingService settingService;
 
-    @ApiVersion(value = {1, 2})
+    @ApiVersion(from = "1.0")
     @GetMapping("/notification")
     public ResponseEntity<SettingsResponse> findSettings(@AuthPrincipal MemberId memberId) {
         return ResponseEntity.ok(settingService.findSettingsByMemberId(memberId));
     }
 
-    @ApiVersion(value = {1, 2})
+    @ApiVersion(from = "1.0")
     @PostMapping("/notification")
     public ResponseEntity<SettingsResponse> toggleSetting(@RequestBody SettingRequest settingRequest,
                                                           @AuthPrincipal MemberId memberId) {
