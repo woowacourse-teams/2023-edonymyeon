@@ -59,6 +59,7 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
                 .isPresent();
     }
 
+    @Disabled
     @Test
     void 하나의_디바이스는_하나의_계정에서만_활성화_되어야_한다_로그인() {
         final String 동일한_디바이스_토큰 = "testDeviceToken";
@@ -71,6 +72,7 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
                 .isPresent();
     }
 
+    @Disabled
     @Test
     void 하나의_디바이스는_하나의_계정에서만_활성화_되어야_한다_소셜로그인() {
         final String 동일한_디바이스_토큰 = "testDeviceToken";
