@@ -1,0 +1,9 @@
+[[notification-api]]
+== 알림
+
+== 나에게 온 알림 조회
+operation::notification[snippets='http-request,response-fields,http-response']
+
+== 알림 메시지 수정(어드민용)
+operation::notification-updating-message[snippets='request-fields,http-request,http-response']
+
