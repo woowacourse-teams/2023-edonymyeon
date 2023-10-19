@@ -5,6 +5,7 @@ import edonymyeon.backend.global.version.ApiVersion;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.notification.application.NotificationService;
 import edonymyeon.backend.notification.application.dto.NotificationResponse;
+import edonymyeon.backend.notification.domain.notification_content.application.dto.NotificationContentRequest;
 import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContent;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.PostSlice;
@@ -32,8 +33,13 @@ public class NotificationController {
 
     @ApiVersion(from = "1.0")
     @PutMapping("/admin/notification/content")
-    public ResponseEntity<Void> updateNotificationMessage(@RequestBody NotificationContent notificationContent) {
-        notificationService.updateContent(notificationContent);
+    public ResponseEntity<Void> updateNotificationMessage(@RequestBody NotificationContentRequest notificationContent) {
+        notificationService.updateContent(
+                new NotificationContent(
+                        notificationContent.id(),
+                        notificationContent.title(),
+                        notificationContent.body())
+        );
         return ResponseEntity.ok().build();
     }
 }
