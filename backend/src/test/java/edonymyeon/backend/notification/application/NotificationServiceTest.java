@@ -83,9 +83,7 @@ class NotificationServiceTest extends IntegrationFixture {
     void 특정_알림을_사용자가_읽었음을_체크할_수_있다() {
         final var post = postTestSupport.builder().build();
         final var notificationId = notificationRepository.save(
-                        new Notification(post.getMember(),
-                                new NotificationContent(NotificationContentId.THUMBS_NOTIFICATION_TITLE, "알림이 등록되었어요!",
-                                        "알림을 확인해보세요!"), ScreenType.POST, post.getId()))
+                        new Notification(post.getMember(), "알림이 등록되었어요!", "알림을 확인해보세요!", ScreenType.POST, post.getId()))
                 .getId();
 
         var notification = notificationRepository.findById(notificationId);
