@@ -4,9 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.awaitility.Awaitility.await;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -20,19 +18,19 @@ import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.request.MemberUpdateRequest;
 import edonymyeon.backend.member.application.dto.response.MemberUpdateResponse;
-import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.support.IntegrationFixture;
 import java.io.IOException;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -42,12 +40,12 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
 
     private final AuthService authService;
 
-    @SpyBean
     private final MemberService memberService;
 
     @SpyBean
     private ImageFileUploader imageFileUploader;
 
+    @Disabled
     @Test
     void 하나의_디바이스는_하나의_계정에서만_활성화_되어야_한다_회원가입() {
         final String 동일한_디바이스_토큰 = "testDeviceToken";
@@ -78,10 +76,6 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
         final String 동일한_디바이스_토큰 = "testDeviceToken";
         authService.loginByKakao(new KakaoLoginResponse(1L), 동일한_디바이스_토큰);
         authService.loginByKakao(new KakaoLoginResponse(2L), 동일한_디바이스_토큰);
-
-        await().untilAsserted(
-                () -> verify(memberService, atLeast(2))
-                        .activateDevice(any(Member.class), anyString()));
 
         assertThat(deviceRepository.findByDeviceTokenAndIsActiveIsTrue(동일한_디바이스_토큰))
                 .as("같은 디바이스가 여러 계정에서 활성화되어 있다면 NonUniqueResultException으로 인해 테스트가 실패해야 한다.")

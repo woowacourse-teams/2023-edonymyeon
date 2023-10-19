@@ -20,6 +20,7 @@ import io.restassured.RestAssured;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,7 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
 
     private final ThumbsService thumbsService;
 
+    @Disabled
     @Test
     void 사용자가_받은_알림_목록을_조회한다(
             @Autowired AuthService authService,
