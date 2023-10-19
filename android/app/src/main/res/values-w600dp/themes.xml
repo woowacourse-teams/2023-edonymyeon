@@ -36,4 +36,8 @@
     <style name="BASIC_TITLE_TEXT_STYLE">
         <item name="android:textSize">28sp</item>
     </style>
+
+    <style name="BASIC_MENU_TEXT_STYLE">
+        <item name="android:textSize">22sp</item>
+    </style>
 </resources>
