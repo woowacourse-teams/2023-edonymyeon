@@ -20,4 +20,7 @@
     <dimen name="post_editor_margin_between_title_and_edit">84dp</dimen>
     <dimen name="post_editor_comment_text_size">18sp</dimen>
     <dimen name="post_editor_image_width">80dp</dimen>
+
+    <!-- post detail -->
+    <dimen name="post_detail_comment_padding">12dp</dimen>
 </resources>
