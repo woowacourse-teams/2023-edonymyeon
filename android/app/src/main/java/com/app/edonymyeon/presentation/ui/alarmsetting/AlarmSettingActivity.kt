@@ -17,11 +17,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AlarmSettingActivity : BaseActivity<ActivityAlarmSettingBinding, AlarmSettingViewModel>(
-    {
-        ActivityAlarmSettingBinding.inflate(it)
-    },
+    { ActivityAlarmSettingBinding.inflate(it) },
 ) {
-
     override val viewModel: AlarmSettingViewModel by viewModels()
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(this) }
 

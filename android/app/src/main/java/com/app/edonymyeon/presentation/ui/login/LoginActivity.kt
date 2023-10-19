@@ -36,7 +36,6 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
     private fun setObserver() {
         viewModel.isSuccess.observe(this) {
             if (it) {
-                setRetrofitToken()
                 finish()
             } else {
                 setEmailAndPasswordEmpty()
@@ -52,15 +51,6 @@ class LoginActivity : BaseActivity<ActivityLoginBinding, LoginViewModel>(
     private fun setEmailAndPasswordEmpty() {
         binding.etEmail.setText("")
         binding.etPassword.setText("")
-    }
-
-    private fun setRetrofitToken() {
-//        AccessTokenInterceptor.setToken(
-//            AuthLocalDataSource().getAuthToken(),
-//        )
-//        AuthLocalDataSource.setAuthToken(
-//            AuthLocalDataSource().getAuthToken(),
-//        )
     }
 
     private fun setKakaoClickListener() {

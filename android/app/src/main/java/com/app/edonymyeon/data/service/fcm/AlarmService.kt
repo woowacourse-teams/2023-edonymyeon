@@ -1,5 +1,4 @@
 package com.app.edonymyeon.data.service.fcm
-
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -19,7 +18,6 @@ import com.google.firebase.messaging.RemoteMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
 @SuppressLint("MissingFirebaseInstanceTokenRefresh")
 class AlarmService : FirebaseMessagingService() {
     @SuppressLint("MissingPermission")
@@ -29,16 +27,13 @@ class AlarmService : FirebaseMessagingService() {
         CoroutineScope(Dispatchers.Main).launch {
             alarmOn.value = true
         }
-
         val intent = getIntentByNotification(message)
-
         val pendingIntent = PendingIntent.getActivity(
             this,
             (message.data["notificationId"] ?: "0").toInt(),
             intent,
             PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
-
         val builder =
             NotificationCompat.Builder(this, CHANNEL_ID).setSmallIcon(R.mipmap.ic_edonymyeon_round)
                 .setContentTitle(message.notification?.title)
@@ -46,12 +41,10 @@ class AlarmService : FirebaseMessagingService() {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT).setContentIntent(
                     pendingIntent,
                 ).setAutoCancel(true)
-
         with(NotificationManagerCompat.from(this)) {
             notify((message.data["notificationId"] ?: "0").toInt(), builder.build())
         }
     }
-
     private fun getIntentByNotification(message: RemoteMessage) =
         when (message.data["navigateTo"].toString()) {
             "POST" -> {
@@ -63,7 +56,6 @@ class AlarmService : FirebaseMessagingService() {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 }
             }
-
             "MYPOST" -> {
                 MyPostActivity.newIntent(
                     this,
@@ -72,14 +64,12 @@ class AlarmService : FirebaseMessagingService() {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 }
             }
-
             else -> {
                 MainActivity.newIntent(this).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 }
             }
         }
-
     private fun createNotificationChannel() {
         val importance = NotificationManager.IMPORTANCE_DEFAULT
         val channel = NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance).apply {
@@ -89,7 +79,6 @@ class AlarmService : FirebaseMessagingService() {
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
-
     companion object {
         private const val CHANNEL_ID = "Edonymyeon"
         private const val CHANNEL_NAME = "이돈이면 채널"

@@ -3,14 +3,19 @@ package com.app.edonymyeon.presentation.ui.profileupdate
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import app.edonymyeon.R
 import app.edonymyeon.databinding.ActivityProfileUpdateBinding
 import com.app.edonymyeon.presentation.common.activity.BaseActivity
+import com.app.edonymyeon.presentation.common.dialog.LoadingDialog
 import com.app.edonymyeon.presentation.uimodel.WriterUiModel
 import com.app.edonymyeon.presentation.util.getParcelableExtraCompat
+import com.app.edonymyeon.presentation.util.setOnSingleClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,6 +24,10 @@ class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, Profile
 ) {
     override val viewModel: ProfileUpdateViewModel by viewModels()
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(this) }
+
+    private val loadingDialog: LoadingDialog by lazy {
+        LoadingDialog(getString(R.string.post_detail_loading))
+    }
 
     private val originalProfile by lazy {
         intent.getParcelableExtraCompat(KEY_PROFILE) as? WriterUiModel
@@ -37,7 +46,10 @@ class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, Profile
         setContentView(binding.root)
         initBinding()
         setOriginalProfile()
+        setNicknameChangedListener()
         setImageButtonsClickListener()
+        setUpdateProfileButtonClickListener()
+        setUpdateSuccessObserver()
     }
 
     private fun initBinding() {
@@ -49,12 +61,41 @@ class ProfileUpdateActivity : BaseActivity<ActivityProfileUpdateBinding, Profile
         viewModel.initOriginalProfile(originalProfile)
     }
 
+    private fun setNicknameChangedListener() {
+        binding.etNickname.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) =
+                Unit
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                viewModel.setNewNickname(s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) = Unit
+        })
+    }
+
     private fun setImageButtonsClickListener() {
-        binding.btnImageUpload.setOnClickListener {
+        binding.btnImageUpload.setOnSingleClickListener {
             navigateToGallery()
         }
-        binding.btnImageDelete.setOnClickListener {
+        binding.btnImageDelete.setOnSingleClickListener {
             viewModel.deleteProfileImage()
+        }
+    }
+
+    private fun setUpdateProfileButtonClickListener() {
+        binding.btnUpdate.setOnClickListener { view ->
+            view.isEnabled = false
+            loadingDialog.show(supportFragmentManager, "LoadingDialog")
+            viewModel.updateProfile(this)
+        }
+    }
+
+    private fun setUpdateSuccessObserver() {
+        viewModel.isUploadSuccess.observe(this) {
+            if (it) {
+                finish()
+            }
         }
     }
 

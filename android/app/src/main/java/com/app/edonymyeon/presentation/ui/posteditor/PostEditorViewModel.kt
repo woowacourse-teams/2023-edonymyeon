@@ -102,8 +102,8 @@ class PostEditorViewModel @Inject constructor(
         }
     }
 
-    fun checkTitleValidate(title: String) {
-        _isUploadAble.value = title.isNotBlank()
+    fun checkUploadValidate(title: String, price: String) {
+        _isUploadAble.value = title.isNotBlank() && price.isNotBlank()
     }
 
     private fun getFileFromContent(context: Context, uris: List<Uri>): List<File> {

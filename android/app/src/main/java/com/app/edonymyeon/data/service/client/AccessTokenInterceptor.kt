@@ -7,7 +7,7 @@ import okhttp3.Response
 
 object AccessTokenInterceptor : Interceptor {
     private var token: String? = null
-    private val apiVersion = BuildConfig.VERSION_NAME.split(".")[0]
+    private const val apiVersion = BuildConfig.VERSION_NAME
 
     override fun intercept(chain: Interceptor.Chain): Response = with(chain) {
         val newRequest: Request = if (token != null) {

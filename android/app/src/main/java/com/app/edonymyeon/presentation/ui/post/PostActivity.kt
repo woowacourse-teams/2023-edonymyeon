@@ -20,9 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class PostActivity : BaseActivity<ActivityPostBinding, PostViewModel>(
-    {
-        ActivityPostBinding.inflate(it)
-    },
+    { ActivityPostBinding.inflate(it) }
 ) {
     private val activityLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -32,7 +30,6 @@ class PostActivity : BaseActivity<ActivityPostBinding, PostViewModel>(
         }
 
     override val viewModel: PostViewModel by viewModels()
-
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
