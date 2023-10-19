@@ -62,7 +62,7 @@
 
             <TextView
                 android:id="@+id/tv_email"
-                style="@style/Basic_TEXT_STYLE"
+                style="@style/BASIC_TEXT_STYLE"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:gravity="center_vertical"
@@ -74,7 +74,7 @@
 
             <EditText
                 android:id="@+id/et_email"
-                style="@style/Basic_TEXT_STYLE"
+                style="@style/BASIC_TEXT_STYLE"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:autofillHints="emailAddress"
@@ -110,7 +110,7 @@
 
             <TextView
                 android:id="@+id/tv_password"
-                style="@style/Basic_TEXT_STYLE"
+                style="@style/BASIC_TEXT_STYLE"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:gravity="center_vertical"
@@ -122,7 +122,7 @@
 
             <EditText
                 android:id="@+id/et_password"
-                style="@style/Basic_TEXT_STYLE"
+                style="@style/BASIC_TEXT_STYLE"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:autofillHints="password"
@@ -148,7 +148,7 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/bt_login"
-                style="@style/Button_TEXT_STYLE"
+                style="@style/BUTTON_TEXT_STYLE"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@drawable/bg_576b9e_radius_6dp"
@@ -205,7 +205,7 @@
 
             <TextView
                 android:id="@+id/tv_join"
-                style="@style/Basic_TEXT_STYLE"
+                style="@style/BASIC_TEXT_STYLE"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:gravity="center_vertical"
@@ -218,7 +218,7 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/bt_join"
-                style="@style/Button_TEXT_STYLE"
+                style="@style/BUTTON_TEXT_STYLE"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@drawable/bg_576b9e_radius_6dp"

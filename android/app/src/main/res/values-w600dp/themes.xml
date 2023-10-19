@@ -16,11 +16,11 @@
         <item name="android:textColor">"@color/gray_615f5f"</item>
     </style>
 
-    <style name="Button_TEXT_STYLE">
+    <style name="BUTTON_TEXT_STYLE">
         <item name="android:textSize">32sp</item>
     </style>
 
-    <style name="Basic_TEXT_STYLE">
+    <style name="BASIC_TEXT_STYLE">
         <item name="android:textSize">24sp</item>
         <item name="android:textColor">"@color/black_000000"</item>
     </style>

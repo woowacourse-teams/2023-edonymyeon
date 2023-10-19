@@ -51,7 +51,7 @@
             android:layout_marginStart="@dimen/post_editor_margin"
             android:text="@string/post_editor_post_title"
             android:textColor="@color/gray_7c7a7a"
-            style="@style/Basic_TEXT_STYLE"
+            style="@style/BASIC_TEXT_STYLE"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/space_title_top" />
 
@@ -83,7 +83,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/all_price_title"
             android:textColor="@color/gray_7c7a7a"
-            style="@style/Basic_TEXT_STYLE"
+            style="@style/BASIC_TEXT_STYLE"
             app:layout_constraintStart_toStartOf="@id/tv_post_title"
             app:layout_constraintTop_toBottomOf="@id/tv_post_title" />
 
