@@ -2,6 +2,7 @@
 <resources>
     <!-- main -->
     <dimen name="main_bottom_icon_size">48dp</dimen>
+
     <!-- home -->
     <dimen name="home_app_title_text_size">48sp</dimen>
     <dimen name="home_hot_title_text_size">32sp</dimen>
@@ -13,6 +14,12 @@
     <dimen name="home_all_post_icon_margin">32dp</dimen>
     <dimen name="home_all_post_icon_width">0.1</dimen>
     <dimen name="home_all_post_icon_padding">24dp</dimen>
+
+    <!-- my page -->
+    <dimen name="my_page_graph_axis_text_size">10px</dimen>
+    <dimen name="my_page_graph_legend_text_size">18px</dimen>
+    <dimen name="my_page_graph_legend_offset_size">100px</dimen>
+    <dimen name="my_page_graph_legend_entry_size">40px</dimen>
 
     <!-- post editor-->
     <dimen name="post_editor_title_text_size">20sp</dimen>

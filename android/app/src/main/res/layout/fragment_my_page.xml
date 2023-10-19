@@ -227,7 +227,7 @@
                     android:id="@+id/space_graph_start"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/space_payment_title_bottom"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_my_payment_title"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintWidth_percent="0.05" />
@@ -242,15 +242,6 @@
                     app:layout_constraintStart_toEndOf="@id/space_graph_start"
                     app:layout_constraintTop_toBottomOf="@id/space_payment_title_top" />
 
-                <Space
-                    android:id="@+id/space_payment_title_bottom"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    app:layout_constraintDimensionRatio="H,335:18"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_my_payment_title" />
-
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/chart_my_payment"
                     android:layout_width="0dp"
@@ -258,7 +249,8 @@
                     app:layout_constraintDimensionRatio="H,302:144"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/space_payment_title_bottom"
+                    app:layout_constraintTop_toBottomOf="@id/tv_my_payment_title"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintWidth_percent="0.9" />
 
                 <TextView
@@ -271,7 +263,7 @@
                     app:layout_constraintDimensionRatio="H, 194:24"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_my_payment_title" />
+                    app:layout_constraintTop_toBottomOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Space

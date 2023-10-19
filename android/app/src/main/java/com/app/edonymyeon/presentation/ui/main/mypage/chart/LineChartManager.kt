@@ -62,7 +62,7 @@ class LineChartManager(
             mAxisMaximum = 6f // 6개월
             mAxisMinimum = 1f
             granularity = 1f // x축 간격
-            textSize = 8f
+            textSize = lineChart.resources.getDimension(R.dimen.my_page_graph_axis_text_size)
             typeface = fontStyle
             valueFormatter = object : IndexAxisValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
@@ -76,6 +76,7 @@ class LineChartManager(
         lineChart.axisLeft.apply {
             this.textColor = textColor
             typeface = fontStyle
+            textSize = lineChart.resources.getDimension(R.dimen.my_page_graph_axis_text_size)
             valueFormatter = object : IndexAxisValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
                     return (value / UNIT_MONEY + 0.1).toInt().toString()
@@ -94,11 +95,14 @@ class LineChartManager(
         lineChart.legend.apply {
             this.textColor = textColor
             typeface = fontStyle
-            xEntrySpace = 20f // 라벨 간 간격 (가로)
+            textSize = lineChart.resources.getDimension(R.dimen.my_page_graph_legend_text_size)
+            xEntrySpace =
+                lineChart.resources.getDimension(R.dimen.my_page_graph_legend_entry_size) // 라벨 간 간격 (가로)
             verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
             horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
             orientation = Legend.LegendOrientation.HORIZONTAL
-            xOffset = 10f
+            xOffset = lineChart.resources.getDimension(R.dimen.my_page_graph_legend_offset_size)
+            yOffset = 20f
         }
     }
 
