@@ -33,7 +33,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/space_image_top"
-            app:layout_constraintWidth_percent="0.54"
+            app:layout_constraintWidth_percent="@dimen/profile_update_image_width"
             tools:src="@drawable/ic_launcher_background" />
 
         <Space
@@ -47,12 +47,12 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_image_upload"
+            style="@style/BUTTON_TEXT_STYLE"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/bg_576b9e_radius_6dp"
             android:text="@string/profile_update_image_upload"
             android:textColor="@color/white_ffffff"
-            android:textSize="16sp"
             app:layout_constraintDimensionRatio="H,140:42"
             app:layout_constraintEnd_toStartOf="@id/btn_image_delete"
             app:layout_constraintStart_toStartOf="parent"
@@ -61,12 +61,12 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_image_delete"
+            style="@style/BUTTON_TEXT_STYLE"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@drawable/bg_666666_radius_6dp"
             android:text="@string/profile_update_image_delete"
             android:textColor="@color/white_ffffff"
-            android:textSize="16sp"
             app:layout_constraintDimensionRatio="H,140:42"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/btn_image_upload"
@@ -102,21 +102,21 @@
 
         <TextView
             android:id="@+id/tv_title_nickname"
+            style="@style/BASIC_TEXT_STYLE"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/profile_update_nickname_title"
             android:textColor="@color/black_434343"
-            android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@id/space_field_start"
             app:layout_constraintTop_toBottomOf="@id/space_button_bottom" />
 
         <TextView
+            style="@style/BASIC_TEXT_EXPLANATION"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:text="@string/sign_up_nickname_policy"
             android:textColor="@color/black_000000"
-            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="@id/tv_title_nickname"
             app:layout_constraintEnd_toStartOf="@id/space_field_end" />
 
@@ -140,7 +140,7 @@
             android:padding="10dp"
             android:text="@{viewModel.profile.nickname.toString()}"
             android:textColor="@color/gray_434343"
-            android:textSize="16sp"
+            style="@style/EDIT_TEXT_STYLE"
             app:layout_constraintDimensionRatio="H,270:36"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -149,6 +149,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_update"
+            style="@style/BUTTON_TEXT_STYLE"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@{viewModel.isAbleToUpdate ? @drawable/bg_576b9e_radius_6dp : @drawable/bg_d9d9d9_radius_6dp}"
@@ -156,7 +157,6 @@
             android:stateListAnimator="@null"
             android:text="@string/profile_update_button_update"
             android:textColor="@color/white_ffffff"
-            android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@id/space_update_bottom"
             app:layout_constraintDimensionRatio="H,320:48"
             app:layout_constraintEnd_toEndOf="parent"

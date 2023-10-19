@@ -30,4 +30,7 @@
 
     <!-- post detail -->
     <dimen name="post_detail_comment_padding">16dp</dimen>
+
+    <!-- profile update -->
+    <dimen name="profile_update_image_width">0.4</dimen>
 </resources>
