@@ -97,13 +97,13 @@
 
                 <TextView
                     android:id="@+id/tv_nickname"
+                    style="@style/BASIC_TITLE_TEXT_STYLE"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="18dp"
                     android:layout_marginBottom="10dp"
                     android:text="@{viewModel.profile.nickname.toString()}"
-                    android:textColor="@color/gray_434343"
-                    android:textSize="18sp"
+                    android:textColor="@color/black_434343"
                     app:layout_constraintBottom_toTopOf="@id/tv_saving_title"
                     app:layout_constraintEnd_toStartOf="@id/space_my_page_profile_end"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -113,62 +113,63 @@
 
                 <TextView
                     android:id="@+id/tv_saving_title"
+                    style="@style/BASIC_TEXT_STYLE"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/my_page_saving_title"
                     android:textColor="@color/blue_576b9e"
-                    android:textSize="14sp"
                     app:layout_constraintBottom_toTopOf="@id/tv_purchase_title"
                     app:layout_constraintStart_toStartOf="@id/tv_nickname"
                     app:layout_constraintTop_toBottomOf="@id/tv_nickname" />
 
                 <TextView
                     android:id="@+id/tv_purchase_title"
+                    style="@style/BASIC_TEXT_STYLE"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/my_page_purchase_title"
                     android:textColor="@color/blue_576b9e"
-                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@id/iv_profile"
                     app:layout_constraintStart_toStartOf="@id/tv_nickname"
                     app:layout_constraintTop_toBottomOf="@id/tv_saving_title" />
 
                 <TextView
                     android:id="@+id/tv_my_saving"
+                    style="@style/BASIC_TEXT_STYLE"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="@{@string/all_price(viewModel.consumptionOnThisMonth.saving)}"
                     android:textColor="@color/gray_434343"
-                    android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_saving_title"
                     app:layout_constraintStart_toEndOf="@id/tv_saving_title"
                     app:layout_constraintTop_toTopOf="@id/tv_saving_title"
                     tools:text="15,000" />
 
                 <TextView
+                    style="@style/BASIC_TEXT_STYLE"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/all_price_unit"
                     android:textColor="@color/gray_434343"
-                    android:textSize="14sp"
                     app:layout_constraintBaseline_toBaselineOf="@id/tv_saving_title"
                     app:layout_constraintStart_toEndOf="@id/tv_my_saving" />
 
                 <TextView
                     android:id="@+id/tv_my_purchase"
+                    style="@style/BASIC_TEXT_STYLE"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="@{@string/all_price(viewModel.consumptionOnThisMonth.purchase)}"
                     android:textColor="@color/gray_434343"
-                    android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_purchase_title"
                     app:layout_constraintStart_toEndOf="@id/tv_purchase_title"
                     app:layout_constraintTop_toTopOf="@id/tv_purchase_title"
                     tools:text="15,000" />
 
                 <TextView
+                    style="@style/BASIC_TEXT_STYLE"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/all_price_unit"
@@ -178,12 +179,12 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_login"
+                    style="@style/BUTTON_TEXT_STYLE"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:background="@drawable/bg_576b9e_radius_15dp"
                     android:text="@string/my_page_login"
                     android:textColor="@color/white_ffffff"
-                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@id/iv_profile"
                     app:layout_constraintDimensionRatio="H, 3:2"
                     app:layout_constraintEnd_toStartOf="@id/space_my_page_profile_end"
@@ -233,11 +234,11 @@
 
                 <TextView
                     android:id="@+id/tv_my_payment_title"
+                    style="@style/BASIC_TITLE_TEXT_STYLE"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/my_page_payment_title"
-                    android:textColor="@color/black_000000"
-                    android:textSize="18sp"
+                    android:textColor="@color/black_434343"
                     app:layout_constraintStart_toEndOf="@id/space_graph_start"
                     app:layout_constraintTop_toBottomOf="@id/space_payment_title_top" />
 
@@ -262,10 +263,10 @@
 
                 <TextView
                     android:id="@+id/tv_required_login"
+                    style="@style/BASIC_TEXT_STYLE"
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:text="@string/all_required_login"
-                    android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="H, 194:24"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -296,12 +297,12 @@
 
                 <TextView
                     android:id="@+id/tv_my_post"
+                    style="@style/BASIC_MENU_TEXT_STYLE"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:gravity="center_vertical"
                     android:text="@string/my_page_my_post"
-                    android:textColor="@color/black_000000"
-                    android:textSize="14sp"
+                    android:textColor="@color/gray_434343"
                     app:layout_constraintBottom_toTopOf="@id/tv_update_user_info"
                     app:layout_constraintDimensionRatio="H,336:48"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -312,12 +313,12 @@
 
                 <TextView
                     android:id="@+id/tv_update_user_info"
+                    style="@style/BASIC_MENU_TEXT_STYLE"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:gravity="center_vertical"
                     android:text="@string/my_page_update_user_info"
-                    android:textColor="@color/black_000000"
-                    android:textSize="14sp"
+                    android:textColor="@color/gray_434343"
                     app:layout_constraintBottom_toTopOf="@id/tv_update_alarm_setting"
                     app:layout_constraintDimensionRatio="H,336:48"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -327,12 +328,12 @@
 
                 <TextView
                     android:id="@+id/tv_update_alarm_setting"
+                    style="@style/BASIC_MENU_TEXT_STYLE"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:gravity="center_vertical"
                     android:text="@string/my_page_alarm_setting"
-                    android:textColor="@color/black_000000"
-                    android:textSize="14sp"
+                    android:textColor="@color/gray_434343"
                     app:layout_constraintBottom_toTopOf="@id/tv_logout"
                     app:layout_constraintDimensionRatio="H,336:48"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -342,12 +343,12 @@
 
                 <TextView
                     android:id="@+id/tv_logout"
+                    style="@style/BASIC_MENU_TEXT_STYLE"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:gravity="center_vertical"
                     android:text="@string/my_page_logout"
-                    android:textColor="@color/black_000000"
-                    android:textSize="14sp"
+                    android:textColor="@color/gray_434343"
                     app:layout_constraintBottom_toTopOf="@id/tv_withdraw"
                     app:layout_constraintDimensionRatio="H, 336:48"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -357,12 +358,12 @@
 
                 <TextView
                     android:id="@+id/tv_withdraw"
+                    style="@style/BASIC_MENU_TEXT_STYLE"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:gravity="center_vertical"
                     android:text="@string/my_page_withdraw"
-                    android:textColor="@color/black_000000"
-                    android:textSize="14sp"
+                    android:textColor="@color/gray_434343"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintDimensionRatio="H, 336:48"
                     app:layout_constraintEnd_toEndOf="parent"
