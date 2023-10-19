@@ -8,12 +8,13 @@ import java.util.Objects;
 import org.springframework.http.MediaType;
 
 public enum ImageExtension {
-    JPG, JPEG, PNG;
+    JPG, JPEG, PNG, WEBP;
 
     private static final Map<String, ImageExtension> extensions = Map.of(
             JPG.name(), JPG,
             JPEG.name(), JPEG,
-            PNG.name(), PNG
+            PNG.name(), PNG,
+            WEBP.name(), WEBP
     );
 
     public static boolean contains(String extension) {
@@ -24,7 +25,7 @@ public enum ImageExtension {
         final String ext = extractExt(fileName);
         final ImageExtension extension = from(ext);
         return switch (extension) {
-            case JPG, JPEG -> MediaType.IMAGE_JPEG;
+            case JPG, JPEG, WEBP -> MediaType.IMAGE_JPEG;
             case PNG -> MediaType.IMAGE_PNG;
         };
     }

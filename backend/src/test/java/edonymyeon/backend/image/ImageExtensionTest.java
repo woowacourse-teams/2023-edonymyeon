@@ -17,7 +17,7 @@ import org.springframework.http.MediaType;
 class ImageExtensionTest {
 
     @ParameterizedTest(name = "{index} : {0}을 넣으면 {1}을 반환한다.")
-    @CsvSource({"jpg, true", "jpEg, true", "png, true", "csv, false", "txt, false"})
+    @CsvSource({"jpg, true", "jpEg, true", "png, true", "csv, false", "txt, false", "webp, true"})
     void 지원하는_확장자인지_테스트(String ext, boolean expected) {
         final boolean actual = ImageExtension.contains(ext);
 
