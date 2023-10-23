@@ -12,7 +12,6 @@ import com.app.edonymyeon.presentation.uimodel.ConsumptionStatisticsUiModel
 import com.app.edonymyeon.presentation.uimodel.NicknameUiModel
 import com.app.edonymyeon.presentation.uimodel.WriterUiModel
 import com.domain.edonymyeon.model.ConsumptionStatistics
-import com.domain.edonymyeon.model.Writer
 import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.ConsumptionsRepository
 import com.domain.edonymyeon.repository.ProfileRepository
@@ -51,7 +50,6 @@ class MyPageViewModel @Inject constructor(
     fun getUserProfile() {
         viewModelScope.launch(exceptionHandler) {
             profileRepository.getProfile().onSuccess {
-                it as Writer
                 _profile.value = it.toUiModel()
             }.onFailure {
                 throw it

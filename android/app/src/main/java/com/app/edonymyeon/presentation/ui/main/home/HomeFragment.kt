@@ -20,11 +20,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeViewModel>(
-    {
-        FragmentHomeBinding.inflate(it)
-    },
+    { FragmentHomeBinding.inflate(it) },
 ) {
-
     override val viewModel: HomeViewModel by viewModels()
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
 

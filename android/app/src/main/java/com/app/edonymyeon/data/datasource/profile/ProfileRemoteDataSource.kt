@@ -1,11 +1,18 @@
 package com.app.edonymyeon.data.datasource.profile
 
+import com.app.edonymyeon.data.dto.WriterDataModel
+import com.app.edonymyeon.data.dto.request.ProfileUpdateRequest
 import com.app.edonymyeon.data.dto.request.PurchaseConfirmRequest
 import com.app.edonymyeon.data.dto.request.SavingConfirmRequest
+import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
 import com.app.edonymyeon.data.dto.response.MyPostsResponse
-import com.app.edonymyeon.data.dto.response.ProfileResponse
 import com.app.edonymyeon.data.service.ProfileService
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Response
+import java.io.File
 import javax.inject.Inject
 
 class ProfileRemoteDataSource @Inject constructor(
@@ -34,11 +41,37 @@ class ProfileRemoteDataSource @Inject constructor(
         return profileService.deleteConfirm(id)
     }
 
-    override suspend fun getProfile(): Response<ProfileResponse> {
+    override suspend fun getProfile(): Response<WriterDataModel> {
         return profileService.getProfile()
     }
 
     override suspend fun withdraw(): Response<Unit> {
         return profileService.withdraw()
+    }
+
+    override suspend fun updateProfile(
+        profileRequest: ProfileUpdateRequest,
+        newProfileImage: File?,
+    ): Response<Unit> {
+        val nickname = profileRequest.nickname.toRequestBody("text/plain".toMediaTypeOrNull())
+        return profileService.updateProfile(
+            nickname,
+            profileRequest.isImageChanged,
+            newProfileImage?.toMultipartBody(),
+        )
+    }
+
+    override suspend fun checkDuplicate(
+        target: String,
+        value: String,
+    ): Response<AuthDuplicateResponse> {
+        return profileService.checkDuplicate(target, value)
+    }
+
+    private fun File?.toMultipartBody(): MultipartBody.Part? {
+        if (this == null) return null
+
+        val requestFile = this.asRequestBody("image/*".toMediaTypeOrNull())
+        return MultipartBody.Part.createFormData("profileImage", this.name, requestFile)
     }
 }

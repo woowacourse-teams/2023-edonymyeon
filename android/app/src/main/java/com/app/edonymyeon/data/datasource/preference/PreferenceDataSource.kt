@@ -7,5 +7,5 @@ import retrofit2.Response
 interface PreferenceDataSource {
     suspend fun getNotificationPreference(): Response<NotificationPreferenceResponse>
     suspend fun saveNotificationPreference(notificationPreferenceRequest: NotificationPreferenceRequest):
-        Response<NotificationPreferenceResponse>
+            Response<NotificationPreferenceResponse>
 }
