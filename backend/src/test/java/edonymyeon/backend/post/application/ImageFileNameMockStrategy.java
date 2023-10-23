@@ -1,6 +1,6 @@
 package edonymyeon.backend.post.application;
 
-import edonymyeon.backend.image.ImageFileNameStrategy;
+import edonymyeon.backend.image.domain.ImageFileNameStrategy;
 
 public class ImageFileNameMockStrategy implements ImageFileNameStrategy {
 

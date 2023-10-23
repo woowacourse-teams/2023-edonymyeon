@@ -1,4 +1,4 @@
-package edonymyeon.backend.image;
+package edonymyeon.backend.image.domain;
 
 public interface ImageFileNameStrategy {
 

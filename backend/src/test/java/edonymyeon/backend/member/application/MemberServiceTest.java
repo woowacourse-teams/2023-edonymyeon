@@ -13,7 +13,7 @@ import edonymyeon.backend.auth.application.AuthService;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
-import edonymyeon.backend.image.ImageFileUploader;
+import edonymyeon.backend.image.application.ImageService;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.request.MemberUpdateRequest;
@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -42,7 +41,7 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
     private final MemberService memberService;
 
     @SpyBean
-    private ImageFileUploader imageFileUploader;
+    private ImageService imageService;
 
     @Test
     void 하나의_디바이스는_하나의_계정에서만_활성화_되어야_한다_회원가입() {
@@ -137,7 +136,7 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
                     soft.assertThat(updatedMember.getId()).isEqualTo(member.getId());
                     soft.assertThat(updatedMember.getNickname()).isEqualTo(updateRequest.nickname());
                     soft.assertThat(updatedMember.getProfileImageInfo()).isNull();
-                    await().untilAsserted(() -> verify(imageFileUploader, atLeastOnce()).removeFile(any()));
+                    await().untilAsserted(() -> verify(imageService, atLeastOnce()).removeImage(any(), any()));
                 }
         );
     }
@@ -163,8 +162,8 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
                     soft.assertThat(updatedMember.getId()).isEqualTo(member.getId());
                     soft.assertThat(updatedMember.getNickname()).isEqualTo(updateRequest.nickname());
                     soft.assertThat(updatedMember.getProfileImageInfo()).isNotNull();
-                    await().untilAsserted(() -> verify(imageFileUploader, atLeastOnce()).removeFile(any()));
-                    await().untilAsserted(() -> verify(imageFileUploader, atLeastOnce()).uploadFile(any()));
+                    await().untilAsserted(() -> verify(imageService, atLeastOnce()).removeImage(any(), any()));
+                    await().untilAsserted(() -> verify(imageService, atLeastOnce()).save(any(), any()));
                 }
         );
     }
@@ -190,8 +189,8 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
                     soft.assertThat(updatedMember.getId()).isEqualTo(member.getId());
                     soft.assertThat(updatedMember.getNickname()).isEqualTo(updateRequest.nickname());
                     soft.assertThat(updatedMember.getProfileImageInfo()).isNotNull();
-                    await().untilAsserted(() -> verify(imageFileUploader, atLeastOnce()).removeFile(any()));
-                    await().untilAsserted(() -> verify(imageFileUploader, atLeastOnce()).uploadFile(any()));
+                    await().untilAsserted(() -> verify(imageService, atLeastOnce()).removeImage(any(), any()));
+                    await().untilAsserted(() -> verify(imageService, atLeastOnce()).save(any(), any()));
                 }
         );
     }
@@ -207,7 +206,7 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
         final MockMultipartFile imageFile = mockMultipartFileTestSupport.builder().buildImageForProfile();
         final MemberUpdateRequest updateRequest = new MemberUpdateRequest("newNickname", imageFile, true);
 
-        doThrow(new RuntimeException("롤백용 예외")).when(imageFileUploader).uploadRealStorage(any(), any());
+        doThrow(new RuntimeException("롤백용 예외")).when(imageService).save(any(), any());
 
         assertThatThrownBy(() -> memberService.updateMember(new ActiveMemberId(member.getId()),
                 updateRequest))
@@ -218,7 +217,7 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
 
         SoftAssertions.assertSoftly(
                 soft -> {
-                    verify(imageFileUploader, atLeastOnce()).uploadRealStorage(any(), any());
+                    verify(imageService, atLeastOnce()).save(any(), any());
                     soft.assertThat(updatedMember.getNickname()).isNotEqualTo(updateRequest.nickname());
                 }
         );

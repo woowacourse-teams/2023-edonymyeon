@@ -13,6 +13,7 @@ public enum ExceptionInformation {
     REQUEST_FILE_SIZE_TOO_LARGE(2, "첨부 파일의 용량이 제한을 초과하였습니다."),
     CACHE_NOT_FOUND(100, "캐싱된 값이 없습니다."),
     INVALID_SETTING_MANAGER_ASSIGNED(201, "잘못된 설정 매니저가 매핑되었습니다"),
+    UNSUPPORTED_METHOD_CALL(202, "현재 지원하지 않는 기능입니다"),
 
     // 클래스이름_필드명_틀린내용
     // 1___: 인증 관련
@@ -60,6 +61,10 @@ public enum ExceptionInformation {
     IMAGE_DOMAIN_INVALID(5001, "이미지의 url 경로가 잘못되었습니다."),
     IMAGE_STORE_NAME_INVALID(5002, "유효하지 않은 이미지 이름이 포함되어 있습니다."),
     IMAGE_UPLOAD_FAIL(5003, "이미지 업로드에 실패했습니다."),
+    IMAGE_GET_BYTE_FAILED(5004, "이미지 파일을 byte로 변환할 수 없습니다."),
+    IMAGE_ORIGINAL_DIRECTORY_INVALID(5005, "기존 이미지 파일 디렉터리를 읽을 수 없습니다."),
+    IMAGE_CONTENT_TYPE_FAIL(5006, "기존 이미지의 content type을 알 수 없습니"),
+    IMAGE_DELETION_FAIL(5007, "이미지 삭제를 실패하였습니다"),
 
     // 6___: 소비, 절약 관련
     CONSUMPTION_POST_ID_ALREADY_EXIST(6000, "이미 소비, 절약 여부가 확정된 게시글입니다."),

@@ -3,11 +3,10 @@ package edonymyeon.backend.member.application;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_DUPLICATE;
 
-import edonymyeon.backend.image.domain.Domain;
-import edonymyeon.backend.member.application.dto.response.DuplicateCheckResponse;
 import edonymyeon.backend.auth.domain.ValidateType;
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.image.ImageFileUploader;
+import edonymyeon.backend.image.application.ImageService;
+import edonymyeon.backend.image.domain.ImageType;
 import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.image.profileimage.repository.ProfileImageInfoRepository;
@@ -16,11 +15,11 @@ import edonymyeon.backend.member.application.dto.YearMonthDto;
 import edonymyeon.backend.member.application.dto.request.MemberUpdateRequest;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
+import edonymyeon.backend.member.application.dto.response.DuplicateCheckResponse;
 import edonymyeon.backend.member.application.dto.response.MemberUpdateResponse;
 import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_0;
 import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_1;
 import edonymyeon.backend.member.application.event.ProfileImageDeletionEvent;
-import edonymyeon.backend.member.application.event.ProfileImageUploadEvent;
 import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -46,9 +45,7 @@ public class MemberService {
 
     private final ProfileImageInfoRepository profileImageInfoRepository;
 
-    private final ImageFileUploader imageFileUploader;
-
-    private final Domain domain;
+    private final ImageService imageService;
 
     private final ApplicationEventPublisher publisher;
 
@@ -64,7 +61,11 @@ public class MemberService {
 
     public MyPageResponseV1_1 findMemberInfoByIdV1_1(final Long id) {
         final Member member = findMember(id);
-        return new MyPageResponseV1_1(member.getId(), member.getNickname(), domain.convertToImageUrl(member.getProfileImageInfo()));
+        return new MyPageResponseV1_1(
+                member.getId(),
+                member.getNickname(),
+                imageService.convertToImageUrl(member.getProfileImageInfo(), ImageType.PROFILE)
+        );
     }
 
     @Transactional
@@ -115,7 +116,7 @@ public class MemberService {
             final ProfileImageInfo imageInfoToDelete = member.getProfileImageInfo();
             profileImageInfoRepository.delete(imageInfoToDelete);
             member.deleteProfileImage();
-            publisher.publishEvent(new ProfileImageDeletionEvent(imageInfoToDelete));
+            publisher.publishEvent(new ProfileImageDeletionEvent(imageInfoToDelete, ImageType.PROFILE));
         }
     }
 
@@ -124,20 +125,18 @@ public class MemberService {
     }
 
     private MemberUpdateResponse updateWithoutProfileImage(final Member member,
-                                                          final MemberUpdateRequest updateRequest) {
+                                                           final MemberUpdateRequest updateRequest) {
         member.updateNickname(updateRequest.nickname());
         return new MemberUpdateResponse(member.getId());
     }
 
     private MemberUpdateResponse updateWithProfileImage(final Member member, final MemberUpdateRequest updateRequest) {
         final MultipartFile imageFile = updateRequest.profileImage();
-        final ImageInfo imageInfo = imageFileUploader.from(imageFile);
+        final ImageInfo imageInfo = imageService.save(imageFile, ImageType.PROFILE);
         final ProfileImageInfo profileImageInfo = ProfileImageInfo.from(imageInfo);
         profileImageInfoRepository.save(profileImageInfo);
         member.updateProfileImageInfo(profileImageInfo);
         member.updateNickname(updateRequest.nickname());
-
-        publisher.publishEvent(new ProfileImageUploadEvent(imageFile, profileImageInfo));
         return new MemberUpdateResponse(member.getId());
     }
 

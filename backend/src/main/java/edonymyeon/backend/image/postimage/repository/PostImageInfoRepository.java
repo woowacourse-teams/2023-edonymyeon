@@ -14,4 +14,7 @@ public interface PostImageInfoRepository extends JpaRepository<PostImageInfo, Lo
     @Modifying
     @Query("delete from PostImageInfo pi where pi.post.id=:postId")
     void deleteAllByPostId(@Param("postId") final Long postId);
+
+    @Query(value = "select * from post_image_info", nativeQuery = true)
+    List<PostImageInfo> findAllImages();
 }

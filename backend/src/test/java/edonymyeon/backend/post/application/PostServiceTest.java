@@ -12,7 +12,6 @@ import edonymyeon.backend.comment.repository.CommentRepository;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
-import edonymyeon.backend.image.ImageFileUploader;
 import edonymyeon.backend.image.postimage.domain.PostImageInfo;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
@@ -67,8 +66,6 @@ class PostServiceTest implements ImageFileCleaner {
     private final TestMemberBuilder memberTestSupport;
 
     private final MockMultipartFileTestSupport mockMultipartFileTestSupport;
-
-    private final ImageFileUploader imageFileUploader;
 
     private final ConsumptionTestSupport consumptionTestSupport;
 
@@ -229,15 +226,6 @@ class PostServiceTest implements ImageFileCleaner {
             assertThat(consumptionRepository.findByPostId(post.getId())).isEmpty();
         }
 
-//        @Test
-//        void 게시글이_삭제되면_디렉토리에_있는_이미지도_삭제된다() throws IOException {
-//            final PostIdResponse postIdResponse = postService.createPost(memberId, getPostRequest());
-//            final PostImageInfo postImageInfo = postImageInfoRepository.findAllByPostId(postIdResponse.id()).get(0);
-//            assertThat(new File(imageFileUploader.getFullPath(postImageInfo.getStoreName())).canRead()).isTrue();
-//
-//            postService.deletePost(memberId, postIdResponse.id());
-//            assertThat(new File(imageFileUploader.getFullPath(postImageInfo.getStoreName())).canRead()).isFalse();
-//        }
 
         @Test
         void 게시글이_삭제되면_조회되지_않는다() throws IOException {
