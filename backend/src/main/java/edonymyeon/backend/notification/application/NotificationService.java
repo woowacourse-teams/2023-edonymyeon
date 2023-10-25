@@ -74,7 +74,7 @@ public class NotificationService {
      * @param post 추천/비추천이 달린 게시글
      */
     @Async
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public void sendThumbsNotificationToWriter(final Post post) {
         if (consumptionService.isPostConfirmed(post.getId())) {
             return;
@@ -100,7 +100,7 @@ public class NotificationService {
      * @param comment 게시글에 달린 댓글
      */
     @Async
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public void sendCommentNotificationToPostWriter(Comment comment) {
         if (comment.isWrittenSelf()) {
             return;
@@ -190,7 +190,7 @@ public class NotificationService {
      * @param notificationId '읽었음' 표시할 알림의 식별자
      */
     @Async
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public void markNotificationAsRead(final Long notificationId) {
         final Optional<Notification> notification = notificationRepository.findById(notificationId);
         notification.ifPresent(Notification::markAsRead);
@@ -201,7 +201,7 @@ public class NotificationService {
      * @param postId 게시글의 식별자
      */
     @Async
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public void deleteNotificationByPost(final Long postId) {
         notificationRepository.deleteAllByPostId(postId);
     }
