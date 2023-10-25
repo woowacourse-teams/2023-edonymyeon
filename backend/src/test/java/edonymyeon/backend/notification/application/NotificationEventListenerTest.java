@@ -5,7 +5,6 @@ import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import edonymyeon.backend.auth.application.AuthService;
@@ -28,8 +27,6 @@ import edonymyeon.backend.thumbs.repository.ThumbsRepository;
 import java.time.Duration;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;

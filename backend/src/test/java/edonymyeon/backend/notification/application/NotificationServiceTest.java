@@ -2,7 +2,6 @@ package edonymyeon.backend.notification.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.atLeastOnce;
@@ -18,12 +17,9 @@ import edonymyeon.backend.comment.application.CommentService;
 import edonymyeon.backend.comment.application.dto.request.CommentRequest;
 import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
-import edonymyeon.backend.logging.application.Log;
-import edonymyeon.backend.member.application.DeviceRepository;
 import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
-import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.ScreenType;
@@ -35,14 +31,10 @@ import edonymyeon.backend.setting.domain.SettingType;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.application.ThumbsService;
 import java.time.Duration;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -291,7 +283,7 @@ class NotificationServiceTest extends IntegrationFixture {
     }
 
     @Test
-    void 로그아웃한_사용자에게_알림을_보내지_않는다(@Autowired CommentService commentService, @Autowired DeviceRepository deviceRepository) {
+    void 로그아웃한_사용자에게_알림을_보내지_않는다(@Autowired CommentService commentService) {
         final Member writer = getJoinedMember(authService);
         settingService.toggleSetting(SettingType.NOTIFICATION_PER_COMMENT.getSerialNumber(), new ActiveMemberId(writer.getId()));
 
