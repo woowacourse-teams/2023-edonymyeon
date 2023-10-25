@@ -1,6 +1,8 @@
 package edonymyeon.backend.post.application;
 
 import edonymyeon.backend.consumption.domain.Consumption;
+import edonymyeon.backend.image.application.ImageService;
+import edonymyeon.backend.image.domain.ImageType;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.post.application.dto.response.MyPostResponse;
@@ -44,6 +46,9 @@ class MyPostServiceTest {
     @Mock
     private PostConsumptionService postConsumptionService;
 
+    @Mock
+    private ImageService imageService;
+
     @InjectMocks
     private MyPostService myPostService;
 
@@ -61,6 +66,8 @@ class MyPostServiceTest {
 
         when(postRepository.findAllByMemberId(anyLong(), any()))
                 .thenReturn(임의_반환_게시글_목록);
+
+        when(imageService.findBaseUrl(ImageType.POST)).thenReturn("이미지 경로");
 
         final Map<Long, PostConsumptionResponse> 소비확정_목록 = 임의_소비확정_목록(게시글_목록);
 

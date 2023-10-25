@@ -17,7 +17,7 @@ import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.auth.domain.PasswordEncoder;
-import edonymyeon.backend.image.ImageFileUploader;
+import edonymyeon.backend.image.application.ImageService;
 import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.member.application.MemberService;
@@ -66,7 +66,7 @@ class AuthServiceTest {
     private MemberRepository memberRepository;
 
     @SpyBean
-    private ImageFileUploader uploader;
+    private ImageService imageService;
 
     @Test
     void 회원가입시_사용한_디바이스_정보를_함께_저장한다(@Autowired EntityManager entityManager) {
@@ -170,7 +170,7 @@ class AuthServiceTest {
         SoftAssertions.assertSoftly(
                 soft -> {
                     verify(memberService, atLeastOnce()).deleteProfileImage(mockedMember);
-                    await().untilAsserted(() -> verify(uploader, atLeastOnce()).removeFile(any()));
+                    await().untilAsserted(() -> verify(imageService, atLeastOnce()).removeImage(any(), any()));
                 }
         );
     }
@@ -195,7 +195,7 @@ class AuthServiceTest {
                 soft -> {
                     soft.assertThatThrownBy(() -> authService.withdraw(memberId));
                     verify(memberService, atLeastOnce()).deleteProfileImage(mockedMember);
-                    verify(uploader, never()).removeFile(any());
+                    verify(imageService, never()).removeImage(any(), any());
                 }
         );
     }

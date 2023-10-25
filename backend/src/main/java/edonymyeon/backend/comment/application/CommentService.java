@@ -8,10 +8,10 @@ import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.comment.repository.CommentRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
-import edonymyeon.backend.image.ImageFileUploader;
+import edonymyeon.backend.image.application.ImageService;
+import edonymyeon.backend.image.domain.ImageType;
 import edonymyeon.backend.image.commentimage.domain.CommentImageInfo;
 import edonymyeon.backend.image.commentimage.repository.CommentImageInfoRepository;
-import edonymyeon.backend.image.domain.Domain;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -38,11 +38,9 @@ public class CommentService {
 
     private final CommentImageInfoRepository commentImageInfoRepository;
 
-    private final ImageFileUploader imageFileUploader;
+    private final ImageService imageService;
 
     private final ApplicationEventPublisher publisher;
-
-    private final Domain domain;
 
     @Transactional
     public long createComment(final MemberId memberId, final Long postId, final CommentRequest commentRequest) {
@@ -68,7 +66,7 @@ public class CommentService {
         if (image == null || image.isEmpty()) {
             return null;
         }
-        final CommentImageInfo commentImageInfo = CommentImageInfo.from(imageFileUploader.uploadFile(image));
+        final CommentImageInfo commentImageInfo = CommentImageInfo.from(imageService.save(image, ImageType.COMMENT));
         commentImageInfoRepository.save(commentImageInfo);
         return commentImageInfo;
     }
@@ -90,7 +88,7 @@ public class CommentService {
         List<CommentDto> commentDtos = new ArrayList<>();
         for (Comment comment : comments) {
             final boolean isWriter = comment.isSameMember(memberId.id());
-            final String imageUrl = domain.convertToImageUrl(comment.getCommentImageInfo());
+            final String imageUrl = imageService.convertToImageUrl(comment.getCommentImageInfo(), ImageType.COMMENT);
             final CommentDto commentDto = CommentDto.of(isWriter, comment, imageUrl);
             commentDtos.add(commentDto);
         }

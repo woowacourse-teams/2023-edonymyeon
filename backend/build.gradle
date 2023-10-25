@@ -69,6 +69,11 @@ dependencies {
 	// flyway 추가
 	implementation 'org.flywaydb:flyway-mysql'
 	implementation 'org.flywaydb:flyway-core'
+
+	//s3
+	implementation platform('software.amazon.awssdk:bom:2.20.56')
+	implementation 'software.amazon.awssdk:s3:'
+
 }
 
 tasks.named('test') {

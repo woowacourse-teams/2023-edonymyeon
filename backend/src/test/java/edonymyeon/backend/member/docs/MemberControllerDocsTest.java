@@ -25,7 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
-import edonymyeon.backend.image.domain.Domain;
+import edonymyeon.backend.image.domain.ImageType;
+import edonymyeon.backend.image.domain.UrlManager;
 import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
@@ -210,16 +211,16 @@ class MemberControllerDocsTest extends DocsTest {
     }
 
     @Test
-    void 회원정보를_조회한다_V1(@Autowired Domain domain) throws Exception {
+    void 회원정보를_조회한다_V1_0(@Autowired UrlManager urlManager) throws Exception {
         final Member 회원 = testMemberBuilder.builder().id(1L).buildWithoutSaving();
         var response = new MyPageResponseV1_0(회원.getId(), 회원.getNickname());
         when(memberService.findMemberInfoByIdV1_0(회원.getId())).thenReturn(response);
 
         final MockHttpServletRequestBuilder 회원_정보_조회_요청 = get("/profile")
-                .header("X-API-VERSION", 1)
+                .header("X-API-VERSION", "1.0.0")
                 .sessionAttr(USER.getSessionId(), 회원.getId());
 
-        final RestDocumentationResultHandler 문서화 = document("profile-v1",
+        final RestDocumentationResultHandler 문서화 = document("profile-v1_0",
                 responseFields(fieldWithPath("memberId").description("회원 id"),
                         fieldWithPath("nickname").description("닉네임")));
 
@@ -229,14 +230,14 @@ class MemberControllerDocsTest extends DocsTest {
     }
 
     @Test
-    void 회원정보를_조회한다_V1_1(@Autowired Domain domain) throws Exception {
+    void 회원정보를_조회한다_V1_1(@Autowired UrlManager urlManager) throws Exception {
         final Member 회원 = testMemberBuilder.builder().id(1L).buildWithoutSaving();
         var response = new MyPageResponseV1_1(회원.getId(), 회원.getNickname(),
-                domain.convertToImageUrl(회원.getProfileImageInfo()));
+                urlManager.convertToImageUrl(ImageType.PROFILE, 회원.getProfileImageInfo()));
         when(memberService.findMemberInfoByIdV1_1(회원.getId())).thenReturn(response);
 
         final MockHttpServletRequestBuilder 회원_정보_조회_요청 = get("/profile")
-                .header("X-API-VERSION", 2)
+                .header("X-API-VERSION", "1.1.0")
                 .sessionAttr(USER.getSessionId(), 회원.getId());
 
         final RestDocumentationResultHandler 문서화 = document("profile-V1_1",
@@ -265,7 +266,7 @@ class MemberControllerDocsTest extends DocsTest {
                 .part(nickname)
                 .file(profileImage)
                 .part(isImageChanged)
-                .header("X-API-VERSION", 2)
+                .header("X-API-VERSION", "1.1.0")
                 .contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
                 .sessionAttr(USER.getSessionId(), 회원.getId());
 
@@ -290,7 +291,7 @@ class MemberControllerDocsTest extends DocsTest {
         when(memberService.checkDuplicate(target, value)).thenReturn(duplicateCheckResponse);
 
         final MockHttpServletRequestBuilder 중복_요청 = get("/profile/check-duplicate")
-                .header("X-API-VERSION", 2)
+                .header("X-API-VERSION", "1.1.0")
                 .queryParam("target", target)
                 .queryParam("value", value);
 
