@@ -28,9 +28,7 @@ import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -169,7 +167,7 @@ public class MemberService {
         memberConsumptionService.removeConfirm(memberId, postId);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public void activateDevice(final Member member, final String deviceToken) {
         final Member rePersistedMember = memberRepository.save(member);
         if (rePersistedMember.isActiveDevice(deviceToken)) {
@@ -180,14 +178,14 @@ public class MemberService {
         deactivateOtherDevices(member, deviceToken);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public void deactivateOtherDevices(final Member member, final String deviceToken) {
         deviceRepository.findAllByDeviceToken(deviceToken)
                 .stream().filter(device -> !device.isOwner(member))
                 .forEach(Device::deactivate);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public void deactivateDevice(final String deviceToken) {
         final Optional<Device> device = deviceRepository.findByDeviceToken(deviceToken);
         device.ifPresent(Device::deactivate);

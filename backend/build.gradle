@@ -69,9 +69,6 @@ dependencies {
 	// flyway 추가
 	implementation 'org.flywaydb:flyway-mysql'
 	implementation 'org.flywaydb:flyway-core'
-
-	// sql 파라미터 보여준 애 나중에 지워잉
-	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
 }
 
 tasks.named('test') {

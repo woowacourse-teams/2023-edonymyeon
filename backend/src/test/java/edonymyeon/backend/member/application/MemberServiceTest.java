@@ -25,12 +25,10 @@ import edonymyeon.backend.support.IntegrationFixture;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.transaction.annotation.Transactional;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -45,7 +43,6 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
     @SpyBean
     private ImageFileUploader imageFileUploader;
 
-    @Disabled
     @Test
     void 하나의_디바이스는_하나의_계정에서만_활성화_되어야_한다_회원가입() {
         final String 동일한_디바이스_토큰 = "testDeviceToken";
@@ -59,7 +56,6 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
                 .isPresent();
     }
 
-    @Disabled
     @Test
     void 하나의_디바이스는_하나의_계정에서만_활성화_되어야_한다_로그인() {
         final String 동일한_디바이스_토큰 = "testDeviceToken";
@@ -72,7 +68,6 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
                 .isPresent();
     }
 
-    @Disabled
     @Test
     void 하나의_디바이스는_하나의_계정에서만_활성화_되어야_한다_소셜로그인() {
         final String 동일한_디바이스_토큰 = "testDeviceToken";

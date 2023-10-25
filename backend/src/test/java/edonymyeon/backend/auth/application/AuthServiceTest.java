@@ -98,7 +98,6 @@ class AuthServiceTest {
         verify(settingService, atLeastOnce()).initializeSettings(any());
     }
 
-    @Disabled
     @Test
     void 로그인_이후_디바이스_교체_작업을_수행한다() {
         doNothing().when(memberService).activateDevice(any(), any());
@@ -109,7 +108,6 @@ class AuthServiceTest {
         verify(memberService, atLeastOnce()).activateDevice(any(), any());
     }
 
-    @Disabled
     @Test
     void 소셜로그인_이후에도_디바이스_교체_작업을_수행한다() {
         doNothing().when(memberService).activateDevice(any(), any());
