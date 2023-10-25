@@ -13,13 +13,17 @@ import static org.mockito.Mockito.verify;
 
 import edonymyeon.backend.auth.application.AuthService;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
+import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.comment.application.CommentService;
 import edonymyeon.backend.comment.application.dto.request.CommentRequest;
 import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
+import edonymyeon.backend.logging.application.Log;
+import edonymyeon.backend.member.application.DeviceRepository;
 import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
+import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.ScreenType;
@@ -31,6 +35,7 @@ import edonymyeon.backend.setting.domain.SettingType;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.application.ThumbsService;
 import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
@@ -285,15 +290,15 @@ class NotificationServiceTest extends IntegrationFixture {
                 ));
     }
 
-    @Disabled
     @Test
-    void 로그아웃한_사용자에게_알림을_보내지_않는다(@Autowired CommentService commentService) {
+    void 로그아웃한_사용자에게_알림을_보내지_않는다(@Autowired CommentService commentService, @Autowired DeviceRepository deviceRepository) {
         final Member writer = getJoinedMember(authService);
         settingService.toggleSetting(SettingType.NOTIFICATION_PER_COMMENT.getSerialNumber(), new ActiveMemberId(writer.getId()));
 
         final Member commenter = memberTestSupport.builder().build();
         final Post post = postTestSupport.builder().member(writer).build();
 
+        authService.login(new LoginRequest("test@gmail.com", "password123!",  "testDevice123"));
         authService.logout(writer.getActiveDeviceToken().orElseGet(() -> fail("활성화된 디바이스 토큰이 존재하지 않음")));
 
         commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
