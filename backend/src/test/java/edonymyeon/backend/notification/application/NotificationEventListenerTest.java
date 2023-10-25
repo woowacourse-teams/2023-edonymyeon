@@ -1,9 +1,12 @@
 package edonymyeon.backend.notification.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 
 import edonymyeon.backend.auth.application.AuthService;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
@@ -22,8 +25,10 @@ import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.application.ThumbsService;
 import edonymyeon.backend.thumbs.domain.Thumbs;
 import edonymyeon.backend.thumbs.repository.ThumbsRepository;
+import java.time.Duration;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -54,10 +59,11 @@ class NotificationEventListenerTest extends IntegrationFixture {
         final Post post = postTestSupport.builder().build();
         thumbsService.thumbsUp(new ActiveMemberId(member.getId()), post.getId());
 
-        Mockito.verify(notificationEventListener, Mockito.atLeast(1)).sendThumbsUpNotification(Mockito.any());
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> verify(notificationEventListener, Mockito.atLeast(1)).sendThumbsUpNotification(Mockito.any()));
     }
 
-    @Disabled
     @Test
     void 따봉_저장이_완료된_후에는_알림_발송_후_저장한다() {
         final Member liker = 사용자를_하나_만든다();
@@ -67,17 +73,20 @@ class NotificationEventListenerTest extends IntegrationFixture {
 
         thumbsService.thumbsUp(new ActiveMemberId(liker.getId()), post.getId());
 
-        assertThat(notificationRepository.findAll())
-                .as("알림도 저장하고")
-                .hasSize(1);
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> {
+                    assertThat(notificationRepository.findAll())
+                            .as("알림도 저장하고")
+                            .hasSize(1);
 
-        final List<Thumbs> thumbs = thumbsRepository.findByPostId(post.getId());
-        assertThat(thumbs)
-                .as("따봉도 정상적으로 저장되어야 한다.")
-                .hasSize(1);
+                    final List<Thumbs> thumbs = thumbsRepository.findByPostId(post.getId());
+                    assertThat(thumbs)
+                            .as("따봉도 정상적으로 저장되어야 한다.")
+                            .hasSize(1);
+                });
     }
 
-    @Disabled
     @Test
     void 댓글을_남기면_글_작성자에게_알림이_간다(
             @Autowired TransactionTemplate template,
@@ -90,15 +99,18 @@ class NotificationEventListenerTest extends IntegrationFixture {
         final CommentRequest commentRequest = new CommentRequest(null, "뭐 이런 글을 썼대요");
         commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(), commentRequest);
 
-        template.execute(status -> {
-            final List<Notification> notifications = notificationRepository.findAll();
-            assertThat(notifications).hasSize(1);
-            assertThat(notifications.get(0).getMember()).isEqualTo(writer);
-            return "";
-        });
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> {
+                    template.execute(status -> {
+                        final List<Notification> notifications = notificationRepository.findAll();
+                        assertThat(notifications).hasSize(1);
+                        assertThat(notifications.get(0).getMember()).isEqualTo(writer);
+                        return "";
+                    });
+                });
     }
 
-    @Disabled
     @Test
     void 알림_전송_트랜잭션이_실패했다고_해서_따봉까지_롤백되어서는_안된다() {
         doThrow(new BusinessLogicException(ExceptionInformation.NOTIFICATION_REQUEST_FAILED))
@@ -113,13 +125,17 @@ class NotificationEventListenerTest extends IntegrationFixture {
 
         thumbsService.thumbsUp(new ActiveMemberId(liker.getId()), post.getId());
 
-        assertThat(notificationRepository.findAll())
-                .as("알림도 저장하고")
-                .hasSize(1);
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> {
+                    assertThat(notificationRepository.findAll())
+                            .as("알림도 저장하고")
+                            .hasSize(1);
 
-        final List<Thumbs> thumbs = thumbsRepository.findByPostId(post.getId());
-        assertThat(thumbs)
-                .as("따봉도 정상적으로 저장되어야 한다.")
-                .hasSize(1);
+                    final List<Thumbs> thumbs = thumbsRepository.findByPostId(post.getId());
+                    assertThat(thumbs)
+                            .as("따봉도 정상적으로 저장되어야 한다.")
+                            .hasSize(1);
+                });
     }
 }

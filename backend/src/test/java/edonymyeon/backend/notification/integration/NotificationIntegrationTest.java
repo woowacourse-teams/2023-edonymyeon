@@ -31,7 +31,6 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
 
     private final ThumbsService thumbsService;
 
-    @Disabled
     @Test
     void 사용자가_받은_알림_목록을_조회한다(
             @Autowired AuthService authService,

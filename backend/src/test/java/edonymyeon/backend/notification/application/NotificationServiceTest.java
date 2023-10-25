@@ -31,11 +31,13 @@ import edonymyeon.backend.setting.domain.SettingType;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.application.ThumbsService;
 import java.time.Duration;
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -49,7 +51,6 @@ class NotificationServiceTest extends IntegrationFixture {
 
     private final NotificationRepository notificationRepository;
 
-    @Disabled
     @Test
     void 알림을_성공적으로_전송한_이후에는_알림_내역을_저장한다() {
         final Member writer = getJoinedMember(authService);
@@ -57,10 +58,11 @@ class NotificationServiceTest extends IntegrationFixture {
         final Post post = postTestSupport.builder().member(writer).build();
         notificationService.sendThumbsNotificationToWriter(post);
 
-        assertThat(notificationRepository.findAll()).hasSize(1);
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> assertThat(notificationRepository.findAll()).hasSize(1));
     }
 
-    @Disabled
     @Test
     void 알림_전송에_실패해도_기록으로_남는다() {
         final Member writer = getJoinedMember(authService);
@@ -71,13 +73,13 @@ class NotificationServiceTest extends IntegrationFixture {
                 .when(notificationSender)
                 .sendNotification(any(), any());
 
-        assertThatCode(() -> notificationService.sendThumbsNotificationToWriter(post))
-                .doesNotThrowAnyException();
+        notificationService.sendThumbsNotificationToWriter(post);
 
-        assertThat(notificationRepository.findAll()).hasSize(1);
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> assertThat(notificationRepository.findAll()).hasSize(1));
     }
 
-    @Disabled
     @Test
     void 특정_알림을_사용자가_읽었음을_체크할_수_있다() {
         final var post = postTestSupport.builder().build();
@@ -92,11 +94,15 @@ class NotificationServiceTest extends IntegrationFixture {
 
         notificationService.markNotificationAsRead(notificationId);
 
-        notification = notificationRepository.findById(notificationId);
-        notification.ifPresentOrElse(
-                not -> assertThat(not.isRead()).isTrue(),
-                Assertions::fail
-        );
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> {
+                    var notificationAfterRead = notificationRepository.findById(notificationId);
+                    notificationAfterRead.ifPresentOrElse(
+                            not -> assertThat(not.isRead()).isTrue(),
+                            Assertions::fail
+                    );
+                });
     }
 
     @Test
@@ -107,10 +113,11 @@ class NotificationServiceTest extends IntegrationFixture {
 
         thumbsService.thumbsUp(new ActiveMemberId(liker.getId()), post.getId());
 
-        verify(super.notificationSender, never()).sendNotification(any(), any());
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> verify(super.notificationSender, never()).sendNotification(any(), any()));
     }
 
-    @Disabled
     @Test
     void 건별_당_좋아요_알림이_활성화되어_있다면_좋아요가_달릴_때마다_알림을_발송한다(@Autowired ThumbsService thumbsService) {
         final Member writer = getJoinedMember(authService);
@@ -121,10 +128,11 @@ class NotificationServiceTest extends IntegrationFixture {
 
         thumbsService.thumbsUp(new ActiveMemberId(liker.getId()), post.getId());
 
-        verify(super.notificationSender, atLeastOnce()).sendNotification(any(), any());
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> verify(super.notificationSender, atLeastOnce()).sendNotification(any(), any()));
     }
 
-    @Disabled
     @Test
     void 열건_당_좋아요_알림이_활성화되어_있다면_좋아요가_10개_달릴_때마다_알림을_발송한다(@Autowired ThumbsService thumbsService) {
         final Member writer = getJoinedMember(authService);
@@ -136,7 +144,9 @@ class NotificationServiceTest extends IntegrationFixture {
             thumbsService.thumbsUp(new ActiveMemberId(memberTestSupport.builder().build().getId()), post.getId());
         }
 
-        verify(super.notificationSender, times(1)).sendNotification(any(), any());
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> verify(super.notificationSender, times(1)).sendNotification(any(), any()));
     }
 
     @Test
@@ -149,10 +159,11 @@ class NotificationServiceTest extends IntegrationFixture {
         commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
                 new CommentRequest(null, "Test Commentary"));
 
-        verify(super.notificationSender, never()).sendNotification(any(), any());
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> verify(super.notificationSender, never()).sendNotification(any(), any()));
     }
 
-    @Disabled
     @Test
     void 댓글당_알림이_활성화되어_있다면_알림을_발송한다(@Autowired CommentService commentService) {
         final Member writer = getJoinedMember(authService);
@@ -164,7 +175,9 @@ class NotificationServiceTest extends IntegrationFixture {
         commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
                 new CommentRequest(null, "Test Commentary"));
 
-        verify(super.notificationSender, atLeastOnce()).sendNotification(any(), any());
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> verify(super.notificationSender, atLeastOnce()).sendNotification(any(), any()));
     }
 
     @Test
@@ -194,10 +207,14 @@ class NotificationServiceTest extends IntegrationFixture {
         commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
                 new CommentRequest(null, "Test Commentary"));
 
-        Assertions.assertAll(
-                () -> verify(notificationSender, never()).sendNotification(any(), any()),
-                () -> assertThat(notificationRepository.count()).isZero()
-        );
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> {
+                    Assertions.assertAll(
+                            () -> verify(notificationSender, never()).sendNotification(any(), any()),
+                            () -> assertThat(notificationRepository.count()).isZero()
+                    );
+                });
     }
 
     @Test
@@ -214,7 +231,9 @@ class NotificationServiceTest extends IntegrationFixture {
         postService.deletePost(new ActiveMemberId(writer.getId()), post.getId());
         notificationService.remindConfirmingConsumptions();
 
-        verify(super.notificationSender, never()).sendNotification(any(), any());
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> verify(super.notificationSender, never()).sendNotification(any(), any()));
     }
 
     @Disabled
@@ -255,10 +274,12 @@ class NotificationServiceTest extends IntegrationFixture {
         commentService.createComment(new ActiveMemberId(writer.getId()), post.getId(),
                 new CommentRequest(null, "Test Commentary"));
 
-        Assertions.assertAll(
-                () -> verify(notificationSender, never()).sendNotification(any(), any()),
-                () -> assertThat(notificationRepository.count()).isZero()
-        );
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> Assertions.assertAll(
+                        () -> verify(notificationSender, never()).sendNotification(any(), any()),
+                        () -> assertThat(notificationRepository.count()).isZero()
+                ));
     }
 
     @Disabled
@@ -275,12 +296,14 @@ class NotificationServiceTest extends IntegrationFixture {
         commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
                 new CommentRequest(null, "Test Commentary"));
 
-        Assertions.assertAll(
-                () -> verify(notificationSender, never()).sendNotification(any(), any()),
-                () -> assertThat(notificationRepository.count())
-                        .as("알림은 발송하지 않았더라도 알림 내역은 저장해야지!")
-                        .isEqualTo(1)
-        );
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> Assertions.assertAll(
+                        () -> verify(notificationSender, never()).sendNotification(any(), any()),
+                        () -> assertThat(notificationRepository.count())
+                                .as("알림은 발송하지 않았더라도 알림 내역은 저장해야지!")
+                                .isEqualTo(1)
+                ));
     }
 
     @Test
@@ -299,10 +322,12 @@ class NotificationServiceTest extends IntegrationFixture {
 
         thumbsService.thumbsUp(new ActiveMemberId(liker.getId()), post.getId());
 
-        Assertions.assertAll(
-                () -> verify(notificationSender, never()).sendNotification(any(), any()),
-                () -> assertThat(notificationRepository.count()).isZero()
-        );
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> Assertions.assertAll(
+                        () -> verify(notificationSender, never()).sendNotification(any(), any()),
+                        () -> assertThat(notificationRepository.count()).isZero()
+                ));
     }
 
     private static Member getJoinedMember(final AuthService authService) {
