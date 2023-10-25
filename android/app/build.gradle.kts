@@ -20,10 +20,6 @@ android {
     namespace = "app.edonymyeon"
     compileSdk = 33
 
-    buildFeatures {
-        buildConfig = true
-    }
-
     defaultConfig {
         applicationId = "app.edonymyeon"
         minSdk = 28
