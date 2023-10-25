@@ -236,7 +236,6 @@ class NotificationServiceTest extends IntegrationFixture {
                 .untilAsserted(() -> verify(super.notificationSender, never()).sendNotification(any(), any()));
     }
 
-    @Disabled
     @Test
     void 게시글이_삭제되면_그와_관련된_알림_내역도_함께_삭제된다(
             @Autowired AuthService authService,
@@ -253,11 +252,15 @@ class NotificationServiceTest extends IntegrationFixture {
         commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
                 new CommentRequest(null, "Test Commentary"));
 
-        assertThat(notificationRepository.count()).isEqualTo(1);
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> assertThat(notificationRepository.count()).isEqualTo(1));
 
         postService.deletePost(new ActiveMemberId(writer.getId()), post.getId());
 
-        assertThat(notificationRepository.count()).isZero();
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() ->         assertThat(notificationRepository.count()).isZero());
     }
 
     @Test
