@@ -1,8 +1,24 @@
 # 2023-edonymyeon
-사용자들에게 소비 절제와 합리적인 소비를 도모하며 재미와 유용한 정보를 제공하는 서비스
 
-<br>
-<br>
+![](https://i.imgur.com/iGiKmml.png)
+
+*합리적인 소비를 하고 싶은 여러분, 안녕하세요 !  
+이돈이면은 여러분들의 소비 절제를 도와주는 커뮤니티 안드로이드 앱 서비스입니다.*  
+
+*사람들과 소비 고민을 나누며 댓글로 더 나은 소비를 추천받고,  
+소비 확정을 통해 소비 내역을 기록하여 한 눈에 나의 소비 그래프를 확인할 수 있어요.  
+이돈이면과 함께 합리적인 소비를 해보세요!*
+
+
+![](https://i.imgur.com/ygOC4tg.png)
+
+![](https://i.imgur.com/J0W2xgF.png)
+
+![](https://i.imgur.com/nnpX7lV.png)
+
+![](https://i.imgur.com/5FTdN5K.png)
+
+---
 
 # 팀원 👨‍👨‍👧‍👧👩‍👦‍👦
 |                                         Backend                                          |                                         Backend                                          |                                         Backend                                          |                                         Backend                                         |                                       Android                                        |                                        Android                                         |                                        Android                                        |

@@ -1,7 +1,6 @@
 package edonymyeon.backend.image.ui;
 
 import edonymyeon.backend.image.domain.ImageExtension;
-import edonymyeon.backend.image.application.ImageMigrationService;
 import edonymyeon.backend.image.application.ImageService;
 import java.net.MalformedURLException;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ImageController {
 
     private final ImageService imageService;
-    private final ImageMigrationService imageMigrationService;
 
     @GetMapping("/images/{fileName}")
     public ResponseEntity<Resource> loadImage(@PathVariable String fileName) throws MalformedURLException {
@@ -26,12 +24,5 @@ public class ImageController {
         return ResponseEntity.ok()
                 .contentType(ImageExtension.findMediaType(fileName))
                 .body(urlResource);
-    }
-
-    // todo: 이미지 migration 되면 없어질 예정
-    @GetMapping("/image-migration")
-    public ResponseEntity<Void> migrateImages() {
-        imageMigrationService.migrate();
-        return ResponseEntity.ok().build();
     }
 }
