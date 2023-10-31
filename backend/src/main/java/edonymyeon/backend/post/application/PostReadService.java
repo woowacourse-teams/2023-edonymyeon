@@ -114,7 +114,7 @@ public class PostReadService {
         return new WriterDetailResponse(
                 member.getId(),
                 member.getNickname(),
-                imageService.convertToImageUrl(member.getProfileImageInfo(), ImageType.POST)
+                imageService.convertToImageUrl(member.getProfileImageInfo(), ImageType.PROFILE)
         );
     }
 
