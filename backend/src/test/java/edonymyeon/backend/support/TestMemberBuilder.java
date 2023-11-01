@@ -107,8 +107,7 @@ public class TestMemberBuilder {
 
         private void encryptPassword(final Member member) {
             final SimplePasswordEncoder encoder = new SimplePasswordEncoder();
-            final String encodedPassword = encoder.encode(DEFAULT_PASSWORD);
-            member.encrypt(encodedPassword);
+            member.encrypt(encoder);
         }
 
         public Member buildWithoutSaving() {

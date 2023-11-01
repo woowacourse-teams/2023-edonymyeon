@@ -123,8 +123,7 @@ public class AuthService {
     }
 
     private Member saveMember(Member member) {
-        final String encodedPassword = passwordEncoder.encode(member.getPassword());
-        member.encrypt(encodedPassword);
+        member.encrypt(passwordEncoder);
         return memberRepository.save(member);
     }
 

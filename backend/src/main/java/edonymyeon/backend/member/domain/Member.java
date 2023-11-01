@@ -1,14 +1,9 @@
 package edonymyeon.backend.member.domain;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.ENCODED_PASSWORD_INVALID;
-import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_INVALID;
-
+import edonymyeon.backend.auth.domain.PasswordEncoder;
 import edonymyeon.backend.global.domain.TemporalRecord;
-import edonymyeon.backend.global.exception.BusinessLogicException;
-import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -22,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -44,8 +38,8 @@ public class Member extends TemporalRecord {
     @Embedded
     private Email email;
 
-    @Column(nullable = false)
-    private String password;
+    @Embedded
+    private Password password;
 
     @Embedded
     private Nickname nickname;
@@ -69,9 +63,8 @@ public class Member extends TemporalRecord {
             final ProfileImageInfo profileImageInfo,
             final List<String> deviceTokens
     ) {
-        validate(password);
         this.email = Email.from(email);
-        this.password = password;
+        this.password = Password.from(password);
         this.nickname = Nickname.from(nickname);
         this.profileImageInfo = profileImageInfo;
         this.devices = deviceTokens.stream()
@@ -79,7 +72,7 @@ public class Member extends TemporalRecord {
                 .toList();
     }
 
-    private Member(final Email email, final String password, final Nickname nickname, final SocialInfo socialInfo) {
+    private Member(final Email email, final Password password, final Nickname nickname, final SocialInfo socialInfo) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
@@ -89,25 +82,9 @@ public class Member extends TemporalRecord {
     public static Member from(final SocialInfo socialInfo) {
         return new Member(
                 Email.from(socialInfo.getSocialType()),
-                defaultSocialPassword(),
+                Password.from(socialInfo.getSocialType()),
                 Nickname.from(socialInfo.getSocialType()),
                 socialInfo);
-    }
-
-    private static String defaultSocialPassword() {
-        final String uuid = UUID.randomUUID().toString();
-        return uuid.replace("-", "").substring(0, 25) + "!";
-    }
-
-    private void validate(final String password) {
-        validatePassword(password);
-    }
-
-    private void validatePassword(final String password) {
-        if (PasswordValidator.isValidPassword(password)) {
-            return;
-        }
-        throw new EdonymyeonException(MEMBER_PASSWORD_INVALID);
     }
 
     public Optional<String> getActiveDeviceToken() {
@@ -134,6 +111,10 @@ public class Member extends TemporalRecord {
             return Nickname.NONE;
         }
         return nickname.getValue();
+    }
+
+    public String getPassword() {
+        return password.getValue();
     }
 
     public boolean isActiveDevice(final String deviceToken) {
@@ -165,16 +146,8 @@ public class Member extends TemporalRecord {
         return Objects.equals(this.id, memberId);
     }
 
-    public void encrypt(final String encodedPassword) {
-        validateEncodedPassword(encodedPassword);
-        this.password = encodedPassword;
-    }
-
-    private void validateEncodedPassword(final String encodedPassword) {
-        if (PasswordValidator.isValidEncodedPassword(encodedPassword)) {
-            return;
-        }
-        throw new BusinessLogicException(ENCODED_PASSWORD_INVALID);
+    public void encrypt(final PasswordEncoder passwordEncoder) {
+        this.password = password.encrypt(passwordEncoder);
     }
 
     public void deleteProfileImage() {
