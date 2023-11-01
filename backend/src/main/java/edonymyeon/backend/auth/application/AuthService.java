@@ -20,6 +20,7 @@ import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.domain.Nickname;
 import edonymyeon.backend.member.domain.SocialInfo;
 import edonymyeon.backend.member.domain.SocialInfo.SocialType;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -156,7 +157,7 @@ public class AuthService {
     }
 
     private void validateDuplicateNickname(final String nickname) {
-        if (memberRepository.existsByNickname(nickname)) {
+        if (memberRepository.existsByNickname(Nickname.from(nickname))) {
             throw new EdonymyeonException(MEMBER_NICKNAME_INVALID);
         }
     }

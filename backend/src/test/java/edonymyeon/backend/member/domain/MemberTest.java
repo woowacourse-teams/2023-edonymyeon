@@ -6,8 +6,6 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NI
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_INVALID;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import edonymyeon.backend.auth.domain.PasswordEncoder;
-import edonymyeon.backend.auth.domain.SimplePasswordEncoder;
 import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import java.util.Collections;
@@ -91,7 +89,7 @@ class MemberTest {
 
     @Test
     void 삭제하면_닉네임은_Unknown() {
-        final Member member = new Member();
+        final Member member = new Member("test@email.com", "password1234!", "nickname", null, Collections.emptyList());
         final String previousNickname = member.getNickname();
         member.withdraw();
         Assertions.assertThat(member.getNickname()).isNotEqualTo(previousNickname);

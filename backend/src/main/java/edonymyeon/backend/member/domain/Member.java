@@ -2,7 +2,6 @@ package edonymyeon.backend.member.domain;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.ENCODED_PASSWORD_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_INVALID;
-import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_INVALID;
 
 import edonymyeon.backend.global.domain.TemporalRecord;
@@ -11,6 +10,7 @@ import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -37,8 +37,6 @@ import org.hibernate.annotations.ColumnDefault;
 public class Member extends TemporalRecord {
 
     private static final int MAX_EMAIL_LENGTH = 30;
-    private static final int MAX_NICKNAME_LENGTH = 20;
-    private static final String UNKNOWN = "Unknown";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,8 +48,8 @@ public class Member extends TemporalRecord {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, unique = true)
-    private String nickname;
+    @Embedded
+    private Nickname nickname;
 
     private SocialInfo socialInfo;
 
@@ -72,17 +70,17 @@ public class Member extends TemporalRecord {
             final ProfileImageInfo profileImageInfo,
             final List<String> deviceTokens
     ) {
-        validate(email, password, nickname);
+        validate(email, password);
         this.email = email;
         this.password = password;
-        this.nickname = nickname;
+        this.nickname = Nickname.from(nickname);
         this.profileImageInfo = profileImageInfo;
         this.devices = deviceTokens.stream()
                 .map(token -> new Device(token, this))
                 .toList();
     }
 
-    private Member(final String email, final String password, final String nickname, final SocialInfo socialInfo) {
+    private Member(final String email, final String password, final Nickname nickname, final SocialInfo socialInfo) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
@@ -92,7 +90,7 @@ public class Member extends TemporalRecord {
     public static Member from(final SocialInfo socialInfo) {
         return new Member(UUID.randomUUID().toString(),
                 defaultSocialPassword(),
-                "#" + socialInfo.getSocialType().name() + UUID.randomUUID(),
+                Nickname.from(socialInfo.getSocialType()),
                 socialInfo);
     }
 
@@ -101,22 +99,14 @@ public class Member extends TemporalRecord {
         return uuid.replace("-", "").substring(0, 25) + "!";
     }
 
-    private void validate(final String email, final String password, final String nickname) {
+    private void validate(final String email, final String password) {
         validateEmail(email);
-        validateNickName(nickname);
         validatePassword(password);
     }
 
     private void validateEmail(final String email) {
         if (Objects.isNull(email) || email.isBlank() || email.length() > MAX_EMAIL_LENGTH) {
             throw new EdonymyeonException(MEMBER_EMAIL_INVALID);
-        }
-    }
-
-    private void validateNickName(final String nickname) {
-        if (Objects.isNull(nickname) || nickname.isBlank() || nickname.length() > MAX_NICKNAME_LENGTH
-                || nickname.equalsIgnoreCase(UNKNOWN)) {
-            throw new EdonymyeonException(MEMBER_NICKNAME_INVALID);
         }
     }
 
@@ -144,9 +134,9 @@ public class Member extends TemporalRecord {
 
     public String getNickname() {
         if (deleted) {
-            return UNKNOWN;
+            return Nickname.NONE;
         }
-        return nickname;
+        return nickname.getValue();
     }
 
     public boolean isActiveDevice(final String deviceToken) {
@@ -195,8 +185,7 @@ public class Member extends TemporalRecord {
     }
 
     public void updateNickname(final String nickname) {
-        validateNickName(nickname);
-        this.nickname = nickname;
+        this.nickname = Nickname.from(nickname);
     }
 
     public void updateProfileImageInfo(final ProfileImageInfo profileImageInfo) {
