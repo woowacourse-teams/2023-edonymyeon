@@ -18,6 +18,7 @@ import edonymyeon.backend.image.application.ImageService;
 import edonymyeon.backend.image.domain.ImageType;
 import edonymyeon.backend.image.domain.UrlManager;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
+import edonymyeon.backend.member.domain.Email;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
@@ -139,7 +140,7 @@ class MyPostControllerDocsTest extends DocsTest {
     }
 
     private void 회원_레포지토리를_모킹한다(final Member 회원) {
-        when(memberRepository.findByEmail(회원.getEmail())).thenReturn(Optional.of(회원));
+        when(memberRepository.findByEmail(Email.from(회원.getEmail()))).thenReturn(Optional.of(회원));
         when(memberRepository.findById(회원.getId())).thenReturn(Optional.of(회원));
     }
 }

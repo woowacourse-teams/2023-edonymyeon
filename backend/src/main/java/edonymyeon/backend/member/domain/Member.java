@@ -1,7 +1,6 @@
 package edonymyeon.backend.member.domain;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.ENCODED_PASSWORD_INVALID;
-import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_INVALID;
 
 import edonymyeon.backend.global.domain.TemporalRecord;
@@ -42,8 +41,8 @@ public class Member extends TemporalRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String email;
+    @Embedded
+    private Email email;
 
     @Column(nullable = false)
     private String password;
@@ -70,8 +69,8 @@ public class Member extends TemporalRecord {
             final ProfileImageInfo profileImageInfo,
             final List<String> deviceTokens
     ) {
-        validate(email, password);
-        this.email = email;
+        validate(password);
+        this.email = Email.from(email);
         this.password = password;
         this.nickname = Nickname.from(nickname);
         this.profileImageInfo = profileImageInfo;
@@ -80,7 +79,7 @@ public class Member extends TemporalRecord {
                 .toList();
     }
 
-    private Member(final String email, final String password, final Nickname nickname, final SocialInfo socialInfo) {
+    private Member(final Email email, final String password, final Nickname nickname, final SocialInfo socialInfo) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
@@ -88,7 +87,8 @@ public class Member extends TemporalRecord {
     }
 
     public static Member from(final SocialInfo socialInfo) {
-        return new Member(UUID.randomUUID().toString(),
+        return new Member(
+                Email.from(socialInfo.getSocialType()),
                 defaultSocialPassword(),
                 Nickname.from(socialInfo.getSocialType()),
                 socialInfo);
@@ -99,15 +99,8 @@ public class Member extends TemporalRecord {
         return uuid.replace("-", "").substring(0, 25) + "!";
     }
 
-    private void validate(final String email, final String password) {
-        validateEmail(email);
+    private void validate(final String password) {
         validatePassword(password);
-    }
-
-    private void validateEmail(final String email) {
-        if (Objects.isNull(email) || email.isBlank() || email.length() > MAX_EMAIL_LENGTH) {
-            throw new EdonymyeonException(MEMBER_EMAIL_INVALID);
-        }
     }
 
     private void validatePassword(final String password) {
@@ -130,6 +123,10 @@ public class Member extends TemporalRecord {
 
     public boolean isDeleted() {
         return deleted;
+    }
+
+    public String getEmail() {
+        return email.getValue();
     }
 
     public String getNickname() {
