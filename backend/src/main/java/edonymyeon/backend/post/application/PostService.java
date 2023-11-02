@@ -1,9 +1,5 @@
 package edonymyeon.backend.post.application;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
-
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.application.ImageService;
 import edonymyeon.backend.image.domain.ImageType;
@@ -18,13 +14,16 @@ import edonymyeon.backend.post.application.dto.response.PostIdResponse;
 import edonymyeon.backend.post.application.event.PostDeletionEvent;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
-import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Objects;
+
+import static edonymyeon.backend.global.exception.ExceptionInformation.*;
 
 @RequiredArgsConstructor
 @Service
@@ -63,7 +62,7 @@ public class PostService {
 
         final PostImageInfos postImageInfos = PostImageInfos.of(post,
                 imageService.saveAll(postRequest.newImages(), ImageType.POST));
-        postImageInfoRepository.saveAll(postImageInfos.getPostImageInfos());
+        postImageInfoRepository.batchSave(postImageInfos.getPostImageInfos(), post.getId());
 
         return new PostIdResponse(post.getId());
     }
@@ -125,7 +124,7 @@ public class PostService {
         final List<MultipartFile> imageFilesToAdd = request.newImages();
         final List<String> remainedImageNames = imageService.convertToStoreName(request.originalImages(), ImageType.POST);
 
-        if(isImagesEmpty(imageFilesToAdd)) {
+        if (isImagesEmpty(imageFilesToAdd)) {
             post.updateImages(remainedImageNames);
             return new PostIdResponse(postId);
         }
