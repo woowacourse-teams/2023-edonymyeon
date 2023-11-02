@@ -165,6 +165,7 @@ public class AuthService {
      * 로그아웃합니다.
      * @param deviceToken 로그아웃하는 디바이스의 토큰 값
      */
+    @Transactional
     public void logout(String deviceToken) {
         publisher.publishEvent(new LogoutEvent(deviceToken));
     }

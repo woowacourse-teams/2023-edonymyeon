@@ -30,6 +30,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Slice;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -72,7 +73,8 @@ public class NotificationService {
      * 자신의 게시글에 누군가 추천/비추천을 남겼음을 알리는 알림을 발송합니다
      * @param post 추천/비추천이 달린 게시글
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Async
+    @Transactional
     public void sendThumbsNotificationToWriter(final Post post) {
         if (consumptionService.isPostConfirmed(post.getId())) {
             return;
@@ -97,7 +99,8 @@ public class NotificationService {
      * 자신의 게시글에 댓글이 달렸음을 알리는 알림을 발송합니다.
      * @param comment 게시글에 달린 댓글
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Async
+    @Transactional
     public void sendCommentNotificationToPostWriter(Comment comment) {
         if (comment.isWrittenSelf()) {
             return;
@@ -186,7 +189,8 @@ public class NotificationService {
      * 알림을 '읽었음' 표시합니다.
      * @param notificationId '읽었음' 표시할 알림의 식별자
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Async
+    @Transactional
     public void markNotificationAsRead(final Long notificationId) {
         final Optional<Notification> notification = notificationRepository.findById(notificationId);
         notification.ifPresent(Notification::markAsRead);
@@ -196,7 +200,8 @@ public class NotificationService {
      * 특정 게시글로부터 발생한 알림 내역을 전부 삭제합니다.
      * @param postId 게시글의 식별자
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Async
+    @Transactional
     public void deleteNotificationByPost(final Long postId) {
         notificationRepository.deleteAllByPostId(postId);
     }

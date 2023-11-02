@@ -1,6 +1,9 @@
 package edonymyeon.backend.post.repository;
 
 import edonymyeon.backend.post.domain.Post;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,14 +16,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.lang.NonNull;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificationExecutor<Post> {
+
+    // todo: 매번 devices까지 가져오는 것도 구린 듯. 리팩터링 필요
+    @Override
+    @EntityGraph(attributePaths = {"member", "member.devices"})
+    Optional<Post> findById(Long id);
 
     @EntityGraph(attributePaths = "member")
     Slice<Post> findAllBy(PageRequest pageRequest);
 
+    @Override
     @NonNull
     @EntityGraph(attributePaths = "member")
     Page<Post> findAll(@NonNull Specification<Post> specification,

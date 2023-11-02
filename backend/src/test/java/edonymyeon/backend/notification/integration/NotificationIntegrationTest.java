@@ -16,7 +16,6 @@ import edonymyeon.backend.setting.domain.SettingType;
 import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.application.ThumbsService;
-import io.restassured.RestAssured;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
