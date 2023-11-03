@@ -1,8 +1,11 @@
 package edonymyeon.backend.member.domain;
 
+import static edonymyeon.backend.global.exception.ExceptionInformation.ALREADY_ENCODED_PASSWORD;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_INVALID;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import edonymyeon.backend.auth.domain.SimplePasswordEncoder;
+import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -71,5 +74,19 @@ class PasswordTest {
         assertThatThrownBy(() -> Password.from(password))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(MEMBER_PASSWORD_INVALID.getMessage());
+    }
+
+    @Test
+    void 이미_암호화된_비밀번호는_암호화될수없다() {
+        //given
+        final String input = "password1234!";
+        final Password password = Password.from(input);
+        final SimplePasswordEncoder encoder = new SimplePasswordEncoder();
+        final Password encryptedPassword = password.encrypt(encoder);
+        //when
+        //then
+        assertThatThrownBy(() -> encryptedPassword.encrypt(encoder))
+                .isInstanceOf(BusinessLogicException.class)
+                .hasMessage(ALREADY_ENCODED_PASSWORD.getMessage());
     }
 }

@@ -4,7 +4,9 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PA
 import static edonymyeon.backend.member.domain.SocialInfo.SocialType;
 
 import edonymyeon.backend.auth.domain.PasswordEncoder;
+import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.global.exception.ExceptionInformation;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.util.UUID;
@@ -43,6 +45,9 @@ public class Password {
     }
 
     public Password encrypt(final PasswordEncoder passwordEncoder) {
+        if (PasswordValidator.isEncodedPassword(value)) {
+            throw new BusinessLogicException(ExceptionInformation.ALREADY_ENCODED_PASSWORD);
+        }
         return new Password(passwordEncoder.encode(value));
     }
 
