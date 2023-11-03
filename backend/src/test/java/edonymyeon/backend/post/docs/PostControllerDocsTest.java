@@ -1,28 +1,7 @@
 package edonymyeon.backend.post.docs;
 
-import static edonymyeon.backend.auth.ui.SessionConst.USER;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import edonymyeon.backend.CacheConfig;
-import edonymyeon.backend.image.postimage.domain.PostImageInfo;
+import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
@@ -39,10 +18,6 @@ import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.thumbs.application.PostThumbsServiceImpl;
 import jakarta.servlet.http.Part;
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.entity.ContentType;
 import org.junit.jupiter.api.Test;
@@ -54,7 +29,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.SliceImpl;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -63,6 +37,24 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.FieldDescriptor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import static edonymyeon.backend.auth.ui.SessionConst.USER;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -132,11 +124,11 @@ class PostControllerDocsTest implements ImageFileCleaner {
                 .id(1L)
                 .buildWithoutSaving();
 
-        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이);
-        final PostImageInfo 유지하는_이미지_정보 = new PostImageInfo("stay.jpg", 게시글);
-        final PostImageInfo 삭제될_이미지_정보 = new PostImageInfo("delete.jpg", 게시글);
-        게시글.addPostImageInfo(유지하는_이미지_정보);
-        게시글.addPostImageInfo(삭제될_이미지_정보);
+        final ImageInfo 유지하는_이미지_정보 = new ImageInfo("stay.jpg");
+        final ImageInfo 삭제될_이미지_정보 = new ImageInfo("delete.jpg");
+
+        final PostImageInfos postImageInfos = PostImageInfos.of(null, List.of(유지하는_이미지_정보, 삭제될_이미지_정보));
+        final Post 게시글 = new Post(1L, "제목", "내용", 1000L, 글쓴이, postImageInfos, 0,0, false);
 
         회원_레포지토리를_모킹한다(글쓴이);
         게시글_레포지토리를_모킹한다(게시글);

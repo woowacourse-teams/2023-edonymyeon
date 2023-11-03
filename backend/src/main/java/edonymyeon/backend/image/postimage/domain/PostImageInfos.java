@@ -54,20 +54,6 @@ public class PostImageInfos {
         return imageCount > MAX_IMAGE_COUNT;
     }
 
-    public void add(final PostImageInfo postImageInfo) {
-        if (this.postImageInfos.contains(postImageInfo)) {
-            return;
-        }
-        validateImageAdditionCount();
-        this.postImageInfos.add(postImageInfo);
-    }
-
-    private void validateImageAdditionCount() {
-        if (isInvalidImageCount(this.postImageInfos.size() + 1)) {
-            throw new EdonymyeonException(POST_IMAGE_COUNT_INVALID);
-        }
-    }
-
     public List<Long> getImageIdsToDeleteBy(final List<String> remainedStoreNames, final List<PostImageInfo> newPostImageInfos) {
         final List<PostImageInfo> imagesToDelete = findImagesToDelete(remainedStoreNames);
         int updatedImageCount = this.postImageInfos.size() - imagesToDelete.size() + newPostImageInfos.size();

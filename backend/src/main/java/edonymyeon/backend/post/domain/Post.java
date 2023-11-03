@@ -124,11 +124,6 @@ public class Post extends TemporalRecord {
         }
     }
 
-    // todo: 이 부분 docs test에서만 쓰고 있어요
-    public void addPostImageInfo(final PostImageInfo postImageInfo) {
-        this.postImageInfos.add(postImageInfo);
-    }
-
     public void validateImageCount(final Integer imageCount) {
         this.postImageInfos.validateImageCount(imageCount);
     }
