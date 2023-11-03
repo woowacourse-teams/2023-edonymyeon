@@ -1,5 +1,7 @@
-package edonymyeon.backend.image;
+package edonymyeon.backend.image.domain;
 
+import edonymyeon.backend.image.domain.ImageExtension;
+import edonymyeon.backend.image.domain.ImageFileNameStrategy;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
 

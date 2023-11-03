@@ -1,6 +1,6 @@
 package edonymyeon.backend.image.profileimage.application;
 
-import edonymyeon.backend.image.ImageFileUploader;
+import edonymyeon.backend.image.application.ImageService;
 import edonymyeon.backend.member.application.event.ProfileImageDeletionEvent;
 import edonymyeon.backend.member.application.event.ProfileImageUploadEvent;
 import lombok.RequiredArgsConstructor;
@@ -13,16 +13,11 @@ import org.springframework.transaction.event.TransactionalEventListener;
 @Component
 public class ProfileImageEventListener {
 
-    private final ImageFileUploader imageFileUploader;
-
-    @EventListener
-    public void uploadFile(ProfileImageUploadEvent event) {
-        imageFileUploader.uploadRealStorage(event.file(), event.imageInfo());
-    }
+    private final ImageService imageService;
 
     @Async
     @TransactionalEventListener
     public void removeFile(ProfileImageDeletionEvent event) {
-        imageFileUploader.removeFile(event.imageInfo());
+        imageService.removeImage(event.imageInfo(), event.imageType());
     }
 }

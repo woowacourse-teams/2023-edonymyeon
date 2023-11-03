@@ -7,7 +7,8 @@ import edonymyeon.backend.cache.application.PostCachingService;
 import edonymyeon.backend.cache.application.dto.CachedPostResponse;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
-import edonymyeon.backend.image.domain.Domain;
+import edonymyeon.backend.image.application.ImageService;
+import edonymyeon.backend.image.domain.ImageType;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -25,11 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
-import static org.springframework.data.domain.Sort.Direction;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -42,7 +39,7 @@ public class PostReadService {
 
     private final PostThumbsService thumbsService;
 
-    private final Domain domain;
+    private final ImageService imageService;
 
     private final PostCachingService postCachingService;
 
@@ -53,7 +50,7 @@ public class PostReadService {
             final GeneralFindingCondition generalFindingCondition) {
         PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
         Slice<Post> posts = postRepository.findAllBy(pageRequest);
-        return PostSlice.from(GeneralPostsInfoResponse.toSlice(posts, domain.getDomain()));
+        return PostSlice.from(GeneralPostsInfoResponse.toSlice(posts, imageService.findBaseUrl(ImageType.POST)));
     }
 
     private static PageRequest convertConditionToPageRequest(final GeneralFindingCondition generalFindingCondition) {
@@ -96,7 +93,7 @@ public class PostReadService {
                     allThumbsInPost,
                     writerDetailResponse,
                     reactionCountResponse,
-                    domain.getDomain()
+                    imageService.findBaseUrl(ImageType.POST)
             );
         }
 
@@ -109,7 +106,7 @@ public class PostReadService {
                 reactionCountResponse,
                 thumbsStatusInPost,
                 member.get(),
-                domain.getDomain()
+                imageService.findBaseUrl(ImageType.POST)
         );
     }
 
@@ -117,7 +114,7 @@ public class PostReadService {
         return new WriterDetailResponse(
                 member.getId(),
                 member.getNickname(),
-                domain.convertToImageUrl(member.getProfileImageInfo())
+                imageService.convertToImageUrl(member.getProfileImageInfo(), ImageType.PROFILE)
         );
     }
 
@@ -129,7 +126,7 @@ public class PostReadService {
         final Specification<Post> searchResults = PostSpecification.searchBy(searchWord);
         final PageRequest pageRequest = convertConditionToPageRequest(generalFindingCondition);
         Slice<Post> foundPosts = postRepository.findAll(searchResults, pageRequest);
-        return PostSlice.from(GeneralPostsInfoResponse.toSlice(foundPosts, domain.getDomain()));
+        return PostSlice.from(GeneralPostsInfoResponse.toSlice(foundPosts, imageService.findBaseUrl(ImageType.POST)));
     }
 
     /**
@@ -153,7 +150,7 @@ public class PostReadService {
         List<Post> sortedHotPosts = hotPosts.stream()
                 .sorted(Comparator.comparing(Post::getId).reversed())
                 .toList();
-        return new PostSlice<>(GeneralPostsInfoResponse.toList(sortedHotPosts, domain.getDomain()), hotPosts.isLast());
+        return new PostSlice<>(GeneralPostsInfoResponse.toList(sortedHotPosts, imageService.findBaseUrl(ImageType.POST)), hotPosts.isLast());
     }
 
     private PostSlice<GeneralPostInfoResponse> findCachedPosts(final HotFindingCondition hotFindingCondition) {
@@ -162,7 +159,7 @@ public class PostReadService {
         if (cachedHotPosts.size() != hotPostsInRepository.size()) {
             return findHotPostFromRepository(hotFindingCondition);
         }
-        return new PostSlice<>(GeneralPostsInfoResponse.toList(hotPostsInRepository, domain.getDomain()), cachedHotPosts.isLast());
+        return new PostSlice<>(GeneralPostsInfoResponse.toList(hotPostsInRepository, imageService.findBaseUrl(ImageType.POST)), cachedHotPosts.isLast());
     }
 
     private Slice<Post> findHotPostSliceFromRepositoryByPolicy(final HotFindingCondition hotFindingCondition) {

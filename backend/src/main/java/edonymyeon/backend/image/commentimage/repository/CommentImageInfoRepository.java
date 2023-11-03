@@ -12,4 +12,7 @@ public interface CommentImageInfoRepository extends JpaRepository<CommentImageIn
     @Modifying //todo: 옵션.. 이대로 괜찮은가?
     @Query("update CommentImageInfo c set c.deleted = true where c.id in :ids")
     void deleteAllById(@Param("ids") List<Long> ids);
+
+    @Query(value = "select * from comment_image_info", nativeQuery = true)
+    List<CommentImageInfo> findAllImages();
 }

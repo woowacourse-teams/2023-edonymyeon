@@ -2,7 +2,6 @@ package edonymyeon.backend.notification.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatCode;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.atLeastOnce;
@@ -13,6 +12,7 @@ import static org.mockito.Mockito.verify;
 
 import edonymyeon.backend.auth.application.AuthService;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
+import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.comment.application.CommentService;
 import edonymyeon.backend.comment.application.dto.request.CommentRequest;
 import edonymyeon.backend.global.exception.BusinessLogicException;
@@ -57,7 +57,9 @@ class NotificationServiceTest extends IntegrationFixture {
         final Post post = postTestSupport.builder().member(writer).build();
         notificationService.sendThumbsNotificationToWriter(post);
 
-        assertThat(notificationRepository.findAll()).hasSize(1);
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> assertThat(notificationRepository.findAll()).hasSize(1));
     }
 
     @Test
@@ -70,10 +72,11 @@ class NotificationServiceTest extends IntegrationFixture {
                 .when(notificationSender)
                 .sendNotification(any(), any());
 
-        assertThatCode(() -> notificationService.sendThumbsNotificationToWriter(post))
-                .doesNotThrowAnyException();
+        notificationService.sendThumbsNotificationToWriter(post);
 
-        assertThat(notificationRepository.findAll()).hasSize(1);
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> assertThat(notificationRepository.findAll()).hasSize(1));
     }
 
     @Test
@@ -90,11 +93,15 @@ class NotificationServiceTest extends IntegrationFixture {
 
         notificationService.markNotificationAsRead(notificationId);
 
-        notification = notificationRepository.findById(notificationId);
-        notification.ifPresentOrElse(
-                not -> assertThat(not.isRead()).isTrue(),
-                Assertions::fail
-        );
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> {
+                    var notificationAfterRead = notificationRepository.findById(notificationId);
+                    notificationAfterRead.ifPresentOrElse(
+                            not -> assertThat(not.isRead()).isTrue(),
+                            Assertions::fail
+                    );
+                });
     }
 
     @Test
@@ -105,7 +112,9 @@ class NotificationServiceTest extends IntegrationFixture {
 
         thumbsService.thumbsUp(new ActiveMemberId(liker.getId()), post.getId());
 
-        verify(super.notificationSender, never()).sendNotification(any(), any());
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> verify(super.notificationSender, never()).sendNotification(any(), any()));
     }
 
     @Test
@@ -118,7 +127,9 @@ class NotificationServiceTest extends IntegrationFixture {
 
         thumbsService.thumbsUp(new ActiveMemberId(liker.getId()), post.getId());
 
-        verify(super.notificationSender, atLeastOnce()).sendNotification(any(), any());
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> verify(super.notificationSender, atLeastOnce()).sendNotification(any(), any()));
     }
 
     @Test
@@ -132,7 +143,9 @@ class NotificationServiceTest extends IntegrationFixture {
             thumbsService.thumbsUp(new ActiveMemberId(memberTestSupport.builder().build().getId()), post.getId());
         }
 
-        verify(super.notificationSender, times(1)).sendNotification(any(), any());
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> verify(super.notificationSender, times(1)).sendNotification(any(), any()));
     }
 
     @Test
@@ -145,7 +158,9 @@ class NotificationServiceTest extends IntegrationFixture {
         commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
                 new CommentRequest(null, "Test Commentary"));
 
-        verify(super.notificationSender, never()).sendNotification(any(), any());
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> verify(super.notificationSender, never()).sendNotification(any(), any()));
     }
 
     @Test
@@ -159,7 +174,9 @@ class NotificationServiceTest extends IntegrationFixture {
         commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
                 new CommentRequest(null, "Test Commentary"));
 
-        verify(super.notificationSender, atLeastOnce()).sendNotification(any(), any());
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> verify(super.notificationSender, atLeastOnce()).sendNotification(any(), any()));
     }
 
     @Test
@@ -189,10 +206,14 @@ class NotificationServiceTest extends IntegrationFixture {
         commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
                 new CommentRequest(null, "Test Commentary"));
 
-        Assertions.assertAll(
-                () -> verify(notificationSender, never()).sendNotification(any(), any()),
-                () -> assertThat(notificationRepository.count()).isZero()
-        );
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> {
+                    Assertions.assertAll(
+                            () -> verify(notificationSender, never()).sendNotification(any(), any()),
+                            () -> assertThat(notificationRepository.count()).isZero()
+                    );
+                });
     }
 
     @Test
@@ -209,7 +230,9 @@ class NotificationServiceTest extends IntegrationFixture {
         postService.deletePost(new ActiveMemberId(writer.getId()), post.getId());
         notificationService.remindConfirmingConsumptions();
 
-        verify(super.notificationSender, never()).sendNotification(any(), any());
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> verify(super.notificationSender, never()).sendNotification(any(), any()));
     }
 
     @Test
@@ -228,11 +251,15 @@ class NotificationServiceTest extends IntegrationFixture {
         commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
                 new CommentRequest(null, "Test Commentary"));
 
-        assertThat(notificationRepository.count()).isEqualTo(1);
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> assertThat(notificationRepository.count()).isEqualTo(1));
 
         postService.deletePost(new ActiveMemberId(writer.getId()), post.getId());
 
-        assertThat(notificationRepository.count()).isZero();
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() ->         assertThat(notificationRepository.count()).isZero());
     }
 
     @Test
@@ -249,10 +276,12 @@ class NotificationServiceTest extends IntegrationFixture {
         commentService.createComment(new ActiveMemberId(writer.getId()), post.getId(),
                 new CommentRequest(null, "Test Commentary"));
 
-        Assertions.assertAll(
-                () -> verify(notificationSender, never()).sendNotification(any(), any()),
-                () -> assertThat(notificationRepository.count()).isZero()
-        );
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> Assertions.assertAll(
+                        () -> verify(notificationSender, never()).sendNotification(any(), any()),
+                        () -> assertThat(notificationRepository.count()).isZero()
+                ));
     }
 
     @Test
@@ -263,17 +292,20 @@ class NotificationServiceTest extends IntegrationFixture {
         final Member commenter = memberTestSupport.builder().build();
         final Post post = postTestSupport.builder().member(writer).build();
 
+        authService.login(new LoginRequest("test@gmail.com", "password123!",  "testDevice123"));
         authService.logout(writer.getActiveDeviceToken().orElseGet(() -> fail("활성화된 디바이스 토큰이 존재하지 않음")));
 
         commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
                 new CommentRequest(null, "Test Commentary"));
 
-        Assertions.assertAll(
-                () -> verify(notificationSender, never()).sendNotification(any(), any()),
-                () -> assertThat(notificationRepository.count())
-                        .as("알림은 발송하지 않았더라도 알림 내역은 저장해야지!")
-                        .isEqualTo(1)
-        );
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> Assertions.assertAll(
+                        () -> verify(notificationSender, never()).sendNotification(any(), any()),
+                        () -> assertThat(notificationRepository.count())
+                                .as("알림은 발송하지 않았더라도 알림 내역은 저장해야지!")
+                                .isEqualTo(1)
+                ));
     }
 
     @Test
@@ -292,10 +324,12 @@ class NotificationServiceTest extends IntegrationFixture {
 
         thumbsService.thumbsUp(new ActiveMemberId(liker.getId()), post.getId());
 
-        Assertions.assertAll(
-                () -> verify(notificationSender, never()).sendNotification(any(), any()),
-                () -> assertThat(notificationRepository.count()).isZero()
-        );
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> Assertions.assertAll(
+                        () -> verify(notificationSender, never()).sendNotification(any(), any()),
+                        () -> assertThat(notificationRepository.count()).isZero()
+                ));
     }
 
     private static Member getJoinedMember(final AuthService authService) {

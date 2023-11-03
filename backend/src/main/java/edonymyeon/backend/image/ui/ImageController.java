@@ -1,7 +1,7 @@
 package edonymyeon.backend.image.ui;
 
-import edonymyeon.backend.image.ImageExtension;
-import edonymyeon.backend.image.ImageFileUploader;
+import edonymyeon.backend.image.domain.ImageExtension;
+import edonymyeon.backend.image.application.ImageService;
 import java.net.MalformedURLException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ImageController {
 
-    private final ImageFileUploader imageFileUploader;
+    private final ImageService imageService;
 
     @GetMapping("/images/{fileName}")
     public ResponseEntity<Resource> loadImage(@PathVariable String fileName) throws MalformedURLException {
-        final UrlResource urlResource = new UrlResource("file:" + imageFileUploader.getFullPath(fileName));
+        final UrlResource urlResource = new UrlResource("file:" + imageService.findResourcePath(fileName));
 
         return ResponseEntity.ok()
                 .contentType(ImageExtension.findMediaType(fileName))

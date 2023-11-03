@@ -5,8 +5,8 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_N
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.image.ImageFileUploader;
-import edonymyeon.backend.image.domain.Domain;
+import edonymyeon.backend.image.application.ImageService;
+import edonymyeon.backend.image.domain.ImageType;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.MemberId;
@@ -18,7 +18,6 @@ import edonymyeon.backend.post.application.dto.response.PostIdResponse;
 import edonymyeon.backend.post.application.event.PostDeletionEvent;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +32,7 @@ public class PostService {
 
     private final PostRepository postRepository;
 
-    private final ImageFileUploader imageFileUploader;
+    private final ImageService imageService;
 
     private final PostImageInfoRepository postImageInfoRepository;
 
@@ -44,8 +43,6 @@ public class PostService {
     private final PostCommentService commentService;
 
     private final ApplicationEventPublisher applicationEventPublisher;
-
-    private final Domain domain;
 
     @Transactional
     public PostIdResponse createPost(final MemberId memberId, final PostRequest postRequest) {
@@ -65,7 +62,7 @@ public class PostService {
         post.validateImageCount(postRequest.newImages().size());
 
         final PostImageInfos postImageInfos = PostImageInfos.of(post,
-                imageFileUploader.uploadFiles(postRequest.newImages()));
+                imageService.saveAll(postRequest.newImages(), ImageType.POST));
         postImageInfoRepository.saveAll(postImageInfos.getPostImageInfos());
 
         return new PostIdResponse(post.getId());
@@ -126,23 +123,16 @@ public class PostService {
         post.update(request.title(), request.content(), request.price());
 
         final List<MultipartFile> imageFilesToAdd = request.newImages();
-        final List<String> remainedImageNames = convertUrlToStoreName(request.originalImages());
+        final List<String> remainedImageNames = imageService.convertToStoreName(request.originalImages(), ImageType.POST);
 
         if(isImagesEmpty(imageFilesToAdd)) {
             post.updateImages(remainedImageNames);
             return new PostIdResponse(postId);
         }
 
-        final PostImageInfos imagesToAdd = PostImageInfos.of(post, imageFileUploader.uploadFiles(imageFilesToAdd));
+        final PostImageInfos imagesToAdd = PostImageInfos.of(post, imageService.saveAll(imageFilesToAdd, ImageType.POST));
         post.updateImages(remainedImageNames, imagesToAdd); //이때 기존 이미지중 삭제되는 것들은 softDelete
         postImageInfoRepository.saveAll(imagesToAdd.getPostImageInfos()); // //새로 추가된 이미지들을 DB에 저장
         return new PostIdResponse(postId);
-    }
-
-    private List<String> convertUrlToStoreName(final List<String> originalImageUrls) {
-        if (originalImageUrls == null || originalImageUrls.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return domain.removeDomainFromUrl(originalImageUrls);
     }
 }

@@ -3,6 +3,7 @@ package edonymyeon.backend.image.domain;
 import static edonymyeon.backend.global.exception.ExceptionInformation.IMAGE_DOMAIN_INVALID;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nullable;
 import lombok.Getter;
@@ -11,20 +12,24 @@ import org.springframework.stereotype.Component;
 
 @Getter
 @Component
-public class Domain {
+public class UrlManager {
 
-    @Value("${domain}")
+    @Value("${image.domain}")
     private String domain;
 
-    public List<String> removeDomainFromUrl(final List<String> imageUrls) {
+    public List<String> convertToStoreName(final List<String> imageUrls, final String typeDirectory) {
+        if (imageUrls == null || imageUrls.isEmpty()) {
+            return Collections.emptyList();
+        }
         return imageUrls.stream()
-                .map(this::removeDomainFromUrl)
+                .map(each -> convertToStoreName(each, typeDirectory))
                 .toList();
     }
 
-    private String removeDomainFromUrl(final String imageUrl) {
+    private String convertToStoreName(final String imageUrl, final String typeDirectory) {
         validateDomainOfUrl(imageUrl);
-        return imageUrl.replace(domain, "");
+        return imageUrl.replace(domain, "")
+                .replace(typeDirectory, "");
     }
 
     private void validateDomainOfUrl(final String imageUrl) {
@@ -34,11 +39,15 @@ public class Domain {
     }
 
     @Nullable
-    public String convertToImageUrl(final ImageInfo imageInfo) {
+    public String convertToImageUrl(final ImageType imageType, final ImageInfo imageInfo) {
         if(imageInfo == null){
             return null;
         }
         final String imageFileName = imageInfo.getStoreName();
-        return domain + imageFileName;
+        return domain + imageType.getSaveDirectory() + imageFileName;
+    }
+
+    public String findBaseUrl(final ImageType imageType) {
+        return domain + imageType.getSaveDirectory();
     }
 }
