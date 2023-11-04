@@ -32,6 +32,11 @@ public class NotificationContent {
         this.body = body;
     }
 
+    public NotificationContent(final String title, final String body) {
+        this.title = title;
+        this.body = body;
+    }
+
     public NotificationContentId getId() {
         return id;
     }
