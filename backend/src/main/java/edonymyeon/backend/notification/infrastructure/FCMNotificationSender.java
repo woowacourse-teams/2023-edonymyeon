@@ -1,7 +1,5 @@
 package edonymyeon.backend.notification.infrastructure;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.NOTIFICATION_REQUEST_FAILED;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -11,22 +9,21 @@ import edonymyeon.backend.notification.application.dto.Data;
 import edonymyeon.backend.notification.application.dto.Receiver;
 import edonymyeon.backend.notification.infrastructure.FcmMessage.Message;
 import edonymyeon.backend.notification.infrastructure.FcmMessage.Notification;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import okhttp3.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+
+import static edonymyeon.backend.global.exception.ExceptionInformation.NOTIFICATION_REQUEST_FAILED;
 
 @Slf4j
 @Component
@@ -51,14 +48,13 @@ public class FCMNotificationSender implements NotificationSender {
     public void sendNotification(final Receiver receiver, final String title) {
         try {
             final String requestBody = makeFCMNotificationRequestBody(receiver.getToken(), title, receiver.getData());
-            log.info("FCM 요청 발송 시작 - {}", requestBody);
             final OkHttpClient client = new OkHttpClient();
             final Request request = makeFCMNotificationRequest(requestBody);
-            log.info("FCM 요청 발송 시작 - {}", request.body().toString());
             final Response response = sendFCMNotificationRequest(client, request);
             if (!isSentSuccessfully(response)) {
                 throw new BusinessLogicException(NOTIFICATION_REQUEST_FAILED);
             }
+            log.info("FCM 발송완료 - {}", request.body().toString());
         } catch (IOException ioException) {
             log.error("FCM 알림 발송 도중 IOException 발생", ioException);
             throw new BusinessLogicException(NOTIFICATION_REQUEST_FAILED);
