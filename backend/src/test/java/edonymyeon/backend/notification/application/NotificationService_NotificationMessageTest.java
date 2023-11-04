@@ -3,6 +3,7 @@ package edonymyeon.backend.notification.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.awaitility.Awaitility.*;
 import static org.mockito.Mockito.when;
 
 import edonymyeon.backend.comment.domain.Comment;
@@ -23,9 +24,11 @@ import edonymyeon.backend.setting.domain.SettingType;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.application.ThumbsService;
 import jakarta.persistence.EntityManager;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.awaitility.Awaitility;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,20 +78,25 @@ class NotificationService_NotificationMessageTest extends IntegrationFixture {
         notificationService.sendThumbsNotificationToWriter(post);
 
         // then
-        final Notification savedNotification = notificationRepository
-                .findByMemberId(member.getId(), Pageable.ofSize(1)).getContent()
-                .get(0);
 
-        final NotificationContent expectedNotificationContent = notificationMessageRepository.findById(
-                NotificationContentId.THUMBS_NOTIFICATION_TITLE).get();
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> {
+                    final Notification savedNotification = notificationRepository
+                            .findByMemberId(member.getId(), Pageable.ofSize(1)).getContent()
+                            .get(0);
 
-        assertThat(savedNotification.getBody())
-                .as("리포지토리에 저장한 알림 title 내용으로 알림을 발송해야 한다.")
-                .isEqualTo(expectedNotificationContent.getBody(Map.of()));
+                    final NotificationContent expectedNotificationContent = notificationMessageRepository.findById(
+                            NotificationContentId.THUMBS_NOTIFICATION_TITLE).get();
 
-        assertThat(savedNotification.getTitle())
-                .as("리포지토리에 저장한 알림 body 내용으로 알림을 발송해야 한다.")
-                .isEqualTo(expectedNotificationContent.getTitle(Map.of()));
+                    assertThat(savedNotification.getBody())
+                            .as("리포지토리에 저장한 알림 title 내용으로 알림을 발송해야 한다.")
+                            .isEqualTo(expectedNotificationContent.getBody(Map.of()));
+
+                    assertThat(savedNotification.getTitle())
+                            .as("리포지토리에 저장한 알림 body 내용으로 알림을 발송해야 한다.")
+                            .isEqualTo(expectedNotificationContent.getTitle(Map.of()));
+                });
     }
 
     @Test
@@ -100,7 +108,7 @@ class NotificationService_NotificationMessageTest extends IntegrationFixture {
             @Mock NotificationMessageRepository notificationMessageRepository
     ) {
         //given
-        this.notificationService = new NotificationService(
+        final NotificationService mockNotificationService = new NotificationService(
                 entityManager, super.notificationSender, notificationRepository, memberRepository,
                 settingService, thumbsService, consumptionService, notificationMessageRepository
         );
@@ -113,7 +121,7 @@ class NotificationService_NotificationMessageTest extends IntegrationFixture {
                 .thenReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> notificationService.sendThumbsNotificationToWriter(post))
+        assertThatThrownBy(() -> mockNotificationService.sendThumbsNotificationToWriter(post))
                 .isInstanceOf(EdonymyeonException.class)
                 .hasMessage(ExceptionInformation.NOTIFICATION_MESSAGE_NOT_FOUND.getMessage());
     }
@@ -128,13 +136,18 @@ class NotificationService_NotificationMessageTest extends IntegrationFixture {
         주요기능모킹하기(member, post);
 
         notificationService.sendThumbsNotificationToWriter(post);
-        final Notification savedNotification = notificationRepository
-                .findAll()
-                .get(0);
-        assertSoftly(softAssertions -> {
-            softAssertions.assertThat(savedNotification.getTitle()).isEqualTo("당신의 글에 따봉이 달려있어요! 짱");
-            softAssertions.assertThat(savedNotification.getBody()).isEqualTo("따봉맨을 확인해 보세요.");
-        });
+
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> {
+                    final Notification savedNotification = notificationRepository
+                            .findAll()
+                            .get(0);
+                    assertSoftly(softAssertions -> {
+                        softAssertions.assertThat(savedNotification.getTitle()).isEqualTo("당신의 글에 따봉이 달려있어요! 짱");
+                        softAssertions.assertThat(savedNotification.getBody()).isEqualTo("따봉맨을 확인해 보세요.");
+                    });
+                });
 
         // when
         final NotificationContent notificationContent
@@ -143,13 +156,18 @@ class NotificationService_NotificationMessageTest extends IntegrationFixture {
 
         // then
         notificationService.sendThumbsNotificationToWriter(post); // 따봉을 취소했다가 다시 한 상황
-        final Notification updatedNotification = notificationRepository
-                .findAll()
-                .get(1);
-        assertSoftly(softAssertions -> {
-            softAssertions.assertThat(updatedNotification.getTitle()).isEqualTo("변경한 알림 제목");
-            softAssertions.assertThat(updatedNotification.getBody()).isEqualTo("변경한 알림 내용");
-        });
+
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> {
+                    final Notification updatedNotification = notificationRepository
+                            .findAll()
+                            .get(1);
+                    assertSoftly(softAssertions -> {
+                        softAssertions.assertThat(updatedNotification.getTitle()).isEqualTo("변경한 알림 제목");
+                        softAssertions.assertThat(updatedNotification.getBody()).isEqualTo("변경한 알림 내용");
+                    });
+                });
     }
 
     @Test
@@ -162,6 +180,9 @@ class NotificationService_NotificationMessageTest extends IntegrationFixture {
         주요기능모킹하기(member, post);
 
         notificationService.sendThumbsNotificationToWriter(post);
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> assertThat(notificationRepository.count()).isEqualTo(1L));
 
         // when
         final NotificationContent notificationContent
@@ -169,7 +190,12 @@ class NotificationService_NotificationMessageTest extends IntegrationFixture {
         notificationService.updateContent(notificationContent);
 
         // then
-        notificationService.sendThumbsNotificationToWriter(post); // 따봉을 취소했다가 다시 한 상황
+
+        notificationService.sendThumbsNotificationToWriter(post);
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> assertThat(notificationRepository.count()).isEqualTo(2L));
+
         final List<Notification> savedNotification = notificationRepository.findAll();
         Assertions.assertAll("이전에 기록된 알림의 제목과 본문 내용은 변경이 없어야 한다.", () -> {
             assertThat(savedNotification.get(0).getTitle()).isEqualTo("당신의 글에 따봉이 달려있어요! 짱");
@@ -198,11 +224,15 @@ class NotificationService_NotificationMessageTest extends IntegrationFixture {
 
         notificationService.sendThumbsNotificationToWriter(post);
 
-        final List<Notification> savedNotification = notificationRepository.findAll();
-        Assertions.assertAll("%title 부분을 게시글 제목으로 치환한다.", () -> {
-            assertThat(savedNotification.get(0).getTitle()).isEqualTo("[신발 사도 될까요?] 글에 새로운 반응이 있습니다.");
-            assertThat(savedNotification.get(0).getBody()).isEqualTo("[신발 사도 될까요?] 글에 새로운 반응이 있습니다. 본문");
-        });
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> {
+                    final List<Notification> savedNotification = notificationRepository.findAll();
+                    Assertions.assertAll("%title 부분을 게시글 제목으로 치환한다.", () -> {
+                        assertThat(savedNotification.get(0).getTitle()).isEqualTo("[신발 사도 될까요?] 글에 새로운 반응이 있습니다.");
+                        assertThat(savedNotification.get(0).getBody()).isEqualTo("[신발 사도 될까요?] 글에 새로운 반응이 있습니다. 본문");
+                    });
+                });
     }
 
     @Test
@@ -228,11 +258,17 @@ class NotificationService_NotificationMessageTest extends IntegrationFixture {
                 .build();
         notificationService.sendCommentNotificationToPostWriter(comment);
 
-        final List<Notification> savedNotification = notificationRepository.findAll();
-        Assertions.assertAll("%comment 부분을 댓글 내용으로 치환한다.", () -> {
-            assertThat(savedNotification.get(0).getTitle()).isEqualTo("[신발 사도 될까요?] 글에 [그 돈이면 국밥이 90그릇] 댓글이 달렸습니다");
-            assertThat(savedNotification.get(0).getBody()).isEqualTo("[신발 사도 될까요?] 글에 [그 돈이면 국밥이 90그릇] 댓글이 달렸습니다. 본문");
-        });
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> {
+                    final List<Notification> savedNotification = notificationRepository.findAll();
+                    Assertions.assertAll("%comment 부분을 댓글 내용으로 치환한다.", () -> {
+                        assertThat(savedNotification.get(0).getTitle()).isEqualTo(
+                                "[신발 사도 될까요?] 글에 [그 돈이면 국밥이 90그릇] 댓글이 달렸습니다");
+                        assertThat(savedNotification.get(0).getBody()).isEqualTo(
+                                "[신발 사도 될까요?] 글에 [그 돈이면 국밥이 90그릇] 댓글이 달렸습니다. 본문");
+                    });
+                });
     }
 
     @Test
@@ -251,12 +287,16 @@ class NotificationService_NotificationMessageTest extends IntegrationFixture {
 
         notificationService.sendThumbsNotificationToWriter(post);
 
-        final List<Notification> savedNotification = notificationRepository.findAll();
-        Assertions.assertAll("%count 부분을 게시글 제목으로 치환한다.", () -> {
-            assertThat(savedNotification.get(0).getTitle()).isEqualTo("[신발 사도 될까요?] 글에 새로운 반응 0건이 있습니다");
-            assertThat(savedNotification.get(0).getBody()).isEqualTo("[신발 사도 될까요?] 글에 새로운 반응 0건이 있습니다. 본문");
-            // 실제 따봉 로직을 호출한 것은 아니므로 0건으로 출력된다
-        });
+        await()
+                .atMost(Duration.ofSeconds(3))
+                .untilAsserted(() -> {
+                    final List<Notification> savedNotification = notificationRepository.findAll();
+                    Assertions.assertAll("%count 부분을 게시글 제목으로 치환한다.", () -> {
+                        assertThat(savedNotification.get(0).getTitle()).isEqualTo("[신발 사도 될까요?] 글에 새로운 반응 0건이 있습니다");
+                        assertThat(savedNotification.get(0).getBody()).isEqualTo("[신발 사도 될까요?] 글에 새로운 반응 0건이 있습니다. 본문");
+                        // 실제 따봉 로직을 호출한 것은 아니므로 0건으로 출력된다
+                    });
+                });
     }
 
     private void 주요기능모킹하기(final Member member, final Post post) {
