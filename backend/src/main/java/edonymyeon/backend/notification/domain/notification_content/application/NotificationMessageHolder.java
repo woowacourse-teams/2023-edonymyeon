@@ -1,5 +1,7 @@
 package edonymyeon.backend.notification.domain.notification_content.application;
 
+import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContent;
 import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId;
 import jakarta.annotation.PostConstruct;
@@ -52,5 +54,18 @@ public class NotificationMessageHolder {
 
     private void assignDefaultContent(final NotificationContentId notificationContentId) {
         holder.put(notificationContentId, notificationContentId.getDefaultContent());
+    }
+
+    @Transactional
+    public void updateMessage(final NotificationContent contentToUpdate) {
+        final Optional<NotificationContent> notificationContent
+                = notificationMessageRepository.findById(contentToUpdate.getId());
+
+        notificationContent.ifPresentOrElse(content -> content.update(contentToUpdate), () -> {
+            throw new EdonymyeonException(
+                    ExceptionInformation.NOTIFICATION_MESSAGE_NOT_FOUND);
+        });
+
+        holder.put(contentToUpdate.getId(), contentToUpdate);
     }
 }

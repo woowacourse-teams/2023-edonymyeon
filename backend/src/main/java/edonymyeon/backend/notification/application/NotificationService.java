@@ -7,8 +7,6 @@ import static edonymyeon.backend.notification.domain.notification_content.domain
 import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.consumption.application.ConsumptionService;
 import edonymyeon.backend.global.exception.BusinessLogicException;
-import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
@@ -17,10 +15,10 @@ import edonymyeon.backend.notification.application.dto.Data;
 import edonymyeon.backend.notification.application.dto.NotificationResponse;
 import edonymyeon.backend.notification.application.dto.Receiver;
 import edonymyeon.backend.notification.domain.Notification;
-import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId;
 import edonymyeon.backend.notification.domain.ScreenType;
-import edonymyeon.backend.notification.domain.notification_content.application.NotificationMessageRepository;
+import edonymyeon.backend.notification.domain.notification_content.application.NotificationMessageHolder;
 import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContent;
+import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId;
 import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.PostSlice;
@@ -39,7 +37,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
@@ -61,7 +58,7 @@ public class NotificationService {
 
     private final ConsumptionService consumptionService;
 
-    private final NotificationMessageRepository notificationMessageRepository;
+    private final NotificationMessageHolder notificationMessageHolder;
 
     /**
      * 특정 회원이 받은 알림 내역을 조회합니다.
@@ -194,9 +191,7 @@ public class NotificationService {
             return;
         }
 
-        final NotificationContent notificationContent
-                = notificationMessageRepository.findById(notificationContentId)
-                .orElseThrow(() -> new EdonymyeonException(ExceptionInformation.NOTIFICATION_MESSAGE_NOT_FOUND));
+        final NotificationContent notificationContent = notificationMessageHolder.findById(notificationContentId);
 
         final Long notificationId = saveNotification(
                 notifyingTarget,
@@ -277,8 +272,6 @@ public class NotificationService {
      */
     @Transactional
     public void updateContent(final NotificationContent content) {
-        final NotificationContent notificationContent = notificationMessageRepository.findById(content.getId())
-                .orElseThrow(() -> new EdonymyeonException(ExceptionInformation.NOTIFICATION_MESSAGE_NOT_FOUND));
-        notificationContent.update(content);
+        notificationMessageHolder.updateMessage(content);
     }
 }
