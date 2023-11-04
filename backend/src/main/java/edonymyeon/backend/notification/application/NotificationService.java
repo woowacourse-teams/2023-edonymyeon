@@ -2,6 +2,7 @@ package edonymyeon.backend.notification.application;
 
 import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.consumption.application.ConsumptionService;
+import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
 import edonymyeon.backend.member.domain.Member;
@@ -154,7 +155,13 @@ public class NotificationService {
         final Receiver receiver = new Receiver(notifyingTarget,
                 new Data(notificationId, notifyingType, redirectId));
 
-        notificationSender.sendNotification(receiver, notificationMessage.getMessage());
+        try {
+            notificationSender.sendNotification(
+                    receiver,
+                    notificationMessage.getMessage()
+            );
+        } catch (BusinessLogicException e) {
+        }
     }
 
     /**
