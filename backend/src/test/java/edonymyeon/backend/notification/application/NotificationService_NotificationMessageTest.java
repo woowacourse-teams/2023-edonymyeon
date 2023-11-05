@@ -150,14 +150,14 @@ class NotificationService_NotificationMessageTest extends IntegrationFixture {
     }
 
     @Test
-    void 알림_메시지_중_count_부분을_수치로_치환한다(
+    void 알림_메시지_중_count_부분을_반응의_총_개수로_치환한다(
             @Autowired NotificationRepository notificationRepository
     ) {
         // given
         notificationService.updateContent(
                 new NotificationContent(NotificationContentId.THUMBS_NOTIFICATION_TITLE,
-                        "[%title] 글에 새로운 반응 %count건이 있습니다",
-                        "[%title] 글에 새로운 반응 %count건이 있습니다. 본문"));
+                        "[%title] 글에 총 %count건의 반응이 생겼습니다.",
+                        "[%title] 글에 총 %count건의 반응이 생겼습니다. 본문"));
 
         final Member member = 회원만들기();
         final Post post = 게시글만들기(member);
@@ -170,8 +170,8 @@ class NotificationService_NotificationMessageTest extends IntegrationFixture {
                 .untilAsserted(() -> {
                     final List<Notification> savedNotification = notificationRepository.findAll();
                     Assertions.assertAll("%count 부분을 게시글 제목으로 치환한다.", () -> {
-                        assertThat(savedNotification.get(0).getTitle()).isEqualTo("[신발 사도 될까요?] 글에 새로운 반응 0건이 있습니다");
-                        assertThat(savedNotification.get(0).getBody()).isEqualTo("[신발 사도 될까요?] 글에 새로운 반응 0건이 있습니다. 본문");
+                        assertThat(savedNotification.get(0).getTitle()).isEqualTo("[신발 사도 될까요?] 글에 총 0건의 반응이 생겼습니다.");
+                        assertThat(savedNotification.get(0).getBody()).isEqualTo("[신발 사도 될까요?] 글에 총 0건의 반응이 생겼습니다. 본문");
                         // 실제 따봉 로직을 호출한 것은 아니므로 0건으로 출력된다
                     });
                 });
