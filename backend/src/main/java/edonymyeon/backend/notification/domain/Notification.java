@@ -58,15 +58,15 @@ public class Notification extends TemporalRecord {
     }
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public String getTitle() {
-        return this.title;
+        return title;
     }
 
     public String getBody() {
-        return this.body;
+        return body;
     }
 
     public ScreenType getScreenType() {
@@ -79,9 +79,5 @@ public class Notification extends TemporalRecord {
 
     public Long getPostId() {
         return postId;
-    }
-
-    public Member getMember() {
-        return member;
     }
 }

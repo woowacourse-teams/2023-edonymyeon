@@ -77,6 +77,14 @@ public class NotificationContent {
         }
     }
 
+    private String switchTextWithParameter(final String target, final Map<String, String> parameters) {
+        String result = target;
+        for (Entry<String, String> parameter : parameters.entrySet()) {
+            result = result.replaceAll("%%%s".formatted(parameter.getKey()), parameter.getValue());
+        }
+        return result;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -86,20 +94,11 @@ public class NotificationContent {
             return false;
         }
         final NotificationContent that = (NotificationContent) o;
-        return id == that.id && Objects.equals(title, that.title) && Objects.equals(body,
-                that.body);
+        return id == that.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, body);
-    }
-
-    private String switchTextWithParameter(final String target, final Map<String, String> parameters) {
-        String result = target;
-        for (Entry<String, String> parameter : parameters.entrySet()) {
-            result = result.replaceAll("%%%s".formatted(parameter.getKey()), parameter.getValue());
-        }
-        return result;
+        return Objects.hash(id);
     }
 }
