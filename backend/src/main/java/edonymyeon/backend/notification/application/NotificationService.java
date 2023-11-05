@@ -16,7 +16,7 @@ import edonymyeon.backend.notification.application.dto.NotificationResponse;
 import edonymyeon.backend.notification.application.dto.Receiver;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.ScreenType;
-import edonymyeon.backend.notification.domain.notification_content.application.NotificationMessageHolder;
+import edonymyeon.backend.notification.domain.notification_content.application.NotificationContentHolder;
 import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContent;
 import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId;
 import edonymyeon.backend.notification.repository.NotificationRepository;
@@ -58,7 +58,7 @@ public class NotificationService {
 
     private final ConsumptionService consumptionService;
 
-    private final NotificationMessageHolder notificationMessageHolder;
+    private final NotificationContentHolder notificationContentHolder;
 
     /**
      * 특정 회원이 받은 알림 내역을 조회합니다.
@@ -191,7 +191,7 @@ public class NotificationService {
             return;
         }
 
-        final NotificationContent notificationContent = notificationMessageHolder.findById(notificationContentId);
+        final NotificationContent notificationContent = notificationContentHolder.findById(notificationContentId);
 
         final Long notificationId = saveNotification(
                 notifyingTarget,
@@ -272,6 +272,6 @@ public class NotificationService {
      */
     @Transactional
     public void updateContent(final NotificationContent content) {
-        notificationMessageHolder.updateMessage(content);
+        notificationContentHolder.updateMessage(content);
     }
 }

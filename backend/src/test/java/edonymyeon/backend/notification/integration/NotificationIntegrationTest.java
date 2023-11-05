@@ -10,7 +10,7 @@ import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.notification_content.application.dto.NotificationContentRequest;
 import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId;
 import edonymyeon.backend.notification.domain.ScreenType;
-import edonymyeon.backend.notification.domain.notification_content.application.NotificationMessageRepository;
+import edonymyeon.backend.notification.domain.notification_content.application.NotificationContentRepository;
 import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContent;
 import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
@@ -94,13 +94,13 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
 
     @Test
     void 알림으로_보낼_메시지의_내용을_수정할_수_있다(
-            @Autowired NotificationMessageRepository notificationMessageRepository
+            @Autowired NotificationContentRepository notificationContentRepository
     ) {
         final NotificationContent notificationContent
                 = new NotificationContent(NotificationContentId.THUMBS_NOTIFICATION_TITLE, "원래 알림 제목", "원래 알림 본문");
-        notificationMessageRepository.save(notificationContent);
+        notificationContentRepository.save(notificationContent);
 
-        assertThat(notificationMessageRepository.findById(NotificationContentId.THUMBS_NOTIFICATION_TITLE)).contains(notificationContent);
+        assertThat(notificationContentRepository.findById(NotificationContentId.THUMBS_NOTIFICATION_TITLE)).contains(notificationContent);
 
         final NotificationContentRequest notificationContentToUpdate
                 = new NotificationContentRequest(NotificationContentId.THUMBS_NOTIFICATION_TITLE, "새로운 알림 제목", "새로운 알림 본문");
@@ -116,7 +116,7 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
                 .statusCode(HttpStatus.OK.value());
 
         final NotificationContent savedNotificationContent
-                = notificationMessageRepository.findById(NotificationContentId.THUMBS_NOTIFICATION_TITLE).get();
+                = notificationContentRepository.findById(NotificationContentId.THUMBS_NOTIFICATION_TITLE).get();
         assertThat(savedNotificationContent.getId()).isEqualTo(notificationContentToUpdate.id());
         assertThat(savedNotificationContent).extracting("title").isEqualTo(notificationContentToUpdate.title());
         assertThat(savedNotificationContent).extracting("body").isEqualTo(notificationContentToUpdate.body());

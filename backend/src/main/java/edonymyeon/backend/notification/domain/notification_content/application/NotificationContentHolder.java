@@ -19,12 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 @Transactional(readOnly = true)
 @Component
-public class NotificationMessageHolder {
+public class NotificationContentHolder {
 
-    private final NotificationMessageRepository notificationMessageRepository;
+    private final NotificationContentRepository notificationContentRepository;
 
-    public NotificationMessageHolder(final NotificationMessageRepository notificationMessageRepository) {
-        this.notificationMessageRepository = notificationMessageRepository;
+    public NotificationContentHolder(final NotificationContentRepository notificationContentRepository) {
+        this.notificationContentRepository = notificationContentRepository;
     }
 
     private final Map<NotificationContentId, NotificationContent> holder = new HashMap<>();
@@ -33,7 +33,7 @@ public class NotificationMessageHolder {
     public void initialize() {
         for (NotificationContentId notificationContentId : NotificationContentId.values()) {
             final Optional<NotificationContent> notificationContent
-                    = notificationMessageRepository.findById(notificationContentId);
+                    = notificationContentRepository.findById(notificationContentId);
             if (notificationContent.isEmpty()) {
                 assignDefaultContent(notificationContentId);
             } else {
@@ -59,7 +59,7 @@ public class NotificationMessageHolder {
     @Transactional
     public void updateMessage(final NotificationContent contentToUpdate) {
         final Optional<NotificationContent> notificationContent
-                = notificationMessageRepository.findById(contentToUpdate.getId());
+                = notificationContentRepository.findById(contentToUpdate.getId());
 
         notificationContent.ifPresentOrElse(content -> content.update(contentToUpdate), () -> {
             throw new EdonymyeonException(
