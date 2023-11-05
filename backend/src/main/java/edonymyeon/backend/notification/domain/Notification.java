@@ -3,6 +3,7 @@ package edonymyeon.backend.notification.domain;
 import edonymyeon.backend.global.domain.TemporalRecord;
 import edonymyeon.backend.member.domain.Member;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -26,9 +27,8 @@ public class Notification extends TemporalRecord {
     @JoinColumn(nullable = false)
     private Member member;
 
-    private String title;
-
-    private String body;
+    @Embedded
+    private NotificationMessage notificationMessage;
 
     @Enumerated(EnumType.STRING)
     private ScreenType screenType;
@@ -40,17 +40,14 @@ public class Notification extends TemporalRecord {
 
     public Notification(
             final Member member,
-            final String title,
-            final String body,
+            final NotificationMessage notificationMessage,
             final ScreenType screenType,
             final Long postId
     ) {
         this.member = member;
-        this.title = title;
-        this.body = body;
+        this.notificationMessage = notificationMessage;
         this.screenType = screenType;
         this.postId = postId;
-        this.read = false;
     }
 
     public void markAsRead() {
@@ -62,11 +59,11 @@ public class Notification extends TemporalRecord {
     }
 
     public String getTitle() {
-        return title;
+        return notificationMessage.getTitle();
     }
 
     public String getBody() {
-        return body;
+        return notificationMessage.getBody();
     }
 
     public ScreenType getScreenType() {

@@ -7,6 +7,7 @@ import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.domain.Notification;
+import edonymyeon.backend.notification.domain.NotificationMessage;
 import edonymyeon.backend.notification.domain.notification_content.application.dto.NotificationContentRequest;
 import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId;
 import edonymyeon.backend.notification.domain.ScreenType;
@@ -70,7 +71,12 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
         final Member 사용자 = 사용자를_하나_만든다();
         final long 게시글id = 응답의_location헤더에서_id를_추출한다(게시글을_하나_만든다(사용자));
         final Long 알림id = notificationRepository
-                .save(new Notification(사용자, "알림이 등록되었어요!", "알림을 확인해보세요!", ScreenType.POST, 게시글id))
+                .save(new Notification(
+                        사용자,
+                        new NotificationMessage("알림이 등록되었어요!", "알림을 확인해보세요!"),
+                        ScreenType.POST,
+                        게시글id
+                ))
                 .getId();
         var notification = notificationRepository.findById(알림id);
         notification.ifPresentOrElse(

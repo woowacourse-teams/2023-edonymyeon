@@ -15,6 +15,7 @@ import edonymyeon.backend.notification.application.dto.Data;
 import edonymyeon.backend.notification.application.dto.NotificationResponse;
 import edonymyeon.backend.notification.application.dto.Receiver;
 import edonymyeon.backend.notification.domain.Notification;
+import edonymyeon.backend.notification.domain.NotificationMessage;
 import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.notification.domain.notification_content.application.NotificationContentHolder;
 import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContent;
@@ -237,8 +238,7 @@ public class NotificationService {
 
         final Notification notification = new Notification(
                 notifyingTarget,
-                title,
-                body,
+                new NotificationMessage(title, body),
                 notifyingType,
                 redirectId
         );

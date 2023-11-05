@@ -22,9 +22,8 @@ import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.domain.Notification;
-import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId;
+import edonymyeon.backend.notification.domain.NotificationMessage;
 import edonymyeon.backend.notification.domain.ScreenType;
-import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContent;
 import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.post.application.PostService;
 import edonymyeon.backend.post.domain.Post;
@@ -83,7 +82,12 @@ class NotificationServiceTest extends IntegrationFixture {
     void 특정_알림을_사용자가_읽었음을_체크할_수_있다() {
         final var post = postTestSupport.builder().build();
         final var notificationId = notificationRepository.save(
-                        new Notification(post.getMember(), "알림이 등록되었어요!", "알림을 확인해보세요!", ScreenType.POST, post.getId()))
+                        new Notification(
+                                post.getMember(),
+                                new NotificationMessage("알림이 등록되었어요!", "알림을 확인해보세요!"),
+                                ScreenType.POST,
+                                post.getId()
+                        ))
                 .getId();
 
         var notification = notificationRepository.findById(notificationId);

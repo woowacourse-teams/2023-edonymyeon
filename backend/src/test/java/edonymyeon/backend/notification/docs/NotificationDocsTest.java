@@ -22,6 +22,7 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.application.NotificationService;
 import edonymyeon.backend.notification.application.dto.NotificationResponse;
 import edonymyeon.backend.notification.domain.Notification;
+import edonymyeon.backend.notification.domain.NotificationMessage;
 import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.notification.domain.notification_content.application.dto.NotificationContentRequest;
 import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId;
@@ -54,15 +55,24 @@ class NotificationDocsTest extends DocsTest {
     void 알림을_조회한다() throws Exception {
         final Member 회원 = testMemberBuilder.builder().id(1L).buildWithoutSaving();
 
-        when(notificationService.findNotifications(eq(new ActiveMemberId(회원.getId())), any(GeneralFindingCondition.class)))
+        when(notificationService.findNotifications(eq(new ActiveMemberId(회원.getId())),
+                any(GeneralFindingCondition.class)))
                 .thenReturn(PostSlice.from(new SliceImpl<>(
                         List.of(
                                 NotificationResponse.from(
-                                        new Notification(회원, "회원님의 글에 새 댓글이 달렸습니다.", "댓글을 확인해보세요~!", ScreenType.POST,
-                                                1L)),
+                                        new Notification(
+                                                회원,
+                                                new NotificationMessage("회원님의 글에 새 댓글이 달렸습니다.", "댓글을 확인해보세요~!"),
+                                                ScreenType.POST,
+                                                1L
+                                        )),
                                 NotificationResponse.from(
-                                        new Notification(회원, "주문확정되지 않은 게시글이 있습니다.", "주문확정 해보세요~!", ScreenType.MYPOST,
-                                                null))
+                                        new Notification(
+                                                회원,
+                                                new NotificationMessage("주문확정되지 않은 게시글이 있습니다.", "주문확정 해보세요~!"),
+                                                ScreenType.MYPOST,
+                                                null
+                                        ))
                         )
                 )));
 
