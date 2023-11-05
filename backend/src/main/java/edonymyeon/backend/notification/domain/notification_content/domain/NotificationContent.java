@@ -49,7 +49,7 @@ public class NotificationContent {
      * @param parameters 치환할 파라미터와 값을 담은 Map
      */
     public String getTitle(Map<String, String> parameters) {
-        return applyDSLs(this.title, parameters);
+        return switchTextWithParameter(this.title, parameters);
     }
 
     /**
@@ -60,7 +60,7 @@ public class NotificationContent {
      * @param parameters 치환할 파라미터와 값을 담은 Map
      */
     public String getBody(Map<String, String> parameters) {
-        return applyDSLs(this.body, parameters);
+        return switchTextWithParameter(this.body, parameters);
     }
 
     public void update(final NotificationContent content) {
@@ -95,7 +95,7 @@ public class NotificationContent {
         return Objects.hash(id, title, body);
     }
 
-    private String applyDSLs(final String target, final Map<String, String> parameters) {
+    private String switchTextWithParameter(final String target, final Map<String, String> parameters) {
         String result = target;
         for (Entry<String, String> parameter : parameters.entrySet()) {
             result = result.replaceAll("%%%s".formatted(parameter.getKey()), parameter.getValue());
