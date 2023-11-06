@@ -51,8 +51,7 @@
         </activity>
         <activity
             android:name="com.app.edonymyeon.presentation.ui.posteditor.PostEditorActivity"
-            android:exported="true"
-            android:configChanges="orientation|screenSize" />
+            android:exported="true" />
         <activity
             android:name="com.app.edonymyeon.presentation.ui.main.MainActivity"
             android:exported="true"

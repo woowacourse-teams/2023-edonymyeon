@@ -7,6 +7,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
@@ -326,6 +327,19 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         binding.etPostPrice.addTextChangedListener(textWatcher)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable(KEY_CAMERA_URI, cameraUri)
+    }
+
+    override fun onRestoreInstanceState(
+        savedInstanceState: Bundle?,
+        persistentState: PersistableBundle?,
+    ) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState)
+        cameraUri = savedInstanceState?.getParcelableExtraCompat(KEY_CAMERA_URI) as Uri?
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         if (!isChangingConfigurations) {
@@ -340,6 +354,7 @@ class PostEditorActivity : BaseActivity<ActivityPostEditorBinding, PostEditorVie
         private const val MAX_IMAGES_COUNT = 10
         private const val KEY_POST_EDITOR_CHECK = "key_post_editor_check"
         private const val KEY_POST_EDITOR_POST = "key_post_editor_post"
+        private const val KEY_CAMERA_URI = "cameraUri"
         const val POST_CODE = 2000
         const val UPDATE_CODE = 3000
         const val RESULT_RELOAD_CODE = 1001
