@@ -16,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>(
-    { FragmentSearchBinding.inflate(it) }
+    { FragmentSearchBinding.inflate(it) },
 ) {
     override val viewModel: SearchViewModel by viewModels()
     override val inflater: LayoutInflater by lazy { LayoutInflater.from(context) }
@@ -41,10 +41,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>(
 
         binding.rvSearchResult.adapter = searchAdapter
         viewModel.searchResult.observe(viewLifecycleOwner) {
-            binding.tvEmptyPost.isVisible = it.isEmpty()
-            if (it.isNotEmpty()) {
-                searchAdapter.setPosts(it)
-            }
+            searchAdapter.setPosts(it)
+            binding.tvEmptyPost.isVisible = it.isEmpty() && searchAdapter.itemCount == 0
         }
     }
 
