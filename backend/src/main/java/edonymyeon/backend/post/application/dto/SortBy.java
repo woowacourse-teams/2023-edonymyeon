@@ -5,7 +5,8 @@ import edonymyeon.backend.global.exception.ExceptionInformation;
 import java.util.Arrays;
 
 public enum SortBy {
-    CREATE_AT("createdAt");
+    CREATE_AT("createdAt"),
+    ID("id");
 
     private final String name;
 

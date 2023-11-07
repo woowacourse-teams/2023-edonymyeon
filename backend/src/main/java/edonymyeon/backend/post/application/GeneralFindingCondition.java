@@ -23,7 +23,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_INVA
 public class GeneralFindingCondition {
 
     public static final int DEFAULT_PAGE = 0;
-    public static final SortBy DEFAULT_SORT_BY = SortBy.CREATE_AT;
+    public static final SortBy DEFAULT_SORT_BY = SortBy.ID;
     public static final SortDirection DEFAULT_SORT_DIRECTION = SortDirection.DESC;
 
     @Builder.Default
