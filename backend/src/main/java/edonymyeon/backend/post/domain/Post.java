@@ -52,7 +52,6 @@ public class Post extends TemporalRecord {
     @JoinColumn(nullable = false)
     private Member member;
 
-    // TODO: cascade
     private PostImageInfos postImageInfos;
 
     @ColumnDefault("0")
@@ -125,10 +124,6 @@ public class Post extends TemporalRecord {
         }
     }
 
-    public void addPostImageInfo(final PostImageInfo postImageInfo) {
-        this.postImageInfos.add(postImageInfo);
-    }
-
     public void validateImageCount(final Integer imageCount) {
         this.postImageInfos.validateImageCount(imageCount);
     }
@@ -156,18 +151,16 @@ public class Post extends TemporalRecord {
 
     /**
      * 게시글 수정시 사용, 새로 추가되는 이미지가 없고 기존 이미지에 대한 수정만 일어나는 경우
-     * -> imageNamesToMaintain을 제외하고 삭제한다.
      */
-    public void updateImages(final List<String> remainedImageNames) {
-        postImageInfos.update(remainedImageNames, Collections.emptyList());
+    public List<Long> getImageIdsToDeleteBy(final List<String> remainedImageNames) {
+        return this.postImageInfos.getImageIdsToDeleteBy(remainedImageNames, Collections.emptyList());
     }
 
     /**
      * 게시글 수정시 사용, 새로 추가되는 이미지도 있는 경우
-     * -> imageNamesToMaintain을 제외하고 삭제 후, imagesToAdd를 추가한다.
      */
-    public void updateImages(final List<String> remainedImageNames, final PostImageInfos imagesToAdd) {
-        this.postImageInfos.update(remainedImageNames, imagesToAdd.getPostImageInfos());
+    public List<Long> getImageIdsToDeleteBy(final List<String> remainedImageNames, final PostImageInfos imagesToAdd) {
+        return this.postImageInfos.getImageIdsToDeleteBy(remainedImageNames, imagesToAdd.getPostImageInfos());
     }
 
     public boolean isSameMember(final Member member) {
@@ -179,7 +172,7 @@ public class Post extends TemporalRecord {
     }
 
     public Member getMember() {
-        return member;
+        return this.member;
     }
 
     public Long getWriterId() {
@@ -212,8 +205,6 @@ public class Post extends TemporalRecord {
     }
 
     public void delete() {
-        //lazyLoading 문제로 repository를 통해 직접 postImageInfos를 제거해주는 것이 필요하다.
-        this.postImageInfos.deleteAll();
         this.deleted = true;
     }
 
