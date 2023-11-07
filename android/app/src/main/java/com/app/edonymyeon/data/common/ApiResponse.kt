@@ -1,11 +1,17 @@
 package com.app.edonymyeon.data.common
 
 sealed interface ApiResponse<out T> {
-    data class Success<T>(val data: T) : ApiResponse<T>
+    data class Success<T>(val data: T, val headers: okhttp3.Headers) : ApiResponse<T>
 
     sealed interface Failure : ApiResponse<Nothing> {
-        data class HttpError(val code: Int, val message: String) : Failure
-        data class NoAuthError(val code: Int, val message: String) : Failure
+        data class HttpError(
+            val errorResponse: ErrorResponse,
+        ) : Failure
+
+        data class NoAuthError(
+            val errorResponse: ErrorResponse,
+        ) : Failure
+
         data class NetworkError(val throwable: Throwable) : Failure
         data class UnknownApiError(val throwable: Throwable) : Failure
     }

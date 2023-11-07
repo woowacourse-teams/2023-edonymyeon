@@ -1,5 +1,6 @@
 package com.app.edonymyeon.data.datasource.profile
 
+import com.app.edonymyeon.data.common.ApiResponse
 import com.app.edonymyeon.data.dto.WriterDataModel
 import com.app.edonymyeon.data.dto.request.ProfileUpdateRequest
 import com.app.edonymyeon.data.dto.request.PurchaseConfirmRequest
@@ -11,7 +12,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.Response
 import java.io.File
 import javax.inject.Inject
 
@@ -19,40 +19,40 @@ class ProfileRemoteDataSource @Inject constructor(
     private val profileService: ProfileService,
 ) : ProfileDataSource {
 
-    override suspend fun getMyPosts(page: Int, notificationId: Long): Response<MyPostsResponse> {
+    override suspend fun getMyPosts(page: Int, notificationId: Long): ApiResponse<MyPostsResponse> {
         return profileService.getMyPost(20, page, notificationId)
     }
 
     override suspend fun postPurchaseConfirm(
         id: Long,
         purchaseConfirmRequest: PurchaseConfirmRequest,
-    ): Response<Unit> {
+    ): ApiResponse<Unit> {
         return profileService.postPurchaseConfirm(id, purchaseConfirmRequest)
     }
 
     override suspend fun postSavingConfirm(
         id: Long,
         savingConfirmRequest: SavingConfirmRequest,
-    ): Response<Unit> {
+    ): ApiResponse<Unit> {
         return profileService.postSavingConfirm(id, savingConfirmRequest)
     }
 
-    override suspend fun deleteConfirm(id: Long): Response<Unit> {
+    override suspend fun deleteConfirm(id: Long): ApiResponse<Unit> {
         return profileService.deleteConfirm(id)
     }
 
-    override suspend fun getProfile(): Response<WriterDataModel> {
+    override suspend fun getProfile(): ApiResponse<WriterDataModel> {
         return profileService.getProfile()
     }
 
-    override suspend fun withdraw(): Response<Unit> {
+    override suspend fun withdraw(): ApiResponse<Unit> {
         return profileService.withdraw()
     }
 
     override suspend fun updateProfile(
         profileRequest: ProfileUpdateRequest,
         newProfileImage: File?,
-    ): Response<Unit> {
+    ): ApiResponse<Unit> {
         val nickname = profileRequest.nickname.toRequestBody("text/plain".toMediaTypeOrNull())
         return profileService.updateProfile(
             nickname,
@@ -64,7 +64,7 @@ class ProfileRemoteDataSource @Inject constructor(
     override suspend fun checkDuplicate(
         target: String,
         value: String,
-    ): Response<AuthDuplicateResponse> {
+    ): ApiResponse<AuthDuplicateResponse> {
         return profileService.checkDuplicate(target, value)
     }
 

@@ -32,12 +32,10 @@ class EdonymyeonCall<T>(
     )
 
     private fun Response<T>.toApiResult(): ApiResponse<T> {
-        // Http 에러 응답
         if (!isSuccessful) {
-            // 성공이 아닐 때, 특정 에정이면 아래, 아니면 기본
             val errorBody =
                 Gson().fromJson(errorBody()?.charStream(), ErrorResponse::class.java)
-            if (errorBody.code == ERROR_AUTHORIZATION_CODE) {
+            if (errorBody.errorCode == ERROR_AUTHORIZATION_CODE) {
                 return ApiResponse.Failure.NoAuthError(
                     errorBody,
                 )
@@ -47,11 +45,13 @@ class EdonymyeonCall<T>(
             )
         }
 
-        body()?.let { body -> return ApiResponse.Success(body) }
+        body()?.let { body ->
+            return ApiResponse.Success(body, headers())
+        }
 
         return if (successType == Unit::class.java) {
             @Suppress("UNCHECKED_CAST")
-            ApiResponse.Success(Unit as T)
+            ApiResponse.Success(Unit as T, headers())
         } else {
             ApiResponse.Failure.UnknownApiError(
                 IllegalStateException(

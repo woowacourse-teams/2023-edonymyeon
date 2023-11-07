@@ -1,6 +1,7 @@
 package com.app.edonymyeon.di
 
 import app.edonymyeon.BuildConfig
+import com.app.edonymyeon.data.common.EdonymyeonCallAdapterFactory
 import com.app.edonymyeon.data.service.client.AccessTokenInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -25,6 +26,7 @@ object RetrofitModule {
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
+            .addCallAdapterFactory(EdonymyeonCallAdapterFactory())
             .addConverterFactory(Json.asConverterFactory(CONTENT_TYPE))
             .client(okHttpClient)
             .build()

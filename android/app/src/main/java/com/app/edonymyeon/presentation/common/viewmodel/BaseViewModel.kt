@@ -21,18 +21,18 @@ open class BaseViewModel @Inject constructor(val authRepository: AuthRepository)
     protected val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         throwable.printStackTrace()
 
-        when (throwable) {
-            is SocketException -> _fetchState.value = FetchState.BadInternet
-            is HttpException -> _fetchState.value = FetchState.ParseError
-            is UnknownHostException -> _fetchState.value = FetchState.WrongConnection
-            else -> {
-                if ((throwable as CustomThrowable).code == NO_AUTHORIZATION_CODE) {
-                    _fetchState.value = FetchState.NoAuthorization(throwable)
-                } else {
-                    _fetchState.value = FetchState.Fail(throwable)
-                }
-            }
-        }
+//        when (throwable) {
+//            is SocketException -> _fetchState.value = FetchState.BadInternet
+//            is HttpException -> _fetchState.value = FetchState.ParseError
+//            is UnknownHostException -> _fetchState.value = FetchState.WrongConnection
+//            else -> {
+//                if ((throwable as CustomThrowable).code == NO_AUTHORIZATION_CODE) {
+//                    _fetchState.value = FetchState.NoAuthorization(throwable)
+//                } else {
+//                    _fetchState.value = FetchState.Fail(throwable)
+//                }
+//            }
+//        }
     }
 
     fun clearAuthToken() {

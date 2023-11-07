@@ -12,13 +12,19 @@ class EdonymyeonCallAdapterFactory : CallAdapter.Factory() {
         annotations: Array<out Annotation>,
         retrofit: Retrofit,
     ): CallAdapter<*, *>? {
-        if (getRawType(returnType) != Call::class.java) {
-            return null
+        if (getRawType(returnType) != Call::class.java) return null
+        check(returnType is ParameterizedType) {
+            ERROR_NOT_MATCH_GENERIC_TYPE
         }
-        check(returnType is ParameterizedType) { println(ERROR_NOT_MATCH_GENERIC_TYPE) }
 
-        val responseType: Type = getParameterUpperBound(0, returnType)
-        return EdonymyeonCallAdapter(responseType)
+        val wrapperType = getParameterUpperBound(0, returnType)
+        if (getRawType(wrapperType) != ApiResponse::class.java) return null
+        check(wrapperType is ParameterizedType) {
+            ERROR_NOT_MATCH_GENERIC_TYPE
+        }
+
+        val bodyType = getParameterUpperBound(0, wrapperType)
+        return EdonymyeonCallAdapter(bodyType)
     }
 
     companion object {
@@ -26,4 +32,3 @@ class EdonymyeonCallAdapterFactory : CallAdapter.Factory() {
             "Call return type must be parameterized as Call<Foo> or Call<? extends Foo>"
     }
 }
-
