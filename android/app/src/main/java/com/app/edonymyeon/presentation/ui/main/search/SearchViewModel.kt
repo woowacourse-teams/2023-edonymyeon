@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
+import com.app.edonymyeon.presentation.util.onFailureWithApiException
 import com.domain.edonymyeon.model.Page
 import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.SearchRepository
@@ -34,7 +35,7 @@ class SearchViewModel @Inject constructor(
                     currentPage = currentPage.increasePage()
                     isLastPage = result.isLast
                 }
-                .onFailure {
+                .onFailureWithApiException {
                     throw it
                 }
         }

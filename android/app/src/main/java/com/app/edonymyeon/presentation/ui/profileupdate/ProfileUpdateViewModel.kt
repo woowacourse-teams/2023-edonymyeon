@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.presentation.common.imageutil.processAndAdjustImage
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.WriterUiModel
+import com.app.edonymyeon.presentation.util.onFailureWithApiException
 import com.domain.edonymyeon.model.Nickname
 import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.ProfileRepository
@@ -82,7 +83,7 @@ class ProfileUpdateViewModel @Inject constructor(
                 .onSuccess {
                     _isNicknameValid.value = it && Nickname.validate(newNickname)
                     checkAbleToUpdate()
-                }.onFailure {
+                }.onFailureWithApiException {
                     _isNicknameValid.value = false
                     throw it
                 }
@@ -115,7 +116,7 @@ class ProfileUpdateViewModel @Inject constructor(
                 isImageChanged,
             ).onSuccess {
                 _isUploadSuccess.value = true
-            }.onFailure {
+            }.onFailureWithApiException {
                 throw it
             }
         }

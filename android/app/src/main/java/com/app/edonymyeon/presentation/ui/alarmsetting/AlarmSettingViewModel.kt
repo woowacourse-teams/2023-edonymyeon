@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
+import com.app.edonymyeon.presentation.util.onFailureWithApiException
 import com.domain.edonymyeon.model.NotificationPreference
 import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.PreferenceRepository
@@ -88,7 +89,7 @@ class AlarmSettingViewModel @Inject constructor(
                 response.map {
                     setNotificationSetting(it)
                 }
-            }.onFailure {
+            }.onFailureWithApiException {
                 throw it
             }
         }
