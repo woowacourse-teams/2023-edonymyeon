@@ -1,7 +1,7 @@
 package com.app.edonymyeon.mapper
 
-import com.app.edonymyeon.data.common.ApiException
-import com.app.edonymyeon.data.common.ApiResponse
+import com.app.edonymyeon.data.service.client.calladapter.ApiException
+import com.app.edonymyeon.data.service.client.calladapter.ApiResponse
 import okhttp3.Headers
 
 fun <T, R> ApiResponse<T>.toResult(

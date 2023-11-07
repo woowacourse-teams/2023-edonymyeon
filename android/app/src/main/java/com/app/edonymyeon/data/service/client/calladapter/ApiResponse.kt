@@ -1,4 +1,4 @@
-package com.app.edonymyeon.data.common
+package com.app.edonymyeon.data.service.client.calladapter
 
 sealed interface ApiResponse<out T> {
     data class Success<T>(val data: T, val headers: okhttp3.Headers) : ApiResponse<T>

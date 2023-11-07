@@ -1,8 +1,8 @@
 package com.app.edonymyeon.di
 
 import app.edonymyeon.BuildConfig
-import com.app.edonymyeon.data.common.EdonymyeonCallAdapterFactory
 import com.app.edonymyeon.data.service.client.AccessTokenInterceptor
+import com.app.edonymyeon.data.service.client.calladapter.EdonymyeonCallAdapterFactory
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides

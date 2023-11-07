@@ -1,6 +1,6 @@
 package com.app.edonymyeon.data.service
 
-import com.app.edonymyeon.data.common.ApiResponse
+import com.app.edonymyeon.data.service.client.calladapter.ApiResponse
 import retrofit2.http.DELETE
 import retrofit2.http.PUT
 import retrofit2.http.Path

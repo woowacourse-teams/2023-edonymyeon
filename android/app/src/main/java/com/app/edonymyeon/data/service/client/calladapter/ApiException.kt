@@ -1,4 +1,4 @@
-package com.app.edonymyeon.data.common
+package com.app.edonymyeon.data.service.client.calladapter
 
 sealed class ApiException : Exception() {
     data class NoAuthException(val errorCode: Int, val errorMessage: String) : ApiException()

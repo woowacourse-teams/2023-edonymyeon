@@ -1,8 +1,8 @@
 package com.app.edonymyeon.data.datasource.search
 
-import com.app.edonymyeon.data.common.ApiResponse
 import com.app.edonymyeon.data.dto.response.Posts
 import com.app.edonymyeon.data.service.SearchService
+import com.app.edonymyeon.data.service.client.calladapter.ApiResponse
 import javax.inject.Inject
 
 class SearchRemoteDataSource @Inject constructor(

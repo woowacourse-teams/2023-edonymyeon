@@ -1,4 +1,4 @@
-package com.app.edonymyeon.data.common
+package com.app.edonymyeon.data.service.client.calladapter
 
 import com.google.gson.Gson
 import okhttp3.Request
@@ -51,7 +51,12 @@ class EdonymyeonCall<T>(
 
         return if (successType == Unit::class.java) {
             @Suppress("UNCHECKED_CAST")
-            ApiResponse.Success(Unit as T, headers())
+            (
+                ApiResponse.Success(
+                    Unit as T,
+                    headers(),
+                )
+                )
         } else {
             ApiResponse.Failure.UnknownApiError(
                 IllegalStateException(

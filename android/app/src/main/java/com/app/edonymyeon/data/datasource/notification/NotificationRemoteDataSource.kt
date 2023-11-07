@@ -1,8 +1,8 @@
 package com.app.edonymyeon.data.datasource.notification
 
-import com.app.edonymyeon.data.common.ApiResponse
 import com.app.edonymyeon.data.dto.response.NotificationsResponse
 import com.app.edonymyeon.data.service.NotificationService
+import com.app.edonymyeon.data.service.client.calladapter.ApiResponse
 import javax.inject.Inject
 
 class NotificationRemoteDataSource @Inject constructor(

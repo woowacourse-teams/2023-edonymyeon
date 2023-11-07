@@ -1,6 +1,6 @@
 package com.app.edonymyeon.data.datasource.recommend
 
-import com.app.edonymyeon.data.common.ApiResponse
+import com.app.edonymyeon.data.service.client.calladapter.ApiResponse
 
 interface RecommendDataSource {
     suspend fun saveRecommendUp(postId: Long): ApiResponse<Unit>

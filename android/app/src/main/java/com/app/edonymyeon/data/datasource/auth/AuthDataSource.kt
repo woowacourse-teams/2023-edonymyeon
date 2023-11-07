@@ -1,11 +1,11 @@
 package com.app.edonymyeon.data.datasource.auth
 
-import com.app.edonymyeon.data.common.ApiResponse
 import com.app.edonymyeon.data.dto.LoginDataModel
 import com.app.edonymyeon.data.dto.request.LogoutRequest
 import com.app.edonymyeon.data.dto.request.TokenRequest
 import com.app.edonymyeon.data.dto.request.UserRegistrationRequest
 import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
+import com.app.edonymyeon.data.service.client.calladapter.ApiResponse
 
 interface AuthDataSource {
 

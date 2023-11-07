@@ -1,4 +1,4 @@
-package com.app.edonymyeon.data.common
+package com.app.edonymyeon.data.service.client.calladapter
 
 import retrofit2.Call
 import retrofit2.CallAdapter

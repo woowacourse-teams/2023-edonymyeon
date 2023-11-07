@@ -1,4 +1,4 @@
-package com.app.edonymyeon.data.common
+package com.app.edonymyeon.data.service.client.calladapter
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable

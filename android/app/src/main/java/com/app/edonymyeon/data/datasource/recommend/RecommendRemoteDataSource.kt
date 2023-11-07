@@ -1,7 +1,7 @@
 package com.app.edonymyeon.data.datasource.recommend
 
-import com.app.edonymyeon.data.common.ApiResponse
 import com.app.edonymyeon.data.service.RecommendService
+import com.app.edonymyeon.data.service.client.calladapter.ApiResponse
 import javax.inject.Inject
 
 class RecommendRemoteDataSource @Inject constructor(

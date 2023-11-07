@@ -1,10 +1,10 @@
 package com.app.edonymyeon.data.service
 
-import com.app.edonymyeon.data.common.ApiResponse
 import com.app.edonymyeon.data.dto.response.CommentsResponse
 import com.app.edonymyeon.data.dto.response.PostDetailResponse
 import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.Posts
+import com.app.edonymyeon.data.service.client.calladapter.ApiResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.DELETE
