@@ -14,6 +14,7 @@ public enum ExceptionInformation {
     CACHE_NOT_FOUND(100, "캐싱된 값이 없습니다."),
     INVALID_SETTING_MANAGER_ASSIGNED(201, "잘못된 설정 매니저가 매핑되었습니다"),
     UNSUPPORTED_METHOD_CALL(202, "현재 지원하지 않는 기능입니다"),
+    REQUEST_API_NOT_FOUND(404, "페이지를 찾을 수 없습니다."),
 
     // 클래스이름_필드명_틀린내용
     // 1___: 인증 관련

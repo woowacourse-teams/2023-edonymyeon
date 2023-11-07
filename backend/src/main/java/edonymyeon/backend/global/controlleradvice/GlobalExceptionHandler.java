@@ -5,10 +5,12 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.COMMENT_M
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_IS_DELETED;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
+import static edonymyeon.backend.global.exception.ExceptionInformation.REQUEST_API_NOT_FOUND;
 import static edonymyeon.backend.global.exception.ExceptionInformation.REQUEST_FILE_SIZE_TOO_LARGE;
 import static edonymyeon.backend.global.exception.ExceptionInformation.REQUEST_PARAMETER_NOT_EXIST;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 @Slf4j
 @RestControllerAdvice
@@ -90,6 +93,15 @@ public class GlobalExceptionHandler {
                 REQUEST_FILE_SIZE_TOO_LARGE.getMessage());
 
         return ResponseEntity.status(BAD_REQUEST)
+                .body(exceptionResponse);
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleNoHandlerFoundException(NoHandlerFoundException e) {
+        final ExceptionResponse exceptionResponse = new ExceptionResponse(REQUEST_API_NOT_FOUND.getCode(),
+                REQUEST_API_NOT_FOUND.getMessage());
+
+        return ResponseEntity.status(NOT_FOUND)
                 .body(exceptionResponse);
     }
 }
