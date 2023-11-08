@@ -1,6 +1,6 @@
 package com.app.edonymyeon.mapper
 
-import com.app.edonymyeon.data.service.client.calladapter.ApiException
+import com.app.edonymyeon.presentation.common.exception.HttpException
 import com.app.edonymyeon.data.service.client.calladapter.ApiResponse
 import okhttp3.Headers
 
@@ -15,18 +15,18 @@ fun <T, R> ApiResponse<T>.toResult(
 
         is ApiResponse.Failure -> {
             val exception = when (this) {
-                is ApiResponse.Failure.NoAuthError -> ApiException.NoAuthException(
+                is ApiResponse.Failure.NoAuthError -> HttpException.NoAuthException(
                     errorResponse.errorCode,
                     errorResponse.errorMessage,
                 )
 
-                is ApiResponse.Failure.HttpError -> ApiException.HttpError(
+                is ApiResponse.Failure.HttpError -> HttpException.HttpError(
                     errorResponse.errorCode,
                     errorResponse.errorMessage,
                 )
 
-                is ApiResponse.Failure.UnknownApiError -> ApiException.UnknownApiError(throwable)
-                is ApiResponse.Failure.NetworkError -> ApiException.NetworkError(throwable)
+                is ApiResponse.Failure.UnknownApiError -> HttpException.UnknownApiError(throwable)
+                is ApiResponse.Failure.NetworkError -> HttpException.NetworkError(throwable)
             }
             Result.failure(exception)
         }

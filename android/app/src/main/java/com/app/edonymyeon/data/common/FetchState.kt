@@ -1,6 +1,6 @@
 package com.app.edonymyeon.data.common
 
-import com.app.edonymyeon.data.service.client.calladapter.ApiException
+import com.app.edonymyeon.presentation.common.exception.HttpException
 
 sealed interface FetchState {
     object BadInternet : FetchState
@@ -8,10 +8,10 @@ sealed interface FetchState {
     object WrongConnection : FetchState
 
     class NoAuthorization(
-        val customThrowable: ApiException,
+        val customThrowable: HttpException,
     ) : FetchState
 
     class Fail(
-        val customThrowable: ApiException,
+        val customThrowable: HttpException,
     ) : FetchState
 }

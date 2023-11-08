@@ -1,9 +1,9 @@
 package com.app.edonymyeon.presentation.util
 
-import com.app.edonymyeon.data.service.client.calladapter.ApiException
+import com.app.edonymyeon.presentation.common.exception.HttpException
 
-fun <T> Result<T>.onFailureWithApiException(onAction: (ApiException) -> Unit) {
+fun <T> Result<T>.onFailureWithApiException(onAction: (HttpException) -> Unit) {
     onFailure {
-        onAction(it as ApiException)
+        onAction(it as HttpException)
     }
 }

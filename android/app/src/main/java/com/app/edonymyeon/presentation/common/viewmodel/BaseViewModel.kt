@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.app.edonymyeon.data.common.FetchState
-import com.app.edonymyeon.data.service.client.calladapter.ApiException
+import com.app.edonymyeon.presentation.common.exception.HttpException
 import com.domain.edonymyeon.repository.AuthRepository
 import kotlinx.coroutines.CoroutineExceptionHandler
 
@@ -16,12 +16,12 @@ open class BaseViewModel(val authRepository: AuthRepository) : ViewModel() {
 
     protected val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         throwable.printStackTrace()
-        if (throwable is ApiException) {
+        if (throwable is HttpException) {
             when (throwable) {
-                is ApiException.NoAuthException ->
+                is HttpException.NoAuthException ->
                     FetchState.NoAuthorization(throwable)
 
-                is ApiException.HttpError -> _fetchState.value = FetchState.Fail(throwable)
+                is HttpException.HttpError -> _fetchState.value = FetchState.Fail(throwable)
                 else -> FetchState.BadInternet
             }
         }

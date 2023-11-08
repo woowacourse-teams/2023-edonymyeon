@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ViewDataBinding
 import app.edonymyeon.R
 import com.app.edonymyeon.data.common.FetchState
-import com.app.edonymyeon.data.service.client.calladapter.ApiException
+import com.app.edonymyeon.presentation.common.exception.HttpException
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.ui.login.LoginActivity
 import com.app.edonymyeon.presentation.util.makeSnackbar
@@ -30,13 +30,13 @@ abstract class BaseActivity<B : ViewDataBinding, VM : BaseViewModel>(private val
                 is FetchState.NoAuthorization -> {
                     viewModel.clearAuthToken()
                     binding.root.makeSnackbarWithEvent(
-                        message = (it.customThrowable as ApiException.NoAuthException).errorMessage,
+                        message = (it.customThrowable as HttpException.NoAuthException).errorMessage,
                         eventTitle = getString(R.string.login_title),
                     ) { navigateToLogin() }
                 }
 
                 is FetchState.Fail -> {
-                    binding.root.makeSnackbar((it.customThrowable as ApiException.HttpError).errorMessage)
+                    binding.root.makeSnackbar((it.customThrowable as HttpException.HttpError).errorMessage)
                 }
             }
         }
