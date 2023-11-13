@@ -25,11 +25,6 @@ import java.util.Objects;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.*;
 
-import java.util.List;
-import java.util.Objects;
-
-import static edonymyeon.backend.global.exception.ExceptionInformation.*;
-
 @RequiredArgsConstructor
 @Service
 public class PostService {
@@ -138,8 +133,7 @@ public class PostService {
 
         final List<Long> imageIdsToDelete = post.getImageIdsToDeleteBy(remainedImageNames, imagesToAdd);
         postImageInfoRepository.deleteAllByIds(imageIdsToDelete); //이때 기존 이미지중 삭제되는 것들은 softDelete
-
-        postImageInfoRepository.saveAll(imagesToAdd.getPostImageInfos()); // //새로 추가된 이미지들을 DB에 저장
+        postImageInfoRepository.batchSave(imagesToAdd.getPostImageInfos(), post.getId()); //새로 추가된 이미지들을 DB에 저장
 
         return new PostIdResponse(postId);
     }
