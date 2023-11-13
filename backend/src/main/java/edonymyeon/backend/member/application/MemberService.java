@@ -21,7 +21,9 @@ import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_0;
 import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_1;
 import edonymyeon.backend.member.application.event.ProfileImageDeletionEvent;
 import edonymyeon.backend.member.domain.Device;
+import edonymyeon.backend.member.domain.Email;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.domain.Nickname;
 import edonymyeon.backend.member.repository.MemberRepository;
 import java.util.Objects;
 import java.util.Optional;
@@ -87,7 +89,7 @@ public class MemberService {
 
     private void validateDuplicateNickname(final String currentNickname, final String updateNickname) {
         if (!currentNickname.equals(updateNickname) &&
-                memberRepository.existsByNickname(updateNickname)) {
+                memberRepository.existsByNickname(Nickname.from(updateNickname))) {
             throw new EdonymyeonException(MEMBER_NICKNAME_DUPLICATE);
         }
     }
@@ -103,10 +105,10 @@ public class MemberService {
 
     private boolean existsByValidateType(final ValidateType validateType, final String value) {
         if (validateType.equals(ValidateType.EMAIL)) {
-            return memberRepository.existsByEmail(value);
+            return memberRepository.existsByEmail(Email.from(value));
         }
 
-        return memberRepository.existsByNickname(value);
+        return memberRepository.existsByNickname(Nickname.from(value));
     }
 
     @Transactional

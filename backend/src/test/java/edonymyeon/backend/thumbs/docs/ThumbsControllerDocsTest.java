@@ -9,6 +9,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import edonymyeon.backend.member.domain.Email;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
@@ -62,14 +63,14 @@ class ThumbsControllerDocsTest {
                 .id(1L)
                 .buildWithoutSaving();
 
-        when(memberRepository.findByEmail(글쓴이.getEmail())).thenReturn(Optional.of(글쓴이));
+        when(memberRepository.findByEmail(Email.from(글쓴이.getEmail()))).thenReturn(Optional.of(글쓴이));
         when(memberRepository.findById(글쓴이.getId())).thenReturn(Optional.of(글쓴이));
 
         반응_하는_사람 = testMemberBuilder.builder()
                 .id(2L)
                 .buildWithoutSaving();
 
-        when(memberRepository.findByEmail(반응_하는_사람.getEmail())).thenReturn(
+        when(memberRepository.findByEmail(Email.from(반응_하는_사람.getEmail()))).thenReturn(
                 Optional.of(반응_하는_사람));
         when(memberRepository.findById(반응_하는_사람.getId())).thenReturn(Optional.of(반응_하는_사람));
 

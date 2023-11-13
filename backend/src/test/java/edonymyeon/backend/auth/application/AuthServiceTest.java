@@ -22,6 +22,7 @@ import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.member.domain.Email;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.domain.SocialInfo;
 import edonymyeon.backend.member.domain.SocialInfo.SocialType;
@@ -75,7 +76,7 @@ class AuthServiceTest {
                 new JoinRequest("test@gmail.com", "@testPassword234", "testNickname", "testDeviceToken"));
         final Member member = entityManager.createQuery(
                         "select m from Member m left join fetch m.devices where m.email = :email", Member.class)
-                .setParameter("email", "test@gmail.com")
+                .setParameter("email", Email.from("test@gmail.com"))
                 .getSingleResult();
         assertThat(member.getDevices()).hasSize(1);
     }

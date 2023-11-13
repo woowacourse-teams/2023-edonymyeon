@@ -5,6 +5,7 @@ import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.image.postimage.domain.PostImageInfos;
 import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.member.domain.Email;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
@@ -81,7 +82,7 @@ class PostControllerDocsTest implements ImageFileCleaner {
     private PostThumbsServiceImpl postThumbsService;
 
     private void 회원_레포지토리를_모킹한다(final Member 회원) {
-        when(memberRepository.findByEmail(회원.getEmail())).thenReturn(
+        when(memberRepository.findByEmail(Email.from(회원.getEmail()))).thenReturn(
                 Optional.of(회원));
         when(memberRepository.findById(회원.getId())).thenReturn(Optional.of(회원));
     }

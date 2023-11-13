@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.consumption.application.ConsumptionService;
 import edonymyeon.backend.consumption.application.dto.ConsumptionPriceResponse;
 import edonymyeon.backend.consumption.application.dto.RecentConsumptionsResponse;
+import edonymyeon.backend.member.domain.Email;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.support.DocsTest;
@@ -46,7 +47,7 @@ class ConsumptionControllerDocsTest extends DocsTest {
     }
 
     private void 회원_레포지토리를_모킹한다(final Member 회원) {
-        when(memberRepository.findByEmail(회원.getEmail())).thenReturn(Optional.of(회원));
+        when(memberRepository.findByEmail(Email.from(회원.getEmail()))).thenReturn(Optional.of(회원));
     }
 
     private void 소비_서비스를_모킹한다(final RecentConsumptionsResponse response) {
