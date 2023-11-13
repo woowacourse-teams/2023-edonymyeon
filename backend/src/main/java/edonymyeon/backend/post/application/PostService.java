@@ -25,6 +25,11 @@ import java.util.Objects;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.*;
 
+import java.util.List;
+import java.util.Objects;
+
+import static edonymyeon.backend.global.exception.ExceptionInformation.*;
+
 @RequiredArgsConstructor
 @Service
 public class PostService {
@@ -89,13 +94,12 @@ public class PostService {
         final Post post = findPostById(postId);
         checkWriter(member, post);
 
-        // soft delete 시킬 때, 실제 이미지는 보관된다.
-        // todo: 이미지 삭제.. 한번에..
         // todo: 소비내역 삭제할 때, 이벤트 대신 인터페이스로 변경
         applicationEventPublisher.publishEvent(new PostDeletionEvent(post.getId()));
         thumbsService.deleteAllThumbsInPost(postId);
         commentService.deleteAllCommentsInPost(postId);
         post.delete();
+        postImageInfoRepository.deleteAllByPostId(postId);
     }
 
     private Post findPostById(final Long postId) {
@@ -124,14 +128,19 @@ public class PostService {
         final List<MultipartFile> imageFilesToAdd = request.newImages();
         final List<String> remainedImageNames = imageService.convertToStoreName(request.originalImages(), ImageType.POST);
 
-        if (isImagesEmpty(imageFilesToAdd)) {
-            post.updateImages(remainedImageNames);
+        if(isImagesEmpty(imageFilesToAdd)) {
+            final List<Long> imageIdsToDelete = post.getImageIdsToDeleteBy(remainedImageNames);
+            postImageInfoRepository.deleteAllByIds(imageIdsToDelete);
             return new PostIdResponse(postId);
         }
 
         final PostImageInfos imagesToAdd = PostImageInfos.of(post, imageService.saveAll(imageFilesToAdd, ImageType.POST));
-        post.updateImages(remainedImageNames, imagesToAdd); //이때 기존 이미지중 삭제되는 것들은 softDelete
+
+        final List<Long> imageIdsToDelete = post.getImageIdsToDeleteBy(remainedImageNames, imagesToAdd);
+        postImageInfoRepository.deleteAllByIds(imageIdsToDelete); //이때 기존 이미지중 삭제되는 것들은 softDelete
+
         postImageInfoRepository.saveAll(imagesToAdd.getPostImageInfos()); // //새로 추가된 이미지들을 DB에 저장
+
         return new PostIdResponse(postId);
     }
 }
