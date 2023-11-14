@@ -279,26 +279,26 @@
                             app:layout_constraintTop_toBottomOf="@id/space_divider_bottom"
                             app:layout_constraintWidth_percent="0.07" />
 
-                        <CheckBox
+                        <ImageButton
                             android:id="@+id/cb_up"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:background="@drawable/selector_cb_reaction_up"
-                            android:button="@null"
-                            android:checked="@{postViewModel.recommendation.isUp}"
+                            android:src="@drawable/selector_cb_reaction_up"
+                            android:background="@null"
+                            android:selected="@{postViewModel.recommendation.isUp}"
                             app:layout_constraintBottom_toBottomOf="@id/space_up_start"
                             app:layout_constraintDimensionRatio="H,1:1"
                             app:layout_constraintStart_toEndOf="@id/space_up_start"
                             app:layout_constraintTop_toTopOf="@id/space_up_start"
                             app:layout_constraintWidth_percent="0.08" />
 
-                        <CheckBox
+                        <ImageButton
                             android:id="@+id/cb_down"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:background="@drawable/selector_cb_reaction_down"
-                            android:button="@null"
-                            android:checked="@{postViewModel.recommendation.isDown}"
+                            android:src="@drawable/selector_cb_reaction_down"
+                            android:background="@null"
+                            android:selected="@{postViewModel.recommendation.isDown}"
                             app:layout_constraintBottom_toBottomOf="@id/space_up_start"
                             app:layout_constraintDimensionRatio="H,1:1"
                             app:layout_constraintEnd_toStartOf="@id/space_down_end"

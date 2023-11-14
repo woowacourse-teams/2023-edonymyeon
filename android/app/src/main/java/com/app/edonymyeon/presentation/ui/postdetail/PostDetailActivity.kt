@@ -10,7 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -299,25 +299,25 @@ class PostDetailActivity : BaseActivity<ActivityPostDetailBinding, PostDetailVie
     }
 
     private fun setRecommendationCheckedListener() {
-        binding.cbUp.setOnCheckedChangeListener { _, isChecked ->
-            if (invalidateRecommendation(binding.cbUp)) return@setOnCheckedChangeListener
-            viewModel.updateRecommendationUi(id, isChecked, true)
+        binding.cbUp.setOnClickListener {
+            if (invalidateRecommendation(binding.cbUp)) return@setOnClickListener
+            viewModel.updateUpRecommendation(id)
         }
-        binding.cbDown.setOnCheckedChangeListener { _, isChecked ->
-            if (invalidateRecommendation(binding.cbDown)) return@setOnCheckedChangeListener
-            viewModel.updateRecommendationUi(id, isChecked, false)
+        binding.cbDown.setOnClickListener {
+            if (invalidateRecommendation(binding.cbDown)) return@setOnClickListener
+            viewModel.updateDownRecommendation(id)
         }
     }
 
-    private fun invalidateRecommendation(checkbox: CheckBox): Boolean {
+    private fun invalidateRecommendation(checkbox: ImageButton): Boolean {
         if (!viewModel.isLogin) {
             binding.root.makeSnackbar(getString(R.string.post_detail_login_required))
-            checkbox.isChecked = false
+            checkbox.isSelected = false
             return true
         }
         if (isMyPost) {
             binding.root.makeSnackbar(getString(R.string.post_detail_writer_cant_recommend))
-            checkbox.isChecked = false
+            checkbox.isSelected = false
             return true
         }
         return false
