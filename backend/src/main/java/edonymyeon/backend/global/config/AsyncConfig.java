@@ -16,6 +16,9 @@ public class AsyncConfig {
     @Bean(name = "taskExecutor")
     public ThreadPoolTaskExecutor threadPoolTaskExecutor(){
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        taskExecutor.setCorePoolSize(40);
+        taskExecutor.setWaitForTasksToCompleteOnShutdown(true);
+        taskExecutor.setAwaitTerminationSeconds(30);
         taskExecutor.setTaskDecorator(new CopyTaskDecorator());
         return taskExecutor;
     }
