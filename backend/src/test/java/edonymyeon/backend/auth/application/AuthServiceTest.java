@@ -20,8 +20,10 @@ import edonymyeon.backend.auth.domain.PasswordEncoder;
 import edonymyeon.backend.image.application.ImageService;
 import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
+import edonymyeon.backend.member.application.DeviceRepository;
 import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.member.domain.Device;
 import edonymyeon.backend.member.domain.Email;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.domain.SocialInfo;
@@ -41,6 +43,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.jdbc.Sql;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -82,6 +85,19 @@ class AuthServiceTest {
     }
 
     @Test
+    void 최초의_소셜로그인시_사용한_디바이스_정보를_함께_저장한다(@Autowired EntityManager entityManager) {
+        doNothing().when(settingService).initializeSettings(any());
+
+        authService.loginByKakao(new KakaoLoginResponse(1L), "testDeviceToken");
+
+        final Member member = entityManager.createQuery(
+                        "select m from Member m left join fetch m.devices where m.socialInfo.socialId = :socialId", Member.class)
+                .setParameter("socialId", 1L)
+                .getSingleResult();
+        assertThat(member.getDevices()).hasSize(1);
+    }
+
+    @Test
     void 회원가입_이후_설정초기화_작업을_수행한다() {
         doNothing().when(settingService).initializeSettings(any());
 
@@ -99,22 +115,48 @@ class AuthServiceTest {
     }
 
     @Test
-    void 로그인_이후_디바이스_교체_작업을_수행한다() {
-        doNothing().when(memberService).activateDevice(any(), any());
+    void 로그인_이후_디바이스_교체_작업을_수행한다(@Autowired DeviceRepository deviceRepository) {
+        //given
+        final JoinRequest joinRequest = new JoinRequest("test@gmail.com", "@testPassword234", "testNickname",
+                "testDeviceToken");
+        authService.joinMember(joinRequest);
 
-        authService.joinMember(
-                new JoinRequest("test@gmail.com", "@testPassword234", "testNickname", "testDeviceToken"));
-        authService.login(new LoginRequest("test@gmail.com", "@testPassword234", "testToken"));
-        verify(memberService, atLeastOnce()).activateDevice(any(), any());
+        //when
+        final LoginRequest loginRequest = new LoginRequest("test@gmail.com", "@testPassword234", "testToken");
+        authService.login(loginRequest);
+
+        //then
+        assertSoftly(
+                softAssertions -> {
+                    final Device originalDevice = deviceRepository.findByDeviceToken(joinRequest.deviceToken()).get();
+                    final Optional<Device> changedDevice = deviceRepository.findByDeviceToken(loginRequest.deviceToken());
+                    assertThat(changedDevice.isPresent()).isTrue();
+                    assertThat(changedDevice.get().isActive()).isTrue();
+                    assertThat(originalDevice.isActive()).isFalse();
+                }
+        );
     }
 
     @Test
-    void 소셜로그인_이후에도_디바이스_교체_작업을_수행한다() {
-        doNothing().when(memberService).activateDevice(any(), any());
+    void 소셜로그인_이후에도_디바이스_교체_작업을_수행한다(@Autowired DeviceRepository deviceRepository) {
+        //given
+        final String originalDeviceToken = "testDeviceToken";
+        authService.loginByKakao(new KakaoLoginResponse(1L), originalDeviceToken);
 
-        authService.loginByKakao(new KakaoLoginResponse(1L), "testDeviceToken");
+        //when
+        final String changedDeviceToken = "testDeviceToken2";
+        authService.loginByKakao(new KakaoLoginResponse(1L), changedDeviceToken);
 
-        verify(memberService, atLeastOnce()).activateDevice(any(), any());
+        //then
+        assertSoftly(
+                softAssertions -> {
+                    final Device originalDevice = deviceRepository.findByDeviceToken(originalDeviceToken).get();
+                    final Optional<Device> changedDevice = deviceRepository.findByDeviceToken(changedDeviceToken);
+                    assertThat(changedDevice.isPresent()).isTrue();
+                    assertThat(changedDevice.get().isActive()).isTrue();
+                    assertThat(originalDevice.isActive()).isFalse();
+                }
+        );
     }
 
     @Test
