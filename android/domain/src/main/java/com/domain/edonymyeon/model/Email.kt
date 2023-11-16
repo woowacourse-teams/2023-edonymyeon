@@ -5,7 +5,6 @@ value class Email private constructor(val value: String) {
     init {
         require(validate(value)) { ERROR_NEGATIVE_EMAIL }
     }
-
     companion object {
         fun validate(value: String): Boolean = Regex(Email_REGEX).matches(value)
 

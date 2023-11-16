@@ -19,7 +19,9 @@ import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.MemberId;
+import edonymyeon.backend.member.domain.Email;
 import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.domain.Nickname;
 import edonymyeon.backend.member.domain.SocialInfo;
 import edonymyeon.backend.member.domain.SocialInfo.SocialType;
 import edonymyeon.backend.member.repository.MemberRepository;
@@ -62,7 +64,7 @@ public class AuthService {
     }
 
     private Member findByEmail(final String email) {
-        final Member member = memberRepository.findByEmail(email)
+        final Member member = memberRepository.findByEmail(Email.from(email))
                 .orElseThrow(() -> new EdonymyeonException(MEMBER_EMAIL_NOT_FOUND));
         if (member.isDeleted()) {
             throw new EdonymyeonException(MEMBER_IS_DELETED);
@@ -121,8 +123,7 @@ public class AuthService {
     }
 
     private Member saveMember(Member member) {
-        final String encodedPassword = passwordEncoder.encode(member.getPassword());
-        member.encrypt(encodedPassword);
+        member.encrypt(passwordEncoder);
         return memberRepository.save(member);
     }
 
@@ -150,13 +151,13 @@ public class AuthService {
     }
 
     private void validateDuplicateEmail(final String email) {
-        if (memberRepository.existsByEmail(email)) {
+        if (memberRepository.existsByEmail(Email.from(email))) {
             throw new EdonymyeonException(MEMBER_EMAIL_DUPLICATE);
         }
     }
 
     private void validateDuplicateNickname(final String nickname) {
-        if (memberRepository.existsByNickname(nickname)) {
+        if (memberRepository.existsByNickname(Nickname.from(nickname))) {
             throw new EdonymyeonException(MEMBER_NICKNAME_INVALID);
         }
     }

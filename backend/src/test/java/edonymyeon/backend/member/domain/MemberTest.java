@@ -1,14 +1,10 @@
 package edonymyeon.backend.member.domain;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.ENCODED_PASSWORD_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EMAIL_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_NICKNAME_INVALID;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_INVALID;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import edonymyeon.backend.auth.domain.PasswordEncoder;
-import edonymyeon.backend.auth.domain.SimplePasswordEncoder;
-import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import java.util.Collections;
 import java.util.List;
@@ -91,20 +87,10 @@ class MemberTest {
 
     @Test
     void 삭제하면_닉네임은_Unknown() {
-        final Member member = new Member();
+        final Member member = new Member("test@email.com", "password1234!", "nickname", null, Collections.emptyList());
         final String previousNickname = member.getNickname();
         member.withdraw();
         Assertions.assertThat(member.getNickname()).isNotEqualTo(previousNickname);
-    }
-
-    @Test
-    void 비밀번호_암호화시_잘못_암호화된_비밀번호가_들어오면_예외발생() {
-        List<String> emptyList = Collections.emptyList();
-        final Member member = new Member("test@email.com", "password1234!", "nickname", null, emptyList);
-
-        assertThatThrownBy(() -> member.encrypt("이리내바보"))
-                .isInstanceOf(BusinessLogicException.class)
-                .hasMessage(ENCODED_PASSWORD_INVALID.getMessage());
     }
 
     @Test
