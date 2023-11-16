@@ -51,6 +51,7 @@ public class AuthService {
      * @param loginRequest 로그인에 필요한 정보
      * @return 로그인한 사용자의 식별자
      */
+    @Transactional
     public MemberId login(final LoginRequest loginRequest) {
         final Member member = authenticateMember(loginRequest.email(), loginRequest.password());
         publisher.publishEvent(new LoginEvent(member, loginRequest.deviceToken()));
