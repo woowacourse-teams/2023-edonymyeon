@@ -188,7 +188,7 @@ public class MemberService {
 
     @Transactional
     public void deactivateDevice(final String deviceToken) {
-        final Optional<Device> device = deviceRepository.findByDeviceToken(deviceToken);
+        final Optional<Device> device = deviceRepository.findByDeviceTokenAndIsActiveIsTrue(deviceToken);
         device.ifPresent(Device::deactivate);
     }
 }

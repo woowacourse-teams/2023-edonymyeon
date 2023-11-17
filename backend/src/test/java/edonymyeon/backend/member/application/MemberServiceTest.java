@@ -1,7 +1,6 @@
 package edonymyeon.backend.member.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.awaitility.Awaitility.await;
 import static org.mockito.Mockito.any;
@@ -25,6 +24,7 @@ import edonymyeon.backend.support.IntegrationFixture;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -221,5 +221,20 @@ class MemberServiceTest extends IntegrationFixture implements ImageFileCleaner {
                     soft.assertThat(updatedMember.getNickname()).isNotEqualTo(updateRequest.nickname());
                 }
         );
+    }
+
+    @Test
+    @DisplayName("동일한 디바이스 정보가 여러 회원에 걸쳐 존재할 때에도 로그아웃이 정상 동작해야 한다.")
+    void deviceLogoutBug() {
+        // Given : 회원이 새로 가입하여 로그인한 후 로그아웃한다.
+        authService.joinMember(new JoinRequest(("test@gmail.com"), "password123!", "nickname", "sameDevice"));
+        authService.login(new LoginRequest("test@gmail.com", "password123!", "sameDevice"));
+        authService.logout("sameDevice");
+
+        // When : 동일한 디바이스를 가지고 새로운 회원이 가입하여 로그인한 후 로그아웃한다.
+        authService.joinMember(new JoinRequest(("test2@gmail.com"), "password123!", "nickname2", "sameDevice"));
+        authService.login(new LoginRequest("test2@gmail.com", "password123!", "sameDevice"));
+        assertThatCode(() -> authService.logout("sameDevice"))
+                .doesNotThrowAnyException();
     }
 }
