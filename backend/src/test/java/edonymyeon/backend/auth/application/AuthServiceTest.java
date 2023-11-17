@@ -32,6 +32,8 @@ import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.setting.application.SettingService;
 import edonymyeon.backend.support.IntegrationTest;
 import jakarta.persistence.EntityManager;
+
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.SoftAssertions;
@@ -128,11 +130,11 @@ class AuthServiceTest {
         //then
         assertSoftly(
                 softAssertions -> {
-                    final Device originalDevice = deviceRepository.findByDeviceToken(joinRequest.deviceToken()).get();
-                    final Optional<Device> changedDevice = deviceRepository.findByDeviceToken(loginRequest.deviceToken());
-                    assertThat(changedDevice.isPresent()).isTrue();
-                    assertThat(changedDevice.get().isActive()).isTrue();
-                    assertThat(originalDevice.isActive()).isFalse();
+                    final List<Device> originalDevice = deviceRepository.findAllByDeviceToken(joinRequest.deviceToken());
+                    final List<Device> changedDevice = deviceRepository.findAllByDeviceToken(loginRequest.deviceToken());
+                    assertThat(changedDevice).hasSize(1);
+                    assertThat(changedDevice.get(0).isActive()).isTrue();
+                    assertThat(originalDevice.get(0).isActive()).isFalse();
                 }
         );
     }
@@ -150,11 +152,11 @@ class AuthServiceTest {
         //then
         assertSoftly(
                 softAssertions -> {
-                    final Device originalDevice = deviceRepository.findByDeviceToken(originalDeviceToken).get();
-                    final Optional<Device> changedDevice = deviceRepository.findByDeviceToken(changedDeviceToken);
-                    assertThat(changedDevice.isPresent()).isTrue();
-                    assertThat(changedDevice.get().isActive()).isTrue();
-                    assertThat(originalDevice.isActive()).isFalse();
+                    final List<Device> originalDevice = deviceRepository.findAllByDeviceToken(originalDeviceToken);
+                    final List<Device> changedDevice = deviceRepository.findAllByDeviceToken(changedDeviceToken);
+                    assertThat(changedDevice).hasSize(1);
+                    assertThat(changedDevice.get(0).isActive()).isTrue();
+                    assertThat(originalDevice.get(0).isActive()).isFalse();
                 }
         );
     }
