@@ -136,23 +136,22 @@ public class NotificationService {
 
     /**
      * 사용자에게 알림을 전송합니다.
-     * @param notifyingTarget 알림을 전송할 대상
+     * @param member 알림을 전송할 대상
      * @param notifyingType 알림을 클릭했을 때 리다이렉트할 페이지의 종류
      * @param redirectId 알림을 클릭했을 때 리다이렉트할 페이지의 id
      * @param notificationMessage 알림에서 표시할 제목
      */
-    private void sendNotification(final Member notifyingTarget, final ScreenType notifyingType, final Long redirectId,
+    private void sendNotification(final Member member, final ScreenType notifyingType, final Long redirectId,
                                   final NotificationMessage notificationMessage) {
-        if (notifyingTarget.isDeleted()) {
+        if (member.isDeleted()) {
             return;
         }
 
-        final Long notificationId = saveNotification(notifyingTarget, notifyingType, redirectId, notificationMessage);
+        final Long notificationId = saveNotification(member, notifyingType, redirectId, notificationMessage);
 
-        final Optional<String> deviceToken = notifyingTarget.getActiveDeviceToken();
-        deviceToken.ifPresent(token -> {
+        if (member.hasActiveDeviceToken()) {
             final Receiver receiver = new Receiver(
-                    deviceToken.get(),
+                    member.getActiveDeviceToken(),
                     new Data(notificationId, notifyingType, redirectId)
             );
             try {
@@ -163,7 +162,7 @@ public class NotificationService {
             } catch (BusinessLogicException e) {
                 log.error("알림 전송에 실패했습니다.", e);
             }
-        });
+        }
     }
 
     /**

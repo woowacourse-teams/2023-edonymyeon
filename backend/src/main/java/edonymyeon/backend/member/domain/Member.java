@@ -87,10 +87,16 @@ public class Member extends TemporalRecord {
                 socialInfo);
     }
 
-    public Optional<String> getActiveDeviceToken() {
+    public boolean hasActiveDeviceToken() {
         return devices.stream().filter(Device::isActive)
                 .map(Device::getDeviceToken)
-                .findAny();
+                .findAny().isPresent();
+    }
+
+    public String getActiveDeviceToken() {
+        return devices.stream().filter(Device::isActive)
+                .map(Device::getDeviceToken)
+                .findAny().orElseThrow();
     }
 
     public void withdraw() {
