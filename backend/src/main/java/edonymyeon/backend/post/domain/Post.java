@@ -15,7 +15,6 @@ import org.hibernate.annotations.Where;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.*;
 
@@ -206,9 +205,5 @@ public class Post extends TemporalRecord {
 
     public void delete() {
         this.deleted = true;
-    }
-
-    public Optional<String> getDeviceTokenFromWriter() {
-        return Optional.ofNullable(this.member.getActiveDeviceToken());
     }
 }
