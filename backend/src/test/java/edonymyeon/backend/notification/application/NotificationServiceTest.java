@@ -81,7 +81,7 @@ class NotificationServiceTest extends IntegrationFixture {
     void 특정_알림을_사용자가_읽었음을_체크할_수_있다() {
         final var post = postTestSupport.builder().build();
         final var notificationId = notificationRepository.save(
-                        new Notification(post.getMember(), "알림이 도착했어요!", ScreenType.POST, post.getId()))
+                        new Notification(post.getMember().getId(), "알림이 도착했어요!", ScreenType.POST, post.getId()))
                 .getId();
 
         var notification = notificationRepository.findById(notificationId);
@@ -291,7 +291,7 @@ class NotificationServiceTest extends IntegrationFixture {
         final Post post = postTestSupport.builder().member(writer).build();
 
         authService.login(new LoginRequest("test@gmail.com", "password123!",  "testDevice123"));
-        authService.logout(writer.getActiveDeviceToken().orElseGet(() -> fail("활성화된 디바이스 토큰이 존재하지 않음")));
+        authService.logout(writer.getActiveDeviceToken());
 
         commentService.createComment(new ActiveMemberId(commenter.getId()), post.getId(),
                 new CommentRequest(null, "Test Commentary"));

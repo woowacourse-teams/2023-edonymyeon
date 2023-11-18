@@ -209,6 +209,6 @@ public class Post extends TemporalRecord {
     }
 
     public Optional<String> getDeviceTokenFromWriter() {
-        return this.member.getActiveDeviceToken();
+        return Optional.ofNullable(this.member.getActiveDeviceToken());
     }
 }
