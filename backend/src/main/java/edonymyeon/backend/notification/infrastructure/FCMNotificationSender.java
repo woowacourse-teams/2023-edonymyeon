@@ -50,7 +50,7 @@ public class FCMNotificationSender implements NotificationSender {
     @Async
     public void sendNotification(final Receiver receiver, final String title) {
         try {
-            final String requestBody = makeFCMNotificationRequestBody(receiver.getToken(), title, receiver.getData());
+            final String requestBody = makeFCMNotificationRequestBody(receiver.token(), title, receiver.data());
             log.info("FCM 요청 발송 시작 - {}", requestBody);
             final OkHttpClient client = new OkHttpClient();
             final Request request = makeFCMNotificationRequest(requestBody);

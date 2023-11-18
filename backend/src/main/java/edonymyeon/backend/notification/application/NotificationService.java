@@ -150,20 +150,20 @@ public class NotificationService {
         final Long notificationId = saveNotification(notifyingTarget, notifyingType, redirectId, notificationMessage);
 
         final Optional<String> deviceToken = notifyingTarget.getActiveDeviceToken();
-        if (deviceToken.isEmpty()) {
-            return;
-        }
-
-        final Receiver receiver = new Receiver(notifyingTarget,
-                new Data(notificationId, notifyingType, redirectId));
-        try {
-            notificationSender.sendNotification(
-                    receiver,
-                    notificationMessage.getMessage()
+        deviceToken.ifPresent(token -> {
+            final Receiver receiver = new Receiver(
+                    deviceToken.get(),
+                    new Data(notificationId, notifyingType, redirectId)
             );
-        } catch (BusinessLogicException e) {
-            log.error("알림 전송에 실패했습니다.", e);
-        }
+            try {
+                notificationSender.sendNotification(
+                        receiver,
+                        notificationMessage.getMessage()
+                );
+            } catch (BusinessLogicException e) {
+                log.error("알림 전송에 실패했습니다.", e);
+            }
+        });
     }
 
     /**
