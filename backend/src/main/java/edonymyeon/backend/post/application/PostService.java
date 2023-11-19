@@ -15,6 +15,7 @@ import edonymyeon.backend.post.application.event.PostDeletionEvent;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +26,7 @@ import java.util.Objects;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class PostService {
@@ -114,6 +116,7 @@ public class PostService {
             final Long postId,
             final PostModificationRequest request
     ) {
+        log.info("originalImages: {}", request.originalImages());
         final Member member = findMemberById(memberId);
         final Post post = findPostById(postId);
         checkWriter(member, post);
