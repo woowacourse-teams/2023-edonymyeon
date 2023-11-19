@@ -117,7 +117,11 @@ public class PostService {
             final PostModificationRequest request
     ) {
         log.info("originalImages: {}", request.originalImages());
-        log.info("newImages: {}", request.newImages().size());
+        if(request.newImages() != null) {
+            log.info("newImages 개수: {}", request.newImages().size());
+        }else{
+            log.info("newImages 없음");
+        }
         final Member member = findMemberById(memberId);
         final Post post = findPostById(postId);
         checkWriter(member, post);
