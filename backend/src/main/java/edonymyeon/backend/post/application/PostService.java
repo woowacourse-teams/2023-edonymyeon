@@ -117,6 +117,7 @@ public class PostService {
             final PostModificationRequest request
     ) {
         log.info("originalImages: {}", request.originalImages());
+        log.info("originalImages: {}", request.originalImages().size());
         final Member member = findMemberById(memberId);
         final Post post = findPostById(postId);
         checkWriter(member, post);
