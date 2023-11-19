@@ -69,7 +69,7 @@ class PostEditorViewModel @Inject constructor(
             repository.updatePost(
                 id,
                 postEditor,
-                getAbsolutePathFromHttp(uris),
+                images,
                 getFileFromContent(context, uris),
             ).onSuccess {
                 _postId.value = (it as PostEditorResponse).id
