@@ -7,9 +7,11 @@ import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nullable;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Getter
 @Component
 public class UrlManager {
@@ -34,6 +36,7 @@ public class UrlManager {
 
     private void validateDomainOfUrl(final String imageUrl) {
         if (!imageUrl.contains(domain)) {
+            log.info("imageUrl: {}", imageUrl);
             throw new EdonymyeonException(IMAGE_DOMAIN_INVALID);
         }
     }
