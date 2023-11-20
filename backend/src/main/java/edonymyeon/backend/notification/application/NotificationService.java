@@ -136,48 +136,47 @@ public class NotificationService {
 
     /**
      * 사용자에게 알림을 전송합니다.
-     * @param notifyingTarget 알림을 전송할 대상
+     * @param member 알림을 전송할 대상
      * @param notifyingType 알림을 클릭했을 때 리다이렉트할 페이지의 종류
      * @param redirectId 알림을 클릭했을 때 리다이렉트할 페이지의 id
      * @param notificationMessage 알림에서 표시할 제목
      */
-    private void sendNotification(final Member notifyingTarget, final ScreenType notifyingType, final Long redirectId,
+    private void sendNotification(final Member member, final ScreenType notifyingType, final Long redirectId,
                                   final NotificationMessage notificationMessage) {
-        if (notifyingTarget.isDeleted()) {
+        if (member.isDeleted()) {
             return;
         }
 
-        final Long notificationId = saveNotification(notifyingTarget, notifyingType, redirectId, notificationMessage);
+        final Long notificationId = saveNotification(member.getId(), notifyingType, redirectId, notificationMessage);
 
-        final Optional<String> deviceToken = notifyingTarget.getActiveDeviceToken();
-        if (deviceToken.isEmpty()) {
-            return;
-        }
-
-        final Receiver receiver = new Receiver(notifyingTarget,
-                new Data(notificationId, notifyingType, redirectId));
-        try {
-            notificationSender.sendNotification(
-                    receiver,
-                    notificationMessage.getMessage()
+        if (member.hasActiveDeviceToken()) {
+            final Receiver receiver = new Receiver(
+                    member.getActiveDeviceToken(),
+                    new Data(notificationId, notifyingType, redirectId)
             );
-        } catch (BusinessLogicException e) {
-            log.error("알림 전송에 실패했습니다.", e);
+            try {
+                notificationSender.sendNotification(
+                        receiver,
+                        notificationMessage.getMessage()
+                );
+            } catch (BusinessLogicException e) {
+                log.error("알림 전송에 실패했습니다.", e);
+            }
         }
     }
 
     /**
      * 알림 전송 전/후 해당 내용을 저장합니다.
-     * @param notifyingTarget 알림을 전송받은 대상
+     * @param memberId 알림을 전송받은 대상의 식별자
      * @param notifyingType 알림을 클릭했을 때 리다이렉트한 페이지의 종류
      * @param redirectId 알림을 클릭했을 때 리다이렉트한 페이지의 id
      * @param notificationMessage 알림에서 표시한 제목
      * @return 알림 식별자
      */
-    private Long saveNotification(final Member notifyingTarget, final ScreenType notifyingType, final Long redirectId,
+    private Long saveNotification(final Long memberId, final ScreenType notifyingType, final Long redirectId,
                           final NotificationMessage notificationMessage) {
         final Notification notification = new Notification(
-                notifyingTarget,
+                memberId,
                 notificationMessage.getMessage(),
                 notifyingType,
                 redirectId

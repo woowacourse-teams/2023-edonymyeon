@@ -65,7 +65,7 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
         final Member 사용자 = 사용자를_하나_만든다();
         final long 게시글id = 응답의_location헤더에서_id를_추출한다(게시글을_하나_만든다(사용자));
         final Long 알림id = notificationRepository
-                .save(new Notification(사용자, "알림이 등록되었어요!", ScreenType.POST, 게시글id))
+                .save(new Notification(사용자.getId(), "알림이 등록되었어요!", ScreenType.POST, 게시글id))
                 .getId();
 
         var notification = notificationRepository.findById(알림id);

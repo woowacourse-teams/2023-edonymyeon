@@ -102,7 +102,7 @@ class NotificationEventListenerTest extends IntegrationFixture {
                     template.execute(status -> {
                         final List<Notification> notifications = notificationRepository.findAll();
                         assertThat(notifications).hasSize(1);
-                        assertThat(notifications.get(0).getMember()).isEqualTo(writer);
+                        assertThat(notifications.get(0).getMemberId()).isEqualTo(writer.getId());
                         return "";
                     });
                 });
