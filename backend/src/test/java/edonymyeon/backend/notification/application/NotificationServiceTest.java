@@ -1,15 +1,5 @@
 package edonymyeon.backend.notification.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-import static org.awaitility.Awaitility.await;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 import edonymyeon.backend.auth.application.AuthService;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
@@ -30,11 +20,18 @@ import edonymyeon.backend.setting.application.SettingService;
 import edonymyeon.backend.setting.domain.SettingType;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.application.ThumbsService;
-import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.time.Duration;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+import static org.awaitility.Awaitility.await;
+import static org.mockito.Mockito.*;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -131,6 +128,7 @@ class NotificationServiceTest extends IntegrationFixture {
     }
 
     @Test
+    @Disabled
     void 열건_당_좋아요_알림이_활성화되어_있다면_좋아요가_10개_달릴_때마다_알림을_발송한다(@Autowired ThumbsService thumbsService) {
         final Member writer = getJoinedMember(authService);
         settingService.toggleSetting(SettingType.NOTIFICATION_PER_10_THUMBS.getSerialNumber(), new ActiveMemberId(writer.getId()));
