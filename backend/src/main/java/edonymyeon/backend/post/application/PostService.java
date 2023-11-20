@@ -62,7 +62,7 @@ public class PostService {
 
         final PostImageInfos postImageInfos = PostImageInfos.of(post,
                 imageService.saveAll(postRequest.newImages(), ImageType.POST));
-        postImageInfoRepository.saveAll(postImageInfos.getPostImageInfos());
+        postImageInfoRepository.batchSave(postImageInfos.getPostImageInfos(), post.getId());
 
         return new PostIdResponse(post.getId());
     }
@@ -133,8 +133,7 @@ public class PostService {
 
         final List<Long> imageIdsToDelete = post.getImageIdsToDeleteBy(remainedImageNames, imagesToAdd);
         postImageInfoRepository.deleteAllByIds(imageIdsToDelete); //이때 기존 이미지중 삭제되는 것들은 softDelete
-
-        postImageInfoRepository.saveAll(imagesToAdd.getPostImageInfos()); // //새로 추가된 이미지들을 DB에 저장
+        postImageInfoRepository.batchSave(imagesToAdd.getPostImageInfos(), post.getId()); //새로 추가된 이미지들을 DB에 저장
 
         return new PostIdResponse(postId);
     }
