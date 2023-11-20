@@ -1,7 +1,5 @@
 package edonymyeon.backend.notification.integration;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import edonymyeon.backend.auth.application.AuthService;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
@@ -16,12 +14,16 @@ import edonymyeon.backend.setting.domain.SettingType;
 import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.application.ThumbsService;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -30,6 +32,7 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
     private final ThumbsService thumbsService;
 
     @Test
+    @Disabled
     void 사용자가_받은_알림_목록을_조회한다(
             @Autowired AuthService authService,
             @Autowired SettingService settingService

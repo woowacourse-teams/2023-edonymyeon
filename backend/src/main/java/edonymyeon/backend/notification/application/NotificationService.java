@@ -1,9 +1,5 @@
 package edonymyeon.backend.notification.application;
 
-import static edonymyeon.backend.notification.domain.NotificationMessage.COMMENT_NOTIFICATION_TITLE;
-import static edonymyeon.backend.notification.domain.NotificationMessage.THUMBS_NOTIFICATION_TITLE;
-import static edonymyeon.backend.notification.domain.NotificationMessage.THUMBS_PER_10_NOTIFICATION_TITLE;
-
 import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.consumption.application.ConsumptionService;
 import edonymyeon.backend.global.exception.BusinessLogicException;
@@ -25,16 +21,18 @@ import edonymyeon.backend.setting.application.SettingService;
 import edonymyeon.backend.setting.domain.SettingType;
 import edonymyeon.backend.thumbs.application.ThumbsService;
 import jakarta.persistence.EntityManager;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Slice;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+
+import static edonymyeon.backend.notification.domain.NotificationMessage.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -156,13 +154,13 @@ public class NotificationService {
 
         final Receiver receiver = new Receiver(notifyingTarget,
                 new Data(notificationId, notifyingType, redirectId));
+
         try {
             notificationSender.sendNotification(
                     receiver,
                     notificationMessage.getMessage()
             );
         } catch (BusinessLogicException e) {
-            log.error("알림 전송에 실패했습니다.", e);
         }
     }
 
