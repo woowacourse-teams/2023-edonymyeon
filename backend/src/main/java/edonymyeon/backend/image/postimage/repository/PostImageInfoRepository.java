@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface PostImageInfoRepository extends JpaRepository<PostImageInfo, Long> {
+public interface PostImageInfoRepository extends JpaRepository<PostImageInfo, Long>, PostImageInfoCustomRepository {
 
     List<PostImageInfo> findAllByPostId(final Long postId);
 
