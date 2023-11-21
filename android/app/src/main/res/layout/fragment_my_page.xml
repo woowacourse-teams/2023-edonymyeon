@@ -378,11 +378,25 @@
                     android:text="@string/my_page_withdraw"
                     android:textColor="@color/black_000000"
                     android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/tv_open_source_license"
                     app:layout_constraintDimensionRatio="H, 336:48"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_logout"
+                    app:layout_constraintWidth_percent="0.87" />
+
+                <TextView
+                    android:id="@+id/tv_open_source_license"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/my_page_open_source"
+                    android:textColor="@color/black_000000"
+                    android:textSize="14sp"
+                    app:layout_constraintDimensionRatio="H, 336:48"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_withdraw"
                     app:layout_constraintWidth_percent="0.87" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
