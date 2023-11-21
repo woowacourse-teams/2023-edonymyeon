@@ -1,18 +1,5 @@
 package edonymyeon.backend.auth.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.awaitility.Awaitility.await;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
@@ -32,9 +19,6 @@ import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.setting.application.SettingService;
 import edonymyeon.backend.support.IntegrationTest;
 import jakarta.persistence.EntityManager;
-
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -45,7 +29,16 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.test.context.jdbc.Sql;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.Mockito.*;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")
@@ -242,5 +235,19 @@ class AuthServiceTest {
                     verify(imageService, never()).removeImage(any(), any());
                 }
         );
+    }
+
+    @Test
+    void 동일한_디바이스_정보가_여러_회원에_걸쳐_존재할_때에도_로그아웃이_정상_동작해야_한다() {
+        // Given : 회원이 새로 가입하여 로그인한 후 로그아웃한다.
+        authService.joinMember(new JoinRequest(("test@gmail.com"), "password123!", "nickname", "sameDevice"));
+        authService.login(new LoginRequest("test@gmail.com", "password123!", "sameDevice"));
+        authService.logout("sameDevice");
+
+        // When : 동일한 디바이스를 가지고 새로운 회원이 가입하여 로그인한 후 로그아웃한다.
+        authService.joinMember(new JoinRequest(("test2@gmail.com"), "password123!", "nickname2", "sameDevice"));
+        authService.login(new LoginRequest("test2@gmail.com", "password123!", "sameDevice"));
+        assertThatCode(() -> authService.logout("sameDevice"))
+                .doesNotThrowAnyException();
     }
 }
