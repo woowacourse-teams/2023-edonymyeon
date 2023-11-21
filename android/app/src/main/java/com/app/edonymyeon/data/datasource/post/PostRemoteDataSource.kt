@@ -6,12 +6,12 @@ import com.app.edonymyeon.data.dto.response.PostDetailResponse
 import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.data.dto.response.Posts
 import com.app.edonymyeon.data.service.PostService
+import com.app.edonymyeon.data.service.client.calladapter.ApiResponse
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.Response
 import java.io.File
 import javax.inject.Inject
 
@@ -22,22 +22,22 @@ class PostRemoteDataSource @Inject constructor(
     override suspend fun getPostDetail(
         postId: Long,
         notificationId: Long,
-    ): Response<PostDetailResponse> {
+    ): ApiResponse<PostDetailResponse> {
         return postService.getPost(postId, notificationId)
     }
 
-    override suspend fun deletePost(postId: Long): Response<Unit> {
+    override suspend fun deletePost(postId: Long): ApiResponse<Unit> {
         return postService.deletePost(postId)
     }
 
-    override suspend fun getPosts(size: Int, page: Int): Response<Posts> {
+    override suspend fun getPosts(size: Int, page: Int): ApiResponse<Posts> {
         return postService.getPosts(size, page)
     }
 
     override suspend fun savePost(
         postEditorRequest: PostEditorRequest,
         imageFiles: List<File>,
-    ): Response<PostEditorResponse> {
+    ): ApiResponse<PostEditorResponse> {
         val postEditorMap: HashMap<String, RequestBody> = hashMapOf()
         postEditorMap["title"] =
             postEditorRequest.title.createRequestBody()
@@ -55,7 +55,7 @@ class PostRemoteDataSource @Inject constructor(
         postEditorRequest: PostEditorRequest,
         imageUrls: List<String>,
         imageFiles: List<File>,
-    ): Response<PostEditorResponse> {
+    ): ApiResponse<PostEditorResponse> {
         val postEditorMap: HashMap<String, RequestBody> = hashMapOf()
         postEditorMap["title"] =
             postEditorRequest.title.createRequestBody()
@@ -69,15 +69,15 @@ class PostRemoteDataSource @Inject constructor(
         return postService.updatePost(id, postEditorMap, originalImages, newImages)
     }
 
-    override suspend fun getHotPosts(): Response<Posts> {
+    override suspend fun getHotPosts(): ApiResponse<Posts> {
         return postService.getHotPosts()
     }
 
-    override suspend fun getComments(postId: Long): Response<CommentsResponse> {
+    override suspend fun getComments(postId: Long): ApiResponse<CommentsResponse> {
         return postService.getComments(postId)
     }
 
-    override suspend fun postComment(id: Long, image: File?, comment: String): Response<Unit> {
+    override suspend fun postComment(id: Long, image: File?, comment: String): ApiResponse<Unit> {
         val requestFile = image?.asRequestBody("image/*".toMediaTypeOrNull())
         val multipartFile =
             requestFile?.let { MultipartBody.Part.createFormData("image", image.name, it) }
@@ -85,7 +85,7 @@ class PostRemoteDataSource @Inject constructor(
         return postService.postComment(id, if (image == null) null else multipartFile, requestBody)
     }
 
-    override suspend fun deleteComment(postId: Long, commentId: Long): Response<Unit> {
+    override suspend fun deleteComment(postId: Long, commentId: Long): ApiResponse<Unit> {
         return postService.deleteComment(postId, commentId)
     }
 

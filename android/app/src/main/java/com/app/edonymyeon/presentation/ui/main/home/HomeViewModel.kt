@@ -8,6 +8,7 @@ import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.AllPostItemUiModel
 import com.app.edonymyeon.presentation.uimodel.PostItemUiModel
+import com.app.edonymyeon.presentation.util.onFailureWithApiException
 import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,7 +39,7 @@ class HomeViewModel @Inject constructor(
                     post.toAllPostItemUiModel()
                 }
                 _allPostsSuccess.value = true
-            }.onFailure {
+            }.onFailureWithApiException {
                 _allPostsSuccess.value = false
                 throw it
             }
@@ -49,7 +50,7 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             postRepository.getHotPosts().onSuccess { post ->
                 _hotPosts.value = post.posts.map { it.toUiModel() }
-            }.onFailure {
+            }.onFailureWithApiException {
                 throw it
             }
         }

@@ -11,6 +11,7 @@ import com.app.edonymyeon.presentation.uimodel.ConsumptionAmountUiModel
 import com.app.edonymyeon.presentation.uimodel.ConsumptionStatisticsUiModel
 import com.app.edonymyeon.presentation.uimodel.NicknameUiModel
 import com.app.edonymyeon.presentation.uimodel.WriterUiModel
+import com.app.edonymyeon.presentation.util.onFailureWithApiException
 import com.domain.edonymyeon.model.ConsumptionStatistics
 import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.ConsumptionsRepository
@@ -51,7 +52,7 @@ class MyPageViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             profileRepository.getProfile().onSuccess {
                 _profile.value = it.toUiModel()
-            }.onFailure {
+            }.onFailureWithApiException {
                 throw it
             }
         }
@@ -68,7 +69,7 @@ class MyPageViewModel @Inject constructor(
                 it as ConsumptionStatistics
                 _consumptions.value = it.toUiModel()
                 _consumptionOnThisMonth.value = it.consumptionAmounts.last().toUiModel()
-            }.onFailure {
+            }.onFailureWithApiException {
                 throw it
             }
         }
@@ -79,7 +80,7 @@ class MyPageViewModel @Inject constructor(
             viewModelScope.launch(exceptionHandler) {
                 authRepository.logout(it ?: "").onSuccess {
                     _isLogoutSuccess.value = true
-                }.onFailure {
+                }.onFailureWithApiException {
                     throw it
                 }
             }
@@ -89,7 +90,7 @@ class MyPageViewModel @Inject constructor(
     fun withdraw() {
         viewModelScope.launch(exceptionHandler) {
             profileRepository.withdraw()
-                .onFailure {
+                .onFailureWithApiException {
                     throw it
                 }
         }

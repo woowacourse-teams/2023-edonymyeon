@@ -14,6 +14,7 @@ import com.app.edonymyeon.presentation.uimodel.CommentUiModel
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
 import com.app.edonymyeon.presentation.uimodel.ReactionCountUiModel
 import com.app.edonymyeon.presentation.uimodel.RecommendationUiModel
+import com.app.edonymyeon.presentation.util.onFailureWithApiException
 import com.domain.edonymyeon.model.Post
 import com.domain.edonymyeon.model.Recommendation
 import com.domain.edonymyeon.repository.AuthRepository
@@ -95,7 +96,7 @@ class PostDetailViewModel @Inject constructor(
                     _post.value = it.toUiModel()
                     _isPostLoadingSuccess.value = true
                     checkLoadingSuccess()
-                }.onFailure {
+                }.onFailureWithApiException {
                     val customThrowable = it as CustomThrowable
                     when (customThrowable.code) {
                         2000 -> {
@@ -114,7 +115,7 @@ class PostDetailViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             postRepository.deletePost(postId)
                 .onSuccess {}
-                .onFailure {
+                .onFailureWithApiException {
                     throw it
                 }
         }
@@ -127,7 +128,7 @@ class PostDetailViewModel @Inject constructor(
                 .onSuccess {
                     _reportSaveMessage.value = MESSAGE_REPORT_SUCCESS
                 }
-                .onFailure {
+                .onFailureWithApiException {
                     throw it
                 }
         }
@@ -221,7 +222,7 @@ class PostDetailViewModel @Inject constructor(
                 .onSuccess {
                     _isRecommendationRequestDone.value = true
                 }
-                .onFailure {
+                .onFailureWithApiException {
                     _isRecommendationRequestDone.value = true
                     throw it
                 }
@@ -237,7 +238,7 @@ class PostDetailViewModel @Inject constructor(
                 ) ?: ReactionCountUiModel(0, comments.commentCount)
                 _isCommentsLoadingSuccess.value = true
                 checkLoadingSuccess()
-            }.onFailure {
+            }.onFailureWithApiException {
                 _isCommentsLoadingSuccess.value = false
                 throw it
             }
@@ -253,7 +254,7 @@ class PostDetailViewModel @Inject constructor(
             ).onSuccess {
                 getComments(postId)
                 _isCommentSaveSuccess.value = true
-            }.onFailure {
+            }.onFailureWithApiException {
                 _isCommentSaveSuccess.value = false
                 throw it
             }
@@ -267,7 +268,7 @@ class PostDetailViewModel @Inject constructor(
                 commentId,
             ).onSuccess {
                 getComments(postId)
-            }.onFailure {
+            }.onFailureWithApiException {
                 throw it
             }
         }

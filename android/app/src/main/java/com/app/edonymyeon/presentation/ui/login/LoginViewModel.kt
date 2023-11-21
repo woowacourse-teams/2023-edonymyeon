@@ -3,9 +3,9 @@ package com.app.edonymyeon.presentation.ui.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.app.edonymyeon.data.common.CustomThrowable
 import com.app.edonymyeon.data.service.fcm.FCMToken
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
+import com.app.edonymyeon.presentation.util.onFailureWithApiException
 import com.domain.edonymyeon.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -41,7 +41,7 @@ class LoginViewModel @Inject constructor(
                     it ?: "",
                 ).onSuccess {
                     _isSuccess.value = true
-                }.onFailure {
+                }.onFailureWithApiException {
                     _isSuccess.value = false
                     throw it
                 }
@@ -57,9 +57,8 @@ class LoginViewModel @Inject constructor(
                     it.orEmpty(),
                 ).onSuccess {
                     _isSuccess.value = true
-                }.onFailure {
+                }.onFailureWithApiException {
                     _isSuccess.value = false
-                    _errorMessage.postValue((it as CustomThrowable).message)
                     throw it
                 }
             }

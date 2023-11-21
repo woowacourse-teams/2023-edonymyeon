@@ -12,6 +12,7 @@ import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.ui.mypost.dialog.ConsumptionDialog
 import com.app.edonymyeon.presentation.uimodel.PostEditorUiModel
 import com.app.edonymyeon.presentation.uimodel.PostUiModel
+import com.app.edonymyeon.presentation.util.onFailureWithApiException
 import com.domain.edonymyeon.model.PostEditor
 import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.PostRepository
@@ -57,7 +58,7 @@ class PostEditorViewModel @Inject constructor(
                 ),
             ).onSuccess {
                 _postId.value = (it as PostEditorResponse).id
-            }.onFailure {
+            }.onFailureWithApiException {
                 throw it
             }
         }
@@ -73,7 +74,7 @@ class PostEditorViewModel @Inject constructor(
                 getFileFromContent(context, uris),
             ).onSuccess {
                 _postId.value = (it as PostEditorResponse).id
-            }.onFailure {
+            }.onFailureWithApiException {
                 throw it
             }
         }
@@ -97,7 +98,7 @@ class PostEditorViewModel @Inject constructor(
             }
         }.onSuccess {
             _isPostPriceValid.value = true
-        }.onFailure {
+        }.onFailureWithApiException {
             _isPostPriceValid.value = false
         }
     }
