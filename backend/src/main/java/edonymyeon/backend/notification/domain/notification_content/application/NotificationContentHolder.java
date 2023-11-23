@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 알림 메시지의 캐싱 값을 관리하는 저장소입니다.
  */
 @Slf4j
-@Transactional(readOnly = true)
+@Transactional
 @Component
 public class NotificationContentHolder {
 
@@ -46,7 +46,15 @@ public class NotificationContentHolder {
     public NotificationContent findById(NotificationContentId notificationContentId) {
         final NotificationContent notificationContent = holder.get(notificationContentId);
         if (Objects.isNull(notificationContent)) {
-            log.error("저장되거나 캐싱되지 않은 알림 메시지가 있음. : {}", notificationContentId.name());
+            log.warn("{}에 해당하는 알림 메시지가 캐싱되지 않았음. DB에서 조회하는 중", notificationContentId);
+            final Optional<NotificationContent> content = notificationContentRepository.findById(notificationContentId);
+
+            if (content.isPresent()) {
+                holder.put(notificationContentId, content.get());
+                return content.get();
+            }
+
+            log.error("{}에 해당하는 알림 메시지가 DB에 저장되지도 캐싱되지도 않았음. 기본 메시지를 발송", notificationContentId);
             assignDefaultContent(notificationContentId);
             return notificationContentId.getDefaultContent();
         }
