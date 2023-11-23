@@ -182,14 +182,10 @@ public class NotificationService {
                 deviceToken,
                 new Data(notificationId, notifyingType, redirectId)
         );
-        try {
-            notificationSender.sendNotification(
-                    receiver,
-                    notificationMessage.getMessage()
-            );
-        } catch (BusinessLogicException e) {
-            log.error("알림 전송에 실패했습니다.", e);
-        }
+        notificationSender.sendNotification(
+                receiver,
+                notificationMessage.getMessage()
+        );
     }
 
     /**
