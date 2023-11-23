@@ -1,4 +1,4 @@
-package edonymyeon.backend.logging;
+package edonymyeon.backend.global.logging;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

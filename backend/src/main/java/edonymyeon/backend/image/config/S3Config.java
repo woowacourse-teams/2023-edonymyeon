@@ -1,4 +1,4 @@
-package edonymyeon.backend.global.config;
+package edonymyeon.backend.image.config;
 
 import static software.amazon.awssdk.regions.Region.AP_NORTHEAST_2;
 

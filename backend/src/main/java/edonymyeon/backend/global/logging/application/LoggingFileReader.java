@@ -1,4 +1,4 @@
-package edonymyeon.backend.logging.application;
+package edonymyeon.backend.global.logging.application;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

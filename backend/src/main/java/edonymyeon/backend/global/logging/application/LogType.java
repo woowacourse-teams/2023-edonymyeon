@@ -1,4 +1,4 @@
-package edonymyeon.backend.logging.application;
+package edonymyeon.backend.global.logging.application;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

@@ -1,6 +1,6 @@
-package edonymyeon.backend.logging.application;
+package edonymyeon.backend.global.logging.application;
 
-import edonymyeon.backend.logging.ui.dto.LoggingResponse;
+import edonymyeon.backend.global.logging.ui.dto.LoggingResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

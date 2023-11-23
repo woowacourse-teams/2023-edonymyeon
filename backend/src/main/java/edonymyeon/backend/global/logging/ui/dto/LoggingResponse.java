@@ -1,4 +1,4 @@
-package edonymyeon.backend.logging.ui.dto;
+package edonymyeon.backend.global.logging.ui.dto;
 
 import java.util.List;
 import java.util.Map;

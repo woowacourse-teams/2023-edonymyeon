@@ -3,7 +3,9 @@ package edonymyeon.backend.logging.application;
 import static org.assertj.core.api.SoftAssertions.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edonymyeon.backend.logging.ui.dto.LoggingResponse;
+import edonymyeon.backend.global.logging.application.LoggingFileReader;
+import edonymyeon.backend.global.logging.application.LoggingService;
+import edonymyeon.backend.global.logging.ui.dto.LoggingResponse;
 import java.nio.file.Paths;
 import org.junit.jupiter.api.Test;
 

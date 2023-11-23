@@ -1,6 +1,6 @@
-package edonymyeon.backend.global.config;
+package edonymyeon.backend.notification.config;
 
-import edonymyeon.backend.global.logging.LoggingInterceptor;
+import edonymyeon.backend.notification.ui.NotificationInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -8,11 +8,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @RequiredArgsConstructor
 @Configuration
-public class WebMvcConfiguration implements WebMvcConfigurer {
+public class WebMvcNotificationConfiguration implements WebMvcConfigurer {
+
+    private final NotificationInterceptor notificationInterceptor;
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
-        registry.addInterceptor(new LoggingInterceptor())
+        registry.addInterceptor(notificationInterceptor)
                 .addPathPatterns("/**");
     }
 }
