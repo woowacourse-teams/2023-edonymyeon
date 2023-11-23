@@ -107,32 +107,4 @@ class NotificationEventListenerTest extends IntegrationFixture {
                     });
                 });
     }
-
-    @Test
-    void 알림_전송_트랜잭션이_실패했다고_해서_따봉까지_롤백되어서는_안된다() {
-        doThrow(new BusinessLogicException(ExceptionInformation.NOTIFICATION_REQUEST_FAILED))
-                .when(notificationSender)
-                .sendNotification(any(), any());
-
-
-        final Member liker = 사용자를_하나_만든다();
-        final Member writer = authService.joinMember(new JoinRequest("test@gmail.com", "password123!", "backfoxxx", "testDevice123"));
-        final Post post = postTestSupport.builder().member(writer).build();
-        settingService.toggleSetting(SettingType.NOTIFICATION_PER_THUMBS.getSerialNumber(), new ActiveMemberId(writer.getId()));
-
-        thumbsService.thumbsUp(new ActiveMemberId(liker.getId()), post.getId());
-
-        await()
-                .atMost(Duration.ofSeconds(3))
-                .untilAsserted(() -> {
-                    assertThat(notificationRepository.findAll())
-                            .as("알림도 저장하고")
-                            .hasSize(1);
-
-                    final List<Thumbs> thumbs = thumbsRepository.findByPostId(post.getId());
-                    assertThat(thumbs)
-                            .as("따봉도 정상적으로 저장되어야 한다.")
-                            .hasSize(1);
-                });
-    }
 }

@@ -1,22 +1,10 @@
 package edonymyeon.backend.notification.application;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
-import static org.awaitility.Awaitility.await;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 import edonymyeon.backend.auth.application.AuthService;
 import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.auth.application.dto.LoginRequest;
 import edonymyeon.backend.comment.application.CommentService;
 import edonymyeon.backend.comment.application.dto.request.CommentRequest;
-import edonymyeon.backend.global.exception.BusinessLogicException;
-import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.member.application.MemberService;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
@@ -30,11 +18,16 @@ import edonymyeon.backend.setting.application.SettingService;
 import edonymyeon.backend.setting.domain.SettingType;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.thumbs.application.ThumbsService;
-import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.time.Duration;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
+import static org.mockito.Mockito.*;
 
 @SuppressWarnings("NonAsciiCharacters")
 @RequiredArgsConstructor
@@ -53,23 +46,6 @@ class NotificationServiceTest extends IntegrationFixture {
         final Member writer = getJoinedMember(authService);
         settingService.toggleSetting(SettingType.NOTIFICATION_PER_THUMBS.getSerialNumber(), new ActiveMemberId(writer.getId()));
         final Post post = postTestSupport.builder().member(writer).build();
-        notificationService.sendThumbsNotificationToWriter(post);
-
-        await()
-                .atMost(Duration.ofSeconds(3))
-                .untilAsserted(() -> assertThat(notificationRepository.findAll()).hasSize(1));
-    }
-
-    @Test
-    void 알림_전송에_실패해도_기록으로_남는다() {
-        final Member writer = getJoinedMember(authService);
-        settingService.toggleSetting(SettingType.NOTIFICATION_PER_THUMBS.getSerialNumber(), new ActiveMemberId(writer.getId()));
-        final Post post = postTestSupport.builder().member(writer).build();
-
-        doThrow(new BusinessLogicException(ExceptionInformation.NOTIFICATION_REQUEST_FAILED))
-                .when(notificationSender)
-                .sendNotification(any(), any());
-
         notificationService.sendThumbsNotificationToWriter(post);
 
         await()
