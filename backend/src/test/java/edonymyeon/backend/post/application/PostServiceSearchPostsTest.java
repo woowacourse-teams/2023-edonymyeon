@@ -3,7 +3,9 @@ package edonymyeon.backend.post.application;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.content.post.application.GeneralFindingCondition;
+import edonymyeon.backend.content.post.application.PostReadService;
+import edonymyeon.backend.membber.member.domain.Member;
 import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.PostTestSupport;

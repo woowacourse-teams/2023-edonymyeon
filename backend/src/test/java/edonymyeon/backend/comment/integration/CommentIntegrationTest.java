@@ -8,9 +8,9 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.image.domain.ImageType;
-import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.membber.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
-import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.content.post.domain.Post;
 import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

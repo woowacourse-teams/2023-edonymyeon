@@ -4,10 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
 import edonymyeon.backend.global.exception.ExceptionInformation;
-import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
-import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.membber.member.application.dto.request.PurchaseConfirmRequest;
+import edonymyeon.backend.membber.member.application.dto.request.SavingConfirmRequest;
+import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.content.post.domain.Post;
 import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

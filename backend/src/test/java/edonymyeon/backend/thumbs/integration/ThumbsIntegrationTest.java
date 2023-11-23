@@ -3,12 +3,12 @@ package edonymyeon.backend.thumbs.integration;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.member.application.dto.ActiveMemberId;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.post.application.PostService;
-import edonymyeon.backend.post.application.dto.request.PostRequest;
-import edonymyeon.backend.post.application.dto.response.PostIdResponse;
+import edonymyeon.backend.membber.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.membber.member.repository.MemberRepository;
+import edonymyeon.backend.content.post.application.PostService;
+import edonymyeon.backend.content.post.application.dto.request.PostRequest;
+import edonymyeon.backend.content.post.application.dto.response.PostIdResponse;
 import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.response.ExtractableResponse;

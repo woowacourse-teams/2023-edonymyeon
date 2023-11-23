@@ -3,9 +3,10 @@ package edonymyeon.backend.auth.application;
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_IS_DELETED;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import edonymyeon.backend.auth.application.dto.LoginRequest;
+import edonymyeon.backend.membber.auth.application.AuthService;
+import edonymyeon.backend.membber.auth.application.dto.LoginRequest;
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.membber.member.domain.Member;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.TestMemberBuilder;
 import lombok.RequiredArgsConstructor;

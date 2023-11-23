@@ -1,19 +1,19 @@
 package edonymyeon.backend.notification.integration;
 
-import edonymyeon.backend.auth.application.AuthService;
-import edonymyeon.backend.auth.application.dto.JoinRequest;
-import edonymyeon.backend.member.application.dto.ActiveMemberId;
-import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.membber.auth.application.AuthService;
+import edonymyeon.backend.membber.auth.application.dto.JoinRequest;
+import edonymyeon.backend.membber.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.membber.member.domain.Member;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
-import edonymyeon.backend.post.application.PostSlice;
-import edonymyeon.backend.setting.application.SettingService;
-import edonymyeon.backend.setting.domain.SettingType;
+import edonymyeon.backend.content.post.application.PostSlice;
+import edonymyeon.backend.membber.setting.application.SettingService;
+import edonymyeon.backend.membber.setting.domain.SettingType;
 import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
-import edonymyeon.backend.thumbs.application.ThumbsService;
+import edonymyeon.backend.content.thumbs.application.ThumbsService;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;

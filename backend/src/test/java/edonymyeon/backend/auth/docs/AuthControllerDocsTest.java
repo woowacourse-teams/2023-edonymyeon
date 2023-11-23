@@ -15,14 +15,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edonymyeon.backend.auth.application.AuthService;
-import edonymyeon.backend.auth.application.KakaoAuthResponseProvider;
-import edonymyeon.backend.member.application.dto.response.DuplicateCheckResponse;
-import edonymyeon.backend.auth.application.dto.JoinRequest;
-import edonymyeon.backend.auth.application.dto.KakaoLoginRequest;
-import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
-import edonymyeon.backend.auth.application.dto.LoginRequest;
-import edonymyeon.backend.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.membber.auth.application.AuthService;
+import edonymyeon.backend.membber.auth.application.KakaoAuthResponseProvider;
+import edonymyeon.backend.membber.member.application.dto.response.DuplicateCheckResponse;
+import edonymyeon.backend.membber.auth.application.dto.JoinRequest;
+import edonymyeon.backend.membber.auth.application.dto.KakaoLoginRequest;
+import edonymyeon.backend.membber.auth.application.dto.KakaoLoginResponse;
+import edonymyeon.backend.membber.auth.application.dto.LoginRequest;
+import edonymyeon.backend.membber.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.support.DocsTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;

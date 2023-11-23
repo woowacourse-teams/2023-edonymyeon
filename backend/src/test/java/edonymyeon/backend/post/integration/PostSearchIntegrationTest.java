@@ -1,10 +1,9 @@
 package edonymyeon.backend.post.integration;
 
 import edonymyeon.backend.global.exception.ExceptionInformation;
-import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.membber.member.domain.Member;
 import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeEach;

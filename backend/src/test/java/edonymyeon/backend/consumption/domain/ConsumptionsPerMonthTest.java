@@ -1,7 +1,7 @@
 package edonymyeon.backend.consumption.domain;
 
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.content.post.domain.Post;
 import edonymyeon.backend.support.TestMemberBuilder;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayNameGeneration;

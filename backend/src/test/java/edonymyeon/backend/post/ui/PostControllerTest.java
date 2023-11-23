@@ -1,15 +1,15 @@
 package edonymyeon.backend.post.ui;
 
-import static edonymyeon.backend.auth.ui.SessionConst.USER;
+import static edonymyeon.backend.membber.auth.ui.SessionConst.USER;
 import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
-import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.membber.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
-import edonymyeon.backend.post.application.dto.response.PostIdResponse;
+import edonymyeon.backend.content.post.application.dto.response.PostIdResponse;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.TestMemberBuilder;
 import java.io.IOException;

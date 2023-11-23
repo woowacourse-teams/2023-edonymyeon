@@ -2,15 +2,16 @@ package edonymyeon.backend.post.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import edonymyeon.backend.content.post.application.PostReadService;
 import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.TestConfig;
-import edonymyeon.backend.member.application.dto.ActiveMemberId;
-import edonymyeon.backend.member.application.dto.AnonymousMemberId;
-import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.membber.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.membber.member.application.dto.AnonymousMemberId;
+import edonymyeon.backend.membber.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
-import edonymyeon.backend.post.domain.Post;
-import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.content.post.domain.Post;
+import edonymyeon.backend.content.post.repository.PostRepository;
 import edonymyeon.backend.support.PostTestSupport;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;

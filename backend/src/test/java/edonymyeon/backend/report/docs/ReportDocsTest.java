@@ -1,6 +1,6 @@
 package edonymyeon.backend.report.docs;
 
-import static edonymyeon.backend.auth.ui.SessionConst.USER;
+import static edonymyeon.backend.membber.auth.ui.SessionConst.USER;
 import static edonymyeon.backend.report.domain.ReportType.POST;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -12,13 +12,13 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edonymyeon.backend.image.postimage.domain.PostImageInfos;
-import edonymyeon.backend.member.domain.Email;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.content.post.postimage.domain.PostImageInfos;
+import edonymyeon.backend.membber.member.domain.Email;
+import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.membber.member.repository.MemberRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
-import edonymyeon.backend.post.domain.Post;
-import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.content.post.domain.Post;
+import edonymyeon.backend.content.post.repository.PostRepository;
 import edonymyeon.backend.report.application.ReportRepository;
 import edonymyeon.backend.report.application.ReportRequest;
 import edonymyeon.backend.report.domain.AbusingType;

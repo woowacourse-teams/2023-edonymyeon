@@ -1,11 +1,12 @@
 package edonymyeon.backend.post.repository;
 
-import edonymyeon.backend.member.application.dto.AnonymousMemberId;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.application.HotFindingCondition;
-import edonymyeon.backend.post.application.PostReadService;
-import edonymyeon.backend.post.domain.HotPostPolicy;
-import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.content.post.repository.PostRepository;
+import edonymyeon.backend.membber.member.application.dto.AnonymousMemberId;
+import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.content.post.application.HotFindingCondition;
+import edonymyeon.backend.content.post.application.PostReadService;
+import edonymyeon.backend.content.post.domain.HotPostPolicy;
+import edonymyeon.backend.content.post.domain.Post;
 import edonymyeon.backend.support.*;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;

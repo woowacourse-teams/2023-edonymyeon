@@ -1,11 +1,12 @@
 package edonymyeon.backend.member.domain;
 
 import static edonymyeon.backend.global.exception.ExceptionInformation.*;
-import static edonymyeon.backend.member.domain.SocialInfo.SocialType;
+import static edonymyeon.backend.membber.member.domain.SocialInfo.SocialType;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.membber.member.domain.Nickname;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.Test;

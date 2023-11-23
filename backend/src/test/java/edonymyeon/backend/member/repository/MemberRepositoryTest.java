@@ -2,11 +2,12 @@ package edonymyeon.backend.member.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edonymyeon.backend.member.application.MemberConsumptionService;
-import edonymyeon.backend.member.application.dto.ActiveMemberId;
-import edonymyeon.backend.member.application.dto.YearMonthDto;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.membber.member.application.MemberConsumptionService;
+import edonymyeon.backend.membber.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.membber.member.application.dto.YearMonthDto;
+import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.membber.member.repository.MemberRepository;
+import edonymyeon.backend.content.post.domain.Post;
 import edonymyeon.backend.support.IntegrationFixture;
 import jakarta.persistence.EntityManager;
 import java.time.LocalDateTime;

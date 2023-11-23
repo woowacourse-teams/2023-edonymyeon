@@ -1,6 +1,6 @@
 package edonymyeon.backend.comment.docs;
 
-import static edonymyeon.backend.auth.ui.SessionConst.USER;
+import static edonymyeon.backend.membber.auth.ui.SessionConst.USER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doNothing;
@@ -21,11 +21,11 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import edonymyeon.backend.comment.application.CommentService;
-import edonymyeon.backend.comment.application.dto.response.CommentDto;
-import edonymyeon.backend.comment.application.dto.response.CommentsResponse;
-import edonymyeon.backend.comment.application.dto.response.WriterDto;
-import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.content.comment.application.CommentService;
+import edonymyeon.backend.content.comment.application.dto.response.CommentDto;
+import edonymyeon.backend.content.comment.application.dto.response.CommentsResponse;
+import edonymyeon.backend.content.comment.application.dto.response.WriterDto;
+import edonymyeon.backend.membber.member.domain.Member;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.TestMemberBuilder;
 import jakarta.servlet.http.Part;

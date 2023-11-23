@@ -3,7 +3,7 @@ package edonymyeon.backend.support;
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.domain.ConsumptionType;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
-import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.content.post.domain.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -1,8 +1,8 @@
 package edonymyeon.backend.support;
 
-import edonymyeon.backend.image.postimage.domain.PostImageInfo;
-import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
-import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.content.post.postimage.domain.PostImageInfo;
+import edonymyeon.backend.content.post.postimage.repository.PostImageInfoRepository;
+import edonymyeon.backend.content.post.domain.Post;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

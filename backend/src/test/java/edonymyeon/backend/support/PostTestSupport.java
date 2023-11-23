@@ -1,8 +1,8 @@
 package edonymyeon.backend.support;
 
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.domain.Post;
-import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.content.post.domain.Post;
+import edonymyeon.backend.content.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

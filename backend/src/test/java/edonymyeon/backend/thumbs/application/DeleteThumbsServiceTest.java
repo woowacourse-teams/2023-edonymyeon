@@ -6,17 +6,18 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP
 import static edonymyeon.backend.global.exception.ExceptionInformation.THUMBS_UP_IS_NOT_EXIST;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
+import edonymyeon.backend.content.thumbs.application.ThumbsService;
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.member.application.dto.ActiveMemberId;
-import edonymyeon.backend.member.application.dto.MemberId;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.post.application.PostService;
-import edonymyeon.backend.post.application.dto.request.PostRequest;
-import edonymyeon.backend.post.application.dto.response.PostIdResponse;
+import edonymyeon.backend.membber.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.membber.member.application.dto.MemberId;
+import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.membber.member.repository.MemberRepository;
+import edonymyeon.backend.content.post.application.PostService;
+import edonymyeon.backend.content.post.application.dto.request.PostRequest;
+import edonymyeon.backend.content.post.application.dto.response.PostIdResponse;
 import edonymyeon.backend.support.IntegrationFixture;
-import edonymyeon.backend.thumbs.domain.Thumbs;
-import edonymyeon.backend.thumbs.repository.ThumbsRepository;
+import edonymyeon.backend.content.thumbs.domain.Thumbs;
+import edonymyeon.backend.content.thumbs.repository.ThumbsRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;

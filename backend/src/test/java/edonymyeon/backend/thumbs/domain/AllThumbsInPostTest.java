@@ -1,15 +1,17 @@
 package edonymyeon.backend.thumbs.domain;
 
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.content.thumbs.domain.AllThumbsInPost;
+import edonymyeon.backend.content.thumbs.domain.Thumbs;
+import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.content.post.domain.Post;
 import edonymyeon.backend.support.TestMemberBuilder;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.List;
 
-import static edonymyeon.backend.thumbs.domain.ThumbsType.DOWN;
-import static edonymyeon.backend.thumbs.domain.ThumbsType.UP;
+import static edonymyeon.backend.content.thumbs.domain.ThumbsType.DOWN;
+import static edonymyeon.backend.content.thumbs.domain.ThumbsType.UP;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @SuppressWarnings("NonAsciiCharacters")

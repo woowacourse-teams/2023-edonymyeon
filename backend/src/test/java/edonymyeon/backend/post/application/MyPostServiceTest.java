@@ -1,14 +1,17 @@
 package edonymyeon.backend.post.application;
 
 import edonymyeon.backend.consumption.domain.Consumption;
+import edonymyeon.backend.content.post.application.GeneralFindingCondition;
+import edonymyeon.backend.content.post.application.MyPostService;
+import edonymyeon.backend.content.post.application.PostConsumptionService;
 import edonymyeon.backend.image.application.ImageService;
 import edonymyeon.backend.image.domain.ImageType;
-import edonymyeon.backend.member.application.dto.ActiveMemberId;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.application.dto.response.MyPostResponse;
-import edonymyeon.backend.post.application.dto.response.PostConsumptionResponse;
-import edonymyeon.backend.post.domain.Post;
-import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.membber.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.content.post.application.dto.response.MyPostResponse;
+import edonymyeon.backend.content.post.application.dto.response.PostConsumptionResponse;
+import edonymyeon.backend.content.post.domain.Post;
+import edonymyeon.backend.content.post.repository.PostRepository;
 import edonymyeon.backend.support.TestMemberBuilder;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;

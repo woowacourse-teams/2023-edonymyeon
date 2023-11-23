@@ -1,6 +1,6 @@
 package edonymyeon.backend.setting.docs;
 
-import static edonymyeon.backend.auth.ui.SessionConst.USER;
+import static edonymyeon.backend.membber.auth.ui.SessionConst.USER;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -13,13 +13,13 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edonymyeon.backend.member.application.dto.ActiveMemberId;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.setting.application.SettingService;
-import edonymyeon.backend.setting.application.dto.SettingRequest;
-import edonymyeon.backend.setting.application.dto.SettingResponse;
-import edonymyeon.backend.setting.application.dto.SettingsResponse;
-import edonymyeon.backend.setting.domain.SettingType;
+import edonymyeon.backend.membber.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.membber.setting.application.SettingService;
+import edonymyeon.backend.membber.setting.application.dto.SettingRequest;
+import edonymyeon.backend.membber.setting.application.dto.SettingResponse;
+import edonymyeon.backend.membber.setting.application.dto.SettingsResponse;
+import edonymyeon.backend.membber.setting.domain.SettingType;
 import edonymyeon.backend.support.DocsTest;
 import edonymyeon.backend.support.TestMemberBuilder;
 import java.util.List;

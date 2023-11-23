@@ -1,11 +1,11 @@
 package edonymyeon.backend.support;
 
-import edonymyeon.backend.auth.domain.SimplePasswordEncoder;
-import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
-import edonymyeon.backend.member.domain.Device;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.domain.SocialInfo;
-import edonymyeon.backend.member.repository.MemberRepository;
+import edonymyeon.backend.membber.auth.domain.SimplePasswordEncoder;
+import edonymyeon.backend.membber.member.profileimage.domain.ProfileImageInfo;
+import edonymyeon.backend.membber.member.domain.Device;
+import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.membber.member.domain.SocialInfo;
+import edonymyeon.backend.membber.member.repository.MemberRepository;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Objects;

@@ -2,13 +2,12 @@ package edonymyeon.backend.report.ui;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edonymyeon.backend.comment.domain.Comment;
-import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.content.comment.domain.Comment;
+import edonymyeon.backend.membber.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.report.application.ReportRequest;
 import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;

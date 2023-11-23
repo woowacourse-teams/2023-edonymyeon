@@ -8,7 +8,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.CONSUMPTI
 
 import edonymyeon.backend.global.domain.TemporalRecord;
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.content.post.domain.Post;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -25,8 +25,6 @@ import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 @EqualsAndHashCode(of = {"id"}, callSuper = false)
 @Getter

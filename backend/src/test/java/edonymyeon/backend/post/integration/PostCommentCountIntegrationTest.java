@@ -1,15 +1,14 @@
 package edonymyeon.backend.post.integration;
 
 import edonymyeon.backend.CacheConfig;
-import edonymyeon.backend.cache.repository.HotPostsRepository;
-import edonymyeon.backend.cache.util.HotPostCachePolicy;
-import edonymyeon.backend.comment.domain.Comment;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.application.HotFindingCondition;
-import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.content.cache.repository.HotPostsRepository;
+import edonymyeon.backend.content.cache.util.HotPostCachePolicy;
+import edonymyeon.backend.content.comment.domain.Comment;
+import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.content.post.application.HotFindingCondition;
+import edonymyeon.backend.content.post.domain.Post;
 import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
-import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

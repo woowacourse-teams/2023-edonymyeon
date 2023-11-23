@@ -1,12 +1,12 @@
 package edonymyeon.backend.support;
 
-import edonymyeon.backend.comment.domain.Comment;
-import edonymyeon.backend.comment.repository.CommentRepository;
-import edonymyeon.backend.image.commentimage.domain.CommentImageInfo;
-import edonymyeon.backend.image.commentimage.repository.CommentImageInfoRepository;
+import edonymyeon.backend.content.comment.domain.Comment;
+import edonymyeon.backend.content.comment.repository.CommentRepository;
+import edonymyeon.backend.content.comment.commentimage.domain.CommentImageInfo;
+import edonymyeon.backend.content.comment.commentimage.repository.CommentImageInfoRepository;
 import edonymyeon.backend.image.domain.ImageInfo;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.content.post.domain.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

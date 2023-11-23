@@ -1,10 +1,10 @@
 package edonymyeon.backend.consumption.ui;
 
-import edonymyeon.backend.auth.annotation.AuthPrincipal;
+import edonymyeon.backend.membber.auth.annotation.AuthPrincipal;
 import edonymyeon.backend.consumption.application.ConsumptionService;
 import edonymyeon.backend.consumption.application.dto.RecentConsumptionsResponse;
 import edonymyeon.backend.global.version.ApiVersion;
-import edonymyeon.backend.member.application.dto.MemberId;
+import edonymyeon.backend.membber.member.application.dto.MemberId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

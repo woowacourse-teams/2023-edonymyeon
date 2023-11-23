@@ -2,15 +2,13 @@ package edonymyeon.backend.comment.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import edonymyeon.backend.comment.domain.Comment;
-import edonymyeon.backend.comment.repository.CommentRepository;
-import edonymyeon.backend.image.commentimage.domain.CommentImageInfo;
-import edonymyeon.backend.member.application.dto.ActiveMemberId;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.application.PostService;
-import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.content.comment.application.CommentService;
+import edonymyeon.backend.content.comment.domain.Comment;
+import edonymyeon.backend.content.comment.repository.CommentRepository;
+import edonymyeon.backend.membber.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.content.post.domain.Post;
 import edonymyeon.backend.support.IntegrationFixture;
-import jakarta.persistence.EntityManager;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;

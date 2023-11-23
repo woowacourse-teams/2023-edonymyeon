@@ -1,17 +1,20 @@
 package edonymyeon.backend.post.application;
 
+import edonymyeon.backend.content.post.application.GeneralFindingCondition;
+import edonymyeon.backend.content.post.application.PostReadService;
+import edonymyeon.backend.content.post.application.PostService;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.TestConfig;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
-import edonymyeon.backend.image.postimage.repository.PostImageInfoRepository;
-import edonymyeon.backend.member.application.dto.ActiveMemberId;
-import edonymyeon.backend.member.application.dto.MemberId;
+import edonymyeon.backend.content.post.postimage.repository.PostImageInfoRepository;
+import edonymyeon.backend.membber.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.membber.member.application.dto.MemberId;
 import edonymyeon.backend.post.ImageFileCleaner;
-import edonymyeon.backend.post.application.dto.response.GeneralPostInfoResponse;
-import edonymyeon.backend.post.application.dto.request.PostRequest;
-import edonymyeon.backend.post.application.dto.response.PostIdResponse;
-import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.content.post.application.dto.response.GeneralPostInfoResponse;
+import edonymyeon.backend.content.post.application.dto.request.PostRequest;
+import edonymyeon.backend.content.post.application.dto.response.PostIdResponse;
+import edonymyeon.backend.content.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

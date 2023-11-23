@@ -4,6 +4,8 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_EM
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.membber.member.domain.Email;
+import edonymyeon.backend.membber.member.domain.SocialInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

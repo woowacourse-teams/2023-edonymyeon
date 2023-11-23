@@ -1,6 +1,6 @@
 package edonymyeon.backend.thumbs.docs;
 
-import static edonymyeon.backend.auth.ui.SessionConst.USER;
+import static edonymyeon.backend.membber.auth.ui.SessionConst.USER;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
@@ -9,16 +9,16 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import edonymyeon.backend.member.domain.Email;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.post.domain.Post;
-import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.membber.member.domain.Email;
+import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.membber.member.repository.MemberRepository;
+import edonymyeon.backend.content.post.domain.Post;
+import edonymyeon.backend.content.post.repository.PostRepository;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.TestMemberBuilder;
-import edonymyeon.backend.thumbs.domain.Thumbs;
-import edonymyeon.backend.thumbs.domain.ThumbsType;
-import edonymyeon.backend.thumbs.repository.ThumbsRepository;
+import edonymyeon.backend.content.thumbs.domain.Thumbs;
+import edonymyeon.backend.content.thumbs.domain.ThumbsType;
+import edonymyeon.backend.content.thumbs.repository.ThumbsRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;

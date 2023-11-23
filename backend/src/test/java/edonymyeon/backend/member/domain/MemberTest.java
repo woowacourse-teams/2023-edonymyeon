@@ -6,6 +6,7 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PA
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.membber.member.domain.Member;
 import java.util.Collections;
 import java.util.List;
 import org.assertj.core.api.Assertions;

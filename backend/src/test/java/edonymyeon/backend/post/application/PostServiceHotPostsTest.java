@@ -1,12 +1,15 @@
 package edonymyeon.backend.post.application;
 
 import edonymyeon.backend.CacheConfig;
-import edonymyeon.backend.cache.application.PostCachingService;
-import edonymyeon.backend.cache.repository.HotPostsRepository;
-import edonymyeon.backend.cache.util.HotPostCachePolicy;
-import edonymyeon.backend.post.application.dto.response.GeneralPostInfoResponse;
-import edonymyeon.backend.post.domain.Post;
-import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.content.cache.application.PostCachingService;
+import edonymyeon.backend.content.cache.repository.HotPostsRepository;
+import edonymyeon.backend.content.cache.util.HotPostCachePolicy;
+import edonymyeon.backend.content.post.application.HotFindingCondition;
+import edonymyeon.backend.content.post.application.PostReadService;
+import edonymyeon.backend.content.post.application.PostSlice;
+import edonymyeon.backend.content.post.application.dto.response.GeneralPostInfoResponse;
+import edonymyeon.backend.content.post.domain.Post;
+import edonymyeon.backend.content.post.repository.PostRepository;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.PostTestSupport;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,8 @@
 package edonymyeon.backend.post.repository;
 
-import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.content.post.domain.Post;
+import edonymyeon.backend.content.post.repository.PostRepository;
+import edonymyeon.backend.content.post.repository.PostSpecification;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.support.PostTestSupport;
 import lombok.RequiredArgsConstructor;

@@ -1,17 +1,17 @@
 package edonymyeon.backend.post.integration;
 
 import edonymyeon.backend.CacheConfig;
-import edonymyeon.backend.cache.repository.HotPostsRepository;
-import edonymyeon.backend.cache.util.HotPostCachePolicy;
-import edonymyeon.backend.member.application.dto.ActiveMemberId;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.application.HotFindingCondition;
-import edonymyeon.backend.post.application.PostReadService;
-import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.content.cache.repository.HotPostsRepository;
+import edonymyeon.backend.content.cache.util.HotPostCachePolicy;
+import edonymyeon.backend.membber.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.content.post.application.HotFindingCondition;
+import edonymyeon.backend.content.post.application.PostReadService;
+import edonymyeon.backend.content.post.domain.Post;
 import edonymyeon.backend.support.IntegrationFixture;
-import edonymyeon.backend.thumbs.domain.Thumbs;
-import edonymyeon.backend.thumbs.domain.ThumbsType;
-import edonymyeon.backend.thumbs.repository.ThumbsRepository;
+import edonymyeon.backend.content.thumbs.domain.Thumbs;
+import edonymyeon.backend.content.thumbs.domain.ThumbsType;
+import edonymyeon.backend.content.thumbs.repository.ThumbsRepository;
 import io.restassured.path.json.JsonPath;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;

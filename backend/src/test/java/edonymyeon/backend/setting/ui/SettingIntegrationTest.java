@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.fail;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edonymyeon.backend.auth.application.AuthService;
-import edonymyeon.backend.auth.application.dto.JoinRequest;
-import edonymyeon.backend.setting.application.dto.SettingRequest;
-import edonymyeon.backend.setting.domain.SettingType;
+import edonymyeon.backend.membber.auth.application.AuthService;
+import edonymyeon.backend.membber.auth.application.dto.JoinRequest;
+import edonymyeon.backend.membber.setting.application.dto.SettingRequest;
+import edonymyeon.backend.membber.setting.domain.SettingType;
 import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.response.ExtractableResponse;

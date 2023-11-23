@@ -13,23 +13,24 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import edonymyeon.backend.auth.application.dto.JoinRequest;
-import edonymyeon.backend.auth.application.dto.KakaoLoginResponse;
-import edonymyeon.backend.auth.application.dto.LoginRequest;
-import edonymyeon.backend.auth.domain.PasswordEncoder;
+import edonymyeon.backend.membber.auth.application.AuthService;
+import edonymyeon.backend.membber.auth.application.dto.JoinRequest;
+import edonymyeon.backend.membber.auth.application.dto.KakaoLoginResponse;
+import edonymyeon.backend.membber.auth.application.dto.LoginRequest;
+import edonymyeon.backend.membber.auth.domain.PasswordEncoder;
 import edonymyeon.backend.image.application.ImageService;
 import edonymyeon.backend.image.domain.ImageInfo;
-import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
-import edonymyeon.backend.member.application.DeviceRepository;
-import edonymyeon.backend.member.application.MemberService;
-import edonymyeon.backend.member.application.dto.ActiveMemberId;
-import edonymyeon.backend.member.domain.Device;
-import edonymyeon.backend.member.domain.Email;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.domain.SocialInfo;
-import edonymyeon.backend.member.domain.SocialInfo.SocialType;
-import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.setting.application.SettingService;
+import edonymyeon.backend.membber.member.profileimage.domain.ProfileImageInfo;
+import edonymyeon.backend.membber.member.application.DeviceRepository;
+import edonymyeon.backend.membber.member.application.MemberService;
+import edonymyeon.backend.membber.member.application.dto.ActiveMemberId;
+import edonymyeon.backend.membber.member.domain.Device;
+import edonymyeon.backend.membber.member.domain.Email;
+import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.membber.member.domain.SocialInfo;
+import edonymyeon.backend.membber.member.domain.SocialInfo.SocialType;
+import edonymyeon.backend.membber.member.repository.MemberRepository;
+import edonymyeon.backend.membber.setting.application.SettingService;
 import edonymyeon.backend.support.IntegrationTest;
 import jakarta.persistence.EntityManager;
 import java.util.Optional;
@@ -43,7 +44,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.test.context.jdbc.Sql;
 
 @DisplayNameGeneration(ReplaceUnderscores.class)
 @SuppressWarnings("NonAsciiCharacters")

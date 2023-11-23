@@ -4,9 +4,11 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.ALREADY_E
 import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_PASSWORD_INVALID;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import edonymyeon.backend.auth.domain.SimplePasswordEncoder;
+import edonymyeon.backend.membber.auth.domain.SimplePasswordEncoder;
 import edonymyeon.backend.global.exception.BusinessLogicException;
 import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.membber.member.domain.Password;
+import edonymyeon.backend.membber.member.domain.SocialInfo;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;

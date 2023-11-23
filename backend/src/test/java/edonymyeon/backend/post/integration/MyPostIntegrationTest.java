@@ -2,9 +2,9 @@ package edonymyeon.backend.post.integration;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.application.dto.response.MyPostResponse;
-import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.content.post.application.dto.response.MyPostResponse;
+import edonymyeon.backend.content.post.domain.Post;
 import edonymyeon.backend.support.IntegrationFixture;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

@@ -3,9 +3,9 @@ package edonymyeon.backend.post.integration;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import edonymyeon.backend.support.IntegrationFixture;
-import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.membber.member.domain.Member;
 import edonymyeon.backend.post.ImageFileCleaner;
-import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.content.post.domain.Post;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
