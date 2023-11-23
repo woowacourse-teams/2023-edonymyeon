@@ -5,13 +5,14 @@ import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContent;
 import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId;
 import jakarta.annotation.PostConstruct;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 알림 메시지의 캐싱 값을 관리하는 저장소입니다.
@@ -27,7 +28,7 @@ public class NotificationContentHolder {
         this.notificationContentRepository = notificationContentRepository;
     }
 
-    private final Map<NotificationContentId, NotificationContent> holder = new HashMap<>();
+    private final Map<NotificationContentId, NotificationContent> holder = new ConcurrentHashMap<>();
 
     @PostConstruct
     public void initialize() {
