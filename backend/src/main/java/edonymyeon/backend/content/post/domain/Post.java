@@ -4,7 +4,7 @@ import edonymyeon.backend.global.domain.TemporalRecord;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.content.post.postimage.domain.PostImageInfo;
 import edonymyeon.backend.content.post.postimage.domain.PostImageInfos;
-import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.member.profile.domain.Member;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;

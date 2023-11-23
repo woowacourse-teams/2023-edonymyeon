@@ -1,16 +1,16 @@
 package edonymyeon.backend.notification.integration;
 
-import edonymyeon.backend.membber.auth.application.AuthService;
-import edonymyeon.backend.membber.auth.application.dto.JoinRequest;
-import edonymyeon.backend.membber.member.application.dto.ActiveMemberId;
-import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.member.auth.application.AuthService;
+import edonymyeon.backend.member.auth.application.dto.JoinRequest;
+import edonymyeon.backend.member.profile.application.dto.ActiveMemberId;
+import edonymyeon.backend.member.profile.domain.Member;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.ScreenType;
 import edonymyeon.backend.notification.repository.NotificationRepository;
-import edonymyeon.backend.post.ImageFileCleaner;
+import edonymyeon.backend.content.post.ImageFileCleaner;
 import edonymyeon.backend.content.post.application.PostSlice;
-import edonymyeon.backend.membber.setting.application.SettingService;
-import edonymyeon.backend.membber.setting.domain.SettingType;
+import edonymyeon.backend.member.setting.application.SettingService;
+import edonymyeon.backend.member.setting.domain.SettingType;
 import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.content.thumbs.application.ThumbsService;

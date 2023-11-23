@@ -1,11 +1,11 @@
 package edonymyeon.backend.content.comment.ui;
 
-import edonymyeon.backend.membber.auth.annotation.AuthPrincipal;
+import edonymyeon.backend.member.auth.annotation.AuthPrincipal;
 import edonymyeon.backend.content.comment.application.CommentService;
 import edonymyeon.backend.content.comment.application.dto.request.CommentRequest;
 import edonymyeon.backend.content.comment.application.dto.response.CommentsResponse;
 import edonymyeon.backend.global.version.ApiVersion;
-import edonymyeon.backend.membber.member.application.dto.MemberId;
+import edonymyeon.backend.member.profile.application.dto.MemberId;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

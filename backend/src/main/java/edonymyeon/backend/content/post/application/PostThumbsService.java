@@ -2,7 +2,7 @@ package edonymyeon.backend.content.post.application;
 
 import edonymyeon.backend.content.post.application.dto.response.AllThumbsInPostResponse;
 import edonymyeon.backend.content.post.application.dto.response.ThumbsStatusInPostResponse;
-import edonymyeon.backend.membber.member.application.dto.MemberId;
+import edonymyeon.backend.member.profile.application.dto.MemberId;
 
 public interface PostThumbsService {
 

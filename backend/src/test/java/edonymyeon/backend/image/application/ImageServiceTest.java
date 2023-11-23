@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import edonymyeon.backend.image.domain.ImageInfo;
 import edonymyeon.backend.image.domain.ImageType;
-import edonymyeon.backend.post.ImageFileCleaner;
+import edonymyeon.backend.content.post.ImageFileCleaner;
 import edonymyeon.backend.support.IntegrationFixture;
 import edonymyeon.backend.support.MockMultipartFileTestSupport;
 import java.io.File;

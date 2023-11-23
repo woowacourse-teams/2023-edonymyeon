@@ -5,7 +5,7 @@ import edonymyeon.backend.content.comment.repository.CommentRepository;
 import edonymyeon.backend.content.comment.commentimage.domain.CommentImageInfo;
 import edonymyeon.backend.content.comment.commentimage.repository.CommentImageInfoRepository;
 import edonymyeon.backend.image.domain.ImageInfo;
-import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.member.profile.domain.Member;
 import edonymyeon.backend.content.post.domain.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

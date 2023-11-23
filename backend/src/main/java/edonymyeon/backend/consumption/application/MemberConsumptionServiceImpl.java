@@ -9,9 +9,9 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_N
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.membber.member.application.MemberConsumptionService;
-import edonymyeon.backend.membber.member.application.dto.MemberId;
-import edonymyeon.backend.membber.member.application.dto.YearMonthDto;
+import edonymyeon.backend.member.profile.application.MemberConsumptionService;
+import edonymyeon.backend.member.profile.application.dto.MemberId;
+import edonymyeon.backend.member.profile.application.dto.YearMonthDto;
 import edonymyeon.backend.content.post.domain.Post;
 import edonymyeon.backend.content.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;

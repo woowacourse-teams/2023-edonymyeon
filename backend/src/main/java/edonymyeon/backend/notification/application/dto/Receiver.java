@@ -1,6 +1,6 @@
 package edonymyeon.backend.notification.application.dto;
 
-import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.member.profile.domain.Member;
 import lombok.Getter;
 
 @Getter

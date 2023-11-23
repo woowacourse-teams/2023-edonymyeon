@@ -6,7 +6,7 @@ import edonymyeon.backend.support.TestMemberBuilder;
 import edonymyeon.backend.support.IntegrationTest;
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.domain.ConsumptionType;
-import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.member.profile.domain.Member;
 import edonymyeon.backend.content.post.domain.Post;
 import edonymyeon.backend.support.ConsumptionTestSupport;
 import edonymyeon.backend.support.PostTestSupport;

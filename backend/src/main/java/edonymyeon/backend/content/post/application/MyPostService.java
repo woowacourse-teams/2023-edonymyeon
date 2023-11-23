@@ -5,7 +5,7 @@ import edonymyeon.backend.content.post.application.dto.response.PostConsumptionR
 import edonymyeon.backend.content.post.repository.PostRepository;
 import edonymyeon.backend.image.application.ImageService;
 import edonymyeon.backend.image.domain.ImageType;
-import edonymyeon.backend.membber.member.application.dto.MemberId;
+import edonymyeon.backend.member.profile.application.dto.MemberId;
 import edonymyeon.backend.content.post.domain.Post;
 import java.util.List;
 import java.util.Map;

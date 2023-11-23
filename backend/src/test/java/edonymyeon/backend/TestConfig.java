@@ -1,7 +1,7 @@
 package edonymyeon.backend;
 
 import edonymyeon.backend.image.domain.ImageFileNameStrategy;
-import edonymyeon.backend.post.application.ImageFileNameMockStrategy;
+import edonymyeon.backend.content.post.application.ImageFileNameMockStrategy;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;

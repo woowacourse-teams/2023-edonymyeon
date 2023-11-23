@@ -1,7 +1,7 @@
 package edonymyeon.backend.notification.domain;
 
 import edonymyeon.backend.global.domain.TemporalRecord;
-import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.member.profile.domain.Member;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

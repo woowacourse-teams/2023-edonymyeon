@@ -3,8 +3,8 @@ package edonymyeon.backend.report.ui;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import edonymyeon.backend.content.comment.domain.Comment;
-import edonymyeon.backend.membber.member.domain.Member;
-import edonymyeon.backend.post.ImageFileCleaner;
+import edonymyeon.backend.member.profile.domain.Member;
+import edonymyeon.backend.content.post.ImageFileCleaner;
 import edonymyeon.backend.report.application.ReportRequest;
 import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;

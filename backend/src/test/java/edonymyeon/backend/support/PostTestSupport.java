@@ -1,6 +1,6 @@
 package edonymyeon.backend.support;
 
-import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.member.profile.domain.Member;
 import edonymyeon.backend.content.post.domain.Post;
 import edonymyeon.backend.content.post.repository.PostRepository;
 import lombok.RequiredArgsConstructor;

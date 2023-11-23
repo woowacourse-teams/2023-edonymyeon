@@ -2,7 +2,7 @@ package edonymyeon.backend.content.thumbs.domain;
 
 import edonymyeon.backend.global.domain.TemporalRecord;
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.membber.member.domain.Member;
+import edonymyeon.backend.member.profile.domain.Member;
 import edonymyeon.backend.content.post.domain.Post;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

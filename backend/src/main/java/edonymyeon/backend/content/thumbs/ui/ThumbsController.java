@@ -1,8 +1,8 @@
 package edonymyeon.backend.content.thumbs.ui;
 
-import edonymyeon.backend.membber.auth.annotation.AuthPrincipal;
+import edonymyeon.backend.member.auth.annotation.AuthPrincipal;
 import edonymyeon.backend.global.version.ApiVersion;
-import edonymyeon.backend.membber.member.application.dto.MemberId;
+import edonymyeon.backend.member.profile.application.dto.MemberId;
 import edonymyeon.backend.content.thumbs.application.ThumbsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

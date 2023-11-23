@@ -1,7 +1,7 @@
 package edonymyeon.backend;
 
 import edonymyeon.backend.content.cache.util.HotPostCachePolicy;
-import edonymyeon.backend.post.application.TestCacheKeyStrategy;
+import edonymyeon.backend.content.post.application.TestCacheKeyStrategy;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 

@@ -1,8 +1,8 @@
 package edonymyeon.backend.content.post.ui;
 
-import edonymyeon.backend.membber.auth.annotation.AuthPrincipal;
+import edonymyeon.backend.member.auth.annotation.AuthPrincipal;
 import edonymyeon.backend.global.version.ApiVersion;
-import edonymyeon.backend.membber.member.application.dto.MemberId;
+import edonymyeon.backend.member.profile.application.dto.MemberId;
 import edonymyeon.backend.content.post.application.PostService;
 import edonymyeon.backend.content.post.application.dto.request.PostModificationRequest;
 import edonymyeon.backend.content.post.application.dto.request.PostRequest;

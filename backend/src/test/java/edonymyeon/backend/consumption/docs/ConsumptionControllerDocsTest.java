@@ -1,6 +1,6 @@
 package edonymyeon.backend.consumption.docs;
 
-import static edonymyeon.backend.membber.auth.ui.SessionConst.USER;
+import static edonymyeon.backend.member.auth.ui.SessionConst.USER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -17,9 +17,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edonymyeon.backend.consumption.application.ConsumptionService;
 import edonymyeon.backend.consumption.application.dto.ConsumptionPriceResponse;
 import edonymyeon.backend.consumption.application.dto.RecentConsumptionsResponse;
-import edonymyeon.backend.membber.member.domain.Email;
-import edonymyeon.backend.membber.member.domain.Member;
-import edonymyeon.backend.membber.member.repository.MemberRepository;
+import edonymyeon.backend.member.profile.domain.Email;
+import edonymyeon.backend.member.profile.domain.Member;
+import edonymyeon.backend.member.profile.repository.MemberRepository;
 import edonymyeon.backend.support.DocsTest;
 import edonymyeon.backend.support.TestMemberBuilder;
 import java.util.List;
