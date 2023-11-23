@@ -2,6 +2,8 @@ package edonymyeon.backend.member.domain;
 
 import edonymyeon.backend.auth.domain.PasswordEncoder;
 import edonymyeon.backend.global.domain.TemporalRecord;
+import edonymyeon.backend.global.exception.EdonymyeonException;
+import edonymyeon.backend.global.exception.ExceptionInformation;
 import edonymyeon.backend.image.profileimage.domain.ProfileImageInfo;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Embedded;
@@ -96,7 +98,7 @@ public class Member extends TemporalRecord {
     public String getActiveDeviceToken() {
         return devices.stream().filter(Device::isActive)
                 .map(Device::getDeviceToken)
-                .findAny().orElseThrow();
+                .findAny().orElseThrow(() -> new EdonymyeonException(ExceptionInformation.MEMBER_DEVICE_TOKEN_NOT_FOUND));
     }
 
     public void withdraw() {
