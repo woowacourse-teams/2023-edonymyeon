@@ -1,9 +1,5 @@
 package edonymyeon.backend.post.application;
 
-import static edonymyeon.backend.global.exception.ExceptionInformation.MEMBER_ID_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_ID_NOT_FOUND;
-import static edonymyeon.backend.global.exception.ExceptionInformation.POST_MEMBER_NOT_SAME;
-
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.image.application.ImageService;
 import edonymyeon.backend.image.domain.ImageType;
@@ -18,13 +14,16 @@ import edonymyeon.backend.post.application.dto.response.PostIdResponse;
 import edonymyeon.backend.post.application.event.PostDeletionEvent;
 import edonymyeon.backend.post.domain.Post;
 import edonymyeon.backend.post.repository.PostRepository;
-import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Objects;
+
+import static edonymyeon.backend.global.exception.ExceptionInformation.*;
 
 @RequiredArgsConstructor
 @Service
@@ -63,7 +62,7 @@ public class PostService {
 
         final PostImageInfos postImageInfos = PostImageInfos.of(post,
                 imageService.saveAll(postRequest.newImages(), ImageType.POST));
-        postImageInfoRepository.saveAll(postImageInfos.getPostImageInfos());
+        postImageInfoRepository.batchSave(postImageInfos.getPostImageInfos(), post.getId());
 
         return new PostIdResponse(post.getId());
     }
@@ -90,13 +89,12 @@ public class PostService {
         final Post post = findPostById(postId);
         checkWriter(member, post);
 
-        // soft delete 시킬 때, 실제 이미지는 보관된다.
-        // todo: 이미지 삭제.. 한번에..
         // todo: 소비내역 삭제할 때, 이벤트 대신 인터페이스로 변경
         applicationEventPublisher.publishEvent(new PostDeletionEvent(post.getId()));
         thumbsService.deleteAllThumbsInPost(postId);
         commentService.deleteAllCommentsInPost(postId);
         post.delete();
+        postImageInfoRepository.deleteAllByPostId(postId);
     }
 
     private Post findPostById(final Long postId) {
@@ -126,13 +124,17 @@ public class PostService {
         final List<String> remainedImageNames = imageService.convertToStoreName(request.originalImages(), ImageType.POST);
 
         if(isImagesEmpty(imageFilesToAdd)) {
-            post.updateImages(remainedImageNames);
+            final List<Long> imageIdsToDelete = post.getImageIdsToDeleteBy(remainedImageNames);
+            postImageInfoRepository.deleteAllByIds(imageIdsToDelete);
             return new PostIdResponse(postId);
         }
 
         final PostImageInfos imagesToAdd = PostImageInfos.of(post, imageService.saveAll(imageFilesToAdd, ImageType.POST));
-        post.updateImages(remainedImageNames, imagesToAdd); //이때 기존 이미지중 삭제되는 것들은 softDelete
-        postImageInfoRepository.saveAll(imagesToAdd.getPostImageInfos()); // //새로 추가된 이미지들을 DB에 저장
+
+        final List<Long> imageIdsToDelete = post.getImageIdsToDeleteBy(remainedImageNames, imagesToAdd);
+        postImageInfoRepository.deleteAllByIds(imageIdsToDelete); //이때 기존 이미지중 삭제되는 것들은 softDelete
+        postImageInfoRepository.batchSave(imagesToAdd.getPostImageInfos(), post.getId()); //새로 추가된 이미지들을 DB에 저장
+
         return new PostIdResponse(postId);
     }
 }

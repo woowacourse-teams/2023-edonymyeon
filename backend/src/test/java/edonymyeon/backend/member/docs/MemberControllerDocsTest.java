@@ -33,6 +33,7 @@ import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
 import edonymyeon.backend.member.application.dto.response.DuplicateCheckResponse;
 import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_0;
 import edonymyeon.backend.member.application.dto.response.MyPageResponseV1_1;
+import edonymyeon.backend.member.domain.Email;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.repository.MemberRepository;
 import edonymyeon.backend.post.domain.Post;
@@ -80,7 +81,7 @@ class MemberControllerDocsTest extends DocsTest {
     }
 
     private void 회원_레포지토리를_모킹한다(final Member 회원) {
-        when(memberRepository.findByEmail(회원.getEmail())).thenReturn(Optional.of(회원));
+        when(memberRepository.findByEmail(Email.from(회원.getEmail()))).thenReturn(Optional.of(회원));
     }
 
     private void 게시글_레포지토리를_모킹한다(final Post 게시글) {

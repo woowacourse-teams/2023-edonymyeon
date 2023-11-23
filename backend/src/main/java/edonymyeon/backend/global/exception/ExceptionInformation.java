@@ -24,7 +24,7 @@ public enum ExceptionInformation {
     LOGOUT_FAILED(1525, "로그아웃에 실패하였습니다."),
     NOT_SUPPORTED_VERSION(1526, "지원하지 않는 버전입니다."),
     NOT_SUPPORTED_ALGORITHM(1527, "현재 지원하지 않는 알고리즘입니다."),
-    ENCODED_PASSWORD_INVALID(1528, "잘못 인코딩된 비밀번호입니다."),
+    ALREADY_ENCODED_PASSWORD(1528, "이미 암호화된 비밀번호입니다."),
 
     // 2___: 게시글 관련
     POST_ID_NOT_FOUND(2000, "존재하지 않는 게시글입니다."),
