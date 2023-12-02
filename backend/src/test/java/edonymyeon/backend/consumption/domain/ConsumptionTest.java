@@ -58,8 +58,8 @@ class ConsumptionTest {
     @Test
     void 미래_시각이_들어오면_예외가_발생한다() {
         final LocalDate currentDate = LocalDate.now();
-        final int year = currentDate.getYear();
         final Month month = currentDate.getMonth().plus(1);
+        final int year = (month.equals(Month.JANUARY)) ? currentDate.getYear() + 1 : currentDate.getYear();
 
         assertThatThrownBy(() -> Consumption.of(null, PURCHASE, 1_000L, year, month.getValue()))
                 .isInstanceOf(EdonymyeonException.class)
