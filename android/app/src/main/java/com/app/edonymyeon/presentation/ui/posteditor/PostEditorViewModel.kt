@@ -113,13 +113,13 @@ class PostEditorViewModel @Inject constructor(
     }
 
     private fun getAbsolutePathFromHttp(uris: List<Uri>): List<String> {
-        return uris.filter { it.scheme == PREFIX_HTTP }.map { uri ->
+        return uris.filter { it.scheme == PREFIX_HTTPS }.map { uri ->
             uri.toString()
         }
     }
 
     companion object {
-        private const val PREFIX_HTTP = "http"
+        private const val PREFIX_HTTPS = "https"
         private const val PREFIX_CONTENT = "content"
     }
 }
