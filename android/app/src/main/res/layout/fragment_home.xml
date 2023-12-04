@@ -47,7 +47,6 @@
                     android:src="@drawable/ic_edonymyeon_logo_white"
                     app:layout_constraintDimensionRatio="W, 47:58"
                     app:layout_constraintEnd_toStartOf="@+id/tv_title"
-                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/space_title_top"
@@ -60,11 +59,12 @@
                     android:fontFamily="@font/dohyeon"
                     android:text="@string/home_edonymyeon"
                     android:textColor="@color/white_ffffff"
-                    android:textSize="32sp"
+                    android:textSize="@dimen/home_app_title_text_size"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_logo"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/iv_logo" />
+                    app:layout_constraintStart_toEndOf="@+id/iv_logo"
+                    app:layout_constraintTop_toTopOf="@id/iv_logo" />
 
                 <Space
                     android:id="@+id/space_title_bottom"
@@ -84,7 +84,7 @@
                     android:fontFamily="@font/dohyeon"
                     android:text="@string/home_hot_post"
                     android:textColor="@color/white_ffffff"
-                    android:textSize="22sp"
+                    android:textSize="@dimen/home_hot_title_text_size"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/space_title_bottom" />
@@ -103,8 +103,8 @@
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_marginHorizontal="16dp"
-                    app:layout_constraintDimensionRatio="H,316:136"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHeight_percent="0.45"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/space_hot_post_top" />
 
@@ -112,10 +112,10 @@
                     android:id="@+id/cl_hot_post_not_content"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginHorizontal="@dimen/home_host_post_margin_horizontal"
                     android:background="@drawable/bg_ffffff_radius_15"
-                    app:layout_constraintDimensionRatio="H,316:136"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHeight_percent="0.45"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/space_hot_post_top">
 
@@ -182,24 +182,26 @@
                     android:id="@+id/tv_all_post"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
+                    android:layout_marginStart="@dimen/home_all_post_title_margin"
                     android:text="@string/home_all_post"
                     android:textColor="@color/black_434343"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/home_all_post_title_text_size"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/space_all_post_title_top" />
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/iv_all_post_more"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="32dp"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginEnd="@dimen/home_all_post_icon_margin"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_all_post_more"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_all_post"
-                    app:layout_constraintDimensionRatio="H,14:16"
+                    app:layout_constraintDimensionRatio="H, 20:18"
+                    android:padding="@dimen/home_all_post_icon_padding"
+                    app:layout_constraintBottom_toBottomOf="@id/space_all_post_title_bottom"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_all_post" />
+                    app:layout_constraintTop_toTopOf="@id/space_all_post_title_top"
+                    app:layout_constraintWidth_percent="@dimen/home_all_post_icon_width" />
 
                 <Space
                     android:id="@+id/space_all_post_title_bottom"
@@ -208,18 +210,18 @@
                     app:layout_constraintDimensionRatio="H,360:20"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/iv_all_post_more" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_all_post" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_all_post"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/home_host_post_margin_horizontal"
                     android:background="@drawable/bg_ffffff_radius_10dp"
                     android:elevation="4dp"
                     android:nestedScrollingEnabled="false"
                     android:overScrollMode="never"
                     android:paddingVertical="17dp"
-                    android:layout_marginHorizontal="20dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

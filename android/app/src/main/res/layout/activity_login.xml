@@ -62,12 +62,11 @@
 
             <TextView
                 android:id="@+id/tv_email"
+                style="@style/BASIC_TEXT_STYLE"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:gravity="center_vertical"
                 android:text="@string/login_email"
-                android:textColor="@color/black_000000"
-                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@id/space_email_left"
                 app:layout_constraintDimensionRatio="W,90:32"
                 app:layout_constraintStart_toEndOf="@id/space_email_left"
@@ -75,6 +74,7 @@
 
             <EditText
                 android:id="@+id/et_email"
+                style="@style/BASIC_TEXT_STYLE"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:autofillHints="emailAddress"
@@ -84,7 +84,6 @@
                 android:maxLines="1"
                 android:padding="10dp"
                 android:textColor="@color/black_000000"
-                android:textSize="16sp"
                 app:layout_constraintDimensionRatio="H,270:36"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -111,12 +110,11 @@
 
             <TextView
                 android:id="@+id/tv_password"
+                style="@style/BASIC_TEXT_STYLE"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:gravity="center_vertical"
                 android:text="@string/login_password"
-                android:textColor="@color/black_000000"
-                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@id/space_password_left"
                 app:layout_constraintDimensionRatio="W,90:28"
                 app:layout_constraintStart_toEndOf="@id/space_password_left"
@@ -124,6 +122,7 @@
 
             <EditText
                 android:id="@+id/et_password"
+                style="@style/BASIC_TEXT_STYLE"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:autofillHints="password"
@@ -132,7 +131,6 @@
                 android:padding="10dp"
                 android:textColor="@color/black_000000"
                 android:textColorHint="@color/black_000000"
-                android:textSize="16sp"
                 app:layout_constraintDimensionRatio="H,270:36"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -150,6 +148,7 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/bt_login"
+                style="@style/BUTTON_TEXT_STYLE"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@drawable/bg_576b9e_radius_6dp"
@@ -157,7 +156,6 @@
                 android:stateListAnimator="@null"
                 android:text="@string/login_login"
                 android:textColor="@color/white_ffffff"
-                android:textSize="16sp"
                 app:layout_constraintDimensionRatio="H,320:48"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -207,12 +205,11 @@
 
             <TextView
                 android:id="@+id/tv_join"
+                style="@style/BASIC_TEXT_STYLE"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:gravity="center_vertical"
                 android:text="@string/login_suggest"
-                android:textColor="@color/black_000000"
-                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="@id/space_join_left"
                 app:layout_constraintDimensionRatio="W,104:28"
                 app:layout_constraintStart_toEndOf="@id/space_join_left"
@@ -221,13 +218,13 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/bt_join"
+                style="@style/BUTTON_TEXT_STYLE"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:background="@drawable/bg_576b9e_radius_6dp"
                 android:stateListAnimator="@null"
                 android:text="@string/login_join"
                 android:textColor="@color/white_ffffff"
-                android:textSize="16sp"
                 app:layout_constraintDimensionRatio="H,320:48"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- main -->
+    <dimen name="main_bottom_icon_size">36dp</dimen>
+
+    <!-- home -->
+    <dimen name="home_app_title_text_size">32sp</dimen>
+    <dimen name="home_hot_title_text_size">22sp</dimen>
+    <dimen name="home_host_post_image_width">0.2</dimen>
+    <dimen name="home_host_post_padding">16dp</dimen>
+    <dimen name="home_host_post_margin_horizontal">16dp</dimen>
+    <dimen name="home_all_post_title_margin">24dp</dimen>
+    <dimen name="home_all_post_title_text_size">20sp</dimen>
+    <dimen name="home_all_post_icon_margin">24dp</dimen>
+    <dimen name="home_all_post_icon_width">0.1</dimen>
+    <dimen name="home_all_post_icon_padding">8dp</dimen>
+
+    <!-- my page -->
+    <dimen name="my_page_graph_axis_text_size">8px</dimen>
+    <dimen name="my_page_graph_legend_text_size">12px</dimen>
+    <dimen name="my_page_graph_legend_offset_size">10px</dimen>
+    <dimen name="my_page_graph_legend_entry_size">20px</dimen>
+
+    <!-- post editor-->
+    <dimen name="post_editor_title_text_size">20sp</dimen>
+    <dimen name="post_editor_margin">20dp</dimen>
+    <dimen name="post_editor_margin_between_title_and_edit">84dp</dimen>
+    <dimen name="post_editor_comment_text_size">18sp</dimen>
+    <dimen name="post_editor_image_width">80dp</dimen>
+
+    <!-- post detail -->
+    <dimen name="post_detail_comment_padding">12dp</dimen>
+
+    <!-- profile update -->
+    <dimen name="profile_update_image_width">0.54</dimen>
+</resources>

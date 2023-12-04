@@ -46,7 +46,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tb_post_detail">
 
-
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_post_all_detail"
                     android:layout_width="match_parent"
@@ -121,11 +120,10 @@
 
                         <TextView
                             android:id="@+id/tv_title"
+                            style="@style/BASIC_TITLE_TEXT_STYLE"
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
                             android:text="@{postViewModel.post.title}"
-                            android:textColor="@color/black_434343"
-                            android:textSize="20sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toEndOf="@id/space_content_start"
                             app:layout_constraintTop_toBottomOf="@id/space_image_bottom"
@@ -153,23 +151,23 @@
 
                         <TextView
                             android:id="@+id/tv_user_nickname"
+                            style="@style/BASIC_TEXT_STYLE"
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
                             android:layout_marginStart="16dp"
                             android:text="@{postViewModel.post.writer.nickname.toString()}"
                             android:textColor="@color/black_434343"
-                            android:textSize="16sp"
                             app:layout_constraintStart_toEndOf="@id/iv_user_profile"
                             app:layout_constraintTop_toTopOf="@id/iv_user_profile"
                             tools:text="하티" />
 
                         <TextView
                             android:id="@+id/tv_post_time"
+                            style="@style/BASIC_TEXT_EXPLANATION"
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
                             android:layout_marginStart="16dp"
                             android:text="@{postViewModel.post.createdAt.toString()}"
-                            android:textSize="12sp"
                             app:layout_constraintStart_toEndOf="@id/iv_user_profile"
                             app:layout_constraintTop_toBottomOf="@id/tv_user_nickname"
                             tools:text="1시간 전" />
@@ -185,10 +183,10 @@
 
                         <TextView
                             android:id="@+id/tv_price"
+                            style="@style/BASIC_TEXT_STYLE"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{@string/all_price_long(postViewModel.post.price)}"
-                            android:textSize="16sp"
                             android:textStyle="bold"
                             app:layout_constraintStart_toEndOf="@id/space_content_start"
                             app:layout_constraintTop_toBottomOf="@id/space_price_top"
@@ -206,11 +204,11 @@
 
                         <TextView
                             android:id="@+id/tv_content"
+                            style="@style/BASIC_TEXT_STYLE"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:text="@{postViewModel.post.content}"
                             android:textColor="@color/black_434343"
-                            android:textSize="14sp"
                             app:layout_constraintEnd_toStartOf="@id/space_content_end"
                             app:layout_constraintStart_toEndOf="@id/space_content_start"
                             app:layout_constraintTop_toBottomOf="@id/space_price_bottom"
@@ -322,6 +320,7 @@
 
                         <TextView
                             android:id="@+id/tv_up_count"
+                            style="@style/BASIC_TEXT_EXPLANATION"
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
                             android:text="@{Integer.toString(postViewModel.recommendation.upCount)}"
@@ -332,6 +331,7 @@
 
                         <TextView
                             android:id="@+id/tv_down_count"
+                            style="@style/BASIC_TEXT_EXPLANATION"
                             android:layout_width="wrap_content"
                             android:layout_height="0dp"
                             android:text="@{Integer.toString(postViewModel.recommendation.downCount)}"

@@ -29,7 +29,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <ImageView
@@ -37,47 +36,48 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
-            android:layout_marginBottom="12dp"
             android:contentDescription="@string/post_detail_gallery_content_description"
             android:src="@drawable/btn_gallery"
             app:layout_constraintBottom_toBottomOf="@id/cl_comment_input"
             app:layout_constraintDimensionRatio="H,1:1.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintWidth_percent="0.0611" />
+            app:layout_constraintTop_toTopOf="@id/cl_comment_input"
+            app:layout_constraintWidth_percent="0.06" />
 
         <EditText
             android:id="@+id/et_comment"
+            style="@style/EDIT_TEXT_STYLE"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginVertical="12dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginHorizontal="10dp"
             android:autofillHints="no"
             android:background="@drawable/bg_d7d9ea_radius_5dp"
             android:hint="@string/post_detail_input_comment"
             android:inputType="textMultiLine"
             android:maxHeight="200dp"
-            android:paddingVertical="12dp"
+            android:paddingVertical="@dimen/post_detail_comment_padding"
             android:paddingStart="8dp"
             android:paddingEnd="32dp"
             android:textColor="@color/black_434343"
             android:textColorHint="@color/white_ffffff"
-            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_gallery_image"
-            app:layout_constraintWidth_percent="0.8722" />
+            app:layout_constraintHorizontal_bias="0.142"
+            app:layout_constraintStart_toEndOf="@id/iv_post_gallery"
+            app:layout_constraintTop_toBottomOf="@id/cl_gallery_image" />
 
         <ImageView
             android:id="@+id/iv_comment_save"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             android:elevation="4dp"
             android:src="@drawable/btn_comment_save"
             app:layout_constraintBottom_toBottomOf="@id/et_comment"
             app:layout_constraintDimensionRatio="W, 16:18"
             app:layout_constraintEnd_toEndOf="@+id/et_comment"
+            app:layout_constraintTop_toTopOf="@id/et_comment"
             app:layout_constraintWidth_percent="0.06" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
