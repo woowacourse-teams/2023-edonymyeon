@@ -3,6 +3,7 @@ package edonymyeon.backend.notification.domain;
 import edonymyeon.backend.global.domain.TemporalRecord;
 import edonymyeon.backend.member.domain.Member;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -12,11 +13,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-@Getter
 @Entity
 public class Notification extends TemporalRecord {
 
@@ -28,7 +27,8 @@ public class Notification extends TemporalRecord {
     @JoinColumn(nullable = false)
     private Member member;
 
-    private String title;
+    @Embedded
+    private NotificationMessage notificationMessage;
 
     @Enumerated(EnumType.STRING)
     private ScreenType screenType;
@@ -38,15 +38,43 @@ public class Notification extends TemporalRecord {
     @Column(name = "is_read")
     private boolean read;
 
-    public Notification(final Member member, final String title, final ScreenType screenType, final Long postId) {
+    public Notification(
+            final Member member,
+            final NotificationMessage notificationMessage,
+            final ScreenType screenType,
+            final Long postId
+    ) {
         this.member = member;
-        this.title = title;
+        this.notificationMessage = notificationMessage;
         this.screenType = screenType;
         this.postId = postId;
-        this.read = false;
     }
 
     public void markAsRead() {
         this.read = true;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public String getTitle() {
+        return notificationMessage.getTitle();
+    }
+
+    public String getBody() {
+        return notificationMessage.getBody();
+    }
+
+    public ScreenType getScreenType() {
+        return screenType;
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public Long getPostId() {
+        return postId;
     }
 }

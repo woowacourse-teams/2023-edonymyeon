@@ -19,3 +19,5 @@ include::common/mypage-api.adoc[]
 include::common/report-api.adoc[]
 
 include::common/comment-api.adoc[]
+
+include::common/notification-api.adoc[]

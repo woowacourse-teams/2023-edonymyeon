@@ -5,7 +5,12 @@ import edonymyeon.backend.auth.application.dto.JoinRequest;
 import edonymyeon.backend.member.application.dto.ActiveMemberId;
 import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.notification.domain.Notification;
+import edonymyeon.backend.notification.domain.NotificationMessage;
+import edonymyeon.backend.notification.domain.notification_content.application.dto.NotificationContentRequest;
+import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId;
 import edonymyeon.backend.notification.domain.ScreenType;
+import edonymyeon.backend.notification.domain.notification_content.application.NotificationContentRepository;
+import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContent;
 import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.post.ImageFileCleaner;
 import edonymyeon.backend.post.application.PostSlice;
@@ -20,6 +25,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 import java.util.Map;
 
@@ -68,9 +74,13 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
         final Member 사용자 = 사용자를_하나_만든다();
         final long 게시글id = 응답의_location헤더에서_id를_추출한다(게시글을_하나_만든다(사용자));
         final Long 알림id = notificationRepository
-                .save(new Notification(사용자, "알림이 등록되었어요!", ScreenType.POST, 게시글id))
+                .save(new Notification(
+                        사용자,
+                        new NotificationMessage("알림이 등록되었어요!", "알림을 확인해보세요!"),
+                        ScreenType.POST,
+                        게시글id
+                ))
                 .getId();
-
         var notification = notificationRepository.findById(알림id);
         notification.ifPresentOrElse(
                 not -> assertThat(not.isRead()).isFalse(),
@@ -89,5 +99,35 @@ class NotificationIntegrationTest extends IntegrationFixture implements ImageFil
         notification.ifPresentOrElse(
                 not -> assertThat(not.isRead()).isTrue(),
                 Assertions::fail);
+    }
+
+    @Test
+    void 알림으로_보낼_메시지의_내용을_수정할_수_있다(
+            @Autowired NotificationContentRepository notificationContentRepository
+    ) {
+        final NotificationContent notificationContent
+                = new NotificationContent(NotificationContentId.THUMBS_NOTIFICATION_TITLE, "원래 알림 제목", "원래 알림 본문");
+        notificationContentRepository.save(notificationContent);
+
+        assertThat(notificationContentRepository.findById(NotificationContentId.THUMBS_NOTIFICATION_TITLE)).contains(notificationContent);
+
+        final NotificationContentRequest notificationContentToUpdate
+                = new NotificationContentRequest(NotificationContentId.THUMBS_NOTIFICATION_TITLE, "새로운 알림 제목", "새로운 알림 본문");
+
+        EdonymyeonRestAssured.builder()
+                .version("1.0.0")
+                .build()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(notificationContentToUpdate)
+                .when()
+                .put("/admin/notification/content")
+                .then()
+                .statusCode(HttpStatus.OK.value());
+
+        final NotificationContent savedNotificationContent
+                = notificationContentRepository.findById(NotificationContentId.THUMBS_NOTIFICATION_TITLE).get();
+        assertThat(savedNotificationContent.getId()).isEqualTo(notificationContentToUpdate.id());
+        assertThat(savedNotificationContent).extracting("title").isEqualTo(notificationContentToUpdate.title());
+        assertThat(savedNotificationContent).extracting("body").isEqualTo(notificationContentToUpdate.body());
     }
 }

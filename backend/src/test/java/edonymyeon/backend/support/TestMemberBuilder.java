@@ -7,6 +7,7 @@ import edonymyeon.backend.member.domain.Member;
 import edonymyeon.backend.member.domain.SocialInfo;
 import edonymyeon.backend.member.repository.MemberRepository;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
@@ -100,7 +101,7 @@ public class TestMemberBuilder {
 
             setField(member, "id", this.id, null);
             setField(member, "socialInfo", this.socialInfo, null);
-            setField(member, "devices", this.devices, List.of(new Device("testToken", member)));
+            setField(member, "devices", this.devices, new ArrayList<>(List.of(new Device("testToken", member))));
             setField(member, "deleted", this.deleted, false);
             return memberRepository.save(member);
         }
@@ -116,11 +117,11 @@ public class TestMemberBuilder {
                     DEFAULT_PASSWORD,
                     this.nickname != null ? this.nickname : DEFAULT_NICK_NAME + nickNameCount++,
                     this.profileImageInfo,
-                    List.of()
+                    new ArrayList<>()
             );
             setField(member, "id", this.id, null);
             setField(member, "socialInfo", this.socialInfo, null);
-            setField(member, "devices", this.devices, List.of(new Device("testToken", member)));
+            setField(member, "devices", this.devices, new ArrayList<>(List.of(new Device("testToken", member))));
             setField(member, "deleted", this.deleted, false);
             return member;
         }

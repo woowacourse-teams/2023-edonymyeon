@@ -1,5 +1,9 @@
 package edonymyeon.backend.notification.application;
 
+import static edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId.COMMENT_NOTIFICATION_TITLE;
+import static edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId.THUMBS_NOTIFICATION_TITLE;
+import static edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId.THUMBS_PER_10_NOTIFICATION_TITLE;
+
 import edonymyeon.backend.comment.domain.Comment;
 import edonymyeon.backend.consumption.application.ConsumptionService;
 import edonymyeon.backend.global.exception.BusinessLogicException;
@@ -13,6 +17,9 @@ import edonymyeon.backend.notification.application.dto.Receiver;
 import edonymyeon.backend.notification.domain.Notification;
 import edonymyeon.backend.notification.domain.NotificationMessage;
 import edonymyeon.backend.notification.domain.ScreenType;
+import edonymyeon.backend.notification.domain.notification_content.application.NotificationContentHolder;
+import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContent;
+import edonymyeon.backend.notification.domain.notification_content.domain.NotificationContentId;
 import edonymyeon.backend.notification.repository.NotificationRepository;
 import edonymyeon.backend.post.application.GeneralFindingCondition;
 import edonymyeon.backend.post.application.PostSlice;
@@ -21,6 +28,10 @@ import edonymyeon.backend.setting.application.SettingService;
 import edonymyeon.backend.setting.domain.SettingType;
 import edonymyeon.backend.thumbs.application.ThumbsService;
 import jakarta.persistence.EntityManager;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Slice;
@@ -28,11 +39,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
-
-import static edonymyeon.backend.notification.domain.NotificationMessage.*;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -52,6 +58,8 @@ public class NotificationService {
     private final ThumbsService thumbsService;
 
     private final ConsumptionService consumptionService;
+
+    private final NotificationContentHolder notificationContentHolder;
 
     /**
      * 특정 회원이 받은 알림 내역을 조회합니다.
@@ -78,14 +86,31 @@ public class NotificationService {
             return;
         }
 
+        final Long reactionCount = thumbsService.countReactions(post.getId());
+        final Map<String, String> notificationContentParameters = new HashMap<>();
+        notificationContentParameters.put("count", reactionCount.toString());
+        notificationContentParameters.put("title", post.getTitle());
+
         if (settingService.isSettingActive(new ActiveMemberId(post.getWriterId()), SettingType.NOTIFICATION_PER_10_THUMBS)
-                && isDivisibleBy10(thumbsService.countReactions(post.getId()))) {
-            sendNotification(post.getMember(), ScreenType.POST, post.getId(), THUMBS_PER_10_NOTIFICATION_TITLE);
+                && isDivisibleBy10(reactionCount)) {
+            sendNotification(
+                    post.getMember(),
+                    ScreenType.POST,
+                    post.getId(),
+                    THUMBS_PER_10_NOTIFICATION_TITLE,
+                    notificationContentParameters
+            );
             return;
         }
 
         if (settingService.isSettingActive(new ActiveMemberId(post.getWriterId()), SettingType.NOTIFICATION_PER_THUMBS)) {
-            sendNotification(post.getMember(), ScreenType.POST, post.getId(), THUMBS_NOTIFICATION_TITLE);
+            sendNotification(
+                    post.getMember(),
+                    ScreenType.POST,
+                    post.getId(),
+                    THUMBS_NOTIFICATION_TITLE,
+                    notificationContentParameters
+            );
         }
     }
 
@@ -107,7 +132,17 @@ public class NotificationService {
         if (settingService.isSettingActive(new ActiveMemberId(comment.getPost().getWriterId()), SettingType.NOTIFICATION_PER_COMMENT)) {
             comment = entityManager.merge(comment);
 
-            sendNotification(comment.getPostWriter(), ScreenType.POST, comment.findPostId(), COMMENT_NOTIFICATION_TITLE);
+            final Map<String, String> notificationContentParameters = new HashMap<>();
+            notificationContentParameters.put("title", comment.getPost().getTitle());
+            notificationContentParameters.put("comment", comment.getContent());
+
+            sendNotification(
+                    comment.getPostWriter(),
+                    ScreenType.POST,
+                    comment.findPostId(),
+                    COMMENT_NOTIFICATION_TITLE,
+                    notificationContentParameters
+            );
         }
     }
 
@@ -128,24 +163,44 @@ public class NotificationService {
     private void remindConfirmingConsumptions(final Member member) {
         if (settingService.isSettingActive(new ActiveMemberId(member.getId()),
                 SettingType.NOTIFICATION_CONSUMPTION_CONFIRMATION_REMINDING)) {
-            sendNotification(member, ScreenType.MYPOST, null, NotificationMessage.UNCONFIRMED_POST_REMINDER_TITLE);
+            sendNotification(
+                    member,
+                    ScreenType.MYPOST,
+                    null,
+                    NotificationContentId.UNCONFIRMED_POST_REMINDER_TITLE,
+                    Map.of()
+            );
         }
     }
 
     /**
      * 사용자에게 알림을 전송합니다.
-     * @param notifyingTarget 알림을 전송할 대상
-     * @param notifyingType 알림을 클릭했을 때 리다이렉트할 페이지의 종류
-     * @param redirectId 알림을 클릭했을 때 리다이렉트할 페이지의 id
-     * @param notificationMessage 알림에서 표시할 제목
+     *
+     * @param notifyingTarget              알림을 전송할 대상
+     * @param notifyingType                알림을 클릭했을 때 리다이렉트할 페이지의 종류
+     * @param redirectId                   알림을 클릭했을 때 리다이렉트할 페이지의 id
+     * @param notificationContentId        알림에서 표시할 제목
+     * @param notificationContentParameters 알림 메시지에 표시할 DSL 파라미터
      */
-    private void sendNotification(final Member notifyingTarget, final ScreenType notifyingType, final Long redirectId,
-                                  final NotificationMessage notificationMessage) {
+    private void sendNotification(
+            final Member notifyingTarget,
+            final ScreenType notifyingType,
+            final Long redirectId,
+            final NotificationContentId notificationContentId,
+            final Map<String, String> notificationContentParameters) {
         if (notifyingTarget.isDeleted()) {
             return;
         }
 
-        final Long notificationId = saveNotification(notifyingTarget, notifyingType, redirectId, notificationMessage);
+        final NotificationContent notificationContent = notificationContentHolder.findById(notificationContentId);
+
+        final Long notificationId = saveNotification(
+                notifyingTarget,
+                notifyingType,
+                redirectId,
+                notificationContent.getTitle(notificationContentParameters),
+                notificationContent.getBody(notificationContentParameters)
+        );
 
         final Optional<String> deviceToken = notifyingTarget.getActiveDeviceToken();
         if (deviceToken.isEmpty()) {
@@ -154,29 +209,36 @@ public class NotificationService {
 
         final Receiver receiver = new Receiver(notifyingTarget,
                 new Data(notificationId, notifyingType, redirectId));
-
         try {
             notificationSender.sendNotification(
                     receiver,
-                    notificationMessage.getMessage()
+                    notificationContent.getTitle(notificationContentParameters)
             );
         } catch (BusinessLogicException e) {
+            log.error("알림 전송에 실패했습니다.", e);
         }
     }
 
     /**
      * 알림 전송 전/후 해당 내용을 저장합니다.
-     * @param notifyingTarget 알림을 전송받은 대상
-     * @param notifyingType 알림을 클릭했을 때 리다이렉트한 페이지의 종류
-     * @param redirectId 알림을 클릭했을 때 리다이렉트한 페이지의 id
-     * @param notificationMessage 알림에서 표시한 제목
+     *
+     * @param notifyingTarget       알림을 전송받은 대상
+     * @param notifyingType         알림을 클릭했을 때 리다이렉트한 페이지의 종류
+     * @param redirectId            알림을 클릭했을 때 리다이렉트한 페이지의 id
+     * @param title                 알림 메시지에 사용할 제목
+     * @param body                  알림 메시지에 사용할 본문
      * @return 알림 식별자
      */
-    private Long saveNotification(final Member notifyingTarget, final ScreenType notifyingType, final Long redirectId,
-                          final NotificationMessage notificationMessage) {
+    private Long saveNotification(final Member notifyingTarget,
+                                  final ScreenType notifyingType,
+                                  final Long redirectId,
+                                  final String title,
+                                  final String body
+    ) {
+
         final Notification notification = new Notification(
                 notifyingTarget,
-                notificationMessage.getMessage(),
+                new NotificationMessage(title, body),
                 notifyingType,
                 redirectId
         );
@@ -202,5 +264,14 @@ public class NotificationService {
     @Transactional
     public void deleteNotificationByPost(final Long postId) {
         notificationRepository.deleteAllByPostId(postId);
+    }
+
+    /**
+     * 알림 메시지로 보낼 제목과 본문 내용을 변경합니다.
+     * @param content 변경할 Notification 정보
+     */
+    @Transactional
+    public void updateContent(final NotificationContent content) {
+        notificationContentHolder.updateMessage(content);
     }
 }
