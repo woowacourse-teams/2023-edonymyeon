@@ -4,11 +4,10 @@ import static edonymyeon.backend.global.exception.ExceptionInformation.REQUEST_F
 import static org.assertj.core.api.Assertions.assertThat;
 
 import edonymyeon.backend.global.controlleradvice.dto.ExceptionResponse;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.ImageFileCleaner;
+import edonymyeon.backend.member.profile.domain.Member;
+import edonymyeon.backend.content.post.ImageFileCleaner;
 import edonymyeon.backend.support.EdonymyeonRestAssured;
 import edonymyeon.backend.support.IntegrationFixture;
-import io.restassured.RestAssured;
 import java.io.File;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;

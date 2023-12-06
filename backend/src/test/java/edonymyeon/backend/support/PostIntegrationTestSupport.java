@@ -1,8 +1,7 @@
 package edonymyeon.backend.support;
 
-import edonymyeon.backend.auth.application.dto.LoginRequest;
-import edonymyeon.backend.member.domain.Member;
-import io.restassured.RestAssured;
+import edonymyeon.backend.member.auth.application.dto.LoginRequest;
+import edonymyeon.backend.member.profile.domain.Member;
 import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;

@@ -5,7 +5,7 @@ import edonymyeon.backend.consumption.application.dto.RecentConsumptionsResponse
 import edonymyeon.backend.consumption.domain.Consumption;
 import edonymyeon.backend.consumption.domain.ConsumptionsPerMonth;
 import edonymyeon.backend.consumption.repository.ConsumptionRepository;
-import edonymyeon.backend.member.application.dto.MemberId;
+import edonymyeon.backend.member.profile.application.dto.MemberId;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;

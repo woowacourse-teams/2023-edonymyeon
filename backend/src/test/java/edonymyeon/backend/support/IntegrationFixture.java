@@ -3,10 +3,10 @@ package edonymyeon.backend.support;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 
-import edonymyeon.backend.auth.application.dto.LoginRequest;
-import edonymyeon.backend.member.application.dto.request.PurchaseConfirmRequest;
-import edonymyeon.backend.member.application.dto.request.SavingConfirmRequest;
-import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.auth.application.dto.LoginRequest;
+import edonymyeon.backend.member.profile.application.dto.request.PurchaseConfirmRequest;
+import edonymyeon.backend.member.profile.application.dto.request.SavingConfirmRequest;
+import edonymyeon.backend.member.profile.domain.Member;
 import edonymyeon.backend.notification.application.NotificationSender;
 import edonymyeon.backend.report.application.ReportRequest;
 import io.restassured.RestAssured;

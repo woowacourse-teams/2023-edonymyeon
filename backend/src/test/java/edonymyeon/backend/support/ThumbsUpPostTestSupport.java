@@ -1,10 +1,10 @@
 package edonymyeon.backend.support;
 
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.post.domain.Post;
-import edonymyeon.backend.thumbs.domain.Thumbs;
-import edonymyeon.backend.thumbs.domain.ThumbsType;
-import edonymyeon.backend.thumbs.repository.ThumbsRepository;
+import edonymyeon.backend.member.profile.domain.Member;
+import edonymyeon.backend.content.post.domain.Post;
+import edonymyeon.backend.content.thumbs.domain.Thumbs;
+import edonymyeon.backend.content.thumbs.domain.ThumbsType;
+import edonymyeon.backend.content.thumbs.repository.ThumbsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

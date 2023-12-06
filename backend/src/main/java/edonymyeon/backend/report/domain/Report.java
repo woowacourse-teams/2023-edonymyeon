@@ -1,7 +1,7 @@
 package edonymyeon.backend.report.domain;
 
 import edonymyeon.backend.global.domain.TemporalRecord;
-import edonymyeon.backend.member.domain.Member;
+import edonymyeon.backend.member.profile.domain.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;

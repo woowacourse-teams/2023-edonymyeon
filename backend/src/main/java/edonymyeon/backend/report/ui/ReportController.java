@@ -1,8 +1,8 @@
 package edonymyeon.backend.report.ui;
 
-import edonymyeon.backend.auth.annotation.AuthPrincipal;
+import edonymyeon.backend.member.auth.annotation.AuthPrincipal;
 import edonymyeon.backend.global.version.ApiVersion;
-import edonymyeon.backend.member.application.dto.MemberId;
+import edonymyeon.backend.member.profile.application.dto.MemberId;
 import edonymyeon.backend.report.application.ReportRequest;
 import edonymyeon.backend.report.application.ReportService;
 import java.net.URI;

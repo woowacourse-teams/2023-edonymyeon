@@ -1,9 +1,9 @@
 package edonymyeon.backend.report.application;
 
-import edonymyeon.backend.comment.domain.Comment;
+import edonymyeon.backend.content.comment.domain.Comment;
 import edonymyeon.backend.global.exception.EdonymyeonException;
-import edonymyeon.backend.member.application.dto.ActiveMemberId;
-import edonymyeon.backend.post.domain.Post;
+import edonymyeon.backend.member.profile.application.dto.ActiveMemberId;
+import edonymyeon.backend.content.post.domain.Post;
 import edonymyeon.backend.report.domain.Report;
 import edonymyeon.backend.support.CommentTestSupport;
 import edonymyeon.backend.support.IntegrationTest;

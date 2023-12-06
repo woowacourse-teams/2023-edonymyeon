@@ -1,14 +1,14 @@
 package edonymyeon.backend.report.application;
 
-import edonymyeon.backend.comment.domain.Comment;
-import edonymyeon.backend.comment.repository.CommentRepository;
+import edonymyeon.backend.content.comment.domain.Comment;
+import edonymyeon.backend.content.comment.repository.CommentRepository;
 import edonymyeon.backend.global.exception.EdonymyeonException;
 import edonymyeon.backend.global.exception.ExceptionInformation;
-import edonymyeon.backend.member.application.dto.MemberId;
-import edonymyeon.backend.member.domain.Member;
-import edonymyeon.backend.member.repository.MemberRepository;
-import edonymyeon.backend.post.domain.Post;
-import edonymyeon.backend.post.repository.PostRepository;
+import edonymyeon.backend.member.profile.application.dto.MemberId;
+import edonymyeon.backend.member.profile.domain.Member;
+import edonymyeon.backend.member.profile.repository.MemberRepository;
+import edonymyeon.backend.content.post.domain.Post;
+import edonymyeon.backend.content.post.repository.PostRepository;
 import edonymyeon.backend.report.domain.AbusingType;
 import edonymyeon.backend.report.domain.Report;
 import edonymyeon.backend.report.domain.ReportType;

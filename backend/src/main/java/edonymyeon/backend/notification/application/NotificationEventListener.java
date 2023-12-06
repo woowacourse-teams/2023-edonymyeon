@@ -1,10 +1,10 @@
 package edonymyeon.backend.notification.application;
 
-import edonymyeon.backend.comment.application.event.SavedCommentEvent;
+import edonymyeon.backend.content.comment.application.event.SavedCommentEvent;
 import edonymyeon.backend.global.exception.BusinessLogicException;
-import edonymyeon.backend.post.application.event.PostDeletionEvent;
-import edonymyeon.backend.thumbs.application.event.ThumbsDownEvent;
-import edonymyeon.backend.thumbs.application.event.ThumbsUpEvent;
+import edonymyeon.backend.content.post.application.event.PostDeletionEvent;
+import edonymyeon.backend.content.thumbs.application.event.ThumbsDownEvent;
+import edonymyeon.backend.content.thumbs.application.event.ThumbsUpEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

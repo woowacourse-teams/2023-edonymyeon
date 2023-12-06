@@ -1,13 +1,13 @@
 package edonymyeon.backend.notification.ui;
 
-import edonymyeon.backend.auth.annotation.AuthPrincipal;
+import edonymyeon.backend.member.auth.annotation.AuthPrincipal;
 import edonymyeon.backend.global.version.ApiVersion;
-import edonymyeon.backend.member.application.dto.MemberId;
+import edonymyeon.backend.member.profile.application.dto.MemberId;
 import edonymyeon.backend.notification.application.NotificationService;
 import edonymyeon.backend.notification.application.dto.NotificationResponse;
-import edonymyeon.backend.post.application.GeneralFindingCondition;
-import edonymyeon.backend.post.application.PostSlice;
-import edonymyeon.backend.post.ui.annotation.PostPaging;
+import edonymyeon.backend.content.post.application.GeneralFindingCondition;
+import edonymyeon.backend.content.post.application.PostSlice;
+import edonymyeon.backend.content.post.ui.annotation.PostPaging;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
