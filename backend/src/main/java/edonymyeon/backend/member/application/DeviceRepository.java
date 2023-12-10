@@ -9,8 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DeviceRepository extends JpaRepository<Device, Long> {
-    Optional<Device> findByDeviceToken(String deviceToken);
-
     @EntityGraph(attributePaths = "member")
     List<Device> findAllByDeviceToken(String deviceToken);
 
