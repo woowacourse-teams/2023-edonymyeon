@@ -17,9 +17,11 @@ import com.app.edonymyeon.presentation.ui.postdetail.PostDetailActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MyPostActivity : BaseActivity<ActivityMyPostBinding, MyPostViewModel>(
-    { ActivityMyPostBinding.inflate(it) }
-), MyPostClickListener {
+class MyPostActivity :
+    BaseActivity<ActivityMyPostBinding, MyPostViewModel>(
+        { ActivityMyPostBinding.inflate(it) },
+    ),
+    MyPostClickListener {
     private val notificationId by lazy {
         intent.getLongExtra(KEY_NOTIFICATION_ID, -1)
     }
@@ -88,10 +90,8 @@ class MyPostActivity : BaseActivity<ActivityMyPostBinding, MyPostViewModel>(
 
     private fun setMyPostsObserver() {
         viewModel.posts.observe(this) {
-            binding.tvEmptyPost.isVisible = it.isEmpty()
-            if (it.isNotEmpty()) {
-                adapter.setMyPosts(it)
-            }
+            adapter.setMyPosts(it)
+            binding.tvEmptyPost.isVisible = it.isEmpty() && adapter.itemCount == 0
         }
     }
 
