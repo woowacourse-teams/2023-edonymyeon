@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.NotificationUiModel
+import com.app.edonymyeon.presentation.util.onFailureWithApiException
 import com.domain.edonymyeon.model.Page
 import com.domain.edonymyeon.repository.AuthRepository
 import com.domain.edonymyeon.repository.NotificationRepository
@@ -37,13 +38,13 @@ class AlarmViewModel @Inject constructor(
             if (result.isSuccess) {
                 _notificationList.value =
                     notificationList.value.orEmpty() +
-                            result.getOrNull()?.notifications?.map {
-                                it.toUiModel()
-                            }.orEmpty()
+                    result.getOrNull()?.notifications?.map {
+                        it.toUiModel()
+                    }.orEmpty()
                 currentPage = currentPage.increasePage()
                 isLastPage = result.getOrNull()?.isLast ?: true
             } else {
-                result.onFailure { throw it }
+                result.onFailureWithApiException { throw it }
             }
         }
     }

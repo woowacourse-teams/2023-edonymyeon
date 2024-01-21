@@ -1,14 +1,11 @@
 package com.app.edonymyeon.data.repository
 
-import com.app.edonymyeon.data.common.createCustomThrowableFromResponse
 import com.app.edonymyeon.data.datasource.profile.ProfileDataSource
-import com.app.edonymyeon.data.dto.WriterDataModel
 import com.app.edonymyeon.data.dto.request.ProfileUpdateRequest
 import com.app.edonymyeon.data.dto.request.PurchaseConfirmRequest
 import com.app.edonymyeon.data.dto.request.SavingConfirmRequest
-import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
-import com.app.edonymyeon.data.dto.response.MyPostsResponse
 import com.app.edonymyeon.mapper.toDomain
+import com.app.edonymyeon.mapper.toResult
 import com.domain.edonymyeon.model.MyPosts
 import com.domain.edonymyeon.model.Nickname
 import com.domain.edonymyeon.model.Writer
@@ -20,17 +17,13 @@ class ProfileRepositoryImpl @Inject constructor(
     private val profileDataSource: ProfileDataSource,
 ) : ProfileRepository {
     override suspend fun getMyPosts(page: Int, notificationId: Long): Result<MyPosts> {
-        val result = profileDataSource.getMyPosts(page, notificationId)
-        return if (result.isSuccessful) {
-            Result.success(
-                MyPosts(
-                    (result.body() as MyPostsResponse).posts.map { it.toDomain() },
-                    result.body()!!.isLast,
-                ),
+        return profileDataSource.getMyPosts(page, notificationId).toResult { it, _ ->
+            MyPosts(
+                it.posts.map { post ->
+                    post.toDomain()
+                },
+                it.isLast,
             )
-        } else {
-            val customThrowable = createCustomThrowableFromResponse(result)
-            Result.failure(customThrowable)
         }
     }
 
@@ -40,56 +33,28 @@ class ProfileRepositoryImpl @Inject constructor(
         year: Int,
         month: Int,
     ): Result<Unit> {
-        val result = profileDataSource.postPurchaseConfirm(
+        return profileDataSource.postPurchaseConfirm(
             id,
             PurchaseConfirmRequest(purchasePrice, year, month),
-        )
-        return if (result.isSuccessful) {
-            Result.success((result.body() ?: Unit))
-        } else {
-            val customThrowable = createCustomThrowableFromResponse(result)
-            Result.failure(customThrowable)
-        }
+        ).toResult()
     }
 
     override suspend fun postSavingConfirm(id: Long, year: Int, month: Int): Result<Unit> {
-        val result = profileDataSource.postSavingConfirm(id, SavingConfirmRequest(year, month))
-        return if (result.isSuccessful) {
-            Result.success((result.body() ?: Unit))
-        } else {
-            val customThrowable = createCustomThrowableFromResponse(result)
-            Result.failure(customThrowable)
-        }
+        return profileDataSource.postSavingConfirm(id, SavingConfirmRequest(year, month)).toResult()
     }
 
     override suspend fun deleteConfirm(id: Long): Result<Unit> {
-        val result = profileDataSource.deleteConfirm(id)
-        return if (result.isSuccessful) {
-            Result.success((result.body() ?: Unit))
-        } else {
-            val customThrowable = createCustomThrowableFromResponse(result)
-            Result.failure(customThrowable)
-        }
+        return profileDataSource.deleteConfirm(id).toResult()
     }
 
     override suspend fun getProfile(): Result<Writer> {
-        val result = profileDataSource.getProfile()
-        return if (result.isSuccessful) {
-            Result.success((result.body() as WriterDataModel).toDomain())
-        } else {
-            val customThrowable = createCustomThrowableFromResponse(result)
-            Result.failure(customThrowable)
+        return profileDataSource.getProfile().toResult { it, _ ->
+            it.toDomain()
         }
     }
 
     override suspend fun withdraw(): Result<Unit> {
-        val result = profileDataSource.withdraw()
-        return if (result.isSuccessful) {
-            Result.success(result.body() ?: Unit)
-        } else {
-            val customThrowable = createCustomThrowableFromResponse(result)
-            Result.failure(customThrowable)
-        }
+        return profileDataSource.withdraw().toResult()
     }
 
     override suspend fun updateProfile(
@@ -97,32 +62,19 @@ class ProfileRepositoryImpl @Inject constructor(
         profileImage: File?,
         isProfileChanged: Boolean,
     ): Result<Unit> {
-        val result = profileDataSource.updateProfile(
+        return profileDataSource.updateProfile(
             ProfileUpdateRequest(
                 nickname.value,
                 isProfileChanged,
             ),
             profileImage,
-        )
-        return if (result.isSuccessful) {
-            Result.success(result.body() ?: Unit)
-        } else {
-            val customThrowable = createCustomThrowableFromResponse(result)
-            Result.failure(customThrowable)
-        }
+        ).toResult()
     }
 
     override suspend fun checkDuplicate(
         target: String,
         value: String,
     ): Result<Boolean> {
-        val result = profileDataSource.checkDuplicate(target, value)
-
-        return if (result.isSuccessful) {
-            Result.success((result.body() ?: AuthDuplicateResponse(false)).isUnique)
-        } else {
-            val customThrowable = createCustomThrowableFromResponse(result)
-            Result.failure(customThrowable)
-        }
+        return profileDataSource.checkDuplicate(target, value).toResult()
     }
 }

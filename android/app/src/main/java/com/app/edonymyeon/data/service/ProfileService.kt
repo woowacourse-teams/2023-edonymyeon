@@ -5,9 +5,9 @@ import com.app.edonymyeon.data.dto.request.PurchaseConfirmRequest
 import com.app.edonymyeon.data.dto.request.SavingConfirmRequest
 import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
 import com.app.edonymyeon.data.dto.response.MyPostsResponse
+import com.app.edonymyeon.data.service.client.calladapter.ApiResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -25,30 +25,30 @@ interface ProfileService {
         @Query("size") size: Int,
         @Query("page") page: Int,
         @Query("notificated") notificated: Long,
-    ): Response<MyPostsResponse>
+    ): ApiResponse<MyPostsResponse>
 
     @POST("/profile/my-posts/{postId}/purchase-confirm")
     suspend fun postPurchaseConfirm(
         @Path("postId") postId: Long,
         @Body purchaseConfirmRequest: PurchaseConfirmRequest,
-    ): Response<Unit>
+    ): ApiResponse<Unit>
 
     @POST("/profile/my-posts/{postId}/saving-confirm")
     suspend fun postSavingConfirm(
         @Path("postId") postId: Long,
         @Body savingConfirmRequest: SavingConfirmRequest,
-    ): Response<Unit>
+    ): ApiResponse<Unit>
 
     @DELETE("/profile/my-posts/{postId}/confirm-remove")
     suspend fun deleteConfirm(
         @Path("postId") postId: Long,
-    ): Response<Unit>
+    ): ApiResponse<Unit>
 
     @GET("/profile")
-    suspend fun getProfile(): Response<WriterDataModel>
+    suspend fun getProfile(): ApiResponse<WriterDataModel>
 
     @DELETE("/withdraw")
-    suspend fun withdraw(): Response<Unit>
+    suspend fun withdraw(): ApiResponse<Unit>
 
     @Multipart
     @PUT("/profile")
@@ -56,11 +56,11 @@ interface ProfileService {
         @Part("nickname") nickname: RequestBody,
         @Part("isImageChanged") isImageChanged: Boolean,
         @Part image: MultipartBody.Part?,
-    ): Response<Unit>
+    ): ApiResponse<Unit>
 
     @GET("/profile/check-duplicate")
     suspend fun checkDuplicate(
         @Query("target") target: String,
         @Query("value") value: String,
-    ): Response<AuthDuplicateResponse>
+    ): ApiResponse<AuthDuplicateResponse>
 }

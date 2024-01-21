@@ -6,29 +6,29 @@ import com.app.edonymyeon.data.dto.request.PurchaseConfirmRequest
 import com.app.edonymyeon.data.dto.request.SavingConfirmRequest
 import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
 import com.app.edonymyeon.data.dto.response.MyPostsResponse
-import retrofit2.Response
+import com.app.edonymyeon.data.service.client.calladapter.ApiResponse
 import java.io.File
 
 interface ProfileDataSource {
-    suspend fun getMyPosts(page: Int, notificationId: Long): Response<MyPostsResponse>
+    suspend fun getMyPosts(page: Int, notificationId: Long): ApiResponse<MyPostsResponse>
     suspend fun postPurchaseConfirm(
         id: Long,
         purchaseConfirmRequest: PurchaseConfirmRequest,
-    ): Response<Unit>
+    ): ApiResponse<Unit>
 
     suspend fun postSavingConfirm(
         id: Long,
         savingConfirmRequest: SavingConfirmRequest,
-    ): Response<Unit>
+    ): ApiResponse<Unit>
 
-    suspend fun deleteConfirm(id: Long): Response<Unit>
-    suspend fun getProfile(): Response<WriterDataModel>
-    suspend fun withdraw(): Response<Unit>
+    suspend fun deleteConfirm(id: Long): ApiResponse<Unit>
+    suspend fun getProfile(): ApiResponse<WriterDataModel>
+    suspend fun withdraw(): ApiResponse<Unit>
 
     suspend fun updateProfile(
         profileRequest: ProfileUpdateRequest,
         newProfileImage: File?,
-    ): Response<Unit>
+    ): ApiResponse<Unit>
 
-    suspend fun checkDuplicate(target: String, value: String): Response<AuthDuplicateResponse>
+    suspend fun checkDuplicate(target: String, value: String): ApiResponse<AuthDuplicateResponse>
 }

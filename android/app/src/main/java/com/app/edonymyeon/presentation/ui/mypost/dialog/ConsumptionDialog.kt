@@ -12,6 +12,7 @@ import app.edonymyeon.databinding.DialogInputConsumptionBinding
 import com.app.edonymyeon.presentation.ui.mypost.ConsumptionType
 import com.app.edonymyeon.presentation.ui.mypost.MyPostViewModel
 import com.app.edonymyeon.presentation.util.makeSnackbar
+import com.app.edonymyeon.presentation.util.onFailureWithApiException
 
 class ConsumptionDialog(
     private val type: ConsumptionType,
@@ -48,7 +49,7 @@ class ConsumptionDialog(
 
     private fun setObserver() {
         viewModel.price.observe(this) { price ->
-            runCatching { if (price != BLANK) price?.toInt() ?: 0 }.onFailure {
+            runCatching { if (price != BLANK) price?.toInt() ?: 0 }.onFailureWithApiException {
                 binding.root.makeSnackbar(this.getString(R.string.dialog_input_price_error_message))
                 viewModel.setPurchasePrice(BLANK)
             }

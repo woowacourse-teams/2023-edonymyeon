@@ -1,12 +1,9 @@
 package com.app.edonymyeon.data.repository
 
-import com.app.edonymyeon.data.common.createCustomThrowableFromResponse
 import com.app.edonymyeon.data.datasource.post.PostDataSource
-import com.app.edonymyeon.data.dto.response.CommentsResponse
-import com.app.edonymyeon.data.dto.response.PostDetailResponse
-import com.app.edonymyeon.data.dto.response.PostEditorResponse
 import com.app.edonymyeon.mapper.toDataModel
 import com.app.edonymyeon.mapper.toDomain
+import com.app.edonymyeon.mapper.toResult
 import com.domain.edonymyeon.model.Comments
 import com.domain.edonymyeon.model.PostEditor
 import com.domain.edonymyeon.model.PostItems
@@ -18,39 +15,23 @@ class PostRepositoryImpl @Inject constructor(
     private val postDataSource: PostDataSource,
 ) : PostRepository {
     override suspend fun getPostDetail(postId: Long, notificationId: Long): Result<Any> {
-        val result = postDataSource.getPostDetail(postId, notificationId)
-        return if (result.isSuccessful) {
-            Result.success((result.body() as PostDetailResponse).toDomain())
-        } else {
-            val customThrowable = createCustomThrowableFromResponse(result)
-            Result.failure(customThrowable)
+        return postDataSource.getPostDetail(postId, notificationId).toResult { it, _ ->
+            it.toDomain()
         }
     }
 
     override suspend fun deletePost(postId: Long): Result<Any> {
-        val result = postDataSource.deletePost(postId)
-        return if (result.isSuccessful) {
-            Result.success(Unit)
-        } else {
-            val customThrowable = createCustomThrowableFromResponse(result)
-            Result.failure(customThrowable)
-        }
+        return postDataSource.deletePost(postId).toResult()
     }
 
     override suspend fun getPosts(size: Int, page: Int): Result<PostItems> {
-        val result = postDataSource.getPosts(size, page)
-        return if (result.isSuccessful && result.body() != null) {
-            Result.success(
-                PostItems(
-                    result.body()!!.post.map {
-                        it.toDomain()
-                    },
-                    result.body()!!.isLast,
-                ),
+        return postDataSource.getPosts(size, page).toResult { postItems, _ ->
+            PostItems(
+                postItems.post.map {
+                    it.toDomain()
+                },
+                postItems.isLast,
             )
-        } else {
-            val customThrowable = createCustomThrowableFromResponse(result)
-            Result.failure(customThrowable)
         }
     }
 
@@ -58,13 +39,7 @@ class PostRepositoryImpl @Inject constructor(
         postEditor: PostEditor,
         images: List<File>,
     ): Result<Any> {
-        val result = postDataSource.savePost(postEditor.toDataModel(), images)
-        return if (result.isSuccessful) {
-            Result.success(result.body() as PostEditorResponse)
-        } else {
-            val customThrowable = createCustomThrowableFromResponse(result)
-            Result.failure(customThrowable)
-        }
+        return postDataSource.savePost(postEditor.toDataModel(), images).toResult()
     }
 
     override suspend fun updatePost(
@@ -73,68 +48,37 @@ class PostRepositoryImpl @Inject constructor(
         imageUrls: List<String>,
         imageFiles: List<File>,
     ): Result<Any> {
-        val result =
-            postDataSource.updatePost(postId, postEditor.toDataModel(), imageUrls, imageFiles)
-        return if (result.isSuccessful) {
-            Result.success(result.body() as PostEditorResponse)
-        } else {
-            val customThrowable = createCustomThrowableFromResponse(result)
-            Result.failure(customThrowable)
-        }
+        return postDataSource.updatePost(postId, postEditor.toDataModel(), imageUrls, imageFiles)
+            .toResult()
     }
 
     override suspend fun getHotPosts(): Result<PostItems> {
-        val result = postDataSource.getHotPosts()
-        return if (result.isSuccessful && result.body() != null) {
-            Result.success(
-                PostItems(
-                    result.body()!!.post.map {
-                        it.toDomain()
-                    },
-                    result.body()!!.isLast,
-                ),
+        return postDataSource.getHotPosts().toResult { it, _ ->
+            PostItems(
+                it.post.map { post ->
+                    post.toDomain()
+                },
+                it.isLast,
             )
-        } else {
-            val customThrowable = createCustomThrowableFromResponse(result)
-            Result.failure(customThrowable)
         }
     }
 
     override suspend fun getComments(postId: Long): Result<Comments> {
-        val result = postDataSource.getComments(postId)
-        return if (result.isSuccessful && result.body() != null) {
-            val body = result.body()
-            Result.success(
-                Comments(
-                    body?.commentCount ?: 0,
-                    (body as CommentsResponse).comments.map {
-                        it.toDomain()
-                    },
-                ),
+        return postDataSource.getComments(postId).toResult { it, _ ->
+            Comments(
+                it.commentCount,
+                it.comments.map { commentData ->
+                    commentData.toDomain()
+                },
             )
-        } else {
-            val customThrowable = createCustomThrowableFromResponse(result)
-            Result.failure(customThrowable)
         }
     }
 
     override suspend fun postComment(id: Long, image: File?, comment: String): Result<Unit> {
-        val result = postDataSource.postComment(id, image, comment)
-        return if (result.isSuccessful) {
-            Result.success(Unit)
-        } else {
-            val customThrowable = createCustomThrowableFromResponse(result)
-            Result.failure(customThrowable)
-        }
+        return postDataSource.postComment(id, image, comment).toResult()
     }
 
     override suspend fun deleteComment(postId: Long, commentId: Long): Result<Unit> {
-        val result = postDataSource.deleteComment(postId, commentId)
-        return if (result.isSuccessful) {
-            Result.success(Unit)
-        } else {
-            val customThrowable = createCustomThrowableFromResponse(result)
-            Result.failure(customThrowable)
-        }
+        return postDataSource.deleteComment(postId, commentId).toResult()
     }
 }

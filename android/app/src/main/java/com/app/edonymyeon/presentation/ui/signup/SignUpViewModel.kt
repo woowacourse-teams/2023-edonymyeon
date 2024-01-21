@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.app.edonymyeon.data.service.fcm.FCMToken
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
+import com.app.edonymyeon.presentation.util.onFailureWithApiException
 import com.domain.edonymyeon.model.Email
 import com.domain.edonymyeon.model.Nickname
 import com.domain.edonymyeon.model.Password
@@ -48,7 +49,7 @@ class SignUpViewModel @Inject constructor(
                     ),
                 ).onSuccess {
                     _isSignUpSuccess.value = true
-                }.onFailure {
+                }.onFailureWithApiException {
                     _isSignUpSuccess.value = false
                     throw it
                 }
@@ -83,16 +84,16 @@ class SignUpViewModel @Inject constructor(
 
     private fun checkSignUpAble() {
         _isSignUpAble.value = isEmailValid.value ?: false &&
-                isNicknameValid.value ?: false &&
-                isPasswordValid.value ?: false &&
-                isPasswordCheckValid.value ?: false
+            isNicknameValid.value ?: false &&
+            isPasswordValid.value ?: false &&
+            isPasswordCheckValid.value ?: false
     }
 
     fun verifyEmail(email: String) {
         viewModelScope.launch(exceptionHandler) {
             authRepository.checkDuplicate(EMAIL, email.trim()).onSuccess {
                 _isEmailValid.value = it && Email.validate(email)
-            }.onFailure {
+            }.onFailureWithApiException {
                 _isEmailValid.value = false
                 throw it
             }
@@ -103,7 +104,7 @@ class SignUpViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             authRepository.checkDuplicate(NICKNAME, nickname.trim()).onSuccess {
                 _isNicknameValid.value = it && Nickname.validate(nickname)
-            }.onFailure {
+            }.onFailureWithApiException {
                 _isNicknameValid.value = false
                 throw it
             }

@@ -7,6 +7,7 @@ import com.app.edonymyeon.mapper.toUiModel
 import com.app.edonymyeon.presentation.common.viewmodel.BaseViewModel
 import com.app.edonymyeon.presentation.uimodel.ConsumptionUiModel
 import com.app.edonymyeon.presentation.uimodel.MyPostUiModel
+import com.app.edonymyeon.presentation.util.onFailureWithApiException
 import com.domain.edonymyeon.model.Date
 import com.domain.edonymyeon.model.MonthRange
 import com.domain.edonymyeon.model.Page
@@ -50,10 +51,9 @@ class MyPostViewModel @Inject constructor(
                 }
                 currentPage = currentPage.increasePage()
                 isLastPage = it.isLast
+            }.onFailureWithApiException {
+                throw it
             }
-                .onFailure {
-                    throw it
-                }
         }
     }
 
@@ -78,7 +78,7 @@ class MyPostViewModel @Inject constructor(
         )
         viewModelScope.launch(exceptionHandler) {
             profileRepository.postPurchaseConfirm(id, purchasePrice, year, month).onSuccess {
-            }.onFailure {
+            }.onFailureWithApiException {
                 throw it
             }
         }
@@ -92,7 +92,7 @@ class MyPostViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             profileRepository.postSavingConfirm(id, year, month).onSuccess {
             }
-                .onFailure {
+                .onFailureWithApiException {
                     throw it
                 }
         }
@@ -106,7 +106,7 @@ class MyPostViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             profileRepository.deleteConfirm(id).onSuccess {
             }
-                .onFailure {
+                .onFailureWithApiException {
                     throw it
                 }
         }
@@ -144,7 +144,7 @@ class MyPostViewModel @Inject constructor(
         viewModelScope.launch(exceptionHandler) {
             postRepository.getPostDetail(id).onSuccess {
                 _price.value = (it as Post).price.toString()
-            }.onFailure {
+            }.onFailureWithApiException {
                 throw it
             }
         }

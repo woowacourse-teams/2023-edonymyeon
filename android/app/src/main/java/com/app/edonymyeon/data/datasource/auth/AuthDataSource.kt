@@ -5,7 +5,7 @@ import com.app.edonymyeon.data.dto.request.LogoutRequest
 import com.app.edonymyeon.data.dto.request.TokenRequest
 import com.app.edonymyeon.data.dto.request.UserRegistrationRequest
 import com.app.edonymyeon.data.dto.response.AuthDuplicateResponse
-import retrofit2.Response
+import com.app.edonymyeon.data.service.client.calladapter.ApiResponse
 
 interface AuthDataSource {
 
@@ -17,12 +17,16 @@ interface AuthDataSource {
     interface Remote {
         suspend fun login(
             loginDataModel: LoginDataModel,
-        ): Response<Unit>
+        ): ApiResponse<Unit>
 
-        suspend fun loginByKakao(accessToken: TokenRequest): Response<Unit>
+        suspend fun loginByKakao(accessToken: TokenRequest): ApiResponse<Unit>
 
-        suspend fun signUp(userRegistrationRequest: UserRegistrationRequest): Response<Unit>
-        suspend fun checkDuplicate(target: String, value: String): Response<AuthDuplicateResponse>
-        suspend fun logout(logoutRequest: LogoutRequest): Response<Unit>
+        suspend fun signUp(userRegistrationRequest: UserRegistrationRequest): ApiResponse<Unit>
+        suspend fun checkDuplicate(
+            target: String,
+            value: String,
+        ): ApiResponse<AuthDuplicateResponse>
+
+        suspend fun logout(logoutRequest: LogoutRequest): ApiResponse<Unit>
     }
 }
