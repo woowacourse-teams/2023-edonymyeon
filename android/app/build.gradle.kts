@@ -7,10 +7,9 @@ plugins {
     id("kotlin-parcelize")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
-
     kotlin("plugin.serialization") version "1.8.21"
-
     id("com.google.dagger.hilt.android")
+    id("com.google.android.gms.oss-licenses-plugin")
 }
 
 val localProperties = Properties()
@@ -48,8 +47,7 @@ android {
         )
 
         val kakaoNativeKey = localProperties.getProperty("KAKAO_NATIVE_KEY")
-        manifestPlaceholders["KAKAO_NATIVE_KEY"] =
-            kakaoNativeKey.substring(1, kakaoNativeKey.length - 1)
+        manifestPlaceholders["KAKAO_NATIVE_KEY"] = kakaoNativeKey.substring(1, kakaoNativeKey.length - 1)
     }
 
     buildTypes {
@@ -165,4 +163,7 @@ dependencies {
     // hilt
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-android-compiler:2.48")
+
+    // open source library
+    implementation("com.google.android.gms:play-services-oss-licenses:17.0.1")
 }

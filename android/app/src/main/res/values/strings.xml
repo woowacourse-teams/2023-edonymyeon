@@ -77,6 +77,7 @@
     <string name="my_page_logout">로그아웃</string>
     <string name="my_page_inquiry">문의하기</string>
     <string name="my_page_withdraw">회원탈퇴</string>
+    <string name="my_page_open_source">오픈소스 라이선스</string>
     <string name="my_page_login">로그인</string>
     <string name="my_page_saving_title">절약금액:</string>
     <string name="my_page_purchase_title">소비금액:</string>

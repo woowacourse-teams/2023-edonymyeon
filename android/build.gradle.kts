@@ -15,6 +15,15 @@ plugins {
     id("com.google.dagger.hilt.android") version "2.48" apply false
 }
 
+buildscript {
+    repositories {
+        google()
+    }
+    dependencies {
+        classpath("com.google.android.gms:oss-licenses-plugin:0.10.6")
+    }
+}
+
 allprojects {
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
 }
